@@ -5,20 +5,20 @@ public class HorizonHold : MonoBehaviour {
 
     private Transform tr;
     private Transform playerTr;
-    private Vector3 rightPos, leftPos;
+    private Vector3 maxLengthPos, originPos;
 
     public float speed = 3f;
     public float length = 8f;
     
 	void Start () {
         tr = GetComponent<Transform>();
-        rightPos.x = tr.position.x + length;
-        leftPos.x = tr.position.x;
+        maxLengthPos.x = tr.position.x + length;
+        originPos.x = tr.position.x;
     }
 	
 	void Update () {
-        if(tr.position.x >= rightPos.x && speed >= 1) { speed *= -1;}
-        else if (tr.position.x <= leftPos.x && speed <= -1) { speed *= -1;}
+        if(tr.position.x >= maxLengthPos.x && speed >= 1) { speed *= -1;}
+        else if (tr.position.x <= originPos.x && speed <= -1) { speed *= -1;}
 
         tr.Translate(Vector3.forward * speed * Time.deltaTime);
     }

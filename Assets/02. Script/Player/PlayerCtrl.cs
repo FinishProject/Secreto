@@ -17,8 +17,8 @@ public class PlayerCtrl : MonoBehaviour {
 
     public Transform rayTr; // 레이캐스트 시작 위치
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
+    public CharacterController controller; // 캐릭터컨트롤러
     private Animator anim; // 애니메이터
-    private CharacterController controller; // 캐릭터컨트롤러
 
     void Start()
     {
@@ -47,23 +47,21 @@ public class PlayerCtrl : MonoBehaviour {
             moveDir = transform.TransformDirection(moveDir);
             //anim.SetBool("Jump", false);
             //점프
-            if (Input.GetKeyUp(KeyCode.Space)) { Jump(true); Debug.Log("jump"); }
-
+            if (Input.GetKeyUp(KeyCode.Space)) { Jump(true); }
             //스페이스바 누르고 있던 시간에 따라 점프 상태 변경
-            //if (Input.GetKey(KeyCode.Space)){
-            //    Debug.Log("longJump");
-            //    jumpTime += Time.deltaTime;
-            //    if (jumpTime > 0.5f) { Jump(false);  }
-            //}
-            
+            if (Input.GetKey(KeyCode.Space))
+            {
+                jumpTime += Time.deltaTime;
+                if (jumpTime > 0.5f) { Jump(false); }
+            }
         }
-        //중력 및 이동, 걷기 애니메이션 재생
+        //중력 및 이동, 애니메이션 재생
         moveDir.y -= gravity * Time.deltaTime;
         controller.Move(moveDir * speed * Time.deltaTime);
         anim.SetFloat("Speed", inputAxis);
     } 
     //점프
-    public void Jump(bool bJump)
+    void Jump(bool bJump)
     {
         if (bJump) // 짧은 점프
             moveDir.y = jumpHight;
@@ -110,7 +108,7 @@ public class PlayerCtrl : MonoBehaviour {
     void ShowScript(string name)
     {
         if (name != null){
-            //대화 중이면 true
+            //대화 중이면 true, 캐릭터 정지
             bScript = ScriptMgr.instance.GetScript(name);
             inputAxis = 0f;
         }
