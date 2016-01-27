@@ -20,10 +20,15 @@ public class PlayerCtrl : MonoBehaviour {
     public CharacterController controller; // 캐릭터컨트롤러
     private Animator anim; // 애니메이터
 
+    Data playerData = new Data();
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+
+        playerData.curPosition = this.transform.position;
+        PlayerData.Save(playerData);
     }
 
     void FixedUpdate()
