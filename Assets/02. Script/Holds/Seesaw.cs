@@ -5,6 +5,7 @@ public class Seesaw : MonoBehaviour {
 
     private Rigidbody rb;
     private Vector3 dir;
+    public float power = 10f;
 
     void Start () {
         rb = GetComponent<Rigidbody>();
@@ -12,8 +13,7 @@ public class Seesaw : MonoBehaviour {
 
     void OnTriggerStay(Collider coll)
     {
-        
         dir = coll.ClosestPointOnBounds(coll.gameObject.transform.position);
-        rb.AddForceAtPosition(-Vector3.up * 10f * Time.deltaTime, dir);
+        rb.AddForceAtPosition(-Vector3.up * power * Time.deltaTime, dir);
     }
 }

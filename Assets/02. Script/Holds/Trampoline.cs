@@ -3,13 +3,12 @@ using System.Collections;
 
 public class Trampoline : MonoBehaviour {
 
-    public float jumpSpeed = 10f;
-    private Transform tr;
+    public float jumpHight = 10f;
     Vector3 moveDir = Vector3.zero;
 
     void OnTriggerEnter(Collider coll)
     {
-        coll.GetComponent<PlayerCtrl>().moveDir.y = jumpSpeed;
+        coll.GetComponent<PlayerCtrl>().moveDir.y = jumpHight;
         coll.GetComponent<PlayerCtrl>().controller.Move(moveDir * Time.deltaTime);
     }
 

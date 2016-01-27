@@ -24,13 +24,13 @@ public sealed class PlayerData {
         posDataElement.SetAttribute("z", data.curPosition.y.ToString());
         posElement.AppendChild(posDataElement);
         //데이터 저장
-        doc.Save(Application.dataPath + "/Resources/Player_Postion.xml");
+        doc.Save(Application.dataPath + "/Resources/Player_Data.xml");
     }
 
     public static Data Load()
     {
         XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc.Load(Application.dataPath + "/Resources/Player_Postion.xml");
+        xmlDoc.Load(Application.dataPath + "/Resources/Player_Data.xml");
         XmlElement posElement = xmlDoc["PlayerPosition"];
 
         float posX, posY, posZ;

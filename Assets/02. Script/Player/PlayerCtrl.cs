@@ -7,20 +7,20 @@ public class PlayerCtrl : MonoBehaviour {
     private float pushPower = 2f; // 미는 힘
     private float inputAxis; // 입력 받는 키의 값
     private bool focusRight = true; //우측을 봐라보는 여부
-    private float jumpTime = 0f; //스페이스 버튼 누르고 있는 시간
     private bool jumpType = true; // 긴점프와 짧은 점프 종류 
-    private bool bScript = false; // 현재 대화중인지 확인
+    private bool bJumping = false; //현재 점프중 확인(대쉬 점프)
+    private bool bScript = false; // 현재 대화중 확인
 
     public float speed = 3.0f; // 이동속도
-    public float jumpHight = 6.0f; // 짧은 점프 높이
-    public float longJumpHight = 8.0f; //긴 점프 높이
+    public float jumpHight = 6.0f; // 기본 점프 높이
+    public float dashJumpHight = 6.0f; //대쉬 점프 높이
 
     public Transform rayTr; // 레이캐스트 시작 위치
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
-    private Animator anim; // 애니메이터
+    private Animator anim;
 
-    Data playerData = new Data();
+    Data playerData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
     void Start()
     {
@@ -37,8 +37,6 @@ public class PlayerCtrl : MonoBehaviour {
         Movement();
         //NPC와 대화
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
-        //공중에서 스페이스바 클릭시 오브젝트 오름
-        else if(!controller.isGrounded && Input.GetKeyDown(KeyCode.Space)) { ShotRay(); }
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
     }
@@ -52,13 +50,12 @@ public class PlayerCtrl : MonoBehaviour {
             moveDir = transform.TransformDirection(moveDir);
             //anim.SetBool("Jump", false);
             //점프
-            if (Input.GetKeyUp(KeyCode.Space)) { Jump(true); }
+            if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
             //스페이스바 누르고 있던 시간에 따라 점프 상태 변경
-            if (Input.GetKey(KeyCode.Space))
-            {
-                jumpTime += Time.deltaTime;
-                if (jumpTime > 0.5f) { Jump(false); }
-            }
+        }
+        else {
+            //대쉬 점프
+            if (Input.GetKeyDown(KeyCode.Space)) { Jump(false); }
         }
         //중력 및 이동, 애니메이션 재생
         moveDir.y -= gravity * Time.deltaTime;
@@ -68,12 +65,16 @@ public class PlayerCtrl : MonoBehaviour {
     //점프
     void Jump(bool bJump)
     {
-        if (bJump) // 짧은 점프
+        if (bJump) { // 짧은 점프
             moveDir.y = jumpHight;
-        else // 긴 점프
-            moveDir.y = longJumpHight;
+            bJumping = true;
+        }
+        else if (!bJump && bJumping)
+        {// 긴 점프
+            moveDir.y = dashJumpHight;
+            bJumping = false;
+        }
         //anim.SetBool("Jump", true); // 점프 애니메이션
-        jumpTime = 0f;
     }
 
     //캐릭터 컨트롤러 충돌

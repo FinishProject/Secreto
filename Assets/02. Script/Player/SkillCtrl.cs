@@ -20,22 +20,21 @@ public class SkillCtrl : MonoBehaviour {
 
     public Transform shotTr;
     public GameObject bullet;
-    public Skill skill = new Skill();
+    Skill skill = new Skill();
 
-    private GameObject gaBullet;
+    private GameObject goBullet;
 
     void Start()
     {
-        gaBullet = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
-        gaBullet.SetActive(false);
+        goBullet = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
+        goBullet.SetActive(false);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F)){
-            Debug.Log("Attack");
-            gaBullet.SetActive(true);
-            gaBullet.transform.position = shotTr.position;
+            goBullet.SetActive(true);
+            goBullet.transform.position = shotTr.position;
         }
         if (Input.GetKeyDown(KeyCode.Tab)) { SkillTypeChagne(); }
         SkillNum();
