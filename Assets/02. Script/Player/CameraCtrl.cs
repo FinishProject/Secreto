@@ -4,8 +4,7 @@ using System.Collections;
 public class CameraCtrl : MonoBehaviour {
 
     public Transform playerTr; // 플레이어의 위치값
-    public float speed = 20f; // 카메라의 속도
-    public float hight = 0f;
+    public float speed = 10f; // 카메라의 속도
     private float relCameraPosMag;
 
     private Vector3 relCameraPos;
@@ -18,12 +17,11 @@ public class CameraCtrl : MonoBehaviour {
 
     void FixedUpdate()
     {
-        relCameraPosMag = relCameraPos.sqrMagnitude - hight;
+        relCameraPosMag = relCameraPos.sqrMagnitude;
 
         Vector3 standardPos = playerTr.position + relCameraPos;
-        Vector3 abovePos = playerTr.position + Vector3.up * relCameraPosMag;
 
-        checkPoint = Vector3.Lerp(standardPos, abovePos, 0.25f);
+        checkPoint = Vector3.Lerp(standardPos, playerTr.position, 0.25f);
 
         transform.position = Vector3.Lerp(transform.position, checkPoint, speed * Time.deltaTime);
 

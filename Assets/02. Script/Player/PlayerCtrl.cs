@@ -7,7 +7,6 @@ public class PlayerCtrl : MonoBehaviour {
     private float pushPower = 2f; // 미는 힘
     private float inputAxis; // 입력 받는 키의 값
     private bool focusRight = true; //우측을 봐라보는 여부
-    private bool jumpType = true; // 긴점프와 짧은 점프 종류 
     private bool bJumping = false; //현재 점프중 확인(대쉬 점프)
     private bool bScript = false; // 현재 대화중 확인
 
@@ -33,6 +32,7 @@ public class PlayerCtrl : MonoBehaviour {
 
     void FixedUpdate()
     {
+        
         //이동
         Movement();
         //NPC와 대화
@@ -51,7 +51,6 @@ public class PlayerCtrl : MonoBehaviour {
             //anim.SetBool("Jump", false);
             //점프
             if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
-            //스페이스바 누르고 있던 시간에 따라 점프 상태 변경
         }
         else {
             //대쉬 점프
@@ -74,6 +73,7 @@ public class PlayerCtrl : MonoBehaviour {
             moveDir.y = dashJumpHight;
             bJumping = false;
         }
+        //controller.Move(moveDir * speed * Time.deltaTime);
         //anim.SetBool("Jump", true); // 점프 애니메이션
     }
 

@@ -13,6 +13,7 @@ public class Seesaw : MonoBehaviour {
 
     void OnTriggerStay(Collider coll)
     {
+        Debug.Log("Push");
         dir = coll.ClosestPointOnBounds(coll.gameObject.transform.position);
         rb.AddForceAtPosition(-Vector3.up * power * Time.deltaTime, dir);
     }
