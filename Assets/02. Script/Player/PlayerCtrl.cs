@@ -19,20 +19,24 @@ public class PlayerCtrl : MonoBehaviour {
     public CharacterController controller; // 캐릭터컨트롤러
     private Animator anim;
 
-    Data playerData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
+    Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
-
-        playerData.curPosition = this.transform.position;
-        PlayerData.Save(playerData);
+        Init();
+        //playerData.curPosition = this.transform.position;
+        //PlayerData.Save(playerData);
+    }
+    //플레이어 정보 초기화
+    void Init()
+    {
+        pData = PlayerData.Load();
     }
 
     void FixedUpdate()
     {
-        
         //이동
         Movement();
         //NPC와 대화
@@ -73,8 +77,6 @@ public class PlayerCtrl : MonoBehaviour {
             moveDir.y = dashJumpHight;
             bJumping = false;
         }
-        //controller.Move(moveDir * speed * Time.deltaTime);
-        //anim.SetBool("Jump", true); // 점프 애니메이션
     }
 
     //캐릭터 컨트롤러 충돌
@@ -100,7 +102,7 @@ public class PlayerCtrl : MonoBehaviour {
         if (Physics.Raycast(rayTr.position, forward, out hit, 1f)) { 
             //앞에 오를 수 있는 오브젝트 있을 시
             if(hit.collider.gameObject.tag == "Climb"){
-                Debug.Log("오르기");
+                Debug.Log("Climb");
             }
             //NPC 체크 및 이름 확인
             else if (hit.collider.gameObject.tag == "NPC"){
@@ -122,6 +124,6 @@ public class PlayerCtrl : MonoBehaviour {
     //펫 타기
     void RidePet()
     {
-        Debug.Log("Pet");
+        Debug.Log("Riding Pet");
     }
 }

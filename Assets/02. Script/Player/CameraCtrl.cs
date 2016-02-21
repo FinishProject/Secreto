@@ -18,11 +18,8 @@ public class CameraCtrl : MonoBehaviour {
     void FixedUpdate()
     {
         relCameraPosMag = relCameraPos.sqrMagnitude;
-
         Vector3 standardPos = playerTr.position + relCameraPos;
-
         checkPoint = Vector3.Lerp(standardPos, playerTr.position, 0.25f);
-
         transform.position = Vector3.Lerp(transform.position, checkPoint, speed * Time.deltaTime);
 
     }

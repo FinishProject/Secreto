@@ -13,8 +13,7 @@ public class JingGume : MonoBehaviour {
 	void Start () {
         chRender = GetComponentsInChildren<Renderer>();
         chTr = GetComponentsInChildren<Transform>();
-        //playerTr = GameObject.FindGameObjectWithTag("Player").transform;
-
+        //발판 렌더링 끄기
         for (int i = 1; i <= 2; i++)
             chRender[i].enabled = false;
 	}
@@ -30,6 +29,7 @@ public class JingGume : MonoBehaviour {
     {
         if (playerTr != null)
         {
+            //플레이어와 발판간의 거리 체크
             distance = Vector3.Distance(playerTr.position, chTr[cnt].position);
             if (distance <= 1.1f)
             {

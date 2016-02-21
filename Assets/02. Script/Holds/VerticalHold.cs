@@ -15,11 +15,11 @@ public class VerticalHold : MonoBehaviour {
     void Start()
     {
         tr = GetComponent<Transform>();
-        maxLengthPos.y = tr.position.y + length;
-        originPos.y = tr.position.y;
+        maxLengthPos.y = tr.position.y + length; //최대 이동 길이(상)
+        originPos.y = tr.position.y; // 기본 이동 길이(하)
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (tr.position.y >= maxLengthPos.y && speed >= 1) { speed *= -1; }
         else if (tr.position.y <= originPos.y && speed <= -1) { speed *= -1; }
@@ -30,6 +30,7 @@ public class VerticalHold : MonoBehaviour {
 
     void OnTriggerStay(Collider coll)
     {
+        // 플레이어가 발판 위에 있을 시 발판과 같이 이동
         if (coll.gameObject.tag == "Player")
         {
             playerTr = coll.GetComponent<Transform>();
