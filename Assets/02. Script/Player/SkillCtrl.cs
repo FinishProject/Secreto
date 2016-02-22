@@ -18,26 +18,35 @@ public class SkillCtrl : MonoBehaviour {
         four = 3,
     };
 
+    private int count = 0;
+
     public Transform shotTr;
     public GameObject bullet;
     Skill skill = new Skill();
 
-    private GameObject goBullet;
+    public GameObject[] goBullets = new GameObject[3];
 
     void Start()
     {
-        goBullet = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
-        goBullet.SetActive(false);
+        for (int i = 0; i < 3; i++)
+        {
+            goBullets[i] = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
+            goBullets[i].SetActive(false);
+        }
     }
 
     void Update()
     {
+        //F키 입력 시 공격체 생성
         if (Input.GetKeyDown(KeyCode.F)){
-            goBullet.SetActive(true);
-            goBullet.transform.position = shotTr.position;
+            //배열의 길이보다 작고 0인덱스의 게임오브젝트가 꺼져있을 때
+            if (count >= goBullets.Length && !goBullets[0].activeSelf) { count = 0; }
+            goBullets[count].SetActive(true);
+            goBullets[count].transform.position = shotTr.position;
+            count++;
         }
-        if (Input.GetKeyDown(KeyCode.Tab)) { SkillTypeChagne(); }
-        SkillNum();
+        //if (Input.GetKeyDown(KeyCode.Tab)) { SkillTypeChagne(); }
+        //SkillNum();
     }
 
     void SkillTypeChagne()
