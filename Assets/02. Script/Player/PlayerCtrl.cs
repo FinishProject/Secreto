@@ -5,7 +5,7 @@ public class PlayerCtrl : MonoBehaviour {
 
     private float gravity = 20.0f; // 중력
     private float pushPower = 2f; // 미는 힘
-    private float inputAxis; // 입력 받는 키의 값
+    private float inputAxis = 0f; // 입력 받는 키의 값
     private bool focusRight = true; //우측을 봐라보는 여부
     private bool bJumping = false; //현재 점프중 확인(대쉬 점프)
     private bool bScript = false; // 현재 대화중 확인
@@ -20,6 +20,8 @@ public class PlayerCtrl : MonoBehaviour {
     private Animator anim;
 
     Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
+
+    Quaternion rotationTarget = new Quaternion(0, 0, 0, -7);
 
     void Start()
     {
@@ -53,6 +55,8 @@ public class PlayerCtrl : MonoBehaviour {
             moveDir = Vector3.forward * inputAxis;
             moveDir = transform.TransformDirection(moveDir);
             //anim.SetBool("Jump", false);
+            if(inputAxis < 0 && focusRight) { TurnPlayer(); }
+            else if(inputAxis > 0 && !focusRight) { TurnPlayer(); }
             //점프
             if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
         }
@@ -64,7 +68,17 @@ public class PlayerCtrl : MonoBehaviour {
         moveDir.y -= gravity * Time.deltaTime;
         controller.Move(moveDir * speed * Time.deltaTime);
         anim.SetFloat("Speed", inputAxis);
-    } 
+    }
+
+    //캐릭터가 봐라보는 방향 회전
+    void TurnPlayer()
+    {
+        focusRight = !focusRight;
+        Vector3 scale = transform.localScale;
+        scale.z *= -1;
+        transform.localScale =  scale;
+    }
+
     //점프
     void Jump(bool bJump)
     {
@@ -72,8 +86,7 @@ public class PlayerCtrl : MonoBehaviour {
             moveDir.y = jumpHight;
             bJumping = true;
         }
-        else if (!bJump && bJumping)
-        {// 긴 점프
+        else if (!bJump && bJumping) {// 대쉬 점프
             moveDir.y = dashJumpHight;
             bJumping = false;
         }
