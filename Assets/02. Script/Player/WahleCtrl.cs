@@ -5,6 +5,7 @@ public class WahleCtrl : MonoBehaviour {
 
     private Transform tr;
     public Transform playerTr;
+    public float speed;
     
     void Start()
     {
@@ -15,7 +16,7 @@ public class WahleCtrl : MonoBehaviour {
     {
         tr.position = Vector3.Lerp(tr.position,
             playerTr.position - (playerTr.forward * 1.0f) + (playerTr.up * 1.5f),
-            Time.deltaTime);
+            speed * Time.deltaTime);
 
         //중점을 중심으로 회전
         //tr.RotateAround(playerTr.position, Vector3.up, Time.deltaTime * 20f);
