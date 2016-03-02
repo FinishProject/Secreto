@@ -12,7 +12,7 @@ public class WahleCtrl : MonoBehaviour {
         tr = GetComponent<Transform>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         tr.position = Vector3.Lerp(tr.position,
             playerTr.position - (playerTr.forward * 1.0f) + (playerTr.up * 1.5f),

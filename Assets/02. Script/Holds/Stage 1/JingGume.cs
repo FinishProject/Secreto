@@ -3,7 +3,7 @@ using System.Collections;
 
 public class JingGume : MonoBehaviour {
 
-    private Renderer[] chRender;
+    public GameObject[] gObject;
     private Transform[] chTr;
     private Transform playerTr;
 
@@ -11,11 +11,12 @@ public class JingGume : MonoBehaviour {
     private int cnt = 0;
 
 	void Start () {
-        chRender = GetComponentsInChildren<Renderer>();
         chTr = GetComponentsInChildren<Transform>();
         //발판 렌더링 끄기
-        for (int i = 1; i <= 2; i++)
-            chRender[i].enabled = false;
+        for (int i = 1; i < gObject.Length; i++)
+        {
+            gObject[i].SetActive(false);
+        }
 	}
     void OnTriggerEnter(Collider col)
     {
@@ -31,10 +32,10 @@ public class JingGume : MonoBehaviour {
         {
             //플레이어와 발판간의 거리 체크
             distance = Vector3.Distance(playerTr.position, chTr[cnt].position);
-            if (distance <= 1.1f)
+            if (distance <= 1.9f)
             {
-                chRender[cnt].enabled = true;
-                if (cnt < chRender.Length - 1)
+                gObject[cnt].SetActive(true);
+                if (cnt < gObject.Length - 1)
                     cnt++;
             }
         }

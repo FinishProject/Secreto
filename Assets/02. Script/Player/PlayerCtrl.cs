@@ -41,6 +41,7 @@ public class PlayerCtrl : MonoBehaviour {
     {
         //이동
         Movement();
+        Debug.Log(inputAxis);
         //NPC와 대화
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기
@@ -49,9 +50,10 @@ public class PlayerCtrl : MonoBehaviour {
 
     void Movement()
     {
+        inputAxis = Input.GetAxis("Horizontal");
         if (controller.isGrounded && !bScript){
+            moveDir = Vector3.zero;
             //이동
-            inputAxis = Input.GetAxis("Horizontal");
             moveDir = Vector3.forward * inputAxis;
             moveDir = transform.TransformDirection(moveDir);
             //anim.SetBool("Jump", false);
@@ -59,15 +61,18 @@ public class PlayerCtrl : MonoBehaviour {
             else if(inputAxis > 0 && !focusRight) { TurnPlayer(); }
             //점프
             if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
+            anim.SetFloat("Speed", inputAxis);
         }
-        else {
+        else if(!controller.isGrounded)
+        {
+            moveDir.x = inputAxis * 50f * Time.deltaTime;
+            controller.Move(moveDir * Time.deltaTime);
             //대쉬 점프
             if (Input.GetKeyDown(KeyCode.Space)) { Jump(false); }
         }
         //중력 및 이동, 애니메이션 재생
-        moveDir.y -= gravity * Time.deltaTime;
+        moveDir += Physics.gravity * Time.deltaTime;
         controller.Move(moveDir * speed * Time.deltaTime);
-        anim.SetFloat("Speed", inputAxis);
     }
 
     //캐릭터가 봐라보는 방향 회전
