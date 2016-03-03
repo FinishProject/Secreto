@@ -82,8 +82,7 @@ public class PlayerCtrl : MonoBehaviour {
         }
         //중력 및 이동
         moveDir += Physics.gravity * Time.deltaTime;
-        
-    }
+        controller.Move(moveDir * curSpeed * Time.deltaTime);    }
 
     //캐릭터가 봐라보는 방향 회전
     void TurnPlayer()
