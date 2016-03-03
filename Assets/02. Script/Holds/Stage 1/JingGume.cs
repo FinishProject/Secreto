@@ -14,7 +14,8 @@ public class JingGume : MonoBehaviour {
         {
             gObject[i].SetActive(false);
         }
-        parent = transform.parent.GetComponentInParent<JingGume>();
+        if(transform.parent)
+            parent = transform.parent.GetComponentInParent<JingGume>();
 	}
 
     void OnTriggerEnter(Collider col)
