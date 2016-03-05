@@ -13,7 +13,7 @@ public class PlayerCtrl : MonoBehaviour {
     public float accel = 0.3f;    // 가속도
     public float nalSpeed = 1.0f; // 기본 이동속도
     public float maxSpeed = 10.0f; // 최대 이동속도
-    private float curSpeed = 0.0f; // 현재 이동속도
+    private float curSpeed = 5.0f; // 현재 이동속도
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
 
@@ -22,9 +22,9 @@ public class PlayerCtrl : MonoBehaviour {
     public CharacterController controller; // 캐릭터컨트롤러
     private Animator anim;
 
-    Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
+    public float speed = 10f;
 
-    Quaternion rotationTarget = new Quaternion(0, 0, 0, -7);
+    Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
     void Start()
     {
@@ -44,6 +44,7 @@ public class PlayerCtrl : MonoBehaviour {
 
     void FixedUpdate()
     {
+        Debug.Log(curSpeed);
         //이동
         Movement();
         //NPC와 대화
@@ -55,9 +56,7 @@ public class PlayerCtrl : MonoBehaviour {
     void Movement()
     {
         inputAxis = Input.GetAxis("Horizontal");
-        //캐릭터 방향 회전
-        if (inputAxis < 0 && focusRight) { TurnPlayer(); }
-        else if (inputAxis > 0 && !focusRight) { TurnPlayer(); }
+       
 
         if (controller.isGrounded && !bScript){
             moveDir = Vector3.zero;
@@ -66,8 +65,11 @@ public class PlayerCtrl : MonoBehaviour {
             if (inputAxis != 0) { bMoving = true; }
             else {
                 bMoving = false;
-                curSpeed = nalSpeed;
+                nalSpeed = 1.0f;
             }
+            //캐릭터 방향 회전
+            if (inputAxis < 0 && focusRight) { TurnPlayer(); }
+            else if (inputAxis > 0 && !focusRight) { TurnPlayer(); }
             //anim.SetBool("Jump", false);
             //점프
             if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
@@ -82,7 +84,8 @@ public class PlayerCtrl : MonoBehaviour {
         }
         //중력 및 이동
         moveDir += Physics.gravity * Time.deltaTime;
-        controller.Move(moveDir * curSpeed * Time.deltaTime);    }
+        controller.Move(moveDir * curSpeed * Time.deltaTime);
+    }
 
     //캐릭터가 봐라보는 방향 회전
     void TurnPlayer()
@@ -102,6 +105,7 @@ public class PlayerCtrl : MonoBehaviour {
             moveDir.y = dashJumpHight;
             bJumping = false;
         }
+        curSpeed = 10f;
         
     }
 
@@ -155,9 +159,11 @@ public class PlayerCtrl : MonoBehaviour {
 
     IEnumerator Acceleration()
     {
+        
         while (true){
-            if (curSpeed < maxSpeed && bMoving) {
-                curSpeed += accel;
+            if (nalSpeed < maxSpeed && bMoving) {
+                nalSpeed += accel;
+                curSpeed = nalSpeed;
             }
             yield return new WaitForSeconds(0.05f);
         }
