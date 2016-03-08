@@ -44,7 +44,6 @@ public class PlayerCtrl : MonoBehaviour {
 
     void FixedUpdate()
     {
-        Debug.Log(curSpeed);
         //이동
         Movement();
         //NPC와 대화
@@ -145,10 +144,14 @@ public class PlayerCtrl : MonoBehaviour {
     //ScriptMgr에서 NPC이름을 찾아서 대화 생성
     void ShowScript(string name)
     {
+        
         if (name != null){
+            
             //대화 중이면 true, 캐릭터 정지
-            bScript = ScriptMgr.instance.GetScript(name);
+            //bScript = ScriptMgr.instance.GetScript(name);
+            bScript = ScriptMgr.instance.Speak();
             inputAxis = 0f;
+            
         }
     }
     //펫 타기

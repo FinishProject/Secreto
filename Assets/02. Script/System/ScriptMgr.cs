@@ -22,6 +22,9 @@ public class ScriptMgr : MonoBehaviour {
     private List<Script> script = new List<Script>(); //XML 데이터 저장
     private List<string> scriptInfo = new List<string>(); //현재 NPC의 대사를 저장
     private List<string> speakNpc = new List<string>(); // 만난 NPC이름 저장
+
+    public string[] sctipts;
+    int speak = 0;
    
     public static ScriptMgr instance;
 
@@ -39,7 +42,7 @@ public class ScriptMgr : MonoBehaviour {
             m_Context = nodes[i].SelectSingleNode("context").InnerText;
             script.Add(new Script { name = m_Name, context = m_Context });
         }
-        scriptUi.SetActive(false);
+        scriptUi.SetActive(false); 
     }
 
     public bool GetScript(string name)
@@ -76,5 +79,23 @@ public class ScriptMgr : MonoBehaviour {
             if(speakNpc[i] == name) return true;
         }
         return false;
+    }
+
+    public bool Speak()
+    {
+
+        if (speak < sctipts.Length)
+        {
+            Debug.Log("11");
+            scriptUi.SetActive(true);
+            txt.text = sctipts[speak];
+            speak++;
+            return true;
+        }
+        else
+        {
+            scriptUi.SetActive(false);
+            return false;
+        }
     }
 }
