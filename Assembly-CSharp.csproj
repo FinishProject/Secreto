@@ -48,6 +48,7 @@
      <Compile Include="Assets\02. Script\Holds\Stage 1\BouncingMushroom.cs" />
      <Compile Include="Assets\02. Script\Holds\Stage 1\HorizonHold.cs" />
      <Compile Include="Assets\02. Script\Holds\Stage 1\JingGume.cs" />
+     <Compile Include="Assets\02. Script\Holds\Stage 1\RandomHolds.cs" />
      <Compile Include="Assets\02. Script\Holds\Stage 1\Seesaw.cs" />
      <Compile Include="Assets\02. Script\Holds\Stage 1\SlantMushroom.cs" />
      <Compile Include="Assets\02. Script\Holds\Stage 1\TimeDown.cs" />
@@ -65,6 +66,7 @@
      <Compile Include="Assets\04. Model\UnityChan\Scripts\SceneLoader.cs" />
      <Compile Include="Assets\04. Model\UnityChan\Scripts\ThirdPersonCamera.cs" />
      <Compile Include="Assets\04. Model\UnityChan\Scripts\UnityChanControlScriptWithRgidBody.cs" />
+     <Compile Include="Assets\Fantasy Skybox FREE\Scripts\FSPlayer.cs" />
      <Compile Include="Assets\ProCore\ProBuilder\API Examples\Icosphere FFT\Scripts\CameraControls.cs" />
      <Compile Include="Assets\ProCore\ProBuilder\API Examples\Icosphere FFT\Scripts\IcoBumpin.cs" />
      <Compile Include="Assets\ProCore\ProBuilder\API Examples\Instantiation\ProBuilderInstantiate.cs" />
@@ -94,6 +96,7 @@
      <None Include="Assets\04. Model\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair.shader" />
      <None Include="Assets\04. Model\UnityChan\Stage\Shader\AlphaMask.shader" />
      <None Include="Assets\04. Model\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eyelash_blend.shader" />
+     <None Include="Assets\Fantasy Skybox FREE\Readme\Readme.txt" />
      <None Include="Assets\ProCore\ProBuilder\About\pc_AboutEntry_ProBuilder.txt" />
      <None Include="Assets\ProCore\ProBuilder\Shader\UnityVC.cginc" />
      <None Include="Assets\04. Model\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
@@ -101,6 +104,9 @@
      <None Include="Assets\04. Model\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hada_blend.shader" />
      <None Include="Assets\ProCore\ProBuilder\readme.txt" />
      <None Include="Assets\ProCore\ProBuilder\About\Credits.txt" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>C:/Users/MGY/Documents/GitHub/Secreto/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -108,14 +114,18 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="ProBuilderCore-Unity5">
- <HintPath>C:/Users/03/Desktop/Secreto/Assets/ProCore/ProBuilder/Classes/ProBuilderCore-Unity5.dll</HintPath>
+ <HintPath>C:/Users/MGY/Documents/GitHub/Secreto/Assets/ProCore/ProBuilder/Classes/ProBuilderCore-Unity5.dll</HintPath>
  </Reference>
  <Reference Include="ProBuilderMeshOps-Unity5">
- <HintPath>C:/Users/03/Desktop/Secreto/Assets/ProCore/ProBuilder/Classes/ProBuilderMeshOps-Unity5.dll</HintPath>
+ <HintPath>C:/Users/MGY/Documents/GitHub/Secreto/Assets/ProCore/ProBuilder/Classes/ProBuilderMeshOps-Unity5.dll</HintPath>
  </Reference>
  <Reference Include="KDTree">
- <HintPath>C:/Users/03/Desktop/Secreto/Assets/ProCore/ProBuilder/Classes/ClassesLib/KDTree.dll</HintPath>
+ <HintPath>C:/Users/MGY/Documents/GitHub/Secreto/Assets/ProCore/ProBuilder/Classes/ClassesLib/KDTree.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{7E700C3C-CF8A-9819-F100-40E92461210E}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
