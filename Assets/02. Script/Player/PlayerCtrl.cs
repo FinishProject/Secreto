@@ -5,15 +5,10 @@ public class PlayerCtrl : MonoBehaviour {
 
     private float pushPower = 2f; // 미는 힘
     private float inputAxis = 0f; // 입력 받는 키의 값
-    private bool focusRight = true; //우측을 봐라보는 여부
+    private bool isFocusRight = true; //우측을 봐라보는 여부
     private bool bJumping = false; //현재 점프중 확인(대쉬 점프)
     private bool bScript = false; // 현재 대화중 확인
     private bool bMoving = false; // 현재 이동중 확인
-
-    //public float accel = 0.3f;    // 가속도
-    //public float nalSpeed = 1.0f; // 기본 이동속도
-    //public float maxSpeed = 10.0f; // 최대 이동속도
-    //private float curSpeed = 5.0f; // 현재 이동속도
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
@@ -32,12 +27,18 @@ public class PlayerCtrl : MonoBehaviour {
     {
         instance = this;
         controller = GetComponent<CharacterController>();
-        anim = GetComponent<Animator>();        
+        anim = GetComponent<Animator>();    
     }
 
+    void Start()
+    {
+        transform.position = pData.pPosition;
+    }
+
+    //플레이어 데이터 저장
     public void Save()
     {
-        pData.pPos = transform.position;
+        pData.pPosition = transform.position;
         PlayerData.Save(pData);
     }
 
@@ -49,14 +50,22 @@ public class PlayerCtrl : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
+
+        //아래로 떨어졌을 시
+        if(transform.position.y <= -5.0f)
+        {
+            Debug.Log("Die");
+            pData = PlayerData.Load();
+            transform.position = pData.pPosition;
+        }
     }
 
     void Movement()
     {
         inputAxis = Input.GetAxis("Horizontal");
         //캐릭터 방향 회전
-        if (inputAxis < 0 && focusRight) { TurnPlayer(); }
-        else if (inputAxis > 0 && !focusRight) { TurnPlayer(); }
+        if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
+        else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
         if (controller.isGrounded && !bScript){
             //이동
@@ -81,7 +90,7 @@ public class PlayerCtrl : MonoBehaviour {
     //캐릭터가 봐라보는 방향 회전
     void TurnPlayer()
     {
-        focusRight = !focusRight;
+        isFocusRight = !isFocusRight;
         transform.Rotate(new Vector3(0, 1, 0), 180.0f);
     }
 
@@ -118,7 +127,7 @@ public class PlayerCtrl : MonoBehaviour {
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward, out hit, 1f)) { 
+        if (Physics.Raycast(rayTr.position, forward, out hit, 3f)) { 
             //앞에 오를 수 있는 오브젝트 있을 시
             if(hit.collider.gameObject.tag == "Climb"){
                 Debug.Log("Climb");
@@ -145,16 +154,4 @@ public class PlayerCtrl : MonoBehaviour {
     {
         Debug.Log("Riding Pet");
     }
-
-    //IEnumerator Acceleration()
-    //{
-        
-    //    while (true){
-    //        if (nalSpeed < maxSpeed && bMoving) {
-    //            nalSpeed += accel;
-    //            curSpeed = nalSpeed;
-    //        }
-    //        yield return new WaitForSeconds(0.05f);
-    //    }
-    //}
 }

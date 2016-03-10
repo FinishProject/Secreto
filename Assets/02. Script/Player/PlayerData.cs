@@ -5,7 +5,7 @@ using System.Xml;
 
 public class Data
 {
-    public Vector3 pPos;
+    public Vector3 pPosition;
 }
 
 public sealed class PlayerData {
@@ -19,9 +19,9 @@ public sealed class PlayerData {
         doc.AppendChild(posElement);
         //캐릭터 위치값 저장
         XmlElement posDataElement = doc.CreateElement("Position");
-        posDataElement.SetAttribute("x", data.pPos.x.ToString());
-        posDataElement.SetAttribute("y", data.pPos.y.ToString());
-        posDataElement.SetAttribute("z", data.pPos.y.ToString());
+        posDataElement.SetAttribute("x", data.pPosition.x.ToString());
+        posDataElement.SetAttribute("y", data.pPosition.y.ToString());
+        posDataElement.SetAttribute("z", data.pPosition.y.ToString());
         posElement.AppendChild(posDataElement);
         //데이터 저장
         doc.Save(Application.dataPath + "/Resources/Player_Data.xml");
@@ -44,7 +44,7 @@ public sealed class PlayerData {
             posZ = System.Convert.ToSingle(PosElement.GetAttribute("z"));
 
             Vector3 initVec = new Vector3(posX, posY, posZ);
-            data.pPos = initVec;
+            data.pPosition = initVec;
         }
         return data;
     }

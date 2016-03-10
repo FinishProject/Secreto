@@ -8,7 +8,7 @@ public class CameraCtrl : MonoBehaviour {
 
     private Vector3 relCameraPos;
 
-    void Start()
+    void Awake()
     {
         relCameraPos = transform.position - playerTr.position;
 

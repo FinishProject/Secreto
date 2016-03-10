@@ -11,10 +11,11 @@ public class WahleCtrl : MonoBehaviour {
         transform.position = Vector3.Lerp(transform.position,
             playerTr.position - (playerTr.forward * 1.0f) + (playerTr.up * 1.5f),
             speed * Time.deltaTime);
-
+        
         if (Input.GetKey(KeyCode.V))
         {
             FullFushObject(true);
+            
         }
         else if(Input.GetKey(KeyCode.C))
         {
@@ -36,7 +37,6 @@ public class WahleCtrl : MonoBehaviour {
 
     void FullFushObject(bool bFush)
     {
-        
         Collider[] hitCollider = Physics.OverlapSphere(this.transform.position, 3f);
         int i = 0;
         while (i < hitCollider.Length)

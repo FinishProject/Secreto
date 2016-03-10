@@ -13,7 +13,6 @@ class Script
 
 public class ScriptMgr : MonoBehaviour {
 
-    public TextAsset xmlFile;
     public Text txt;
     public GameObject scriptUi;
 
@@ -30,7 +29,7 @@ public class ScriptMgr : MonoBehaviour {
         instance = this;
         //XML 생성
         xmldoc = new XmlDocument();
-        xmldoc.LoadXml(xmlFile.ToString());
+        xmldoc.Load(Application.dataPath + "/Resources/script.xml");
         XmlNodeList nodes = xmldoc.SelectNodes("UniSet/info");
         //XML데이터를 Script클래스 리스트의 옮겨 담음
         for (int i = 0; i < nodes.Count; i++) {
@@ -69,6 +68,7 @@ public class ScriptMgr : MonoBehaviour {
             return true;
         }
     }
+
     //이미 대화한 NPC인지 확인
     bool SpeakName(string name)
     {
