@@ -10,36 +10,35 @@ public class PlayerCtrl : MonoBehaviour {
     private bool bScript = false; // 현재 대화중 확인
     private bool bMoving = false; // 현재 이동중 확인
 
-    public float accel = 0.3f;    // 가속도
-    public float nalSpeed = 1.0f; // 기본 이동속도
-    public float maxSpeed = 10.0f; // 최대 이동속도
-    private float curSpeed = 5.0f; // 현재 이동속도
+    //public float accel = 0.3f;    // 가속도
+    //public float nalSpeed = 1.0f; // 기본 이동속도
+    //public float maxSpeed = 10.0f; // 최대 이동속도
+    //private float curSpeed = 5.0f; // 현재 이동속도
+
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
+    public float speed = 10f;
 
     public Transform rayTr; // 레이캐스트 시작 위치
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
     private Animator anim;
 
-    public float speed = 10f;
-
     Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
-    void Start()
+    public static PlayerCtrl instance;
+
+    void Awake()
     {
+        instance = this;
         controller = GetComponent<CharacterController>();
-        anim = GetComponent<Animator>();
-        Init();
-        StartCoroutine(Acceleration());
-        //playerData.curPosition = this.transform.position;
-        //PlayerData.Save(playerData);
+        anim = GetComponent<Animator>();        
     }
-    //플레이어 정보 초기화
-    void Init()
+
+    public void Save()
     {
-        curSpeed = nalSpeed;
-        pData = PlayerData.Load();
+        pData.pPos = transform.position;
+        PlayerData.Save(pData);
     }
 
     void FixedUpdate()
@@ -55,20 +54,13 @@ public class PlayerCtrl : MonoBehaviour {
     void Movement()
     {
         inputAxis = Input.GetAxis("Horizontal");
-       
+        //캐릭터 방향 회전
+        if (inputAxis < 0 && focusRight) { TurnPlayer(); }
+        else if (inputAxis > 0 && !focusRight) { TurnPlayer(); }
 
         if (controller.isGrounded && !bScript){
-            moveDir = Vector3.zero;
             //이동
             moveDir = Vector3.right * inputAxis;
-            if (inputAxis != 0) { bMoving = true; }
-            else {
-                bMoving = false;
-                nalSpeed = 1.0f;
-            }
-            //캐릭터 방향 회전
-            if (inputAxis < 0 && focusRight) { TurnPlayer(); }
-            else if (inputAxis > 0 && !focusRight) { TurnPlayer(); }
             //anim.SetBool("Jump", false);
             //점프
             if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
@@ -83,7 +75,7 @@ public class PlayerCtrl : MonoBehaviour {
         }
         //중력 및 이동
         moveDir += Physics.gravity * Time.deltaTime;
-        controller.Move(moveDir * curSpeed * Time.deltaTime);
+        controller.Move(moveDir * speed * Time.deltaTime);
     }
 
     //캐릭터가 봐라보는 방향 회전
@@ -104,8 +96,6 @@ public class PlayerCtrl : MonoBehaviour {
             moveDir.y = dashJumpHight;
             bJumping = false;
         }
-        curSpeed = 10f;
-        
     }
 
     //캐릭터 컨트롤러 충돌
@@ -143,15 +133,11 @@ public class PlayerCtrl : MonoBehaviour {
 
     //ScriptMgr에서 NPC이름을 찾아서 대화 생성
     void ShowScript(string name)
-    {
-        
+    { 
         if (name != null){
-            
             //대화 중이면 true, 캐릭터 정지
-            //bScript = ScriptMgr.instance.GetScript(name);
-            bScript = ScriptMgr.instance.Speak();
+            bScript = ScriptMgr.instance.GetScript(name);
             inputAxis = 0f;
-            
         }
     }
     //펫 타기
@@ -160,15 +146,15 @@ public class PlayerCtrl : MonoBehaviour {
         Debug.Log("Riding Pet");
     }
 
-    IEnumerator Acceleration()
-    {
+    //IEnumerator Acceleration()
+    //{
         
-        while (true){
-            if (nalSpeed < maxSpeed && bMoving) {
-                nalSpeed += accel;
-                curSpeed = nalSpeed;
-            }
-            yield return new WaitForSeconds(0.05f);
-        }
-    }
+    //    while (true){
+    //        if (nalSpeed < maxSpeed && bMoving) {
+    //            nalSpeed += accel;
+    //            curSpeed = nalSpeed;
+    //        }
+    //        yield return new WaitForSeconds(0.05f);
+    //    }
+    //}
 }

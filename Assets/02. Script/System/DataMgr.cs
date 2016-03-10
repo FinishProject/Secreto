@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 
-public sealed class DataMgr {
-//대화 완료한 NPC이름 저장
+public sealed class DataMgr : MonoBehaviour {
+    //대화 완료한 NPC이름 저장
     public static void Save(List<string> name)
     {
         XmlDocument doc = new XmlDocument();
