@@ -4,40 +4,29 @@ using System.Collections;
 public class CameraCtrl : MonoBehaviour {
 
     public Transform playerTr; // 플레이어의 위치값
+    public Transform whaleTr;
     public float speed = 10f; // 카메라의 속도
 
-    private Vector3 relCameraPos;
+    private Vector3[] relCameraPos = new Vector3[2];
+    Vector3[] standardPos = new Vector3[2];
+
+    private int index = 0;
 
     void Awake()
     {
-        relCameraPos = transform.position - playerTr.position;
+        relCameraPos[0] = transform.position - playerTr.position;
+        relCameraPos[1] = transform.position - whaleTr.position;
 
     }
     void FixedUpdate()
     {
-        Vector3 standardPos = playerTr.position + relCameraPos;
-        transform.position = Vector3.Lerp(transform.position, standardPos, speed * Time.deltaTime);
+        standardPos[0] = playerTr.position + relCameraPos[0];
+        standardPos[1] = whaleTr.position + relCameraPos[1];
+
+        if (WahleCtrl.isChange) { index = 0; }
+        else { index = 1; }
+
+        transform.position = Vector3.Lerp(transform.position, standardPos[index], speed * Time.deltaTime);
 
     }
-
-    //void Start()
-    //{
-    //    tr = GetComponent<Transform>();
-    //    offset = tr.position - playerTr.position;
-    //}
-
-    //void FixedUpdate()
-    //{
-    //    tr.position = playerTr.position + new Vector3(offset.x+ horizontal, offset.y+y, offset.z+ zoom);
-    //    //타겟 추적
-    //    tr.position = Vector3.Lerp(tr.position,
-    //            playerTr.position - (playerTr.right * zoom) + (playerTr.up * vertical) + (playerTr.forward * horizontal),
-    //           speed * Time.deltaTime);
-
-    //    //타겟을 봐라봄(LookAt과 같음)
-    //    Vector3 dir = playerTr.position - tr.position;
-    //    Quaternion drot = Quaternion.LookRotation(dir);
-    //    Quaternion rot = Quaternion.Slerp(tr.rotation, drot, Time.deltaTime * speed);
-    //    transform.rotation = rot;
-    //}
 }

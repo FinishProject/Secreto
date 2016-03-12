@@ -3,19 +3,33 @@ using System.Collections;
 
 public class Test : MonoBehaviour {
 
-    void FullObject()
-    {
-        Transform wahle = GameObject.FindWithTag("Wahle").transform;
+    float gr = 9.8f;
+    float vx, vy;
+    float time;
 
-        Vector3 relativePos = wahle.position - transform.position;
-        transform.Translate(relativePos.normalized * 10f * Time.deltaTime);
+    Vector3 startPos;
+    Vector3 destPos;
+
+
+    void Start()
+    {
+        startPos = transform.position;
+        destPos = new Vector3(startPos.x - 5f, 0, 0);
+
+        vx = (destPos.x - startPos.x) / 2f;
+        vy = (destPos.y - startPos.y + 2 * 9.8f) / 2f;
     }
 
-    void FushObject()
+    void Update()
     {
-        Transform wahle = GameObject.FindWithTag("Wahle").transform;
+        if (time <= 1.9f)
+        {
+            time += Time.deltaTime;
+            float sx = startPos.x + vx * time;
+            float sy = startPos.y + vy * time - 0.5f * gr * time * time;
 
-        Vector3 relativePos = wahle.position - transform.position;
-        transform.Translate(-relativePos.normalized * 10f * Time.deltaTime);
+            transform.position = new Vector3(sx, sy, 0f);
+        }
+        
     }
 }

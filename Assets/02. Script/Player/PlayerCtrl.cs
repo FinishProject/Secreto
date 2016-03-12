@@ -6,9 +6,9 @@ public class PlayerCtrl : MonoBehaviour {
     private float pushPower = 2f; // 미는 힘
     private float inputAxis = 0f; // 입력 받는 키의 값
     private bool isFocusRight = true; //우측을 봐라보는 여부
-    private bool bJumping = false; //현재 점프중 확인(대쉬 점프)
-    private bool bScript = false; // 현재 대화중 확인
-    private bool bMoving = false; // 현재 이동중 확인
+    private bool isJumping = false; //현재 점프중 확인(대쉬 점프)
+    private bool isScript = false; // 현재 대화중 확인
+    private bool isMoving = false; // 현재 이동중 확인
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
@@ -30,10 +30,11 @@ public class PlayerCtrl : MonoBehaviour {
         anim = GetComponent<Animator>();    
     }
 
-    void Start()
-    {
-        transform.position = pData.pPosition;
-    }
+    //void Start()
+    //{
+    //    pData = PlayerData.Load();
+    //    transform.position = pData.pPosition;
+    //}
 
     //플레이어 데이터 저장
     public void Save()
@@ -45,7 +46,10 @@ public class PlayerCtrl : MonoBehaviour {
     void FixedUpdate()
     {
         //이동
-        Movement();
+        if (WahleCtrl.isChange)
+        {
+            Movement();
+        }
         //NPC와 대화
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기
@@ -67,7 +71,7 @@ public class PlayerCtrl : MonoBehaviour {
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        if (controller.isGrounded && !bScript){
+        if (controller.isGrounded && !isScript){
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);
@@ -99,11 +103,11 @@ public class PlayerCtrl : MonoBehaviour {
     {
         if (bJump) { // 짧은 점프
             moveDir.y = jumpHight;
-            bJumping = true;
+            isJumping = true;
         }
-        else if (!bJump && bJumping) {// 대쉬 점프
+        else if (!bJump && isJumping) {// 대쉬 점프
             moveDir.y = dashJumpHight;
-            bJumping = false;
+            isJumping = false;
         }
     }
 
@@ -145,7 +149,7 @@ public class PlayerCtrl : MonoBehaviour {
     { 
         if (name != null){
             //대화 중이면 true, 캐릭터 정지
-            bScript = ScriptMgr.instance.GetScript(name);
+            isScript = ScriptMgr.instance.GetScript(name);
             inputAxis = 0f;
         }
     }

@@ -5,9 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - NPC
-  - Monster
+  - MONSTER
+  - OBJECT
+  - WAHLE
   - Object
-  - Wahle
   layers:
   - Default
   - TransparentFX

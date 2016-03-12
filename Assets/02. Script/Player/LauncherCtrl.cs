@@ -6,7 +6,7 @@ public class LauncherCtrl : MonoBehaviour {
     public float speed = 5f;
     private float m_Time = 0f;
 
-    private Transform targetTr;
+    private static Transform targetTr;
 
     void Update ()
     {
@@ -14,6 +14,7 @@ public class LauncherCtrl : MonoBehaviour {
         else
         {
             Vector3 relativePos = targetTr.position - transform.position;
+            //transform.position = Vector3.Lerp(transform.position, relativePos, speed * Time.deltaTime);
             transform.Translate(relativePos.normalized * speed * Time.deltaTime);
         }
 
@@ -23,13 +24,16 @@ public class LauncherCtrl : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        Destroy(coll.gameObject);
-        gameObject.SetActive(false);      
+        gameObject.SetActive(false);
     }
 
     void OnEnable()
     {
         m_Time = 0f;
-        targetTr = GameObject.FindGameObjectWithTag("Monster").transform;
+    }
+
+    public static void GetTarget(Transform _targetTr)
+    {
+        targetTr = _targetTr;
     }
 }
