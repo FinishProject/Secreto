@@ -191,29 +191,29 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         this.weatherValue = weatherValue;
     }
 
-    void OnGUI()
-    {
-        string tempText;
-        tempText = "바람 : ";
-        if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
-            tempText += "ON   ";
-        else
-            tempText += "OFF  ";
+    //void OnGUI()
+    //{
+    //    string tempText;
+    //    tempText = "바람 : ";
+    //    if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
+    //        tempText += "ON   ";
+    //    else
+    //        tempText += "OFF  ";
 
-        tempText += "비  : ";
-        if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN)
-            tempText += "ON   ";
-        else
-            tempText += "OFF  ";
+    //    tempText += "비  : ";
+    //    if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN)
+    //        tempText += "ON   ";
+    //    else
+    //        tempText += "OFF  ";
 
-        if (bUsingUmb)
-            tempText += "나뭇잎 사용 O";
-        else
-            tempText += "나뭇잎 사용 X";
+    //    if (bUsingUmb)
+    //        tempText += "나뭇잎 사용 O";
+    //    else
+    //        tempText += "나뭇잎 사용 X";
 
-        GUI.TextField(new Rect(0, 0, 300.0f, 30.0f), tempText);
+    //    GUI.TextField(new Rect(0, 0, 300.0f, 30.0f), tempText);
 
-    }
+    //}
 
     void OnTriggerEnter(Collider coll)
     {
