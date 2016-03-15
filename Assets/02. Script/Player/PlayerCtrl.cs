@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerCtrl : MonoBehaviour {
+public class PlayerCtrl : MonoBehaviour, WorldObserver {
+
+    WorldSubject worldData;
+    WeatherState weatherState;
+    float weatherValue;
 
     private float pushPower = 2f; // 미는 힘
     public float inputAxis = 0f; // 입력 받는 키의 값
@@ -9,6 +13,7 @@ public class PlayerCtrl : MonoBehaviour {
     private bool isJumping = false; //현재 점프중 확인(대쉬 점프)
     private bool isScript = false; // 현재 대화중 확인
     private bool isMoving = false; // 현재 이동중 확인
+    private bool bUsingUmb = false; // 우산 쓰고 있니?
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
@@ -27,7 +32,11 @@ public class PlayerCtrl : MonoBehaviour {
     {
         instance = this;
         controller = GetComponent<CharacterController>();
-        anim = GetComponent<Animator>();    
+        anim = GetComponent<Animator>();
+
+        // 옵저버 등록
+        worldData = WorldCtrl.GetInstance().RetrunThis();
+        worldData.registerObserver(this);
     }
 
     //void Start()
@@ -87,7 +96,25 @@ public class PlayerCtrl : MonoBehaviour {
         }
         //중력 및 이동
         moveDir += Physics.gravity * Time.deltaTime;
-        controller.Move(moveDir * speed * Time.deltaTime);
+
+        {   // 날씨 효과
+            if ((WeatherState.NONE & weatherState) == WeatherState.NONE)
+            {
+
+            }
+            if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
+            {
+                controller.Move(-Vector3.right * weatherValue * Time.deltaTime);
+            }
+            if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !bUsingUmb)
+            {
+                controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
+            }
+            else
+            {
+                controller.Move(moveDir * speed * Time.deltaTime);
+            }
+        }
     }
 
     //캐릭터가 봐라보는 방향 회전
@@ -156,5 +183,49 @@ public class PlayerCtrl : MonoBehaviour {
     void RidePet()
     {
         Debug.Log("Riding Pet");
+    }
+
+    public void updateObserver(WeatherState weatherState, float weatherValue)
+    {
+        this.weatherState = weatherState;
+        this.weatherValue = weatherValue;
+    }
+
+    void OnGUI()
+    {
+        string tempText;
+        tempText = "바람 : ";
+        if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
+            tempText += "ON   ";
+        else
+            tempText += "OFF  ";
+
+        tempText += "비  : ";
+        if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN)
+            tempText += "ON   ";
+        else
+            tempText += "OFF  ";
+
+        if (bUsingUmb)
+            tempText += "나뭇잎 사용 O";
+        else
+            tempText += "나뭇잎 사용 X";
+
+        GUI.TextField(new Rect(0, 0, 300.0f, 30.0f), tempText);
+
+    }
+
+    void OnTriggerEnter(Collider coll)
+    {
+        if (coll.name == "Leaf")
+        {
+            Destroy(coll.gameObject);
+            bUsingUmb = true;
+        }
+
+        if (coll.tag == "Rope")
+        {
+            Debug.Log(coll.name);
+        }
     }
 }
