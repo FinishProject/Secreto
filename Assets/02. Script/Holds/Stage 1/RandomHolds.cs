@@ -36,7 +36,7 @@ public class RandomHolds : MonoBehaviour {
                 beforeNum.Add(rndNum);
                 gaHold.Add((GameObject)Instantiate(holds, points[rndNum].position, Quaternion.identity));
             }
-            yield return new WaitForSeconds(0.01f);
+            yield return null;
         }
     }
 

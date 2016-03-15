@@ -10,6 +10,9 @@ public class WahleCtrl : MonoBehaviour {
     public Transform playerTr;
     private Vector3 moveDir;
 
+    private GameObject targetGo = null;
+    private bool isFush;
+
     void FixedUpdate()
     {
         //스위칭
@@ -36,8 +39,9 @@ public class WahleCtrl : MonoBehaviour {
             transform.Translate(moveDir * (speed * 10f) * Time.deltaTime);
         }
         
-        if (Input.GetKey(KeyCode.V)) { FullFushObject(true); }
-        else if(Input.GetKey(KeyCode.C)) { FullFushObject(false); }
+        if (Input.GetKey(KeyCode.V)) { FullFushObject(true); isFush = true; }
+        else if(Input.GetKey(KeyCode.C)) { FullFushObject(false); isFush = false; }
+        else { StopCoroutine("GrabObject"); }
     }
     //고래 이동 타입
     void MoveType()
@@ -69,28 +73,39 @@ public class WahleCtrl : MonoBehaviour {
         int i = 0;
         while (i < hitCollider.Length)
         {
-            if (hitCollider[i].tag == "Object")
+            if (hitCollider[i].tag == "OBJECT" && targetGo == null)
             {
-                if (isFush)
-                    hitCollider[i].SendMessage("FullObject");
-                else if (!isFush)
-                    hitCollider[i].SendMessage("FushObject");
+                StartCoroutine("GrabObject", hitCollider[i].gameObject);
+                break;
             }
             i++;
         }
     }
 
+    IEnumerator GrabObject(GameObject target)
+    {
+        targetGo = target;
+        while (true)
+        {
+            if (isFush)
+                targetGo.SendMessage("FullObject");
+            else if (!isFush)
+                targetGo.SendMessage("FushObject");
+            yield return null;
+        }
+    }
+
     //void LookTarger()
     //{
-        //중점을 중심으로 회전
-        //tr.RotateAround(playerTr.position, Vector3.up, Time.deltaTime * 20f);
-        //tr.LookAt(playerTr.position);
+    //중점을 중심으로 회전
+    //tr.RotateAround(playerTr.position, Vector3.up, Time.deltaTime * 20f);
+    //tr.LookAt(playerTr.position);
 
-        //목표를 봐라보도록 회전시킨다. LookAt과 비슷하다.
-        //Vector3 dir = targetTr.position - tr.position;
-        //Quaternion drot = Quaternion.LookRotation(dir);
+    //목표를 봐라보도록 회전시킨다. LookAt과 비슷하다.
+    //Vector3 dir = targetTr.position - tr.position;
+    //Quaternion drot = Quaternion.LookRotation(dir);
 
-        //Quaternion rot = Quaternion.Slerp(tr.rotation, drot, Time.deltaTime * 20f);
-        //transform.rotation = rot;
+    //Quaternion rot = Quaternion.Slerp(tr.rotation, drot, Time.deltaTime * 20f);
+    //transform.rotation = rot;
     //}
 }

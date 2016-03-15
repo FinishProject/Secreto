@@ -5,16 +5,16 @@ public class LauncherCtrl : MonoBehaviour {
 
     public float speed = 5f;
     private float m_Time = 0f;
-
     private Transform targetTr;
+    private Vector3 focusVec;
 
-    void Update ()
+    void FixedUpdate ()
     {
         //타겟 없을 시
-        if (targetTr == null) { transform.Translate(Vector3.right * speed * Time.deltaTime); }
+        if (targetTr == null) { transform.Translate(focusVec * speed * Time.deltaTime); }
         //타겟 있을 시
         else {
-            Vector3 relativePos = this.targetTr.position - transform.position;
+            Vector3 relativePos = this.targetTr.position - this.transform.position;
             //transform.position = Vector3.Lerp(transform.position, relativePos, speed * Time.deltaTime);
             transform.Translate(relativePos.normalized * speed * Time.deltaTime);
         }
@@ -30,6 +30,11 @@ public class LauncherCtrl : MonoBehaviour {
     void OnEnable()
     {
         m_Time = 0f;
+    }
+
+    public void GetFocusVector(Vector3 _focusVec)
+    {
+        focusVec = _focusVec;
     }
 
     void GetTarget(Transform _targetTr)

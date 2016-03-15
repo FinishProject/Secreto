@@ -3,19 +3,16 @@ using System.Collections;
 
 public class SkillCtrl : MonoBehaviour {
 
-    private Transform targetTr;
     public Transform shotTr;
     public GameObject bullet;
 
     private int count = 0;
-    private int bulletCount = 0;
 
     public GameObject[] goBullets = new GameObject[3];
 
     void Start()
-    {
-        for (int i = 0; i < goBullets.Length; i++)
-        {
+    { 
+        for (int i = 0; i < goBullets.Length; i++) {
             goBullets[i] = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
             goBullets[i].SetActive(false);
         }
@@ -24,11 +21,11 @@ public class SkillCtrl : MonoBehaviour {
     void Update()
     {
         //F키 입력 시 공격체 생성
-        if (Input.GetKeyDown(KeyCode.F)) {
+        if (Input.GetKeyDown(KeyCode.F)) {   
             if (count >= goBullets.Length && !goBullets[0].activeSelf) { count = 0; }
             goBullets[count].SetActive(true);
-            goBullets[count].transform.position = shotTr.position;
-
+            goBullets[count].SendMessage("GetFocusVector", this.transform.forward.normalized);
+            goBullets[count].transform.position = shotTr.position;  
             FindTarget();
             count++;
         }
@@ -43,6 +40,5 @@ public class SkillCtrl : MonoBehaviour {
                 break;
             }
         }
-        bulletCount++;
     }
 }
