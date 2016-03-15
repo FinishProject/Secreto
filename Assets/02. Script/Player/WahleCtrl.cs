@@ -10,23 +10,24 @@ public class WahleCtrl : MonoBehaviour {
     public Transform playerTr;
     private Vector3 moveDir;
 
-    private GameObject targetGo = null;
+    private GameObject targetObj = null;
     private bool isFush;
 
     void FixedUpdate()
     {
-        //스위칭
+        //이동 방식 스위칭
         if (Input.GetKeyDown(KeyCode.Tab)) { isChange = !isChange; }
 
         //캐릭터 조종
         if (isChange)
         {
-            float distance = Vector3.Distance(new Vector3(moveDir.x, moveDir.y, 0f), 
+            float distance = Vector3.Distance(new Vector3(moveDir.x, moveDir.y, 0f),
                 new Vector3(transform.position.x, transform.position.y, 0f));
-            //캐릭터를 추격함
+            //캐릭터를 추격함 (클릭한 위치이고 플레이어가 이동 시)
             if (distance <= 3f && PlayerCtrl.instance.inputAxis != 0.0f) { isType = false; }
             //클릭한 마우스 위치로 이동함
-            if (Input.GetMouseButton(1)) {
+            if (Input.GetMouseButton(1))
+            {
                 isType = true;
                 GetMousePos();
             }
@@ -38,42 +39,45 @@ public class WahleCtrl : MonoBehaviour {
             moveDir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
             transform.Translate(moveDir * (speed * 10f) * Time.deltaTime);
         }
-        
-        if (Input.GetKey(KeyCode.V)) { FullFushObject(true); isFush = true; }
-        else if(Input.GetKey(KeyCode.C)) { FullFushObject(false); isFush = false; }
-        else { StopCoroutine("GrabObject"); }
+        //키 입려에 따른 척력 인력 실행
+        if (Input.GetKey(KeyCode.V)) { FullFushObject(); isFush = true; }
+        else if (Input.GetKey(KeyCode.C)) { FullFushObject(); isFush = false; }
+        else { StopCoroutine("GrabObject"); targetObj = null; } // 잡기 중지
     }
     //고래 이동 타입
     void MoveType()
     {
         //플레이어 추격
-        if (!isType) {
+        if (!isType)
+        {
             transform.position = Vector3.Lerp(transform.position,
                     playerTr.position - (playerTr.forward * 1.0f) + (playerTr.up * 1.5f),
                     speed * Time.deltaTime);
         }
         //마우스 위치 추격
-        else if (isType) {
+        else if (isType)
+        {
             transform.position = Vector3.Lerp(transform.position,
                 new Vector3(moveDir.x, moveDir.y, 0), speed * Time.deltaTime);
         }
     }
-    //마우스 좌표값
+    //마우스 좌표값 구하기
     void GetMousePos()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 500f)) { moveDir = hit.point; }
     }
+
     //인력, 척력
-    void FullFushObject(bool isFush)
+    void FullFushObject()
     {
         //주위 오브젝트 탐색
         Collider[] hitCollider = Physics.OverlapSphere(this.transform.position, 3f);
         int i = 0;
         while (i < hitCollider.Length)
         {
-            if (hitCollider[i].tag == "OBJECT" && targetGo == null)
+            if (hitCollider[i].tag == "OBJECT" && targetObj == null)
             {
                 StartCoroutine("GrabObject", hitCollider[i].gameObject);
                 break;
@@ -81,19 +85,20 @@ public class WahleCtrl : MonoBehaviour {
             i++;
         }
     }
-
+    // 인력, 척력 유지
     IEnumerator GrabObject(GameObject target)
     {
-        targetGo = target;
+        targetObj = target;
         while (true)
         {
             if (isFush)
-                targetGo.SendMessage("FullObject");
+                targetObj.SendMessage("FullObject");
             else if (!isFush)
-                targetGo.SendMessage("FushObject");
+                targetObj.SendMessage("FushObject");
             yield return null;
         }
     }
+
 
     //void LookTarger()
     //{
