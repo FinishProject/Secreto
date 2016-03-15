@@ -38,7 +38,7 @@ public class SlantMushroom : MonoBehaviour {
         rb.constraints = RigidbodyConstraints.None;
         while (transform.rotation.y >= origin.y)
         {
-            rb.AddForceAtPosition(Vector3.up * (power*retrunPower) * Time.deltaTime, dir);
+            rb.AddForceAtPosition(Vector3.up * (power * retrunPower) * Time.deltaTime, dir);
             yield return new WaitForSeconds(0.1f);
         }
         rb.constraints = RigidbodyConstraints.FreezeRotation;
