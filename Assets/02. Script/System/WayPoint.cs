@@ -3,12 +3,15 @@ using System.Collections;
 
 public class WayPoint : MonoBehaviour {
 
+    PlayerData pData = new PlayerData();
+
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.tag == "Player")
         {
-            ScriptMgr.instance.SpeakNpcSave();
-            PlayerCtrl.instance.Save();
+            PlayerData.Save();
+            //ScriptMgr.instance.SpeakNpcSave();
+            //PlayerCtrl.instance.Save();
         }
     }
 }

@@ -11,6 +11,13 @@ class Script
     public string context;
 }
 
+public class SciptSave{
+    void Save()
+    {
+        Debug.Log("Script");
+    }
+}
+
 public class ScriptMgr : MonoBehaviour {
 
     public Text txt;

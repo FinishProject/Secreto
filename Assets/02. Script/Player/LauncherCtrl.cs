@@ -6,24 +6,24 @@ public class LauncherCtrl : MonoBehaviour {
     public float speed = 5f;
     private float m_Time = 0f;
 
-    private static Transform targetTr;
+    private Transform targetTr;
 
     void Update ()
     {
+        //타겟 없을 시
         if (targetTr == null) { transform.Translate(Vector3.right * speed * Time.deltaTime); }
-        else
-        {
-            Vector3 relativePos = targetTr.position - transform.position;
+        //타겟 있을 시
+        else {
+            Vector3 relativePos = this.targetTr.position - transform.position;
             //transform.position = Vector3.Lerp(transform.position, relativePos, speed * Time.deltaTime);
             transform.Translate(relativePos.normalized * speed * Time.deltaTime);
         }
-
         m_Time += Time.deltaTime;
-        if(m_Time >= 4f) { gameObject.SetActive(false); }
+        if(m_Time >= 3f) { gameObject.SetActive(false); }
 	}
-
-    void OnCollisionEnter(Collision coll)
+    void OnTriggerEnter(Collider coll)
     {
+        this.targetTr = null;
         gameObject.SetActive(false);
     }
 
@@ -32,8 +32,8 @@ public class LauncherCtrl : MonoBehaviour {
         m_Time = 0f;
     }
 
-    public static void GetTarget(Transform _targetTr)
+    void GetTarget(Transform _targetTr)
     {
-        targetTr = _targetTr;
+        this.targetTr = _targetTr;
     }
 }

@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerCtrl : MonoBehaviour {
 
     private float pushPower = 2f; // 미는 힘
-    private float inputAxis = 0f; // 입력 받는 키의 값
+    public float inputAxis = 0f; // 입력 받는 키의 값
     private bool isFocusRight = true; //우측을 봐라보는 여부
     private bool isJumping = false; //현재 점프중 확인(대쉬 점프)
     private bool isScript = false; // 현재 대화중 확인
@@ -37,17 +37,16 @@ public class PlayerCtrl : MonoBehaviour {
     //}
 
     //플레이어 데이터 저장
-    public void Save()
-    {
-        pData.pPosition = transform.position;
-        PlayerData.Save(pData);
-    }
+    //public void Save()
+    //{
+    //    pData.pPosition = transform.position;
+    //    PlayerData.Save();
+    //}
 
     void FixedUpdate()
     {
         //이동
-        if (WahleCtrl.isChange)
-        {
+        if (WahleCtrl.isChange) {
             Movement();
         }
         //NPC와 대화
