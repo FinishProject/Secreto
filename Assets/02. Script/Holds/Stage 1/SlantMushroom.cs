@@ -2,11 +2,11 @@
 using System.Collections;
 
 public class SlantMushroom : MonoBehaviour {
-
-    private Rigidbody rb;
     public float power = 10f;
     public float retrunPower = 3f;
     public float slope = 0.09f;
+
+    private Rigidbody rb;
     private Quaternion origin;
     private Vector3 dir;
 

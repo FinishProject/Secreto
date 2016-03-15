@@ -10,15 +10,21 @@ public class RandomHolds : MonoBehaviour {
     private List<GameObject> gaHold = new List<GameObject>();
     private List<int> beforeNum = new List<int>();
 
-	// Use this for initialization
-	void Start () {
+    private int index = 0;
+    public int spawnHoldNum = 3;
+
+    void Start () {
         points = GetComponentsInChildren<Transform>();
+        
+        for (int i = 0; i < 3; i++) {
+            gaHold.Add((GameObject)Instantiate(holds, transform.position, Quaternion.identity));
+            gaHold[i].SetActive(false);
+        }
     }
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Player")
-        {
+        if (col.gameObject.tag == "Player") {
             Init();
             StartCoroutine("SpwanHolds");
         }
@@ -27,25 +33,27 @@ public class RandomHolds : MonoBehaviour {
     IEnumerator SpwanHolds()
     {
         int rndNum = 0;
-        while(beforeNum.Count < 3)
+        while(beforeNum.Count < spawnHoldNum)
         {
-            rndNum = Random.Range(1, points.Length);
+            rndNum = Random.Range(1, points.Length - 1);
             
             if (beforeNum.Contains(rndNum)) { rndNum = Random.Range(1, points.Length - 1); }
             else {
                 beforeNum.Add(rndNum);
-                gaHold.Add((GameObject)Instantiate(holds, points[rndNum].position, Quaternion.identity));
+                gaHold[index].SetActive(true);
+                gaHold[index].transform.position = points[rndNum].position;
+                index++;
             }
-            yield return new WaitForSeconds(0.01f);
+            yield return null;
         }
     }
 
     void Init()
     {
         for(int i=0; i < gaHold.Count; i++) {
-            Destroy(gaHold[i].gameObject);
+            gaHold[i].SetActive(false);
         }
-        gaHold.RemoveRange(0, gaHold.Count);
+        index = 0;
         beforeNum.RemoveRange(0, beforeNum.Count);
     }
 }

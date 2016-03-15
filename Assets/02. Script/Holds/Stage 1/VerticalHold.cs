@@ -38,8 +38,8 @@ public class VerticalHold : MonoBehaviour {
         }
     }
 
-    void OnTriggerExit(Collider coll)
-    {
-        playerTr = null;
-    }
+    //void OnTriggerExit(Collider coll)
+    //{
+    //    playerTr = null;
+    //}
 }
