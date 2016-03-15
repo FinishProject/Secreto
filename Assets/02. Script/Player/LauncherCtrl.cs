@@ -30,6 +30,6 @@ public class LauncherCtrl : MonoBehaviour {
     void OnEnable()
     {
         m_Time = 0f;
-        targetTr = GameObject.FindGameObjectWithTag("Monster").transform;
+//        targetTr = GameObject.FindGameObjectWithTag("Monster").transform;
     }
 }
