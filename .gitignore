@@ -1,34 +1,32 @@
-# =============== #
-# Unity generated #
-# =============== #
-[Tt]emp/
-[Oo]bj/
-[Bb]uild
-[Ll]ibrary/
-sysinfo.txt
-*.stackdump
- 
-# ===================================== #
-# Visual Studio / MonoDevelop generated #
-# ===================================== #
-[Ee]xported[Oo]bj/
-.vs/
-/*.userprefs
-/*.csproj
-/*.pidb
-/*.suo
-/*.sln*
-/*.user
-/*.unityproj
-/*.booproj
- 
-# ============ #
-# OS generated #
-# ============ #
-.DS_Store*
+gitignore_global.txt
+#----- 여기부터
+# Visual Studio / MonoDevelop generated
+ExportedObj/
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
+
+# OS generated
+.DS_Store
+.DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-Icon?
-ehthumbs.db
-[Tt]humbs.db
+hthumbs.db
+Thumbs.db
+#----- 여기까지
+
+.gitignore
+#----- 여기부터
+# Unity generated
+/Temp/
+/Obj/
+/UnityGenerated/
+/Library/
+#----- 여기까지
