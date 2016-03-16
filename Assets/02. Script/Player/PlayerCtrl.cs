@@ -55,9 +55,9 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     void FixedUpdate()
     {
         //이동
-        if (WahleCtrl.isChange) {
-            Movement();
-        }
+        if (WahleCtrl.isChange) Movement();
+        else anim.SetFloat("Speed", 0f);
+
         //NPC와 대화
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기

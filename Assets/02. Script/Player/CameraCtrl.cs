@@ -23,8 +23,8 @@ public class CameraCtrl : MonoBehaviour {
         standardPos[0] = playerTr.position + relCameraPos[0];
         standardPos[1] = whaleTr.position + relCameraPos[1];
 
-        if (WahleCtrl.isChange) { index = 0; }
-        else { index = 1; }
+        //if (WahleCtrl.isChange) { index = 0; }
+        //else { index = 1; }
 
         transform.position = Vector3.Lerp(transform.position, standardPos[index], speed * Time.deltaTime);
 
