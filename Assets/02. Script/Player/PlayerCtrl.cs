@@ -7,12 +7,9 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     WeatherState weatherState;
     float weatherValue;
 
-    private float pushPower = 2f; // 미는 힘
     public float inputAxis = 0f; // 입력 받는 키의 값
     private bool isFocusRight = true; //우측을 봐라보는 여부
-    private bool isJumping = false; //현재 점프중 확인(대쉬 점프)
     private bool isScript = false; // 현재 대화중 확인
-    private bool isMoving = false; // 현재 이동중 확인
     private bool bUsingUmb = false; // 우산 쓰고 있니?
 
     public float jumpHight = 6.0f; // 기본 점프 높이
@@ -46,16 +43,16 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     //}
 
     //플레이어 데이터 저장
-    //public void Save()
-    //{
-    //    pData.pPosition = transform.position;
-    //    PlayerData.Save();
-    //}
+    public void Save()
+    {
+        pData.pPosition = transform.position;
+        PlayerData.Save();
+    }
 
     void FixedUpdate()
     {
         //이동
-        if (WahleCtrl.isChange) Movement();
+        if (WahleCtrl.moveType != WahleCtrl.Type.keybord) Movement();
         else anim.SetFloat("Speed", 0f);
 
         //NPC와 대화
@@ -129,11 +126,9 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     {
         if (bJump) { // 짧은 점프
             moveDir.y = jumpHight;
-            isJumping = true;
         }
-        else if (!bJump && isJumping) {// 대쉬 점프
+        else if (!bJump) {// 대쉬 점프
             moveDir.y = dashJumpHight;
-            isJumping = false;
         }
     }
 
@@ -148,7 +143,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         //오브젝트 밀기
         if (Input.GetKey(KeyCode.LeftShift)){
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-            body.velocity = pushDir * pushPower;
+            body.velocity = pushDir * 2f;
         }
     }
 

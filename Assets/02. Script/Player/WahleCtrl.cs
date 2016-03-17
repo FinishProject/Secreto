@@ -3,41 +3,34 @@ using System.Collections;
 
 public class WahleCtrl : MonoBehaviour {
 
-    private enum Type { trace, mouse, keybord };
-
-    private Type moveType = Type.trace;
+    public enum Type { trace, mouse, keybord, };
+    public static Type moveType = Type.trace;
 
     public float speed; // 이동속도
-    public static bool isChange = true; // 스위칭 체크
     private bool isFush;
-
     private float countTime = 0f; 
-    public float maxTime = 5f; 
+    public float maxTime = 5f;
 
     public Transform playerTr;
     private Vector3 moveDir;
-
     private GameObject targetObj = null;
-    private Vector3 camVec;
+    private Vector3 camPos;
 
     void FixedUpdate()
     {
-        Debug.Log(countTime);
         //이동 방식 스위칭
         if (Input.GetKeyDown(KeyCode.Tab)) {
-            isChange = !isChange;
-            countTime = 0f;
-            if (!isChange) { moveType = Type.keybord;}
-            else if (isChange) { moveType = Type.trace; }
+            if (moveType != Type.keybord) { moveType = Type.keybord;}
+            else if (moveType == Type.keybord) { moveType = Type.trace; }
         }
-        else if (Input.GetMouseButton(1) && isChange) {
+        else if (Input.GetMouseButton(1) && moveType != Type.keybord) {
             moveType = Type.mouse;
             GetMousePos();
         }
         CheckOutCamera();
         MoveType();
 
-        //키 입려에 따른 척력 인력 실행
+        //키 입력에 따른 척력 인력 실행
         if (Input.GetKey(KeyCode.V)) { FullFushObject(); isFush = true; }
         else if (Input.GetKey(KeyCode.C)) { FullFushObject(); isFush = false; }
         else { StopCoroutine("GrabObject"); targetObj = null; } // 잡기 중지
@@ -45,40 +38,48 @@ public class WahleCtrl : MonoBehaviour {
     //카메라 밖 체크
     void CheckOutCamera()
     {
-        camVec = Camera.main.WorldToScreenPoint(transform.position);
+        camPos = Camera.main.WorldToScreenPoint(transform.position);
 
-        if (camVec.x >= Camera.main.pixelWidth || camVec.x <= -1f) moveType = Type.trace;
-        else if (camVec.y >= Camera.main.pixelHeight) moveType = Type.trace;
+        if (camPos.x >= Camera.main.pixelWidth || camPos.x <= -1f ||
+            camPos.y >= Camera.main.pixelHeight) { moveType = Type.trace; }
     }
+
     //고래 이동 타입
     void MoveType()
     {
         switch (moveType)
         {
-            case Type.trace:
+            case Type.trace: // 플레이어 추격
                 transform.position = Vector3.Lerp(transform.position,
                     playerTr.position - (playerTr.forward * 1.0f) + (playerTr.up * 1.5f),
                     speed * Time.deltaTime);
                 break;
-            case Type.mouse:
+            case Type.mouse: // 마우스 이동
                 transform.position = Vector3.Lerp(transform.position,
                         new Vector3(moveDir.x, moveDir.y, 0), speed * Time.deltaTime);
-                CountDonw();
+                CountDown();
                 break;
-            case Type.keybord:
+            case Type.keybord: // 키보드 이동
                 moveDir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
                 transform.Translate(moveDir * (speed * 10f) * Time.deltaTime);
-                CountDonw();
+                //CheckDistance();
+                CountDown();
                 break;
         }
     }
+    //거리 체크
+    void CheckDistance()
+    {
+        float distance = Vector3.Distance(transform.position, playerTr.position);
 
-    void CountDonw()
+        if(distance > 14f) { moveType = Type.trace; }
+    }
+    //시간 제한 체크
+    void CountDown()
     {
         countTime += Time.deltaTime;
-        if (countTime >= maxTime) { moveType = Type.trace; isChange = true; }
+        if (countTime >= maxTime) { moveType = Type.trace; countTime = 0f; }
     }
-
     //마우스 좌표값 구하기
     void GetMousePos()
     {
@@ -116,7 +117,6 @@ public class WahleCtrl : MonoBehaviour {
             yield return null;
         }
     }
-
 
     //void LookTarger()
     //{
