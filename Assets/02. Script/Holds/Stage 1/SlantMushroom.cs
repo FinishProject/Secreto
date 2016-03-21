@@ -9,7 +9,7 @@ public class SlantMushroom : MonoBehaviour {
     public float slope = 0.09f;
     private Quaternion origin;
     private Vector3 dir;
-
+    float rY = 0f;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -20,10 +20,13 @@ public class SlantMushroom : MonoBehaviour {
     {
         if (transform.rotation.y <= slope)
         {
-            rb.constraints = RigidbodyConstraints.None;
+            //rY += 0.001f;
+            //transform.Rotate(new Vector3(rY, 0f, 0f), Space.Self);
+
             //플레이어와 접촉 되어 있는 부분에서 아래로 힘을 가함
+            rb.constraints = RigidbodyConstraints.None;
             dir = coll.ClosestPointOnBounds(coll.gameObject.transform.position);
-            rb.AddForceAtPosition(-Vector3.up * power * Time.deltaTime, dir);
+            rb.AddForceAtPosition(Vector3.right * power * Time.deltaTime, dir);
         }
         else { rb.constraints = RigidbodyConstraints.FreezeRotation; }
     }
@@ -39,8 +42,9 @@ public class SlantMushroom : MonoBehaviour {
         while (transform.rotation.y >= origin.y)
         {
             rb.AddForceAtPosition(Vector3.up * (power * retrunPower) * Time.deltaTime, dir);
-            yield return new WaitForSeconds(0.1f);
+            yield return null;
         }
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+        StopCoroutine("RollBack");
     }
 }

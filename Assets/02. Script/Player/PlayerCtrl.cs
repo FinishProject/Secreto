@@ -7,21 +7,22 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     WeatherState weatherState;
     float weatherValue;
 
-    public float inputAxis = 0f; // 입력 받는 키의 값
-    private bool isFocusRight = true; //우측을 봐라보는 여부
+    public static bool isFocusRight = true; //우측을 봐라보는 여부
     private bool isScript = false; // 현재 대화중 확인
+    private bool isJumping = false; // 현재 점프중 확인
     private bool bUsingUmb = false; // 우산 쓰고 있니?
 
+    public float inputAxis = 0f; // 입력 받는 키의 값
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
-    public float speed = 10f;
+    public float speed = 10f; // 이동 속도
 
     public Transform rayTr; // 레이캐스트 시작 위치
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
     private Animator anim;
 
-    Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
+    public Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
     public static PlayerCtrl instance;
 
@@ -43,10 +44,10 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     //}
 
     //플레이어 데이터 저장
-    public void Save()
+    public Data Save()
     {
         pData.pPosition = transform.position;
-        PlayerData.Save();
+        return pData;
     }
 
     void FixedUpdate()
@@ -99,11 +100,11 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
             {
 
             }
-            if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
+            else if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
             {
                 controller.Move(-Vector3.right * weatherValue * Time.deltaTime);
             }
-            if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !bUsingUmb)
+            else if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !bUsingUmb)
             {
                 controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
             }
@@ -126,9 +127,11 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     {
         if (bJump) { // 짧은 점프
             moveDir.y = jumpHight;
+            isJumping = true;
         }
-        else if (!bJump) {// 대쉬 점프
+        else if (!bJump && isJumping) {// 대쉬 점프
             moveDir.y = dashJumpHight;
+            isJumping = false;
         }
     }
 

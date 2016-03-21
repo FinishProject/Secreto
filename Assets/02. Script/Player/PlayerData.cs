@@ -8,11 +8,11 @@ public class Data
     public Vector3 pPosition;
 }
 
-public class PlayerData {
+public sealed class PlayerData {
 
     public static void Save()
     {
-        Data data = new Data();
+        Data data = PlayerCtrl.instance.Save();
         //xml 생성
         XmlDocument doc = new XmlDocument();
         //요소 생성
