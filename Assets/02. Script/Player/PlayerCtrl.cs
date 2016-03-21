@@ -8,13 +8,14 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     float weatherValue;
 
     public float inputAxis = 0f; // 입력 받는 키의 값
-    private bool isFocusRight = true; //우측을 봐라보는 여부
+    public static bool isFocusRight = true; // 우측을 봐라보는 여부
     private bool isScript = false; // 현재 대화중 확인
     private bool isUsingLeaf = false; // 나뭇잎 쓰고 있니?
+    private bool isJumping = false; // 현재 점프중인지 확인
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
-    public float speed = 10f;
+    public float speed = 10f; // 이동 속도
 
     public float LeafTimer = 10.0f;
 
@@ -143,9 +144,11 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     {
         if (bJump) { // 짧은 점프
             moveDir.y = jumpHight;
+            isJumping = true;
         }
-        else if (!bJump) {// 대쉬 점프
+        else if (!bJump && isJumping) { // 대쉬 점프
             moveDir.y = dashJumpHight;
+            isJumping = false;
         }
     }
 
