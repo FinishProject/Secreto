@@ -25,7 +25,7 @@ public class ObjectForWeather : MonoBehaviour, WorldObserver
         {
 
         }
-        if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
+        if ((WeatherState.WIND_LR & weatherState) == WeatherState.WIND_LR)
         {
             tr.position = Vector3.Lerp(tr.position, tr.position - (Vector3.right * weatherValue), Time.deltaTime);
         }

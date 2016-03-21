@@ -10,11 +10,13 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     public float inputAxis = 0f; // 입력 받는 키의 값
     private bool isFocusRight = true; //우측을 봐라보는 여부
     private bool isScript = false; // 현재 대화중 확인
-    private bool bUsingUmb = false; // 우산 쓰고 있니?
+    private bool isUsingLeaf = false; // 나뭇잎 쓰고 있니?
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
     public float speed = 10f;
+
+    public float LeafTimer = 10.0f;
 
     public Transform rayTr; // 레이캐스트 시작 위치
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
@@ -76,34 +78,47 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        if (controller.isGrounded && !isScript){
-            //이동
-            moveDir = Vector3.right * inputAxis;
-            //anim.SetBool("Jump", false);
-            //점프
-            if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
-            anim.SetFloat("Speed", inputAxis);
-        }
-        else if(!controller.isGrounded)
-        {
-            moveDir.x = inputAxis * 50f * Time.deltaTime;
-            controller.Move(moveDir * Time.deltaTime);
-            //대쉬 점프
-            if (Input.GetKeyDown(KeyCode.Space)) { Jump(false); }
-        }
-        //중력 및 이동
-        moveDir += Physics.gravity * Time.deltaTime;
 
         {   // 날씨 효과
             if ((WeatherState.NONE & weatherState) == WeatherState.NONE)
             {
-
+                
             }
-            if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
+            if ((WeatherState.WIND_LR & weatherState) == WeatherState.WIND_LR)
             {
                 controller.Move(-Vector3.right * weatherValue * Time.deltaTime);
             }
-            if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !bUsingUmb)
+            if ((WeatherState.WIND_UD & weatherState) == WeatherState.WIND_UD && isUsingLeaf)
+            {
+                moveDir.x = inputAxis * 50f * Time.deltaTime;
+                controller.Move(moveDir * Time.deltaTime);
+
+                if (Input.GetKeyDown(KeyCode.Space)) { moveDir.y = 2f; }
+
+                moveDir += new Vector3(0.0f,-2.0f,0.0f) * Time.deltaTime;
+            }
+            else
+            {
+                if (controller.isGrounded && !isScript)
+                {
+                    //이동
+                    moveDir = Vector3.right * inputAxis;
+                    //anim.SetBool("Jump", false);
+                    //점프
+                    if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
+                    anim.SetFloat("Speed", inputAxis);
+                }
+                else if (!controller.isGrounded)
+                {
+                    moveDir.x = inputAxis * 50f * Time.deltaTime;
+                    controller.Move(moveDir * Time.deltaTime);
+                    //대쉬 점프
+                    if (Input.GetKeyDown(KeyCode.Space)) { Jump(false); }
+                }
+
+                moveDir += Physics.gravity * Time.deltaTime;
+            }
+            if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !isUsingLeaf)
             {
                 controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
             }
@@ -112,6 +127,8 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
                 controller.Move(moveDir * speed * Time.deltaTime);
             }
         }
+
+        
     }
 
     //캐릭터가 봐라보는 방향 회전
@@ -186,41 +203,50 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         this.weatherValue = weatherValue;
     }
 
-    //void OnGUI()
-    //{
-    //    string tempText;
-    //    tempText = "바람 : ";
-    //    if ((WeatherState.WIND & weatherState) == WeatherState.WIND)
-    //        tempText += "ON   ";
-    //    else
-    //        tempText += "OFF  ";
+    void OnGUI()
+    {
+        string tempText;
+        tempText = "바람 : ";
+        if ((WeatherState.WIND_LR & weatherState) == WeatherState.WIND_LR)
+            tempText += "L/R  ";
+        else if ((WeatherState.WIND_UD & weatherState) == WeatherState.WIND_UD)
+            tempText += "U/D  ";
+        else
+            tempText += "OFF  ";
 
-    //    tempText += "비  : ";
-    //    if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN)
-    //        tempText += "ON   ";
-    //    else
-    //        tempText += "OFF  ";
+        tempText += "비  : ";
+        if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN)
+            tempText += "ON   ";
+        else
+            tempText += "OFF  ";
 
-    //    if (bUsingUmb)
-    //        tempText += "나뭇잎 사용 O";
-    //    else
-    //        tempText += "나뭇잎 사용 X";
+        if (isUsingLeaf)
+            tempText += "나뭇잎 사용 O";
+        else
+            tempText += "나뭇잎 사용 X";
 
-    //    GUI.TextField(new Rect(0, 0, 300.0f, 30.0f), tempText);
-
-    //}
+        GUI.TextField(new Rect(0, 0, 300.0f, 30.0f), tempText);
+    }
 
     void OnTriggerEnter(Collider coll)
     {
         if (coll.name == "Leaf")
         {
             Destroy(coll.gameObject);
-            bUsingUmb = true;
+            isUsingLeaf = true;
+            StartCoroutine(LeafDestroy());
         }
 
         if (coll.tag == "Rope")
         {
             Debug.Log(coll.name);
         }
+    }
+
+    // 임시
+    IEnumerator LeafDestroy()
+    {
+        yield return new WaitForSeconds(LeafTimer);
+        isUsingLeaf = false;
     }
 }

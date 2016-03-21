@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-
 public enum WeatherState
 {
-    NONE = 0x1, WIND = 0x2, RAIN = 0x4,
+    NONE = 0x1, WIND_LR = 0x2, WIND_UD = 0x4, RAIN = 0x8,
 }
 
 public interface WorldObserver
@@ -77,7 +76,7 @@ public partial class WorldCtrl : MonoBehaviour, WorldSubject
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            WeatherCtrl(WeatherState.WIND, 4);
+            WeatherCtrl(WeatherState.WIND_LR, 4);
             StartCoroutine(WeatherReset(3.0f));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -87,10 +86,15 @@ public partial class WorldCtrl : MonoBehaviour, WorldSubject
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            WeatherCtrl(WeatherState.WIND | WeatherState.RAIN, 4);
+            WeatherCtrl(WeatherState.WIND_LR | WeatherState.RAIN, 4);
             StartCoroutine(WeatherReset(4.0f));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            WeatherCtrl(WeatherState.WIND_UD,4);
+            StartCoroutine(WeatherReset(8.0f));
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             WeatherCtrl(WeatherState.NONE, 0);
         }
