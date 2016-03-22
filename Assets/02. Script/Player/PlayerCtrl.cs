@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerCtrl : MonoBehaviour, WorldObserver
 {
@@ -13,7 +14,9 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     private bool isScript = false; // 현재 대화중 확인
     private bool isUsingLeaf = false; // 나뭇잎 쓰고 있니?
     private bool isJumping = false; // 현재 점프중인지 확인
+    private bool isCtrlAuthority = true; // 조작권한 (로프 조종)
     private string carryItemName = null;
+    
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
@@ -27,6 +30,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     private Animator anim;
     private SwitchObject switchState;
     private float hp = 100;
+    private GameObject currInteraction;
 
     Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
@@ -36,6 +40,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     {
         return carryItemName;
     }
+
 
     void Awake()
     {
@@ -65,20 +70,34 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
 
     void Update()
     {
+        // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
+
+        //NPC와 대화
+        if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
+
+        //펫 타기
+        else if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
     }
 
     void FixedUpdate()
     {
+        // 로프
+        if(!isCtrlAuthority && currInteraction != null)
+        {
+            Vector3 pos = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().position;
+            Quaternion rot = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().rotation;
+
+            pos.y -= gameObject.transform.localScale.y;
+            rot.y = 1.0f;
+
+            gameObject.transform.position = pos;
+            gameObject.transform.localRotation = rot;
+        }
+
         //이동
-        if (WahleCtrl.moveType != WahleCtrl.Type.keybord) Movement();
+        if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
         else anim.SetFloat("Speed", 0f);
-
-        //NPC와 대화
-        if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
-        //펫 타기
-        else if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
-
 
         //아래로 떨어졌을 시
         if (transform.position.y <= -5.0f)
@@ -216,6 +235,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
             inputAxis = 0f;
         }
     }
+
     //펫 타기
     void RidePet()
     {
@@ -272,6 +292,13 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
         {
             coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
             switchState = coll.GetComponent<SwitchObject>();
+        }
+
+        if (coll.tag == "Rope" && isCtrlAuthority)
+        {
+            currInteraction = coll.transform.parent.gameObject;
+            currInteraction.GetComponent<RopeCtrl>().setPlayerAuthority(Convert.ToInt32(coll.name));
+            isCtrlAuthority = false;
         }
     }
 
