@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerCtrl : MonoBehaviour, WorldObserver {
+public class PlayerCtrl : MonoBehaviour, WorldObserver
+{
 
     WorldSubject worldData;
     WeatherState weatherState;
@@ -12,6 +13,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     private bool isScript = false; // 현재 대화중 확인
     private bool isUsingLeaf = false; // 나뭇잎 쓰고 있니?
     private bool isJumping = false; // 현재 점프중인지 확인
+    private string carryItemName = null;
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
@@ -23,16 +25,25 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
     private Animator anim;
+    private SwitchObject switchState;
+    private float hp = 100;
 
     Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
     public static PlayerCtrl instance;
+
+    public string getCarryItemName()
+    {
+        return carryItemName;
+    }
 
     void Awake()
     {
         instance = this;
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        switchState = new SwitchObject();
+        switchState.IsCanUseSwitch = false;
 
         // 옵저버 등록
         worldData = WorldCtrl.GetInstance().RetrunThis();
@@ -52,6 +63,11 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         PlayerData.Save();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
+    }
+
     void FixedUpdate()
     {
         //이동
@@ -63,8 +79,9 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
 
+
         //아래로 떨어졌을 시
-        if(transform.position.y <= -5.0f)
+        if (transform.position.y <= -5.0f)
         {
             Debug.Log("Die");
             pData = PlayerData.Load();
@@ -83,7 +100,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         {   // 날씨 효과
             if ((WeatherState.NONE & weatherState) == WeatherState.NONE)
             {
-                
+
             }
             if ((WeatherState.WIND_LR & weatherState) == WeatherState.WIND_LR)
             {
@@ -96,7 +113,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
 
                 if (Input.GetKeyDown(KeyCode.Space)) { moveDir.y = 2f; }
 
-                moveDir += new Vector3(0.0f,-2.0f,0.0f) * Time.deltaTime;
+                moveDir += new Vector3(0.0f, -2.0f, 0.0f) * Time.deltaTime;
             }
             else
             {
@@ -128,8 +145,6 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
                 controller.Move(moveDir * speed * Time.deltaTime);
             }
         }
-
-        
     }
 
     //캐릭터가 봐라보는 방향 회전
@@ -142,11 +157,13 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     //점프
     void Jump(bool bJump)
     {
-        if (bJump) { // 짧은 점프
+        if (bJump)
+        { // 짧은 점프
             moveDir.y = jumpHight;
             isJumping = true;
         }
-        else if (!bJump && isJumping) { // 대쉬 점프
+        else if (!bJump && isJumping)
+        { // 대쉬 점프
             moveDir.y = dashJumpHight;
             isJumping = false;
         }
@@ -161,7 +178,8 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         if (hit.moveDirection.y < -0.3F)
             return;
         //오브젝트 밀기
-        if (Input.GetKey(KeyCode.LeftShift)){
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             body.velocity = pushDir * 2f;
         }
@@ -172,13 +190,16 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward, out hit, 3f)) { 
+        if (Physics.Raycast(rayTr.position, forward, out hit, 3f))
+        {
             //앞에 오를 수 있는 오브젝트 있을 시
-            if(hit.collider.gameObject.tag == "Climb"){
+            if (hit.collider.gameObject.tag == "Climb")
+            {
                 Debug.Log("Climb");
             }
             //NPC 체크 및 이름 확인
-            else if (hit.collider.gameObject.tag == "NPC"){
+            else if (hit.collider.gameObject.tag == "NPC")
+            {
                 string name = hit.collider.gameObject.name;
                 ShowScript(name);
             }
@@ -187,8 +208,9 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
 
     //ScriptMgr에서 NPC이름을 찾아서 대화 생성
     void ShowScript(string name)
-    { 
-        if (name != null){
+    {
+        if (name != null)
+        {
             //대화 중이면 true, 캐릭터 정지
             isScript = ScriptMgr.instance.GetScript(name);
             inputAxis = 0f;
@@ -237,6 +259,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         {
             Destroy(coll.gameObject);
             isUsingLeaf = true;
+            carryItemName = coll.name;
             StartCoroutine(LeafDestroy());
         }
 
@@ -244,12 +267,40 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
         {
             Debug.Log(coll.name);
         }
+
+        if (coll.name == "Switch")
+        {
+            coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
+            switchState = coll.GetComponent<SwitchObject>();
+        }
     }
+
+    void OnTriggerExit(Collider coll)
+    {
+        if (coll.name == "Switch")
+        {
+            coll.GetComponent<SwitchObject>().IsCanUseSwitch = false;
+            switchState = new SwitchObject();
+        }
+    }
+
 
     // 임시
     IEnumerator LeafDestroy()
     {
         yield return new WaitForSeconds(LeafTimer);
+        carryItemName = null;
         isUsingLeaf = false;
+    }
+
+    public void getDamage(float damage)
+    {
+        hp -= damage;
+        if(hp <= 0)
+        {
+            Debug.Log("사망");
+            return;
+        }
+        Debug.Log(hp);
     }
 }

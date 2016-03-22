@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class Elevator : MonoBehaviour {
-
     public bool isType = true; // 아래에서 위 또는 위에서 아래로 가는지 체크
     public float speed = 5f; // 이동 속도
     public float maxLength = 10f; // 마지막 위치 길이
