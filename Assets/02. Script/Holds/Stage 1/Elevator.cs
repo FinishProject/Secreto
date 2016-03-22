@@ -85,7 +85,7 @@ public class Elevator : MonoBehaviour {
     void OnTriggerExit(Collider col)
     {
         StartCoroutine("CountDown");
-        //playerTr = null;
+        playerTr = null;
     }
     // 플레이어 벗어난 후 초기 위치로 돌아가기 위한 카운트 다운
     IEnumerator CountDown()

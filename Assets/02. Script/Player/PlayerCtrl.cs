@@ -165,6 +165,8 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             body.velocity = pushDir * 2f;
         }
+
+        Debug.Log("11");
     }
 
     //레이캐스팅 발사
