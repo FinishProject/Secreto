@@ -8,6 +8,8 @@ TagManager:
   - MONSTER
   - OBJECT
   - WAHLE
+  - Wahle
+  - Rope
   layers:
   - Default
   - TransparentFX
