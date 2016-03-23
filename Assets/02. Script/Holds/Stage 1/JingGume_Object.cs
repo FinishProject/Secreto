@@ -28,11 +28,9 @@ public class JingGume_Object : MonoBehaviour
         if (col.gameObject.tag == "Player")
         {
             Cnt++;
-<<<<<<< HEAD
+
             //parent.OnHolds(col.GetComponent<PlayerCtrl>().getCarryItemName());
-=======
             parent.OnHolds(col.GetComponent<PlayerCtrl>().getCarryItemName());
->>>>>>> Rope
         }
     }
 

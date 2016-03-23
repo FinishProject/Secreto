@@ -50,13 +50,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     {
         instance = this;
         controller = GetComponent<CharacterController>();
-        anim = GetComponent<Animator>();
-        switchState = gameObject.AddComponent<SwitchObject>();
-        switchState.IsCanUseSwitch = false;
-
-        // 옵저버 등록
-        worldData = WorldCtrl.GetInstance().RetrunThis();
-        worldData.registerObserver(this);
+        anim = GetComponent<Animator>(); 
     }
 
     //void Start()
@@ -74,15 +68,12 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
 
     void Update()
     {
-<<<<<<< HEAD
         //이동
         //if (WahleCtrl.moveType != WahleCtrl.Type.keybord) Movement();
         //else anim.SetFloat("Speed", 0f);
         Movement();
-=======
         // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
->>>>>>> Rope
 
         //NPC와 대화
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
@@ -100,32 +91,32 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
 
     void FixedUpdate()
     {
-        // 로프
-        if(!isCtrlAuthority && currInteraction != null)
-        {
-            Vector3 pos = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().position;
-            Quaternion rot = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().rotation;
+        //// 로프
+        //if(!isCtrlAuthority && currInteraction != null)
+        //{
+        //    Vector3 pos = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().position;
+        //    Quaternion rot = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().rotation;
 
-            pos.y -= gameObject.transform.localScale.y;
-            rot.y = 1.0f;
+        //    pos.y -= gameObject.transform.localScale.y;
+        //    rot.y = 1.0f;
 
-            gameObject.transform.position = pos;
-            gameObject.transform.localRotation = rot;
-        }
+        //    gameObject.transform.position = pos;
+        //    gameObject.transform.localRotation = rot;
+        //}
 
-        if (isFlying)
-        {
-            Debug.Log(1111111);
-            moveDir.x += vx;
-            moveDir.y += vy;
-            moveDir += Physics.gravity * Time.deltaTime;
-            controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
+        //if (isFlying)
+        //{
+        //    Debug.Log(1111111);
+        //    moveDir.x += vx;
+        //    moveDir.y += vy;
+        //    moveDir += Physics.gravity * Time.deltaTime;
+        //    controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
 
-            if (controller.isGrounded)
-            {
-                isFlying = false;
-            }
-        }
+        //    if (controller.isGrounded)
+        //    {
+        //        isFlying = false;
+        //    }
+        //}
 
         //이동
         if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
@@ -290,73 +281,6 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     {
         this.weatherState = weatherState;
         this.weatherValue = weatherValue;
-    }
-
-    void OnGUI()
-    {
-        string tempText;
-        tempText = "바람 : ";
-        if ((WeatherState.WIND_LR & weatherState) == WeatherState.WIND_LR)
-            tempText += "L/R  ";
-        else if ((WeatherState.WIND_UD & weatherState) == WeatherState.WIND_UD)
-            tempText += "U/D  ";
-        else
-            tempText += "OFF  ";
-
-        tempText += "비  : ";
-        if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN)
-            tempText += "ON   ";
-        else
-            tempText += "OFF  ";
-
-        if (isUsingLeaf)
-            tempText += "나뭇잎 사용 O";
-        else
-            tempText += "나뭇잎 사용 X";
-
-        GUI.TextField(new Rect(0, 0, 300.0f, 30.0f), tempText);
-    }
-
-    void OnTriggerEnter(Collider coll)
-    {
-        if (coll.name == "Leaf")
-        {
-            Destroy(coll.gameObject);
-            isUsingLeaf = true;
-            carryItemName = coll.name;
-            StartCoroutine(LeafDestroy());
-        }
-
-        if (coll.name == "Switch")
-        {
-            coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
-            switchState = coll.GetComponent<SwitchObject>();
-        }
-
-        if (coll.tag == "Rope" && Input.GetKeyDown(KeyCode.UpArrow) &&isCtrlAuthority)
-        {
-            isCtrlAuthority = false;
-            currInteraction = coll.transform.parent.gameObject;
-            currInteraction.GetComponent<RopeCtrl>().setPlayerAuthority(Convert.ToInt32(coll.name));
-        }
-    }
-
-    void OnTriggerExit(Collider coll)
-    {
-        if (coll.name == "Switch")
-        {
-            coll.GetComponent<SwitchObject>().IsCanUseSwitch = false;
-            switchState = gameObject.AddComponent<SwitchObject>();
-        }
-    }
-
-
-    // 임시
-    IEnumerator LeafDestroy()
-    {
-        yield return new WaitForSeconds(LeafTimer);
-        carryItemName = null;
-        isUsingLeaf = false;
     }
 
     public void getDamage(float damage)
