@@ -55,8 +55,9 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
     void FixedUpdate()
     {
         //이동
-        if (WahleCtrl.moveType != WahleCtrl.Type.keybord) Movement();
-        else anim.SetFloat("Speed", 0f);
+        //if (WahleCtrl.moveType != WahleCtrl.Type.keybord) Movement();
+        //else anim.SetFloat("Speed", 0f);
+        Movement();
 
         //NPC와 대화
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
