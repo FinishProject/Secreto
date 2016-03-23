@@ -13,9 +13,12 @@ public class Balance : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
     }
 
-    void OnCollisionStay(Collision coll)
+    void OnTriggerStay(Collider coll)
     {
-        power += Time.deltaTime;
-        transform.Rotate(new Vector3(0f, 0f, 1f), power);
+        if(coll.gameObject.tag == "Player")
+        {
+            dir = coll.ClosestPointOnBounds(coll.gameObject.transform.position);
+            rb.AddForceAtPosition(Vector3.down * power * Time.deltaTime, dir);
+        }
     }
 }

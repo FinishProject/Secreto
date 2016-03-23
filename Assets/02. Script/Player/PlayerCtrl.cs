@@ -74,8 +74,15 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
 
     void Update()
     {
+<<<<<<< HEAD
+        //이동
+        //if (WahleCtrl.moveType != WahleCtrl.Type.keybord) Movement();
+        //else anim.SetFloat("Speed", 0f);
+        Movement();
+=======
         // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
+>>>>>>> Rope
 
         //NPC와 대화
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
@@ -238,6 +245,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             body.velocity = pushDir * 2f;
         }
+
     }
 
     //레이캐스팅 발사
