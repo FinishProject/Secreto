@@ -3,7 +3,6 @@ using System.Collections;
 
 public class HorizonHold : MonoBehaviour
 {
-
     private Transform playerTr;
     private Vector3 maxLengthPos, originPos;
 
