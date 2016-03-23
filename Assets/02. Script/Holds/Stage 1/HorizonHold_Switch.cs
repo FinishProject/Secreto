@@ -34,14 +34,14 @@ public class HorizonHold_Switch : MonoBehaviour {
     void OnTriggerStay(Collider coll)
     {
         // 플레이어가 발판 위에 있을 시 발판과 같이 이동
-        if (coll.gameObject.tag == "Player")
+        if (coll.gameObject.tag == "Player" && switchObject.GetComponent<SwitchObject>().IsSwitchOn)
         {
             playerTr = coll.GetComponent<Transform>();
             isFocus = PlayerCtrl.isFocusRight;
             pSpeed = speed;
             if (!isFocus) { pSpeed *= -1; }
             //발판 위에 있을 시 플레이어 이동
-            playerTr.Translate(Vector3.right * pSpeed * Time.deltaTime);
+            playerTr.Translate(Vector3.forward * pSpeed * Time.deltaTime);
         }
     }
 

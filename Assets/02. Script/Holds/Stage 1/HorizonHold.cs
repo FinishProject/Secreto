@@ -3,7 +3,6 @@ using System.Collections;
 
 public class HorizonHold : MonoBehaviour
 {
-
     private Transform playerTr;
     private Vector3 maxLengthPos, originPos;
 
@@ -37,7 +36,7 @@ public class HorizonHold : MonoBehaviour
             pSpeed = speed;
             if (!isFocus) { pSpeed *= -1; }
             //발판 위에 있을 시 플레이어 이동
-            playerTr.Translate(Vector3.right * pSpeed * Time.deltaTime);
+            playerTr.Translate(Vector3.forward * pSpeed * Time.deltaTime);
         }
     }
 

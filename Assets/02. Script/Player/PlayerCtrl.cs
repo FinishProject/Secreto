@@ -14,9 +14,13 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     private bool isScript = false; // 현재 대화중 확인
     private bool isUsingLeaf = false; // 나뭇잎 쓰고 있니?
     private bool isJumping = false; // 현재 점프중인지 확인
+    private bool isFlying = false;  // 날고 있는지
     private bool isCtrlAuthority = true; // 조작권한 (로프 조종)
     private string carryItemName = null;
-    
+
+    private float currRadian;
+    private float vx;
+    private float vy;
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 6.0f; //대쉬 점프 높이
@@ -47,7 +51,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
         instance = this;
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
-        switchState = new SwitchObject();
+        switchState = gameObject.AddComponent<SwitchObject>();
         switchState.IsCanUseSwitch = false;
 
         // 옵저버 등록
@@ -78,6 +82,13 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
 
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
+
+        if (currInteraction!= null && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
+        {
+            getCtrlAuthority();
+            isCtrlAuthority = true;
+        }
+             
     }
 
     void FixedUpdate()
@@ -95,6 +106,20 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
             gameObject.transform.localRotation = rot;
         }
 
+        if (isFlying)
+        {
+            Debug.Log(1111111);
+            moveDir.x += vx;
+            moveDir.y += vy;
+            moveDir += Physics.gravity * Time.deltaTime;
+            controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
+
+            if (controller.isGrounded)
+            {
+                isFlying = false;
+            }
+        }
+
         //이동
         if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
         else anim.SetFloat("Speed", 0f);
@@ -106,6 +131,17 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
             pData = PlayerData.Load();
             transform.position = pData.pPosition;
         }
+    }
+
+    // 권한 찾기
+    void getCtrlAuthority()
+    {
+        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
+        float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
+        vx = Mathf.Cos(currRadian) * speed;
+        vy = Mathf.Sin(currRadian) * speed;
+
+        isFlying = true;
     }
 
     void Movement()
@@ -283,22 +319,17 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
             StartCoroutine(LeafDestroy());
         }
 
-        if (coll.tag == "Rope")
-        {
-            Debug.Log(coll.name);
-        }
-
         if (coll.name == "Switch")
         {
             coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
             switchState = coll.GetComponent<SwitchObject>();
         }
 
-        if (coll.tag == "Rope" && isCtrlAuthority)
+        if (coll.tag == "Rope" && Input.GetKeyDown(KeyCode.UpArrow) &&isCtrlAuthority)
         {
+            isCtrlAuthority = false;
             currInteraction = coll.transform.parent.gameObject;
             currInteraction.GetComponent<RopeCtrl>().setPlayerAuthority(Convert.ToInt32(coll.name));
-            isCtrlAuthority = false;
         }
     }
 
@@ -307,7 +338,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
         if (coll.name == "Switch")
         {
             coll.GetComponent<SwitchObject>().IsCanUseSwitch = false;
-            switchState = new SwitchObject();
+            switchState = gameObject.AddComponent<SwitchObject>();
         }
     }
 
