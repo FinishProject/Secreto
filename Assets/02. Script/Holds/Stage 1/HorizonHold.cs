@@ -8,7 +8,7 @@ public class HorizonHold : MonoBehaviour
     private Vector3 maxLengthPos, originPos;
 
     public float speed = 3f; // 발판 이동 속도
-    private float pSpeed = 3f; // 플레이어 이동 속도
+    private float pSpeed; // 플레이어 이동 속도
     public float length = 8f; // 발판이 이동할 길이
     private bool isFocus; // 플레이어가 왼쪽을 봐라보는지
 
@@ -16,6 +16,7 @@ public class HorizonHold : MonoBehaviour
     {
         maxLengthPos.x = transform.position.x + length; //최대 이동 길이(우측)
         originPos.x = transform.position.x; //초기 이동 길이(좌측)
+        pSpeed = speed;
     }
 
     void FixedUpdate()
@@ -24,7 +25,7 @@ public class HorizonHold : MonoBehaviour
         if (transform.position.x >= maxLengthPos.x && speed >= 1) { speed *= -1; }
         else if (transform.position.x <= originPos.x && speed <= -1) { speed *= -1; }
 
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector3.right * speed * Time.deltaTime);
     }
 
     void OnTriggerStay(Collider coll)

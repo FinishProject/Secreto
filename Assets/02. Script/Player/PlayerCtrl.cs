@@ -166,7 +166,6 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver {
             body.velocity = pushDir * 2f;
         }
 
-        Debug.Log("11");
     }
 
     //레이캐스팅 발사

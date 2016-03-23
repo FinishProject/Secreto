@@ -90,16 +90,10 @@ public class Elevator : MonoBehaviour {
     // 플레이어 벗어난 후 초기 위치로 돌아가기 위한 카운트 다운
     IEnumerator CountDown()
     {
-        float time = 0f;
-        while (true) {
-            time += Time.deltaTime;
-            if(time >= 3f) {
-                isTrample = false;
-                break;
-            }
-            yield return null;
-        }
-        StopCoroutine("TimeDown");
+        yield return new WaitForSeconds(3f);
+        isTrample = false;
+
+        StopCoroutine("CountDown");
     }
 
 }
