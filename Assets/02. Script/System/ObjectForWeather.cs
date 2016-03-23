@@ -41,8 +41,11 @@ public class ObjectForWeather : MonoBehaviour, WorldObserver
         {
             Vector3 tempScale = tr.transform.localScale;
             Vector3 tempPos = tr.transform.position;
+            
             tempScale.y += 0.02f;
+            tempPos.y = tempScale.y / 2;
             tr.transform.localScale = tempScale;
+            tr.transform.position = tempPos;
         }
     }
 

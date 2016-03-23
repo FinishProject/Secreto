@@ -19,7 +19,11 @@ public class DamageObject : MonoBehaviour {
         if(col.tag == "Player")
         {
             Debug.Log("damaged");
+<<<<<<< HEAD
             //col.GetComponent<PlayerCtrl>().getDamage(damage);
+=======
+            col.GetComponent<PlayerCtrl>().getDamage(damage);
+>>>>>>> Rope
         }
     }
 }
