@@ -10,7 +10,7 @@ public class WayPoint : MonoBehaviour {
         if (col.gameObject.tag == "Player")
         {
             PlayerData.Save();
-            //ScriptMgr.instance.SpeakNpcSave();
+            ScriptMgr.instance.SpokenNpcSave();
             //PlayerCtrl.instance.Save();
         }
     }

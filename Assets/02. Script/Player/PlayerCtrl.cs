@@ -2,17 +2,11 @@
 using System.Collections;
 using System;
 
-public class PlayerCtrl : MonoBehaviour, WorldObserver
-{
+public class PlayerCtrl : MonoBehaviour {
 
-    WorldSubject worldData;
-    WeatherState weatherState;
-    float weatherValue;
-
-    public float inputAxis = 0f; // 입력 받는 키의 값
+    private float inputAxis = 0f; // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
     private bool isScript = false; // 현재 대화중 확인
-    private bool isUsingLeaf = false; // 나뭇잎 쓰고 있니?
     private bool isJumping = false; // 현재 점프중인지 확인
     private bool isFlying = false;  // 날고 있는지
     private bool isCtrlAuthority = true; // 조작권한 (로프 조종)
@@ -23,14 +17,13 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     private float vy;
 
     public float jumpHight = 6.0f; // 기본 점프 높이
-    public float dashJumpHight = 6.0f; //대쉬 점프 높이
+    public float dashJumpHight = 4.0f; //대쉬 점프 높이
     public float speed = 10f; // 이동 속도
 
-    public float LeafTimer = 10.0f;
-
-    public Transform rayTr; // 레이캐스트 시작 위치
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
+
+    public Transform rayTr; // 레이캐스트 시작 위치
     private Animator anim;
     private SwitchObject switchState;
     private float hp = 100;
@@ -44,7 +37,6 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     {
         return carryItemName;
     }
-
 
     void Awake()
     {
@@ -68,10 +60,7 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
 
     void Update()
     {
-        //이동
-        //if (WahleCtrl.moveType != WahleCtrl.Type.keybord) Movement();
-        //else anim.SetFloat("Speed", 0f);
-        Movement();
+
         // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
 
@@ -122,9 +111,8 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
         if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
         else anim.SetFloat("Speed", 0f);
 
-        //아래로 떨어졌을 시
-        if (transform.position.y <= -5.0f)
-        {
+        //추락하여 사망 시
+        if (transform.position.y <= -5.0f) {
             Debug.Log("Die");
             pData = PlayerData.Load();
             transform.position = pData.pPosition;
@@ -144,60 +132,31 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
 
     void Movement()
     {
+        // 키 입력
         inputAxis = Input.GetAxis("Horizontal");
+        if (controller.isGrounded && !isScript)
+        {
+            //이동
+            moveDir = Vector3.right * inputAxis;
+            //anim.SetBool("Jump", false);
+            //점프
+            if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
+            anim.SetFloat("Speed", inputAxis);
+        }
+        else if (!controller.isGrounded)
+        {
+            moveDir.x = inputAxis * 50f * Time.deltaTime;
+            controller.Move(moveDir * Time.deltaTime);
+            //대쉬 점프
+            if (Input.GetKeyDown(KeyCode.Space)) { Jump(false); }
+        }
+
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-
-        {   // 날씨 효과
-            if ((WeatherState.NONE & weatherState) == WeatherState.NONE)
-            {
-
-            }
-            if ((WeatherState.WIND_LR & weatherState) == WeatherState.WIND_LR)
-            {
-                controller.Move(-Vector3.right * weatherValue * Time.deltaTime);
-            }
-            if ((WeatherState.WIND_UD & weatherState) == WeatherState.WIND_UD && isUsingLeaf)
-            {
-                moveDir.x = inputAxis * 50f * Time.deltaTime;
-                controller.Move(moveDir * Time.deltaTime);
-
-                if (Input.GetKeyDown(KeyCode.Space)) { moveDir.y = 2f; }
-
-                moveDir += new Vector3(0.0f, -2.0f, 0.0f) * Time.deltaTime;
-            }
-            else
-            {
-                if (controller.isGrounded && !isScript)
-                {
-                    //이동
-                    moveDir = Vector3.right * inputAxis;
-                    //anim.SetBool("Jump", false);
-                    //점프
-                    if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
-                    anim.SetFloat("Speed", inputAxis);
-                }
-                else if (!controller.isGrounded)
-                {
-                    moveDir.x = inputAxis * 50f * Time.deltaTime;
-                    controller.Move(moveDir * Time.deltaTime);
-                    //대쉬 점프
-                    if (Input.GetKeyDown(KeyCode.Space)) { Jump(false); }
-                }
-
-                moveDir += Physics.gravity * Time.deltaTime;
-            }
-            if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !isUsingLeaf)
-            {
-                controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
-            }
-            else
-            {
-                controller.Move(moveDir * speed * Time.deltaTime);
-            }
-        }
+        moveDir += Physics.gravity * Time.deltaTime;
+        controller.Move(moveDir * speed * Time.deltaTime);
     }
 
     //캐릭터가 봐라보는 방향 회전
@@ -210,13 +169,11 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     //점프
     void Jump(bool bJump)
     {
-        if (bJump)
-        { // 짧은 점프
+        if (bJump) { // 짧은 점프
             moveDir.y = jumpHight;
             isJumping = true;
         }
-        else if (!bJump && isJumping)
-        { // 대쉬 점프
+        else if (!bJump && isJumping) { // 대쉬 점프
             moveDir.y = dashJumpHight;
             isJumping = false;
         }
@@ -275,12 +232,6 @@ public class PlayerCtrl : MonoBehaviour, WorldObserver
     void RidePet()
     {
         Debug.Log("Riding Pet");
-    }
-
-    public void updateObserver(WeatherState weatherState, float weatherValue)
-    {
-        this.weatherState = weatherState;
-        this.weatherValue = weatherValue;
     }
 
     public void getDamage(float damage)

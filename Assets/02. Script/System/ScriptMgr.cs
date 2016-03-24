@@ -4,18 +4,10 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine.UI;
 
-[System.Serializable]
 class Script
 {
     public string name;
     public string context;
-}
-
-public class SciptSave{
-    void Save()
-    {
-        Debug.Log("Script");
-    }
 }
 
 public class ScriptMgr : MonoBehaviour {
@@ -24,9 +16,9 @@ public class ScriptMgr : MonoBehaviour {
     public GameObject scriptUi;
 
     private int curIndex = 0; // 현재 보여줄 대사 인덱스
-    private List<Script> script = new List<Script>(); //XML 데이터 저장
+    private List<Script> scriptData = new List<Script>(); //XML 데이터 저장
     private List<string> scriptInfo = new List<string>(); //현재 NPC의 대사를 저장
-    public List<string> speakNpc = new List<string>(); // 만난 NPC이름 저장
+    private List<string> spokeNpc = new List<string>(); // 만난 NPC이름 저장
 
     public static ScriptMgr instance;
 
@@ -41,15 +33,15 @@ public class ScriptMgr : MonoBehaviour {
         //대화할 NPC의 이름을 XML 데이터에서 찾아 대사를 getInfo에 저장
         if (!SpeakName(name))
         {
-            for (int i = 0; i < script.Count; i++)
+            for (int i = 0; i < scriptData.Count; i++)
             {
-                if (script[i].name == name)
+                if (scriptData[i].name == name)
                 {
-                    scriptInfo.Add(script[i].context);
+                    scriptInfo.Add(scriptData[i].context);
                 }
             }
             //NPC 이름 저장, 대사 길이, UI 실행
-            speakNpc.Add(name);
+            spokeNpc.Add(name);
             curIndex = 0;
             scriptUi.SetActive(true);
         }
@@ -58,7 +50,6 @@ public class ScriptMgr : MonoBehaviour {
         {
             scriptInfo.Clear();
             scriptUi.SetActive(false);
-            SpeakNpcSave();
             return false;
         }
         //다음 대화가 있을 경우 대화 출력
@@ -72,16 +63,16 @@ public class ScriptMgr : MonoBehaviour {
     //이미 대화한 NPC인지 확인
     bool SpeakName(string name)
     {
-        for (int i = 0; i < speakNpc.Count; i++)
+        for (int i = 0; i < spokeNpc.Count; i++)
         {
-            if (speakNpc[i] == name) return true;
+            if (spokeNpc[i] == name) return true;
         }
         return false;
     }
 
-    // NPC 대사 XML 문서 불러오기
     void LoadScript()
     {
+        // NPC 대사 XML 문서 불러오기
         //XML 생성
         XmlDocument xmldoc = new XmlDocument();
         xmldoc.Load(Application.dataPath + "/Resources/script.xml");
@@ -92,8 +83,9 @@ public class ScriptMgr : MonoBehaviour {
             string m_Name, m_Context;
             m_Name = nodes[i].SelectSingleNode("name").InnerText;
             m_Context = nodes[i].SelectSingleNode("context").InnerText;
-            script.Add(new Script { name = m_Name, context = m_Context });
+            scriptData.Add(new Script { name = m_Name, context = m_Context });
         }
+        // 대화한 NPC 이름 XML 데이터 불러오기
         XmlDocument xmlDocName = new XmlDocument();
         xmlDocName.Load(Application.dataPath + "/Resources/ScriptSpeak.xml");
         XmlElement posElemnet = xmlDocName["Script"];
@@ -102,29 +94,24 @@ public class ScriptMgr : MonoBehaviour {
         foreach (XmlElement PosElement in posElemnet.ChildNodes)
         {
             name = System.Convert.ToString(PosElement.GetAttribute("Speak_NPC"));
-            speakNpc.Add(name);
+            spokeNpc.Add(name);
         }
-
         scriptUi.SetActive(false);
     }
 
     //대화 완료한 NPC이름 저장
-    public void SpeakNpcSave()
+    public void SpokenNpcSave()
     {
-        List<string> name = new List<string>();
-        name = speakNpc;
-
         XmlDocument doc = new XmlDocument();
         XmlElement scriptElement = doc.CreateElement("Script");
         doc.AppendChild(scriptElement);
 
-        XmlElement scriptSpeak = doc.CreateElement("SpeakNPC");
-        for (int i = 0; i < speakNpc.Count; i++)
-        {
-            scriptSpeak.SetAttribute("Speak_NPC", speakNpc[i].ToString());
+        XmlElement scriptSpeak = doc.CreateElement("SpokeNPC");
+        for (int i = 0; i < spokeNpc.Count; i++) {
+            scriptSpeak.SetAttribute("Spoke_NPC", spokeNpc[i].ToString());
         }
         scriptElement.AppendChild(scriptSpeak);
 
-        doc.Save(Application.dataPath + "/Resources/ScriptSpeak.xml");
+        doc.Save(Application.dataPath + "/Resources/SpokeNpcName.xml");
     }
 }

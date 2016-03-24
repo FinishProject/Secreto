@@ -9,7 +9,7 @@ public class BouncingMushroom : MonoBehaviour {
     void OnTriggerEnter(Collider coll)
     {
         coll.GetComponent<PlayerCtrl>().moveDir.y = jumpHight;
-        coll.GetComponent<PlayerCtrl>().controller.Move(moveDir * Time.deltaTime);
+        coll.GetComponent<PlayerCtrl>().controller.Move(moveDir * 10f * Time.deltaTime);
     }
 
 }

@@ -7,12 +7,10 @@ public class AvoidingObject : MonoBehaviour {
     private Transform tr;
     private bool bPlayerisLeft = true;
 
-	// Use this for initialization
 	void Start () {
         tr = gameObject.transform;
 	}
 	
-	// Update is called once per frame
 	void Update () {
         playerX = GameObject.FindWithTag("Player").transform.position.x;
         Vector3 temp = tr.transform.position;
