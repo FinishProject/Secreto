@@ -5,26 +5,25 @@ public class RopeCtrl : MonoBehaviour {
     public GameObject prefab;
     public int ropeCnt;
     public float angleLimit = 100f;
-
     private Transform[] lowRopes;
     private float ropeScale;
-    
+
     private float L = 0;                        // 실 길이(m)
     private float stepSize = 0.02f;             // 스텝사이즈
     private float resist = -0.5f;              // 저항
     private float theta = 50 * Mathf.Deg2Rad;   // 각도
-    private float theta1 = 0;                   
+    private float theta1 = 0;
     private float theta2 = 0;
     private float pre_theta1 = 0;
     private float pre_theta2 = 0;
-    public bool  isCtrlAuthority = false;        // 조작권한 (로프 조종)
+    public bool isCtrlAuthority = false;        // 조작권한 (로프 조종)
 
     private float oldPos;
 
     private float addPower = 70.0f;
-    private bool  isLimited = false;            // 힘의 제한
-    private bool  isLeft;
-    private int   playerIdx;
+    private bool isLimited = false;            // 힘의 제한
+    private bool isLeft;
+    private int playerIdx;
 
     public void setPlayerAuthority(int playerIdx)
     {
@@ -34,29 +33,30 @@ public class RopeCtrl : MonoBehaviour {
 
     public Transform getLowRopeTransform()
     {
-        return lowRopes[playerIdx].transform; 
+        return lowRopes[playerIdx].transform;
     }
 
     public float getRadian()
     {
-        return theta / Mathf.Deg2Rad;
+        return theta;
     }
 
     public float getSpeed()
     {
-        return theta1;
+        return theta2;
     }
 
-    void Start () {
+    void Start()
+    {
         lowRopes = new Transform[ropeCnt];
         playerIdx = ropeCnt - 1;
-        
+
         CreateRope();
         changeRopeRange(playerIdx);
         InitState(40.0f);
 
     }
-	
+
     void InitState(float getAngle)
     {
         stepSize = 0.025f;
@@ -68,26 +68,24 @@ public class RopeCtrl : MonoBehaviour {
         pre_theta2 = 0;
     }
 
-	// Update is called once per frame
-	void Update () {
-        
-        if(isCtrlAuthority)
+    // Update is called once per frame
+    void Update()
+    {
+        if (isCtrlAuthority)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 playerIdx--;
-                Debug.Log(playerIdx);
                 changeRopeRange(playerIdx);
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 playerIdx++;
-                Debug.Log(playerIdx);
                 changeRopeRange(playerIdx);
             }
             if (Input.GetKeyDown(KeyCode.RightArrow) && !isLimited && isLeft)
             {
-                if(Mathf.Abs(theta1) < addPower)
+                if (Mathf.Abs(theta1) < addPower)
                     theta1 += addPower * Mathf.Deg2Rad;
                 pre_theta1 = 0;
                 pre_theta2 = 0;
@@ -117,10 +115,10 @@ public class RopeCtrl : MonoBehaviour {
     void PendulumMove()
     {
         // 진자운동 구현
-        theta2 = (Physics.gravity.y / L ) * Mathf.Sin(theta);                           // 가속도
+        theta2 = (Physics.gravity.y / L) * Mathf.Sin(theta);                           // 가속도
         theta1 = theta1 + (pre_theta2 * stepSize)                                       // 속도
              + ((theta2 - pre_theta2) * stepSize / 2)
-             - ((theta2 - pre_theta2) * resist);       
+             - ((theta2 - pre_theta2) * resist);
         theta = theta + (theta1 * stepSize) + ((theta1 - pre_theta1) * stepSize / 2);   // 변위
         pre_theta2 = theta2;
         pre_theta1 = theta1;
@@ -138,7 +136,7 @@ public class RopeCtrl : MonoBehaviour {
             pre_theta1 = 0;
             pre_theta2 = 0;
         }
-        
+
 
         //진자 위치
         //        float m_x =  ropeScale * Mathf.Sin(theta);
@@ -149,9 +147,9 @@ public class RopeCtrl : MonoBehaviour {
             isLimited = false;
 
         // 줄 회전
-        ChangeRot(0, playerIdx ,theta / Mathf.Deg2Rad);
-        if(playerIdx != ropeCnt - 1)
-            ChangeRot(playerIdx, ropeCnt-1, ((theta - theta) + (theta / 3)) / Mathf.Deg2Rad);
+        ChangeRot(0, playerIdx, theta / Mathf.Deg2Rad);
+        if (playerIdx != ropeCnt - 1)
+            ChangeRot(playerIdx, ropeCnt - 1, ((theta - theta) + (theta / 3)) / Mathf.Deg2Rad);
 
         if (Mathf.Sin(theta) < 0f)
             isLeft = true;
@@ -161,7 +159,7 @@ public class RopeCtrl : MonoBehaviour {
 
     // 플레이어 위치에 따른 줄의 길이 (진자의 위치)
     void changeRopeRange(int idx)
-    { 
+    {
         if (idx >= ropeCnt || idx <= 0)
             return;
 
@@ -177,7 +175,7 @@ public class RopeCtrl : MonoBehaviour {
         for (int i = index; i < ropeCnt; i++)
         {
             temp = lowRopes[i].transform.rotation;
-            temp.eulerAngles = new Vector3 (0,0,rot);
+            temp.eulerAngles = new Vector3(0, 0, rot);
             lowRopes[i].rotation = temp;
             if (i == 0)
                 continue;
@@ -226,13 +224,13 @@ public class RopeCtrl : MonoBehaviour {
             Vector3 temp = gameObject.transform.position;
             if (i == 0)
             {
-                temp.y = gameObject.transform.position.y - gameObject.transform.localScale.y/2;
+                temp.y = gameObject.transform.position.y - gameObject.transform.localScale.y / 2;
                 lowRopes[i].position = temp;
                 ropeScale = lowRopes[i].localScale.y;
             }
             else
             {
-                temp.y = lowRopes[i-1].position.y - ropeScale / 2;
+                temp.y = lowRopes[i - 1].position.y - ropeScale / 2;
                 lowRopes[i].position = temp;
             }
         }

@@ -80,32 +80,41 @@ public class PlayerCtrl : MonoBehaviour {
 
     void FixedUpdate()
     {
-        //// 로프
-        //if(!isCtrlAuthority && currInteraction != null)
-        //{
-        //    Vector3 pos = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().position;
-        //    Quaternion rot = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().rotation;
+        // 로프
+        if (!isCtrlAuthority && currInteraction != null)
+        {
+            Vector3 pos = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().position;
+            Quaternion rot = gameObject.transform.rotation;
 
-        //    pos.y -= gameObject.transform.localScale.y;
-        //    rot.y = 1.0f;
+            pos.y -= gameObject.transform.localScale.y;
+            //            rot.x = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z;
 
-        //    gameObject.transform.position = pos;
-        //    gameObject.transform.localRotation = rot;
-        //}
+            gameObject.transform.position = pos;
+            gameObject.transform.rotation = rot;
+        }
 
-        //if (isFlying)
-        //{
-        //    Debug.Log(1111111);
-        //    moveDir.x += vx;
-        //    moveDir.y += vy;
-        //    moveDir += Physics.gravity * Time.deltaTime;
-        //    controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
+        if (isFlying)
+        {
+            moveDir += Physics.gravity * Time.deltaTime;
+            controller.Move(((Vector3.right * vx) + moveDir) * Time.deltaTime / 10f);
+            /*
+            moveDir.x += vx;
+            moveDir += Physics.gravity * Time.deltaTime;
+            controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
+            */
+            if (controller.isGrounded)
+            {
+                /*
+                Quaternion rot = gameObject.GetComponent<RectTransform>().rotation;
+                rot.x = 0.0f;
+                rot.y = 90.0f;
+                rot.z = 0.0f;
+                gameObject.GetComponent<RectTransform>().rotation = baseRot;
+                */
+                isFlying = false;
+            }
 
-        //    if (controller.isGrounded)
-        //    {
-        //        isFlying = false;
-        //    }
-        //}
+        }
 
         //이동
         if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
@@ -122,11 +131,15 @@ public class PlayerCtrl : MonoBehaviour {
     // 권한 찾기
     void getCtrlAuthority()
     {
-        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
+        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z;
         float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian) * speed;
-        vy = Mathf.Sin(currRadian) * speed;
+        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (-speed * 15.0f);
+        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (-speed * 15.0f);
 
+        Debug.Log(-speed);
+        Debug.Log(currRadian);
+        Debug.Log(vy);
+        moveDir.y = vy;
         isFlying = true;
     }
 
@@ -244,4 +257,17 @@ public class PlayerCtrl : MonoBehaviour {
         }
         Debug.Log(hp);
     }
+
+
+    void OnTriggerEnter(Collider coll)
+    {
+        if (coll.tag == "Rope" && Input.GetKey(KeyCode.UpArrow) && isCtrlAuthority)
+        {
+            isCtrlAuthority = false;
+            currInteraction = coll.transform.parent.gameObject;
+            currInteraction.GetComponent<RopeCtrl>().setPlayerAuthority(Convert.ToInt32(coll.name));
+        }
+    }
+
+
 }
