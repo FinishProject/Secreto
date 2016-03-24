@@ -2,6 +2,11 @@
 using System.Collections;
 using System;
 
+public enum JumpType
+{
+    NONE, IDLE, NOMAL_JUMP, DOUBLE_JUMP, FLY_JUMP, FLY_IDLE
+}
+
 public class PlayerCtrl : MonoBehaviour {
 
     private float inputAxis = 0f; // 입력 받는 키의 값
@@ -11,6 +16,7 @@ public class PlayerCtrl : MonoBehaviour {
     private bool isFlying = false;  // 날고 있는지
     private bool isCtrlAuthority = true; // 조작권한 (로프 조종)
     private string carryItemName = null;
+    
 
     private float currRadian;
     private float vx;
@@ -18,10 +24,14 @@ public class PlayerCtrl : MonoBehaviour {
 
     public float jumpHight = 6.0f; // 기본 점프 높이
     public float dashJumpHight = 4.0f; //대쉬 점프 높이
+    public float flyJumpHight = 2.0f; //대쉬 점프 높이
     public float speed = 10f; // 이동 속도
+    public float moveResistant = 0f; // 이동 저항력
+
 
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
+    public JumpType jumpState = JumpType.IDLE;
 
     public Transform rayTr; // 레이캐스트 시작 위치
     private Animator anim;
@@ -42,7 +52,11 @@ public class PlayerCtrl : MonoBehaviour {
     {
         instance = this;
         controller = GetComponent<CharacterController>();
-        anim = GetComponent<Animator>(); 
+        anim = GetComponent<Animator>();
+
+        // 상호작용을 하기 위한 스위치
+        switchState = gameObject.AddComponent<SwitchObject>();
+        switchState.IsCanUseSwitch = false;
     }
 
     //void Start()
@@ -68,9 +82,13 @@ public class PlayerCtrl : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
 
         //펫 타기
-        else if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
+        if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
 
-        if (currInteraction!= null && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
+        if (Input.GetKeyDown(KeyCode.Space)) { Jump(); }
+
+
+        // 로프에 매달린다면
+        if (currInteraction != null && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
         {
             getCtrlAuthority();
             isCtrlAuthority = true;
@@ -97,26 +115,13 @@ public class PlayerCtrl : MonoBehaviour {
         {
             moveDir += Physics.gravity * Time.deltaTime;
             controller.Move(((Vector3.right * vx) + moveDir) * Time.deltaTime / 10f);
-            /*
-            moveDir.x += vx;
-            moveDir += Physics.gravity * Time.deltaTime;
-            controller.Move(moveDir * (speed - weatherValue) * Time.deltaTime);
-            */
             if (controller.isGrounded)
             {
-                /*
-                Quaternion rot = gameObject.GetComponent<RectTransform>().rotation;
-                rot.x = 0.0f;
-                rot.y = 90.0f;
-                rot.z = 0.0f;
-                gameObject.GetComponent<RectTransform>().rotation = baseRot;
-                */
                 isFlying = false;
             }
-
         }
 
-        //이동
+        //고래이동
         if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
         else anim.SetFloat("Speed", 0f);
 
@@ -145,6 +150,8 @@ public class PlayerCtrl : MonoBehaviour {
 
     void Movement()
     {
+        Debug.Log(jumpState);
+        Debug.Log(isJumping);
         // 키 입력
         inputAxis = Input.GetAxis("Horizontal");
         if (controller.isGrounded && !isScript)
@@ -152,24 +159,53 @@ public class PlayerCtrl : MonoBehaviour {
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);
-            //점프
-            if (Input.GetKeyDown(KeyCode.Space)) { Jump(true); }
             anim.SetFloat("Speed", inputAxis);
+
+            if (isJumping && jumpState != JumpType.FLY_IDLE && jumpState != JumpType.FLY_JUMP)
+            {
+                isJumping = false;
+                jumpState = JumpType.IDLE;
+            }
         }
         else if (!controller.isGrounded)
         {
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
-            //대쉬 점프
-            if (Input.GetKeyDown(KeyCode.Space)) { Jump(false); }
+        }
+
+        switch (jumpState)
+        {
+            case JumpType.NOMAL_JUMP:
+                moveDir.y = jumpHight;
+                isJumping = true;
+                jumpState = JumpType.IDLE;
+                break;
+            case JumpType.DOUBLE_JUMP:
+                moveDir.y = dashJumpHight;
+                jumpState = JumpType.NONE;
+                break;
+            case JumpType.FLY_JUMP:
+                moveDir.y = flyJumpHight;
+                isJumping = true;
+                jumpState = JumpType.FLY_IDLE;
+                break;
         }
 
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        moveDir += Physics.gravity * Time.deltaTime;
-        controller.Move(moveDir * speed * Time.deltaTime);
+        // 중력 조절
+        if(jumpState != JumpType.FLY_JUMP && jumpState != JumpType.FLY_IDLE)
+        {
+            moveDir += Physics.gravity * Time.deltaTime;
+        }
+        else
+        {
+            moveDir += new Vector3(0.0f, -2.0f, 0.0f) * Time.deltaTime;
+        }
+
+        controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
     //캐릭터가 봐라보는 방향 회전
@@ -179,16 +215,22 @@ public class PlayerCtrl : MonoBehaviour {
         transform.Rotate(new Vector3(0, 1, 0), 180.0f);
     }
 
-    //점프
-    void Jump(bool bJump)
+    // 점프
+    void Jump()
     {
-        if (bJump) { // 짧은 점프
-            moveDir.y = jumpHight;
-            isJumping = true;
-        }
-        else if (!bJump && isJumping) { // 대쉬 점프
-            moveDir.y = dashJumpHight;
-            isJumping = false;
+        switch(jumpState)
+        {
+            case JumpType.IDLE:
+                if (!isJumping)
+                    jumpState = JumpType.NOMAL_JUMP;
+                else
+                    Debug.Log(2);
+                    jumpState = JumpType.DOUBLE_JUMP;
+                break;
+
+           case JumpType.FLY_IDLE:
+                jumpState = JumpType.FLY_JUMP;
+                break;
         }
     }
 
@@ -261,6 +303,12 @@ public class PlayerCtrl : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
+        if (coll.name == "Switch")
+        {
+            coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
+            switchState = coll.GetComponent<SwitchObject>();
+        }
+
         if (coll.tag == "Rope" && Input.GetKey(KeyCode.UpArrow) && isCtrlAuthority)
         {
             isCtrlAuthority = false;
@@ -269,5 +317,12 @@ public class PlayerCtrl : MonoBehaviour {
         }
     }
 
-
+    void OnTriggerExit(Collider coll)
+    {
+        if (coll.name == "Switch")
+        {
+            coll.GetComponent<SwitchObject>().IsCanUseSwitch = false;
+            switchState = gameObject.AddComponent<SwitchObject>();
+        }
+    }
 }

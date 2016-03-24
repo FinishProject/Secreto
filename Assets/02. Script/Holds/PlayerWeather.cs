@@ -6,18 +6,18 @@ public class PlayerWeather : MonoBehaviour, WorldObserver
 {
     WorldSubject worldData;
     WeatherState weatherState;
+    private float weatherValue;
 
     private bool isUsingLeaf = false; // 나뭇잎 쓰고 있니?
     public float LeafTimer = 10.0f;
     private string carryItemName = null;
+    private bool isLocked_WIND_UD = false;    // 데이터 한번만 보내야할때 잠금 역할
+    private bool isLocked_NONE = false;    // 데이터 한번만 보내야할때 잠금 역할
 
     //private SwitchObject switchState;
 
     void Awake()
     {
-        //switchState = gameObject.AddComponent<SwitchObject>();
-        //switchState.IsCanUseSwitch = false;
-
         // 옵저버 등록
         worldData = WorldCtrl.GetInstance().RetrunThis();
         worldData.registerObserver(this);
@@ -30,30 +30,46 @@ public class PlayerWeather : MonoBehaviour, WorldObserver
     // 날씨 종류
     void WeatherType()
     {
-        //if ((WeatherState.NONE & weatherState) == WeatherState.NONE)
-        //{
-        //    Debug.Log("11");
-        //}
-        // 바람 영향 받을 시
+        if ((WeatherState.NONE & weatherState) == WeatherState.NONE)
+        {
+            if(!isLocked_NONE)
+            {
+                PlayerCtrl.instance.jumpState = JumpType.IDLE;
+                PlayerCtrl.instance.moveResistant = 0;
+                isLocked_WIND_UD = false;
+                isLocked_NONE = true;
+            }
+        }
+        else
+        {
+            isLocked_NONE = false;
+        }
+
+        // 바람 영향 받을 시(좌우)
         if ((WeatherState.WIND_LR & weatherState) == WeatherState.WIND_LR)
         {
-            PlayerCtrl.instance.controller.Move(-Vector3.right * 8f * Time.deltaTime);
+            PlayerCtrl.instance.controller.Move(-Vector3.right * weatherValue * Time.deltaTime);
         }
-        // 나뭇잎 습득
-        else if ((WeatherState.WIND_UD & weatherState) == WeatherState.WIND_UD && isUsingLeaf)
+        // 바람 영향 받을 시(상하) 나뭇잎 보유했을때
+        if ((WeatherState.WIND_UD & weatherState) == WeatherState.WIND_UD && isUsingLeaf)
         {
-            Debug.Log("Get Leaf");
+            if(!isLocked_WIND_UD)
+            {
+                PlayerCtrl.instance.jumpState = JumpType.FLY_IDLE;
+                isLocked_WIND_UD = true;
+            }
         }
         // 비 영향 받을 시 
-        else if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !isUsingLeaf)
+        if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !isUsingLeaf)
         {
-            Debug.Log("Rain && Not Leaf");
+            PlayerCtrl.instance.moveResistant = weatherValue;
         }
     }
 
     public void updateObserver(WeatherState weatherState, float weatherValue)
     {
         this.weatherState = weatherState;
+        this.weatherValue = weatherValue;
     }
 
     // 임시
@@ -75,22 +91,9 @@ public class PlayerWeather : MonoBehaviour, WorldObserver
             carryItemName = coll.name;
             StartCoroutine(LeafDestroy());
         }
-
-        //if (coll.name == "Switch")
-        //{
-        //    coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
-        //    switchState = coll.GetComponent<SwitchObject>();
-        //}
     }
 
-    //void OnTriggerExit(Collider coll)
-    //{
-    //    if (coll.name == "Switch")
-    //    {
-    //        coll.GetComponent<SwitchObject>().IsCanUseSwitch = false;
-    //        switchState = gameObject.AddComponent<SwitchObject>();
-    //    }
-    //}
+    
 
     void OnGUI()
     {
