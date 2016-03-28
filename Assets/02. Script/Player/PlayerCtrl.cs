@@ -224,7 +224,6 @@ public class PlayerCtrl : MonoBehaviour {
                 if (!isJumping)
                     jumpState = JumpType.NOMAL_JUMP;
                 else
-                    Debug.Log(2);
                     jumpState = JumpType.DOUBLE_JUMP;
                 break;
 

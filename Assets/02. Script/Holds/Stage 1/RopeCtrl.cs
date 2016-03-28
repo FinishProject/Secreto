@@ -10,7 +10,7 @@ public class RopeCtrl : MonoBehaviour {
 
     private float L = 0;                        // 실 길이(m)
     private float stepSize = 0.02f;             // 스텝사이즈
-    private float resist = -0.5f;              // 저항
+    private float resist = -0.5f;               // 저항
     private float theta = 50 * Mathf.Deg2Rad;   // 각도
     private float theta1 = 0;
     private float theta2 = 0;
@@ -21,30 +21,9 @@ public class RopeCtrl : MonoBehaviour {
     private float oldPos;
 
     private float addPower = 70.0f;
-    private bool isLimited = false;            // 힘의 제한
+    private bool isLimited = false;             // 힘의 제한
     private bool isLeft;
     private int playerIdx;
-
-    public void setPlayerAuthority(int playerIdx)
-    {
-        this.playerIdx = playerIdx;
-        isCtrlAuthority = true;
-    }
-
-    public Transform getLowRopeTransform()
-    {
-        return lowRopes[playerIdx].transform;
-    }
-
-    public float getRadian()
-    {
-        return theta;
-    }
-
-    public float getSpeed()
-    {
-        return theta2;
-    }
 
     void Start()
     {
@@ -235,6 +214,28 @@ public class RopeCtrl : MonoBehaviour {
             }
         }
     }
+
+    public void setPlayerAuthority(int playerIdx)
+    {
+        this.playerIdx = playerIdx;
+        isCtrlAuthority = true;
+    }
+
+    public Transform getLowRopeTransform()
+    {
+        return lowRopes[playerIdx].transform;
+    }
+
+    public float getRadian()
+    {
+        return theta;
+    }
+
+    public float getSpeed()
+    {
+        return theta2;
+    }
+
 
 }
 
