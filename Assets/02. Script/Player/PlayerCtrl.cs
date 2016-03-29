@@ -88,7 +88,7 @@ public class PlayerCtrl : MonoBehaviour {
 
 
         // 로프에 매달린다면
-        if (currInteraction != null && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
+        if (currInteraction != null && !isCtrlAuthority && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
         {
             getCtrlAuthority();
             isCtrlAuthority = true;
@@ -105,7 +105,7 @@ public class PlayerCtrl : MonoBehaviour {
             Quaternion rot = gameObject.transform.rotation;
 
             pos.y -= gameObject.transform.localScale.y;
-            //            rot.x = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z;
+//            rot.x = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z;
 
             gameObject.transform.position = pos;
             gameObject.transform.rotation = rot;
@@ -113,16 +113,17 @@ public class PlayerCtrl : MonoBehaviour {
 
         if (isFlying)
         {
-            moveDir += Physics.gravity * Time.deltaTime;
-            controller.Move(((Vector3.right * vx) + moveDir) * Time.deltaTime / 10f);
+//            moveDir += Physics.gravity * Time.deltaTime;
+            controller.Move(Vector3.right * vx * Time.deltaTime);
+            controller.Move(moveDir * Time.deltaTime);
+//            controller.Move(((Vector3.right * vx) + moveDir) * Time.deltaTime / 10f);
             if (controller.isGrounded)
             {
                 isFlying = false;
             }
         }
 
-        //고래이동
-        if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
+        if (isCtrlAuthority) Movement();
         else anim.SetFloat("Speed", 0f);
 
         //추락하여 사망 시
@@ -136,11 +137,12 @@ public class PlayerCtrl : MonoBehaviour {
     // 권한 찾기
     void getCtrlAuthority()
     {
-        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z;
+        //        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z
+        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
         float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (-speed * 15.0f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (-speed * 15.0f);
-
+        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 20.0f);
+        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 60.0f);
+//        Debug.Break();
         Debug.Log(-speed);
         Debug.Log(currRadian);
         Debug.Log(vy);
@@ -150,8 +152,6 @@ public class PlayerCtrl : MonoBehaviour {
 
     void Movement()
     {
-        Debug.Log(jumpState);
-        Debug.Log(isJumping);
         // 키 입력
         inputAxis = Input.GetAxis("Horizontal");
         if (controller.isGrounded && !isScript)

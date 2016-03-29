@@ -81,7 +81,6 @@ public class RopeCtrl : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 isCtrlAuthority = false;
-                playerIdx = ropeCnt - 1;
             }
         }
     }
@@ -94,11 +93,11 @@ public class RopeCtrl : MonoBehaviour {
     void PendulumMove()
     {
         // 진자운동 구현
-        theta2 = (Physics.gravity.y / L) * Mathf.Sin(theta);                           // 가속도
+        theta2 = (Physics.gravity.y / L) * Mathf.Sin(theta);                            // 가속도
         theta1 = theta1 + (pre_theta2 * stepSize)                                       // 속도
-             + ((theta2 - pre_theta2) * stepSize / 2)
+             + ((theta2 - pre_theta2) * stepSize * 0.5f)
              - ((theta2 - pre_theta2) * resist);
-        theta = theta + (theta1 * stepSize) + ((theta1 - pre_theta1) * stepSize / 2);   // 변위
+        theta = theta + (theta1 * stepSize) + ((theta1 - pre_theta1) * stepSize * 0.5f);   // 변위
         pre_theta2 = theta2;
         pre_theta1 = theta1;
 
@@ -125,10 +124,14 @@ public class RopeCtrl : MonoBehaviour {
         if (Mathf.Sin(theta) < 0f && !isLeft || Mathf.Sin(theta) >= 0f && isLeft)
             isLimited = false;
 
+
+        if (!isCtrlAuthority)
+            playerIdx = ropeCnt - 1;
+
         // 줄 회전
         ChangeRot(0, playerIdx, theta / Mathf.Deg2Rad);
         if (playerIdx != ropeCnt - 1)
-            ChangeRot(playerIdx, ropeCnt - 1, ((theta - theta) + (theta / 3)) / Mathf.Deg2Rad);
+            ChangeRot(playerIdx, ropeCnt - 1, ((theta - theta) - (theta * 0.15f)) / Mathf.Deg2Rad);
 
         if (Mathf.Sin(theta) < 0f)
             isLeft = true;
@@ -219,21 +222,22 @@ public class RopeCtrl : MonoBehaviour {
     {
         this.playerIdx = playerIdx;
         isCtrlAuthority = true;
+        playerIdx = ropeCnt - 1;
     }
 
     public Transform getLowRopeTransform()
     {
-        return lowRopes[playerIdx].transform;
+        return lowRopes[playerIdx-1].transform;
     }
 
     public float getRadian()
     {
-        return theta;
+        return lowRopes[playerIdx-1].transform.eulerAngles.z;
     }
 
     public float getSpeed()
     {
-        return theta2;
+        return theta1;
     }
 
 

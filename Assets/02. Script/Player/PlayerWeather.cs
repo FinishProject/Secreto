@@ -94,7 +94,7 @@ public class PlayerWeather : MonoBehaviour, WorldObserver
     }
 
     
-
+    /*
     void OnGUI()
     {
         string tempText;
@@ -119,5 +119,5 @@ public class PlayerWeather : MonoBehaviour, WorldObserver
 
         GUI.TextField(new Rect(0, 0, 300.0f, 30.0f), tempText);
     }
-
+    */
 }
