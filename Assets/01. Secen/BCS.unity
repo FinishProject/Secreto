@@ -247,6 +247,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11470944, guid: 5ca7aa28596946b4b8eac45ef6bf2f9a, type: 2}
+      propertyPath: LeapJumpHight
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5ca7aa28596946b4b8eac45ef6bf2f9a, type: 2}
   m_IsPrefabParent: 0

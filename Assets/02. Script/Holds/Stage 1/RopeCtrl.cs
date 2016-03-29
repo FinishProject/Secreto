@@ -9,7 +9,7 @@ public class RopeCtrl : MonoBehaviour {
     private float ropeScale;
 
     private float L = 0;                        // 실 길이(m)
-    private float stepSize = 0.02f;             // 스텝사이즈
+    private float stepSize = 0.1f;             // 스텝사이즈
     private float resist = -0.5f;               // 저항
     private float theta = 50 * Mathf.Deg2Rad;   // 각도
     private float theta1 = 0;
@@ -52,15 +52,13 @@ public class RopeCtrl : MonoBehaviour {
     {
         if (isCtrlAuthority)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKey(KeyCode.UpArrow))
             {
-                playerIdx--;
-                changeRopeRange(playerIdx);
+                changeRopeRange(--playerIdx);
             }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.DownArrow))
             {
-                playerIdx++;
-                changeRopeRange(playerIdx);
+                changeRopeRange(++playerIdx);
             }
             if (Input.GetKeyDown(KeyCode.RightArrow) && !isLimited && isLeft)
             {
@@ -115,7 +113,6 @@ public class RopeCtrl : MonoBehaviour {
             pre_theta2 = 0;
         }
 
-
         //진자 위치
         //        float m_x =  ropeScale * Mathf.Sin(theta);
         //        float m_y = -ropeScale * Mathf.Cos(theta);
@@ -142,8 +139,17 @@ public class RopeCtrl : MonoBehaviour {
     // 플레이어 위치에 따른 줄의 길이 (진자의 위치)
     void changeRopeRange(int idx)
     {
-        if (idx >= ropeCnt || idx <= 0)
+        if (idx >= ropeCnt)
+        {
+            playerIdx = ropeCnt - 1;
             return;
+        }
+        else if (idx <= 0)
+        {
+            playerIdx = 0;
+            // 로프의 끝
+            return;
+        }
 
         playerIdx = idx;
         L = Vector3.Distance(lowRopes[0].transform.position, lowRopes[playerIdx].transform.position);
