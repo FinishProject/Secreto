@@ -12,7 +12,7 @@ public class PlayerCtrl : MonoBehaviour {
     private float inputAxis = 0f; // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
     private bool isScript = false; // 현재 대화중 확인
-    private bool isJumping = false; // 현재 점프중인지 확인
+    public static bool isJumping = false; // 현재 점프중인지 확인
     private bool isFlying = false;  // 날고 있는지
     private bool isCtrlAuthority = true; // 조작권한 (로프 조종)
     private string carryItemName = null;
@@ -75,6 +75,8 @@ public class PlayerCtrl : MonoBehaviour {
     void Update()
     {
 
+        Movement();
+
         // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
 
@@ -123,8 +125,14 @@ public class PlayerCtrl : MonoBehaviour {
             }
         }
 
+<<<<<<< HEAD
         if (isCtrlAuthority) Movement();
         else anim.SetFloat("Speed", 0f);
+=======
+        //고래이동
+        //if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
+        //else anim.SetFloat("Speed", 0f);
+>>>>>>> merge1
 
         //추락하여 사망 시
         if (transform.position.y <= -5.0f) {

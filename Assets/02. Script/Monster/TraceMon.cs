@@ -18,19 +18,16 @@ public class TraceMon : MonoBehaviour {
         if (this.transform.position.y <= -5f)
             TraceMonMgr.instance.SetChildObj();
         else
-            Movement();
-    }
-    // 포물선을 그리며 이동
-    void Movement()
-    {
-        float vz = (finishPos.z - startPos.z) / 2f; // z 속도
-        float vy = (finishPos.y - startPos.y + 2f * gr) / 2f; // y 속도
+        { // 포물선을 그리며 이동
+            float vz = (finishPos.z - startPos.z) * 0.5f; // z 속도
+            float vy = (finishPos.y - startPos.y + 2f * gr) * 0.5f; // y 속도
 
-        time += Time.deltaTime;
+            time += Time.deltaTime;
 
-        float sz = startPos.z + vz * time; // z 값
-        float sy = startPos.y + vy * time - 0.5f * gr * time * time; // y 값
-        transform.position = new Vector3(startPos.x, sy, sz);
+            float sz = startPos.z + vz * time; // z 값
+            float sy = startPos.y + vy * time - 0.5f * gr * time * time; // y 값
+            transform.position = new Vector3(startPos.x, sy, sz);
+        }
     }
 
     void OnTriggerEnter(Collider col)
