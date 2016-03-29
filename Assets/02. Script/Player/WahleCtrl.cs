@@ -2,19 +2,18 @@
 using System.Collections;
 
 public class WahleCtrl : MonoBehaviour {
-
-    public enum Type { trace, mouse, keybord, };
-    public static Type moveType = Type.trace;
+    //고래 이동 타입
+    public enum MoveType { idle, trace, mouse, keybord, };
+    public static MoveType moveType = MoveType.idle;
 
     public float speed; // 이동속도
-    private bool isFush;
+    private bool isFush; // 오브젝트 밀고 당기기 체크
     private float countTime = 0f; 
-    public float maxTime = 5f;
-    public float distance = 0f;
+    public float maxTime = 5f; // 최대 이동 시간
 
     public Transform playerTr;
-    private Vector3 moveDir, camPos;
-    private GameObject targetObj = null;
+    private Vector3 moveDir, camPos; // 이동 벡터, 카메라 벡터
+    private GameObject targetObj = null; //인력, 척력 대상 오브젝트
 
     void FixedUpdate()
     {
@@ -29,9 +28,13 @@ public class WahleCtrl : MonoBehaviour {
         //}
         //CheckOutCamera();
 
-        distance = Vector3.Distance(transform.position, playerTr.position);
-        //if (distance >= 4.2f) 
-        MoveType();
+        //플레이어와 고래의 거리 차이 구함
+        float distance = Vector3.Distance(transform.position, playerTr.position);
+        if (distance >= 2f)
+            moveType = MoveType.trace;
+        else moveType = MoveType.idle;
+
+        MovementType();
 
         //키 입력에 따른 척력 인력 실행
         if (Input.GetKey(KeyCode.V)) { FullFushObject(); isFush = true; }
@@ -40,11 +43,12 @@ public class WahleCtrl : MonoBehaviour {
     }
 
     //고래 이동 타입
-    void MoveType()
+    void MovementType()
     {
-        switch (moveType)
-        {
-            case Type.trace: // 플레이어 추격
+        switch (moveType) {
+            case MoveType.idle:
+                break;
+            case MoveType.trace: // 플레이어 추격
                 transform.position = Vector3.Lerp(transform.position,
                     playerTr.position - (playerTr.forward * 1.3f) + (playerTr.up * 1.3f),
                     speed * Time.deltaTime);
