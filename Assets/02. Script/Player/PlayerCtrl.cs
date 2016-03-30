@@ -75,7 +75,7 @@ public class PlayerCtrl : MonoBehaviour {
     void Update()
     {
 
-        Movement();
+        //Movement();
 
         // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
@@ -125,14 +125,14 @@ public class PlayerCtrl : MonoBehaviour {
             }
         }
 
-<<<<<<< HEAD
+
         if (isCtrlAuthority) Movement();
         else anim.SetFloat("Speed", 0f);
-=======
+
         //고래이동
         //if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
         //else anim.SetFloat("Speed", 0f);
->>>>>>> merge1
+
 
         //추락하여 사망 시
         if (transform.position.y <= -5.0f) {
@@ -167,7 +167,7 @@ public class PlayerCtrl : MonoBehaviour {
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);
-            anim.SetFloat("Speed", inputAxis);
+            //anim.SetFloat("Speed", inputAxis);
 
             if (isJumping && jumpState != JumpType.FLY_IDLE && jumpState != JumpType.FLY_JUMP)
             {
