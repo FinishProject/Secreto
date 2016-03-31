@@ -34,9 +34,9 @@ public class SkillCtrl : MonoBehaviour {
     void FindTarget()
     {
         Collider[] hitCollider = Physics.OverlapSphere(this.transform.position, 10f);
-        foreach (Collider collider in hitCollider) {
-            if (collider.gameObject.tag == "MONSTER") {
-                goBullets[count].SendMessage("GetTarget", collider.transform);
+        for(int i = 0; i < hitCollider.Length; i++) { 
+            if (hitCollider[i].gameObject.tag == "MONSTER") {
+                goBullets[count].SendMessage("GetTarget", hitCollider[i].transform);
                 break;
             }
         }
