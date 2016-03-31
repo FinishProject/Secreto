@@ -37,7 +37,7 @@ public class PlayerCtrl : MonoBehaviour {
     public Transform rayTr; // 레이캐스트 시작 위치
     private Animator anim;
     private SwitchObject switchState;
-    private float hp = 100;
+    private float hp = 50;
     private GameObject currInteraction;
 
     Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
@@ -86,19 +86,23 @@ public class PlayerCtrl : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
 
         // 점프
-        if (Input.GetKey(KeyCode.Space))
+        if(!isFlyingByRope)
         {
-            startTime += Time.deltaTime;
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            Debug.Log(startTime);
-            if(startTime > 0.5f )
-                jumpState = JumpType.LEAP_JUMP;
-            Jump();
+            if (Input.GetKey(KeyCode.Space))
+            {
+                startTime += Time.deltaTime;
+            }
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                Debug.Log(startTime);
+                if (startTime > 0.5f)
+                    jumpState = JumpType.LEAP_JUMP;
+                Jump();
 
-            startTime = 0;
+                startTime = 0;
+            }
         }
+        
         
 
 
@@ -108,6 +112,7 @@ public class PlayerCtrl : MonoBehaviour {
             getCtrlAuthority();
             isCtrlAuthority = true;
         }
+        
              
     }
 
@@ -159,8 +164,8 @@ public class PlayerCtrl : MonoBehaviour {
         //        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z
         currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
         float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 30.0f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 60.0f);
+        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 5.0f);
+        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 5.0f);
 
         moveDir.y = vy;
         isFlyingByRope = true;
@@ -223,7 +228,6 @@ public class PlayerCtrl : MonoBehaviour {
         // 중력 조절
         if(jumpState != JumpType.FLY_JUMP && jumpState != JumpType.FLY_IDLE)
         {
-            Debug.Log(1111);
             moveDir += Physics.gravity * Time.deltaTime;
         }
         else
@@ -319,6 +323,18 @@ public class PlayerCtrl : MonoBehaviour {
         hp -= damage;
         if(hp <= 0)
         {
+            Debug.Log("사망");
+            return;
+        }
+        Debug.Log(hp);
+    }
+
+    public void getRecovery(float recovery)
+    {
+        hp += recovery;
+        if (hp >= 100)
+        {
+            hp = 100;
             Debug.Log("사망");
             return;
         }

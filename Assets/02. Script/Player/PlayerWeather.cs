@@ -2,9 +2,9 @@
 using System.Collections;
 using System;
 
-public class PlayerWeather : MonoBehaviour, WorldObserver
+public class PlayerWeather : MonoBehaviour, WeatherObserver
 {
-    WorldSubject worldData;
+    WeatherSubject WeatherData;
     WeatherState weatherState;
     private float weatherValue;
 
@@ -19,8 +19,8 @@ public class PlayerWeather : MonoBehaviour, WorldObserver
     void Awake()
     {
         // 옵저버 등록
-        worldData = WorldCtrl.GetInstance().RetrunThis();
-        worldData.registerObserver(this);
+        WeatherData = WeatherMgr.GetInstance().RetrunThis();
+        WeatherData.registerObserver(this);
     }
 
     void Update()
