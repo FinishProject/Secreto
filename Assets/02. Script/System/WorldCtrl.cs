@@ -2,38 +2,47 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*************************   정보   **************************
+
+    날씨 매니저
+    옵저버 패턴으로 구현 했음
+
+    사용방법
+    은 나중에 적어야지
+*************************************************************/
+
 public enum WeatherState
 {
     NONE = 0x1, WIND_LR = 0x2, WIND_UD = 0x4, RAIN = 0x8,
 }
 
-public interface WorldObserver
+public interface WeatherObserver
 {
     void updateObserver(WeatherState state, float value);
 }
 
-public interface WorldSubject
+public interface WeatherSubject
 {
-    void registerObserver(WorldObserver o);
-    void removeObserver(WorldObserver o);
+    void registerObserver(WeatherObserver o);
+    void removeObserver(WeatherObserver o);
     void notifyObservers();
 }
 
-public partial class WorldCtrl : MonoBehaviour, WorldSubject
+public partial class WeatherMgr : MonoBehaviour, WeatherSubject
 {
-    List<WorldObserver> observers;
+    List<WeatherObserver> observers;
     private WeatherState weatherState;
     private float weatherValue;
     bool isWinding = false;
 
     // 옵저버 추가
-    public void registerObserver(WorldObserver o)
+    public void registerObserver(WeatherObserver o)
     {
         observers.Add(o);
     }
 
     // 옵저버 삭제
-    public void removeObserver(WorldObserver o)
+    public void removeObserver(WeatherObserver o)
     {
         if (observers.Count >= 0)
             observers.Remove(o);
@@ -42,7 +51,7 @@ public partial class WorldCtrl : MonoBehaviour, WorldSubject
     // 옵저버들에게 통지
     public void notifyObservers()
     {
-        WorldObserver observer;
+        WeatherObserver observer;
 
         for (int i = 0; i < observers.Count; i++)
         {
@@ -52,7 +61,7 @@ public partial class WorldCtrl : MonoBehaviour, WorldSubject
     }
 
     // 날씨 입력
-    public void WeatherCtrl(WeatherState weatherState, float weatherValue)
+    public void SetWeather(WeatherState weatherState, float weatherValue)
     {
         this.weatherState = weatherState;
         this.weatherValue = weatherValue;
@@ -69,61 +78,61 @@ public partial class WorldCtrl : MonoBehaviour, WorldSubject
     IEnumerator WeatherReset(float timer)
     {
         yield return new WaitForSeconds(timer);
-        WeatherCtrl(WeatherState.NONE, 0);
+        SetWeather(WeatherState.NONE, 0);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            WeatherCtrl(WeatherState.WIND_LR, 4);
+            SetWeather(WeatherState.WIND_LR, 4);
             StartCoroutine(WeatherReset(3.0f));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            WeatherCtrl(WeatherState.RAIN, 4);
+            SetWeather(WeatherState.RAIN, 4);
             StartCoroutine(WeatherReset(4.0f));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            WeatherCtrl(WeatherState.WIND_LR | WeatherState.RAIN, 4);
+            SetWeather(WeatherState.WIND_LR | WeatherState.RAIN, 4);
             StartCoroutine(WeatherReset(4.0f));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            WeatherCtrl(WeatherState.WIND_UD,4);
+            SetWeather(WeatherState.WIND_UD,4);
             StartCoroutine(WeatherReset(8.0f));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            WeatherCtrl(WeatherState.NONE, 0);
+            SetWeather(WeatherState.NONE, 0);
         }
     }
 }
 
 // 싱글톤 / 초기화
-public partial class WorldCtrl : MonoBehaviour, WorldSubject
+public partial class WeatherMgr : MonoBehaviour, WeatherSubject
 {
-    private static WorldCtrl instance;
+    private static WeatherMgr instance;
     private static GameObject container;
-    public static WorldCtrl GetInstance()
+    public static WeatherMgr GetInstance()
     {
         if (!instance)
         {
             container = new GameObject();
-            container.name = "WorldCtrl";
-            instance = container.AddComponent(typeof(WorldCtrl)) as WorldCtrl;
+            container.name = "WeatherMgr";
+            instance = container.AddComponent(typeof(WeatherMgr)) as WeatherMgr;
 
         }
         return instance;
     }
 
-    public WorldCtrl()
+    public WeatherMgr()
     {
-        observers = new List<WorldObserver>();
+        observers = new List<WeatherObserver>();
     }
 
-    public WorldCtrl RetrunThis()
+    public WeatherMgr RetrunThis()
     {
         return this;
     }

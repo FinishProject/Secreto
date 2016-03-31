@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ObjectForWeather : MonoBehaviour, WorldObserver
+public class ObjectForWeather : MonoBehaviour, WeatherObserver
 {
     public bool isInfluence_Wind;
     public bool isInfluence_Rain;
 
-    private WorldSubject worldData;
+    private WeatherSubject WeatherData;
     private WeatherState weatherState;
     private float weatherValue;
     private Transform tr;
@@ -17,8 +17,8 @@ public class ObjectForWeather : MonoBehaviour, WorldObserver
         tr = GetComponent<Transform>();
 
         // 옵저버 등록
-        worldData = WorldCtrl.GetInstance().RetrunThis();
-        worldData.registerObserver(this);
+        WeatherData = WeatherMgr.GetInstance().RetrunThis();
+        WeatherData.registerObserver(this);
     }
 
     // Update is called once per frame
