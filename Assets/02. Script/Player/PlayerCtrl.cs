@@ -4,12 +4,12 @@ using System;
 
 public enum JumpType
 {
-    NONE, IDLE, NOMAL_JUMP, DOUBLE_JUMP, FLY_JUMP, FLY_IDLE, LEAP_JUMP
+    IDLE, FLY_IDLE, BASIC, DASH, LEAP, POWER, 
 }
 
 public class PlayerCtrl : MonoBehaviour {
 
-    private float inputAxis = 0f;           // 입력 받는 키의 값
+    public static float inputAxis = 0f;           // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
     private bool isScript = false;          // 현재 대화중 확인
     public static bool isJumping = false;   // 현재 점프중인지 확인
@@ -21,9 +21,9 @@ public class PlayerCtrl : MonoBehaviour {
     private float vx;
     private float vy;
 
-    public float jumpHight = 6.0f;     // 기본 점프 높이
+    public float jumpHight = 3.0f;     // 기본 점프 높이
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
-    public float flyJumpHight = 2.0f;  // 날기 점프 높이
+    //public float flyJumpHight = 2.0f;  // 날기 점프 높이
     public float LeapJumpHight = 3.0f; // 도약 점프 높이
     public float speed = 10f;          // 이동 속도
     public float moveResistant = 0f;   // 이동 저항력
@@ -32,13 +32,16 @@ public class PlayerCtrl : MonoBehaviour {
 
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
-    public JumpType jumpState = JumpType.IDLE;
+    public JumpType jumpState = JumpType.IDLE; // 점프 타입
 
     public Transform rayTr; // 레이캐스트 시작 위치
     private Animator anim;
     private SwitchObject switchState;
     private float hp = 100;
     private GameObject currInteraction;
+
+    public Transform wahleTr;
+    private Collider objColl = null;
 
     Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
@@ -75,32 +78,12 @@ public class PlayerCtrl : MonoBehaviour {
 
     void Update()
     {
-
         // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
-
         //NPC와 대화
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
-
         //펫 타기
         if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
-
-        // 점프
-        if (Input.GetKey(KeyCode.Space))
-        {
-            startTime += Time.deltaTime;
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            Debug.Log(startTime);
-            if(startTime > 0.5f )
-                jumpState = JumpType.LEAP_JUMP;
-            Jump();
-
-            startTime = 0;
-        }
-        
-
 
         // 로프에 매달린다면
         if (currInteraction != null && !isCtrlAuthority && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
@@ -108,7 +91,8 @@ public class PlayerCtrl : MonoBehaviour {
             getCtrlAuthority();
             isCtrlAuthority = true;
         }
-             
+        Movement();
+
     }
 
     void FixedUpdate()
@@ -129,17 +113,15 @@ public class PlayerCtrl : MonoBehaviour {
         if (isFlyingByRope)
         {
             controller.Move(Vector3.right * vx * Time.deltaTime);
-
-
             if (controller.isGrounded)
             {
                 isFlyingByRope = false;
             }
         }
-
+        //Movement();
         // 플레이어
-        if (isCtrlAuthority) Movement();
-        else anim.SetFloat("Speed", 0f);
+        //if (isCtrlAuthority) Movement();
+        //else anim.SetFloat("Speed", 0f);
 
         //고래이동
         //if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
@@ -170,66 +152,44 @@ public class PlayerCtrl : MonoBehaviour {
     {
         // 키 입력
         inputAxis = Input.GetAxis("Horizontal");
+        // 지상에 있을 시
         if (controller.isGrounded && !isScript)
         {
+            jumpHight = 3f;
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);
             anim.SetFloat("Speed", inputAxis);
+            // 점프
+            if (Input.GetKey(KeyCode.UpArrow) && Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.LEAP); }
+            else if (Input.GetKey(KeyCode.Space)) { Jump(JumpType.BASIC); }
 
-            if (isJumping && jumpState != JumpType.FLY_IDLE && jumpState != JumpType.FLY_JUMP)
-            {
-                isJumping = false;
-                jumpState = JumpType.IDLE;
-            }
+            
         }
-        else if(isFlyingByRope)
-        {
-
-        }
+        // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            moveDir.x = inputAxis * 50f * Time.deltaTime;
+            moveDir.x = inputAxis * 25f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
-        }
-
-        switch (jumpState)
-        {
-            case JumpType.NOMAL_JUMP:
-                moveDir.y = jumpHight;
-                isJumping = true;
-                jumpState = JumpType.IDLE;
-                break;
-            case JumpType.DOUBLE_JUMP:
-                moveDir.y = dashJumpHight;
-                jumpState = JumpType.NONE;
-                break;
-            case JumpType.FLY_JUMP:
-                moveDir.y = flyJumpHight;
-                isJumping = true;
-                jumpState = JumpType.FLY_IDLE;
-                break;
-            case JumpType.LEAP_JUMP:
-                moveDir.y += LeapJumpHight;
-                isJumping = true;
-                jumpState = JumpType.NONE;
-                break;
+            // 대쉬 점프
+            if (Input.GetKey(KeyCode.DownArrow)) { Jump(JumpType.POWER); }
+            else if (Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.DASH); }
         }
 
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        // 중력 조절
-        if(jumpState != JumpType.FLY_JUMP && jumpState != JumpType.FLY_IDLE)
-        {
-            Debug.Log(1111);
-            moveDir += Physics.gravity * Time.deltaTime;
-        }
-        else
-        {
-            moveDir += new Vector3(0.0f, -2.0f, 0.0f) * Time.deltaTime;
-        }
+        //// 중력 조절
+        //if (jumpState != JumpType.FLY_JUMP && jumpState != JumpType.FLY_IDLE)
+        //{
+        //    moveDir += Physics.gravity * Time.deltaTime;
+        //}
+        //else
+        //{
+        //    moveDir += new Vector3(0.0f, -2.0f, 0.0f) * Time.deltaTime;
+        //}
+        moveDir += Physics.gravity * Time.deltaTime;
 
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
@@ -242,21 +202,57 @@ public class PlayerCtrl : MonoBehaviour {
     }
 
     // 점프
-    void Jump()
+    void Jump(JumpType isJump)
     {
-        switch(jumpState)
+        jumpState = isJump;
+        switch (jumpState)
         {
-            case JumpType.IDLE:
-                if (!isJumping)
-                    jumpState = JumpType.NOMAL_JUMP;
-                else
-                    jumpState = JumpType.DOUBLE_JUMP;
+            case JumpType.BASIC:
+                isJumping = false;
+                if (!isJumping) {
+                    isJumping = true;
+                    StartCoroutine(Jumping());  
+                }
                 break;
-
-           case JumpType.FLY_IDLE:
-                jumpState = JumpType.FLY_JUMP;
+            case JumpType.DASH:
+                if (isJumping) {
+                    moveDir.y = dashJumpHight;
+                    isJumping = false;
+                }
+                break;
+            case JumpType.LEAP:
+                moveDir.y = 5f;
+                PlayerFunc.instance.FindObject();
+                break;
+            case JumpType.POWER:
+                moveDir.y = -7f;
+                StartCoroutine(WaitTime());
                 break;
         }
+    }
+    IEnumerator WaitTime()
+    {
+        while (true)
+        {
+            if (controller.isGrounded) { break; }
+            yield return null;
+        }
+        PlayerFunc.instance.SetPowerDamage();
+        StopCoroutine(WaitTime());
+    }
+
+    IEnumerator Jumping()
+    {
+        float jumpTime = 0f; // 체공 시간
+
+        while (Input.GetKey(KeyCode.Space) && jumpTime <= 0.18f)
+        {
+            moveDir.y = jumpHight;
+            jumpTime += Time.deltaTime;
+
+            yield return null;
+        }
+        StopCoroutine(Jumping());
     }
 
     //캐릭터 컨트롤러 충돌
@@ -273,7 +269,6 @@ public class PlayerCtrl : MonoBehaviour {
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             body.velocity = pushDir * 2f;
         }
-
     }
 
     //레이캐스팅 발사

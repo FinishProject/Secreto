@@ -10,6 +10,7 @@ public class WahleCtrl : MonoBehaviour {
     private bool isFush; // 오브젝트 밀고 당기기 체크
     private float countTime = 0f; 
     public float maxTime = 5f; // 최대 이동 시간
+    private  bool isFocusRight = true; // 오른쪽을 봐라보는지 확인
 
     public Transform playerTr;
     private Vector3 moveDir, camPos; // 이동 벡터, 카메라 벡터
@@ -17,29 +18,32 @@ public class WahleCtrl : MonoBehaviour {
 
     void FixedUpdate()
     {
-        ////이동 방식 스위칭
-        //if (Input.GetKeyDown(KeyCode.Tab)) {
-        //    if (moveType != Type.keybord) { moveType = Type.keybord;}
-        //    else if (moveType == Type.keybord) { moveType = Type.trace; }
-        //}
-        //else if (Input.GetMouseButton(1) && moveType != Type.keybord) {
-        //    moveType = Type.mouse;
-        //    GetMousePos();
-        //}
-        //CheckOutCamera();
-
         //플레이어와 고래의 거리 차이 구함
         float distance = Vector3.Distance(transform.position, playerTr.position);
-        if (distance >= 2f)
-            moveType = MoveType.trace;
+        if (distance >= 3.7f) moveType = MoveType.trace;
         else moveType = MoveType.idle;
 
         MovementType();
+
+        if (moveType == MoveType.trace)
+        {
+            if (PlayerCtrl.inputAxis < 0f && isFocusRight) { TurnFocus(); }
+            else if (PlayerCtrl.inputAxis > 0f && !isFocusRight) { TurnFocus(); }
+        }
 
         //키 입력에 따른 척력 인력 실행
         if (Input.GetKey(KeyCode.V)) { FullFushObject(); isFush = true; }
         else if (Input.GetKey(KeyCode.C)) { FullFushObject(); isFush = false; }
         else { StopCoroutine("GrabObject"); targetObj = null; } // 잡기 중지
+    }
+
+    void TurnFocus()
+    {
+        isFocusRight = !isFocusRight;
+        //transform.Rotate(new Vector3(0, 0, 1), 180f);
+        Vector3 scale = transform.localScale;
+        scale.y *= -1f;
+        transform.localScale = scale;
     }
 
     //고래 이동 타입
@@ -50,7 +54,7 @@ public class WahleCtrl : MonoBehaviour {
                 break;
             case MoveType.trace: // 플레이어 추격
                 transform.position = Vector3.Lerp(transform.position,
-                    playerTr.position - (playerTr.forward * 1.3f) + (playerTr.up * 1.3f),
+                    playerTr.position - (playerTr.forward * 0.5f) + (playerTr.up * 3.3f),
                     speed * Time.deltaTime);
                 break;
             //case Type.mouse: // 마우스 이동
@@ -124,18 +128,4 @@ public class WahleCtrl : MonoBehaviour {
             yield return null;
         }
     }
-
-    //void LookTarger()
-    //{
-    //중점을 중심으로 회전
-    //tr.RotateAround(playerTr.position, Vector3.up, Time.deltaTime * 20f);
-    //tr.LookAt(playerTr.position);
-
-    //목표를 봐라보도록 회전시킨다. LookAt과 비슷하다.
-    //Vector3 dir = targetTr.position - tr.position;
-    //Quaternion drot = Quaternion.LookRotation(dir);
-
-    //Quaternion rot = Quaternion.Slerp(tr.rotation, drot, Time.deltaTime * 20f);
-    //transform.rotation = rot;
-    //}
 }
