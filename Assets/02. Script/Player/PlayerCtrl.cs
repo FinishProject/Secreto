@@ -291,6 +291,18 @@ public class PlayerCtrl : MonoBehaviour {
             }
         }
     }
+    
+    public void getRecovery(float recovery)
+    {
+        hp += recovery;
+        if (hp >= 100)
+        {
+            hp = 100;
+            Debug.Log("사망");
+            return;
+        }
+        Debug.Log(hp);
+    }
 
     //ScriptMgr에서 NPC이름을 찾아서 대화 생성
     void ShowScript(string name)
