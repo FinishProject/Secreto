@@ -11,6 +11,7 @@ using System.Collections.Generic;
     은 나중에 적어야지
 *************************************************************/
 
+// 날씨의 종류
 public enum WeatherState
 {
     NONE = 0x1, WIND_LR = 0x2, WIND_UD = 0x4, RAIN = 0x8,

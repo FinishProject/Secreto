@@ -9,12 +9,12 @@ public enum JumpType
 
 public class PlayerCtrl : MonoBehaviour {
 
-    public static float inputAxis = 0f;           // 입력 받는 키의 값
+    public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
     private bool isScript = false;          // 현재 대화중 확인
     public static bool isJumping = false;   // 현재 점프중인지 확인
     private bool isFlyingByRope = false;    // 날고 있는지
-    private bool isCtrlAuthority = true;    // 조작권한 (로프 조종)
+    private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
     private string carryItemName = null;    // 들고 있는 아이템 이름
     
     private float currRadian;
@@ -37,7 +37,7 @@ public class PlayerCtrl : MonoBehaviour {
     public Transform rayTr; // 레이캐스트 시작 위치
     private Animator anim;
     private SwitchObject switchState;
-    private float hp = 100;
+    private float hp = 10;
     private GameObject currInteraction;
 
     public Transform wahleTr;
@@ -85,40 +85,15 @@ public class PlayerCtrl : MonoBehaviour {
         //펫 타기
         if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
 
-        // 로프에 매달린다면
-        if (currInteraction != null && !isCtrlAuthority && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
-        {
-            getCtrlAuthority();
-            isCtrlAuthority = true;
-        }
-        Movement();
+        // 플레이어에게 조작권한이 있다면 움직임
+        if (isCtrlAuthority) Movement();
 
     }
 
     void FixedUpdate()
     {
-        // 로프
-        if (!isCtrlAuthority && currInteraction != null)
-        {
-            Vector3 pos = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().position;
-            Quaternion rot = gameObject.transform.rotation;
+        RopeWorker();
 
-            pos.y -= gameObject.transform.localScale.y;
-//            rot.x = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z;
-
-            gameObject.transform.position = pos;
-            gameObject.transform.rotation = rot;
-        }
-
-        if (isFlyingByRope)
-        {
-            controller.Move(Vector3.right * vx * Time.deltaTime);
-            if (controller.isGrounded)
-            {
-                isFlyingByRope = false;
-            }
-        }
-        //Movement();
         // 플레이어
         //if (isCtrlAuthority) Movement();
         //else anim.SetFloat("Speed", 0f);
@@ -136,16 +111,17 @@ public class PlayerCtrl : MonoBehaviour {
     }
 
     // 권한 찾기
-    void getCtrlAuthority()
+    void getCtrlAuthorityByRope()
     {
         //        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z
         currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
         float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 30.0f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 60.0f);
+        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 10.0f);
+        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 5.0f);
 
         moveDir.y = vy;
         isFlyingByRope = true;
+        currInteraction = null;
     }
 
     void Movement()
@@ -180,15 +156,6 @@ public class PlayerCtrl : MonoBehaviour {
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        //// 중력 조절
-        //if (jumpState != JumpType.FLY_JUMP && jumpState != JumpType.FLY_IDLE)
-        //{
-        //    moveDir += Physics.gravity * Time.deltaTime;
-        //}
-        //else
-        //{
-        //    moveDir += new Vector3(0.0f, -2.0f, 0.0f) * Time.deltaTime;
-        //}
         moveDir += Physics.gravity * Time.deltaTime;
 
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
@@ -298,7 +265,7 @@ public class PlayerCtrl : MonoBehaviour {
         if (hp >= 100)
         {
             hp = 100;
-            Debug.Log("사망");
+            Debug.Log(hp);
             return;
         }
         Debug.Log(hp);
@@ -332,6 +299,46 @@ public class PlayerCtrl : MonoBehaviour {
         Debug.Log(hp);
     }
 
+    public bool IsJumping()
+    {
+        return isJumping;
+    }
+
+    // 로프의 움직임 관련
+    void RopeWorker()
+    {
+        // 로프에서 권한을 찾아옴 ( 상호작용 하고 있는 로프의 조작 권한이 없어지면 )
+        if (currInteraction != null && !isCtrlAuthority && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
+        {
+            getCtrlAuthorityByRope();
+        }
+
+        // 로프를 타고 있을때
+        if (!isCtrlAuthority && !isFlyingByRope && currInteraction != null)
+        {
+            Vector3 pos = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().position;
+            Quaternion rot = gameObject.transform.rotation;
+
+            pos.y -= gameObject.transform.localScale.y;
+
+            gameObject.transform.position = pos;
+            gameObject.transform.rotation = rot;
+        }
+        // 로프를 이용해 날고 있을때
+        if (isFlyingByRope)
+        {
+
+            controller.Move(Vector3.right * vx * Time.deltaTime);
+            moveDir += Physics.gravity * Time.deltaTime;
+            controller.Move(moveDir * 10.0f * Time.deltaTime);
+
+            if (controller.isGrounded)
+            {
+                isFlyingByRope = false;
+                isCtrlAuthority = true;
+            }
+        }
+    }
 
     void OnTriggerEnter(Collider coll)
     {

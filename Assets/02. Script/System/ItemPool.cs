@@ -3,9 +3,9 @@ using System.Collections;
 
 public class ItemPool : MonoBehaviour {
 
-    private GameObject[] items;
+    private GameObject[] items = null;
 
-    public ItemPool(GameObject prefab, int number)
+    public void CreateItemPool(GameObject prefab, int number)
     {
         items = new GameObject[number];
         for (int i = 0; i < number; i++)

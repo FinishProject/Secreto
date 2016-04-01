@@ -9,7 +9,7 @@ using System.Collections;
 
 public partial class ItemMgr : MonoBehaviour
 {
-    public ItemPool[] items;
+    public ItemPool[] items = null;
 
     public GameObject HpRecoveryItemPrefab;
     public int HpRecoveryItemNumber;
@@ -19,9 +19,10 @@ public partial class ItemMgr : MonoBehaviour
     public void ItemPoolInit()
     {
         items = new ItemPool[2];
-        items[(int)ItemFunction.HpRecovery] = new ItemPool(HpRecoveryItemPrefab, HpRecoveryItemNumber);
-        items[(int)ItemFunction.Exp]        = new ItemPool(EXPItemPrefab, EXPItemNumber);
-
+        items[(int)ItemFunction.HpRecovery] = gameObject.AddComponent<ItemPool>();
+        items[(int)ItemFunction.HpRecovery].CreateItemPool(HpRecoveryItemPrefab, HpRecoveryItemNumber);
+        items[(int)ItemFunction.Exp] = gameObject.AddComponent<ItemPool>();
+        items[(int)ItemFunction.Exp].CreateItemPool(EXPItemPrefab, EXPItemNumber);
     }
 
     public ItemPool GetItem(ItemFunction itemType)
@@ -69,9 +70,8 @@ public partial class ItemMgr : MonoBehaviour
 
         temp = new ItemStruct();
         csvParser = new CSVParser("Item");
-        ItemPoolInit();
-//        csvParser.Load();
-//        csvParser.ParseByID(temp, 0);
+        csvParser.Load();
+        ItemPoolInit();       
     }
 
     public CSVParser GetItem()

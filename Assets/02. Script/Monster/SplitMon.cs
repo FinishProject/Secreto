@@ -62,6 +62,7 @@ public class SplitMon : MonoBehaviour {
         }
         else if(coll.gameObject.tag == "OBJECT")
         {
+            gameObject.GetComponent<ItemDrop>().DropItem();
             this.gameObject.SetActive(false);
         }
     }
