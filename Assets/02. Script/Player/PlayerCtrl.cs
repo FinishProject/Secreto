@@ -138,7 +138,7 @@ public class PlayerCtrl : MonoBehaviour {
             anim.SetFloat("Speed", inputAxis);
             // 점프
             if (Input.GetKey(KeyCode.UpArrow) && Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.LEAP); }
-            else if (Input.GetKey(KeyCode.Space)) { Jump(JumpType.BASIC); }
+            else if (Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.BASIC); }
 
             
         }

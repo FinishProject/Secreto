@@ -11,6 +11,7 @@ TagManager:
   - Wahle
   - Rope
   - Ground
+  - WALL
   layers:
   - Default
   - TransparentFX

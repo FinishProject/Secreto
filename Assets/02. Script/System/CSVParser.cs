@@ -82,7 +82,7 @@ public class CSVParser : CSVReader
         sb.Remove(sb.Length - 2, 2);
 
         string filePath = Application.streamingAssetsPath + "/" + fileName + ".csv";
-        File.WriteAllText(filePath, sb.ToString());
+        //File.WriteAllText(filePath, sb.ToString());
 
     }
 }
