@@ -2,17 +2,28 @@
 using System.Collections;
 using System;
 
+/*************************   정보   **************************
+
+    플레이어에게 날씨 효과를 주는 클래스
+
+    사용방법 :
+    
+    오브젝트에 추가만 해주자
+    
+*************************************************************/
+
+
 public class PlayerWeather : MonoBehaviour, WeatherObserver
 {
     WeatherSubject WeatherData;
     WeatherState weatherState;
     private float weatherValue;
 
-    private bool isUsingLeaf = false; // 나뭇잎 쓰고 있니?
+    private bool isUsingLeaf = false;         // 나뭇잎 쓰고 있니?
     public float LeafTimer = 10.0f;
     private string carryItemName = null;
     private bool isLocked_WIND_UD = false;    // 데이터 한번만 보내야할때 잠금 역할
-    private bool isLocked_NONE = false;    // 데이터 한번만 보내야할때 잠금 역할
+    private bool isLocked_NONE = false;       // 데이터 한번만 보내야할때 잠금 역할
 
     //private SwitchObject switchState;
 
@@ -93,7 +104,7 @@ public class PlayerWeather : MonoBehaviour, WeatherObserver
         }
     }
 
-    
+
     /*
     void OnGUI()
     {

@@ -3,12 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 
 /*************************   정보   **************************
-
+    
     날씨 매니저
     옵저버 패턴으로 구현 했음
+    
+    
+    사용방법 :
 
-    사용방법
-    은 나중에 적어야지
+    1.  WeatherSubject WeatherData 이런식으로 변수 선언
+
+    2.  WeatherData = WeatherMgr.GetInstance().RetrunThis();
+        WeatherData.registerObserver(this);
+        이렇게 옵버저 등록을 한다
+
+    3.  날씨 영향을 받을 오브젝트에 WeatherObserver를 상속 받아
+        updateObserver 를 통해 업데이트 받음
+
+    ★ 매니저가 자동 생성 되므로 오브젝트에 추가하지 말자 ★ 
+
 *************************************************************/
 
 // 날씨의 종류

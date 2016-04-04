@@ -19,6 +19,7 @@ public class CSVParser : CSVReader
         OpenFile(fileName);
     }
 
+    //===========================   아이템   ===========================
     // 아이디로 검색, 반환
     public void ParseByID(ItemStruct data, int id)
     {
@@ -55,6 +56,22 @@ public class CSVParser : CSVReader
         }
     }
 
+    //===========================   경험치 테이블   ===========================
+    // 레벨로 검색, 반환
+    public void ParseByLevel(ExpTable data, int level)
+    {
+        for (int row = 2; row < rowCnt; row++)
+        {
+            if (!Convert.ToInt32(stringList[colCnt * row]).Equals(level))
+                continue;
+
+            data.SetData(
+                Convert.ToInt32(stringList[colCnt * row]),
+                Convert.ToInt32(stringList[colCnt * row + 1]));
+
+            break;
+        }
+    }
 
     public void Save()
     {
