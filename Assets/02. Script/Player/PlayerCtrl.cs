@@ -8,10 +8,10 @@ public enum JumpType
 }
 
 public class PlayerCtrl : MonoBehaviour {
-
+    float inputVer = 0f;
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
-    private bool isScript = false;          // 현재 대화중 확인
+    public static bool isMove = true;          // 현재 대화중 확인
     public static bool isJumping = false;   // 현재 점프중인지 확인
     private bool isFlyingByRope = false;    // 날고 있는지
     private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
@@ -42,6 +42,8 @@ public class PlayerCtrl : MonoBehaviour {
 
     public Transform wahleTr;
     private Collider objColl = null;
+
+    bool isClimb = false;
 
     Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
 
@@ -81,9 +83,9 @@ public class PlayerCtrl : MonoBehaviour {
         // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
         //NPC와 대화
-        if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
+        else if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기
-        if (Input.GetKeyDown(KeyCode.E)) { RidePet(); }
+        else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
 
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
@@ -93,21 +95,6 @@ public class PlayerCtrl : MonoBehaviour {
     void FixedUpdate()
     {
         RopeWorker();
-
-        // 플레이어
-        //if (isCtrlAuthority) Movement();
-        //else anim.SetFloat("Speed", 0f);
-
-        //고래이동
-        //if (WahleCtrl.moveType != WahleCtrl.Type.keybord && isCtrlAuthority) Movement();
-        //else anim.SetFloat("Speed", 0f);
-
-        //추락하여 사망 시
-        if (transform.position.y <= -5.0f) {
-            Debug.Log("Die");
-            pData = PlayerData.Load();
-            transform.position = pData.pPosition;
-        }
     }
 
     // 권한 찾기
@@ -129,7 +116,7 @@ public class PlayerCtrl : MonoBehaviour {
         // 키 입력
         inputAxis = Input.GetAxis("Horizontal");
         // 지상에 있을 시
-        if (controller.isGrounded && !isScript)
+        if (controller.isGrounded && isMove)
         {
             jumpHight = 3f;
             //이동
@@ -138,9 +125,7 @@ public class PlayerCtrl : MonoBehaviour {
             anim.SetFloat("Speed", inputAxis);
             // 점프
             if (Input.GetKey(KeyCode.UpArrow) && Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.LEAP); }
-            else if (Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.BASIC); }
-
-            
+            else if (Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.BASIC); } 
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
@@ -156,8 +141,16 @@ public class PlayerCtrl : MonoBehaviour {
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        moveDir += Physics.gravity * Time.deltaTime;
+        if(!isClimb)
+            moveDir += Physics.gravity * Time.deltaTime;
 
+        else if (isClimb)
+        {
+            Debug.Log("11");
+            inputVer = Input.GetAxis("Vertical");
+            moveDir = Vector3.up * inputVer;
+        }
+            
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
@@ -197,6 +190,7 @@ public class PlayerCtrl : MonoBehaviour {
                 break;
         }
     }
+
     IEnumerator WaitTime()
     {
         while (true)
@@ -246,7 +240,7 @@ public class PlayerCtrl : MonoBehaviour {
         if (Physics.Raycast(rayTr.position, forward, out hit, 3f))
         {
             //앞에 오를 수 있는 오브젝트 있을 시
-            if (hit.collider.gameObject.tag == "Climb")
+            if (hit.collider.gameObject.tag == "WALL")
             {
                 Debug.Log("Climb");
             }
@@ -254,7 +248,7 @@ public class PlayerCtrl : MonoBehaviour {
             else if (hit.collider.gameObject.tag == "NPC")
             {
                 string name = hit.collider.gameObject.name;
-                ShowScript(name);
+                PlayerFunc.instance.ShowScript(name);
             }
         }
     }
@@ -269,23 +263,6 @@ public class PlayerCtrl : MonoBehaviour {
             return;
         }
         Debug.Log(hp);
-    }
-
-    //ScriptMgr에서 NPC이름을 찾아서 대화 생성
-    void ShowScript(string name)
-    {
-        if (name != null)
-        {
-            //대화 중이면 true, 캐릭터 정지
-            isScript = ScriptMgr.instance.GetScript(name);
-            inputAxis = 0f;
-        }
-    }
-
-    //펫 타기
-    void RidePet()
-    {
-        Debug.Log("Riding Pet");
     }
 
     public void getDamage(float damage)
@@ -356,6 +333,14 @@ public class PlayerCtrl : MonoBehaviour {
         }
     }
 
+    void OnTriggerStay(Collider coll)
+    {
+        if (coll.tag == "WALL")
+        {
+            isClimb = true;
+        }
+    }
+
     void OnTriggerExit(Collider coll)
     {
         if (coll.name == "Switch")
@@ -363,5 +348,13 @@ public class PlayerCtrl : MonoBehaviour {
             coll.GetComponent<SwitchObject>().IsCanUseSwitch = false;
             switchState = gameObject.AddComponent<SwitchObject>();
         }
+        isClimb = false;
+    }
+
+
+    void PlayerDie()
+    {
+        pData = PlayerData.Load();
+        transform.position = pData.pPosition;
     }
 }

@@ -50,13 +50,13 @@ public class ScriptMgr : MonoBehaviour {
         {
             scriptInfo.Clear();
             scriptUi.SetActive(false);
-            return false;
+            return true;
         }
         //다음 대화가 있을 경우 대화 출력
         else {
             txt.text = scriptInfo[curIndex];
             curIndex++;
-            return true;
+            return false;
         }
     }
 

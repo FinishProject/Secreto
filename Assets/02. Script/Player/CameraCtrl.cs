@@ -4,7 +4,6 @@ using System.Collections;
 public class CameraCtrl : MonoBehaviour {
 
     public Transform playerTr; // 플레이어의 위치값
-    public Transform whaleTr;
     public float speed = 10f; // 카메라의 속도
 
     private Vector3[] relCameraPos = new Vector3[2];
@@ -26,7 +25,7 @@ public class CameraCtrl : MonoBehaviour {
         //if (WahleCtrl.isChange) { index = 0; }
         //else { index = 1; }
 
-        transform.position = Vector3.Lerp(transform.position, standardPos[index], 50f * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, standardPos[index], speed * Time.deltaTime);
 
     }
 }

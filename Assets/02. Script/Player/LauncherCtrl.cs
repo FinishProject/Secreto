@@ -23,8 +23,12 @@ public class LauncherCtrl : MonoBehaviour {
 	}
     void OnTriggerEnter(Collider coll)
     {
-        this.targetTr = null;
-        gameObject.SetActive(false);
+        if (coll.tag == "MONSTER")
+        {
+            this.targetTr = null;
+            gameObject.SetActive(false);
+
+        }
     }
 
     void OnEnable()
