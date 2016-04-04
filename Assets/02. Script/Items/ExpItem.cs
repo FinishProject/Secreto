@@ -1,49 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/*************************   정보   **************************
-
-    회복 아이템
-
-    사용방법 :
-
-    사용시 Dropped 함수의 마지막 인자(회복템 종류)를 생각하자
-
-*************************************************************/
-
-public class HpRecoveryItem : MonoBehaviour{
+public class ExpItem : MonoBehaviour {
 
     public float removeTime = 5.0f;         // 아이템이 사라지는데 걸리는 시간
     private ItemStruct itemData;            // 아이템의 정보
     private Transform thisTr;               // 위치 확인
     private bool isGetPossible = false;     // 플레이어가 아이템을 습득 가능한지 판단
 
-    void initData(bool isBulkRecovery)
+    void initData(bool isBulkExp)
     {
         itemData = new ItemStruct();
-        // 회복아이템의 종류를 구분, 정보를 불러온다.
-        if (isBulkRecovery)
-            ItemMgr.instance.GetItem().ParseByID(itemData, 1); // 엑셀 시트 ID값 참조
+
+        // 경험치 아이템의 종류를 구분, 정보를 불러온다.
+        if (isBulkExp)
+            ItemMgr.instance.GetItem().ParseByID(itemData, 2); // 엑셀 시트 ID값 참조
         else
-            ItemMgr.instance.GetItem().ParseByID(itemData, 0);
+            ItemMgr.instance.GetItem().ParseByID(itemData, 3);
     }
 
     void OnTriggerEnter(Collider col)
     {
-        if(col.tag.Equals("Player") && isGetPossible)
+        if (col.tag.Equals("Player") && isGetPossible)
         {
-            col.GetComponent<PlayerCtrl>().getRecovery(itemData.value);  // 플레이어 체력회복
-            StopAllCoroutines();                                         // 사용중인 코루틴 정지
-            isGetPossible = false;                                       
+            Debug.Log(11111);
+            col.GetComponent<SkillMgr>().GetEXPoint(itemData.value);  // 플레이어 체력회복
+            StopAllCoroutines();                                      // 사용중인 코루틴 정지
+            isGetPossible = false;
             gameObject.SetActive(false);
         }
     }
 
     // 드랍 해주는 함수       시작 위치        목표 위치       회복 아이템 종류
-    public void Dropped(Vector3 StartPos, Vector3 tagetPos, bool isBulkRecovery)
+    public void Dropped(Vector3 StartPos, Vector3 tagetPos, bool isBulkExp)
     {
         gameObject.SetActive(true);
-        initData(isBulkRecovery);
+        initData(isBulkExp);
         StartCoroutine(Moving(StartPos, tagetPos));
         StartCoroutine(OffActive());
     }
@@ -55,13 +47,13 @@ public class HpRecoveryItem : MonoBehaviour{
         thisTr.position = StartPos;
 
         float oldTime = 0;
-        while(true)
+        while (true)
         {
             oldTime += Time.deltaTime;
             if (oldTime >= 0.4f)
             {
                 isGetPossible = true;
-                break;   
+                break;
             }
             if (Vector3.Distance(thisTr.position, tagetPos) > 0.5f)
             {

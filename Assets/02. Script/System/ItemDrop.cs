@@ -7,10 +7,10 @@ using System.Collections;
 
     사용방법 :
     
-    아이템을 드랍할 오브젝트에 이 클래스를 추가한후
-    아이템을 드랍할 상황에 DropItem() 함수를 호출
+    1. 아이템을 드랍할 오브젝트에 이 클래스를 추가
+    2. 아이템을 드랍할 상황에 DropItem() 함수를 호출
 
-     * 별도의 제어 변수는 주석 참조
+     ★ 별도의 제어 변수는 주석 참조
 
 *************************************************************/
 
@@ -48,7 +48,7 @@ public class ItemDrop : MonoBehaviour {
                 Random.Range(thisTr.position.x - dropRange, thisTr.position.x + dropRange), 
                 Random.Range(thisTr.position.y + dropRange, thisTr.position.y + (dropRange * 2)),
                 -2);
-            tempItem.GetComponent<HpRecoveryItem>().Dropped(thisTr.position, randPos);
+            tempItem.GetComponent<HpRecoveryItem>().Dropped(thisTr.position, randPos, true);
         }
 
         for (int i = 0; i < dropItemList.ExpNumber; i++)
@@ -59,7 +59,7 @@ public class ItemDrop : MonoBehaviour {
                 Random.Range(thisTr.position.x - dropRange, thisTr.position.x + dropRange),
                 Random.Range(thisTr.position.y + dropRange, thisTr.position.y + (dropRange * 2)),
                 -2);
-            tempItem.GetComponent<HpRecoveryItem>().Dropped(thisTr.position, randPos);
+            tempItem.GetComponent<ExpItem>().Dropped(thisTr.position, randPos, true);
         }
 
     }

@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 421546}
-  - 135: {fileID: 13501510}
+  - 135: {fileID: 13543206}
   - 114: {fileID: 11440466}
   - 23: {fileID: 2318936}
   - 102: {fileID: 10299200}
@@ -89,8 +89,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7adcb374095f9f478a0d055de0dc1ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isBulkRecovery: 0
---- !u!135 &13501510
+  removeTime: 5
+--- !u!135 &13543206
 SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -100,8 +100,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.7474365
+  m_Center: {x: 0.65000004, y: -0.7474365, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
