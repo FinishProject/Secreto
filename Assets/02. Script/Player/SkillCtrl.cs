@@ -11,7 +11,7 @@ public class SkillCtrl : MonoBehaviour {
     public GameObject[] goBullets = new GameObject[3];
 
     void Start()
-    { 
+    {
         for (int i = 0; i < goBullets.Length; i++) {
             goBullets[i] = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
             goBullets[i].SetActive(false);

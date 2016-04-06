@@ -4,7 +4,7 @@ using System.Collections;
 public class ShootingObject : MonoBehaviour {
 
     public float delayTime = 10f;
-
+    public Dir shootDir;
     // Use this for initialization
     void Start()
     {
@@ -17,7 +17,7 @@ public class ShootingObject : MonoBehaviour {
         {
             StartCoroutine( 
                 ObjectMgr.instance.GetBullet().UseItem().
-                GetComponent<BulletObject>().Moveing(gameObject.transform, Dir.LEFT, 10f));
+                GetComponent<BulletObject>().Moveing(gameObject.transform, shootDir, 10f));
 
             yield return new WaitForSeconds(delayTime);
         }

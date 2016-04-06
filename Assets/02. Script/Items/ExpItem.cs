@@ -23,9 +23,8 @@ public class ExpItem : MonoBehaviour {
     {
         if (col.tag.Equals("Player") && isGetPossible)
         {
-            Debug.Log(11111);
-            col.GetComponent<SkillMgr>().GetEXPoint(itemData.value);  // 플레이어 체력회복
-            StopAllCoroutines();                                      // 사용중인 코루틴 정지
+            col.GetComponent<SkillMgr>().GetEXPoint();  // 스킬 경험치 획득
+            StopAllCoroutines();                        // 사용중인 코루틴 정지
             isGetPossible = false;
             gameObject.SetActive(false);
         }

@@ -89,26 +89,8 @@ public class PlayerCtrl : MonoBehaviour {
 
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
+        else RopeWorker();
 
-    }
-
-    void FixedUpdate()
-    {
-        RopeWorker();
-    }
-
-    // 권한 찾기
-    void getCtrlAuthorityByRope()
-    {
-        //        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z
-        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
-        float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 10.0f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 5.0f);
-
-        moveDir.y = vy;
-        isFlyingByRope = true;
-        currInteraction = null;
     }
 
     void Movement()
@@ -118,7 +100,7 @@ public class PlayerCtrl : MonoBehaviour {
         // 지상에 있을 시
         if (controller.isGrounded && isMove)
         {
-            jumpHight = 3f;
+            isJumping = false;
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);
@@ -281,14 +263,22 @@ public class PlayerCtrl : MonoBehaviour {
         return isJumping;
     }
 
+    // 로프에서 권한 찾기
+    public void GetCtrlAuthorityByRope()
+    {
+        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
+        float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
+        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 10.0f);
+        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 5.0f);
+
+        moveDir.y = vy;
+        isFlyingByRope = true;
+        currInteraction = null;
+    }
+
     // 로프의 움직임 관련
     void RopeWorker()
     {
-        // 로프에서 권한을 찾아옴 ( 상호작용 하고 있는 로프의 조작 권한이 없어지면 )
-        if (currInteraction != null && !isCtrlAuthority && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
-        {
-            getCtrlAuthorityByRope();
-        }
 
         // 로프를 타고 있을때
         if (!isCtrlAuthority && !isFlyingByRope && currInteraction != null)
@@ -304,7 +294,6 @@ public class PlayerCtrl : MonoBehaviour {
         // 로프를 이용해 날고 있을때
         if (isFlyingByRope)
         {
-
             controller.Move(Vector3.right * vx * Time.deltaTime);
             moveDir += Physics.gravity * Time.deltaTime;
             controller.Move(moveDir * 10.0f * Time.deltaTime);

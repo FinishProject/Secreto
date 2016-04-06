@@ -41,6 +41,7 @@ public class Inventory : MonoBehaviour {
         return ownItems.Find(x => x.id == itemId);
     }
 
+    /*
     void OnGUI()
     {
         string tempText;
@@ -50,6 +51,8 @@ public class Inventory : MonoBehaviour {
             tempText += ownItems[0].name;
         }
         GUI.TextField(new Rect(0, 30.0f, 300.0f, 30.0f), tempText);
+
     }
+    */
 
 }
