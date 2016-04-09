@@ -8,7 +8,7 @@ public enum JumpType
 }
 
 public class PlayerCtrl : MonoBehaviour {
-    float inputVer = 0f;
+
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
     public static bool isMove = true;          // 현재 대화중 확인
@@ -16,19 +16,16 @@ public class PlayerCtrl : MonoBehaviour {
     private bool isFlyingByRope = false;    // 날고 있는지
     private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
     private string carryItemName = null;    // 들고 있는 아이템 이름
-    
+    private float hp = 10; // 체력
+
     private float currRadian;
     private float vx;
     private float vy;
 
     public float jumpHight = 3.0f;     // 기본 점프 높이
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
-    //public float flyJumpHight = 2.0f;  // 날기 점프 높이
-    public float LeapJumpHight = 3.0f; // 도약 점프 높이
     public float speed = 10f;          // 이동 속도
     public float moveResistant = 0f;   // 이동 저항력
-
-    private float startTime = 0f;
 
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
@@ -37,11 +34,10 @@ public class PlayerCtrl : MonoBehaviour {
     public Transform rayTr; // 레이캐스트 시작 위치
     private Animator anim;
     private SwitchObject switchState;
-    private float hp = 10;
+    
     private GameObject currInteraction;
 
-    public Transform wahleTr;
-    private Collider objColl = null;
+    //private Collider objColl = null;
 
     bool isClimb = false;
 
@@ -80,37 +76,26 @@ public class PlayerCtrl : MonoBehaviour {
 
     void Update()
     {
+        // 점프
+        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded) { Jump(JumpType.BASIC); }
+        else if (Input.GetKeyDown(KeyCode.Space) && !controller.isGrounded) { Jump(JumpType.DASH); }
         // 상호작용 (버튼 조작)
-        if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
+        else if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
         //NPC와 대화
         else if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
-
-        // 플레이어에게 조작권한이 있다면 움직임
-        if (isCtrlAuthority) Movement();
-
     }
 
     void FixedUpdate()
     {
+        // 플레이어에게 조작권한이 있다면 움직임
+        if (isCtrlAuthority) Movement();
+
         RopeWorker();
     }
 
-    // 권한 찾기
-    void getCtrlAuthorityByRope()
-    {
-        //        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z
-        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
-        float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 10.0f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 5.0f);
-
-        moveDir.y = vy;
-        isFlyingByRope = true;
-        currInteraction = null;
-    }
-
+   
     void Movement()
     {
         // 키 입력
@@ -118,23 +103,16 @@ public class PlayerCtrl : MonoBehaviour {
         // 지상에 있을 시
         if (controller.isGrounded && isMove)
         {
-            jumpHight = 3f;
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);
-            anim.SetFloat("Speed", inputAxis);
-            // 점프
-            if (Input.GetKey(KeyCode.UpArrow) && Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.LEAP); }
-            else if (Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.BASIC); } 
+            //anim.SetFloat("Speed", inputAxis);            
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            moveDir.x = inputAxis * 25f * Time.deltaTime;
+            moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
-            // 대쉬 점프
-            if (Input.GetKey(KeyCode.DownArrow)) { Jump(JumpType.POWER); }
-            else if (Input.GetKeyDown(KeyCode.Space)) { Jump(JumpType.DASH); }
         }
 
         //캐릭터 방향 회전
@@ -146,9 +124,8 @@ public class PlayerCtrl : MonoBehaviour {
 
         else if (isClimb)
         {
-            Debug.Log("11");
-            inputVer = Input.GetAxis("Vertical");
-            moveDir = Vector3.up * inputVer;
+            inputAxis = Input.GetAxis("Vertical");
+            moveDir = Vector3.up * inputAxis;
         }
             
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
@@ -177,40 +154,22 @@ public class PlayerCtrl : MonoBehaviour {
             case JumpType.DASH:
                 if (isJumping) {
                     moveDir.y = dashJumpHight;
+                    controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
                     isJumping = false;
                 }
                 break;
-            case JumpType.LEAP:
-                moveDir.y = 5f;
-                PlayerFunc.instance.FindObject();
-                break;
-            case JumpType.POWER:
-                moveDir.y = -7f;
-                StartCoroutine(WaitTime());
-                break;
         }
-    }
-
-    IEnumerator WaitTime()
-    {
-        while (true)
-        {
-            if (controller.isGrounded) { break; }
-            yield return null;
-        }
-        PlayerFunc.instance.SetPowerDamage();
-        StopCoroutine(WaitTime());
+        
     }
 
     IEnumerator Jumping()
     {
         float jumpTime = 0f; // 체공 시간
-
         while (Input.GetKey(KeyCode.Space) && jumpTime <= 0.18f)
         {
             moveDir.y = jumpHight;
             jumpTime += Time.deltaTime;
-
+            controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
             yield return null;
         }
         StopCoroutine(Jumping());
@@ -231,6 +190,21 @@ public class PlayerCtrl : MonoBehaviour {
             body.velocity = pushDir * 2f;
         }
     }
+
+    // 권한 찾기
+    void getCtrlAuthorityByRope()
+    {
+        //        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z
+        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
+        float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
+        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 10.0f);
+        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 5.0f);
+
+        moveDir.y = vy;
+        isFlyingByRope = true;
+        currInteraction = null;
+    }
+
 
     //레이캐스팅 발사
     void ShotRay()
@@ -270,10 +244,10 @@ public class PlayerCtrl : MonoBehaviour {
         hp -= damage;
         if(hp <= 0)
         {
-            Debug.Log("사망");
+            PlayerDie();
+            Debug.Log("Player Die");
             return;
         }
-        Debug.Log(hp);
     }
 
     public bool IsJumping()

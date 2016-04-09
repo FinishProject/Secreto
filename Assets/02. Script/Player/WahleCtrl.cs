@@ -3,48 +3,37 @@ using System.Collections;
 
 public class WahleCtrl : MonoBehaviour {
     //고래 이동 타입
-    public enum MoveType { IDLE, TRACE, WALL, ATTACK};
-    public static MoveType moveType = MoveType.IDLE;
+    private enum MoveType { IDLE, TRACE, WALL, ATTACK};
+    private MoveType moveType = MoveType.IDLE;
 
     public float speed; // 이동속도
+    private float distance;
     private bool isFush; // 오브젝트 밀고 당기기 체크
     private  bool isFocusRight = true; // 오른쪽을 봐라보는지 확인
     private bool isWall = false; // 벽에 충돌했는지 여부
 
     public Transform playerTr; // 플레이어 위치
     private Vector3 moveDir; // 이동 벡터, 카메라 벡터
-    Transform monPos;
+    private Transform monTr; // 몬스터 위치
     private GameObject targetObj = null; //인력, 척력 대상 오브젝트
 
-    Vector3 relPos;
+    private bool isMon = false;
 
-    //void Start()
-    //{
-    //    StartCoroutine(FindMonster());
-    //}
+    void Start()
+    {
+        //StartCoroutine(FindMonster());
+    }
 
     void FixedUpdate()
     {
-        //플레이어와 고래의 거리 차이 구함
-        float distance = Vector3.Distance(transform.position, playerTr.position);
-        if (distance >= 3.7f && !isWall)
-        {
-            moveType = MoveType.TRACE;
-        }
-        else if (!isWall) moveType = MoveType.IDLE;
-
+        // 플레이어와 고래의 거리 차이 구함
+        distance = Vector3.Distance(transform.position, playerTr.position);
         MovementType();
 
-        if (moveType == MoveType.TRACE)
-        {
-            if (PlayerCtrl.inputAxis < 0f && isFocusRight) { TurnFocus(); }
-            else if (PlayerCtrl.inputAxis > 0f && !isFocusRight) { TurnFocus(); }
-        }
-
         //키 입력에 따른 척력 인력 실행
-        if (Input.GetKey(KeyCode.V)) { FullFushObject(); isFush = true; }
-        else if (Input.GetKey(KeyCode.C)) { FullFushObject(); isFush = false; }
-        else { StopCoroutine("GrabObject"); targetObj = null; } // 잡기 중지
+        //if (Input.GetKey(KeyCode.V)) { FullFushObject(); isFush = true; }
+        //else if (Input.GetKey(KeyCode.C)) { FullFushObject(); isFush = false; }
+        //else { StopCoroutine("GrabObject"); targetObj = null; } // 잡기 중지
     }
 
     void TurnFocus()
@@ -58,24 +47,36 @@ public class WahleCtrl : MonoBehaviour {
     {
         switch (moveType) {
             case MoveType.IDLE:
+                if (distance >= 2f)
+                    moveType = MoveType.TRACE;
                 break;
             case MoveType.TRACE: // 플레이어 추격
+                if (distance <= 1.1f && PlayerCtrl.inputAxis == 0f)
+                    moveType = MoveType.IDLE;
+
+                if (PlayerCtrl.inputAxis < 0f && isFocusRight) { TurnFocus(); }
+                else if (PlayerCtrl.inputAxis > 0f && !isFocusRight) { TurnFocus(); }
+
                 transform.position = Vector3.Lerp(transform.position,
-                    playerTr.position - (playerTr.forward * 0.5f) + (playerTr.up * 3.3f),
+                    playerTr.position - (playerTr.forward * 0.5f) + (playerTr.up * 0.59f ),
                     speed * Time.deltaTime);
                 break;
-            case MoveType.WALL:
-                transform.position = Vector3.Lerp(transform.position,
-                    playerTr.position - (playerTr.forward * -2f) + (playerTr.up * 3.3f),
-                    speed * Time.deltaTime);
-                StartCoroutine(ResetType());
-                break;
+            //case MoveType.WALL:
+            //    transform.position = Vector3.Lerp(transform.position,
+            //        playerTr.position - (playerTr.forward * -2f) + (playerTr.up * 3.3f),
+            //        speed * Time.deltaTime);
+            //    StartCoroutine(ResetType());
+            //    break;
             case MoveType.ATTACK:
-                transform.position = Vector3.Lerp(transform.position,
-                    playerTr.position - (playerTr.forward * -5f) + (playerTr.up * 2f),
-                    speed * Time.deltaTime);
-                Vector3 lookPos = new Vector3(monPos.position.x, monPos.position.y + 20f, 0f);
-                transform.LookAt(lookPos);
+
+                if (isMon)
+                {
+                    transform.position = Vector3.Lerp(transform.position,
+                        playerTr.position - (playerTr.forward * -5f) + (playerTr.up * 2f),
+                        speed * Time.deltaTime);
+                }
+                //Vector3 lookPos = new Vector3(monTr.position.x, monTr.position.y + 20f, 0f);
+                //transform.LookAt(lookPos);
                 break;
         }
     }
@@ -84,15 +85,18 @@ public class WahleCtrl : MonoBehaviour {
     {
         while (true)
         {
-            Collider[] hitColl = Physics.OverlapSphere(playerTr.position, 10f);
-            for (int i = 0; i < hitColl.Length; i++)
+            if (!isMon)
             {
-                if (hitColl[i].tag == "MONSTER")
+                Collider[] hitColl = Physics.OverlapSphere(playerTr.position, 10f);
+                for (int i = 0; i < hitColl.Length; i++)
                 {
-                    Quaternion targetRotate = Quaternion.LookRotation(hitColl[i].transform.position - transform.position, Vector3.up);
-                    monPos = hitColl[i].transform;
-                    moveType = MoveType.ATTACK;
-                    break;
+                    if (hitColl[i].tag == "MONSTER")
+                    {
+                        monTr = hitColl[i].transform;
+                        moveType = MoveType.ATTACK;
+                        isMon = true;
+                        break;
+                    }
                 }
             }
             yield return new WaitForSeconds(1f);
@@ -115,7 +119,7 @@ public class WahleCtrl : MonoBehaviour {
     {
         //주위 오브젝트 탐색
         Collider[] hitCollider = Physics.OverlapSphere(this.transform.position, 3f);
-        int i = 0;
+        int i = 0; 
         while (i < hitCollider.Length)
         {
             if (hitCollider[i].tag == "OBJECT" || hitCollider[i].tag == "MONSTER" && targetObj == null)

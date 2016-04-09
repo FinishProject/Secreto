@@ -8,13 +8,13 @@ public class SkillCtrl : MonoBehaviour {
 
     private int count = 0;
 
-    public GameObject[] goBullets = new GameObject[3];
+    private GameObject[] objBullets = new GameObject[3];
 
     void Start()
     { 
-        for (int i = 0; i < goBullets.Length; i++) {
-            goBullets[i] = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
-            goBullets[i].SetActive(false);
+        for (int i = 0; i < objBullets.Length; i++) {
+            objBullets[i] = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
+            objBullets[i].SetActive(false);
         }
     }
 
@@ -22,10 +22,10 @@ public class SkillCtrl : MonoBehaviour {
     {
         //F키 입력 시 공격체 생성
         if (Input.GetKeyDown(KeyCode.F)) {   
-            if (count >= goBullets.Length && !goBullets[0].activeSelf) { count = 0; }
-            goBullets[count].SetActive(true);
-            goBullets[count].SendMessage("GetFocusVector", this.transform.forward.normalized);
-            goBullets[count].transform.position = shotTr.position;  
+            if (count >= objBullets.Length && !objBullets[0].activeSelf) { count = 0; }
+            objBullets[count].SetActive(true);
+            objBullets[count].SendMessage("GetFocusVector", this.transform.forward.normalized);
+            objBullets[count].transform.position = shotTr.position;  
             FindTarget();
             count++;
         }
@@ -33,10 +33,10 @@ public class SkillCtrl : MonoBehaviour {
     //타겟 탐색
     void FindTarget()
     {
-        Collider[] hitCollider = Physics.OverlapSphere(this.transform.position, 10f);
+        Collider[] hitCollider = Physics.OverlapSphere(this.transform.position, 8f);
         for(int i = 0; i < hitCollider.Length; i++) { 
             if (hitCollider[i].gameObject.tag == "MONSTER") {
-                goBullets[count].SendMessage("GetTarget", hitCollider[i].transform);
+                objBullets[count].SendMessage("GetTarget", hitCollider[i].transform);
                 break;
             }
         }

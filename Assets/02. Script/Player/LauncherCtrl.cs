@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LauncherCtrl : MonoBehaviour {
 
-    public float speed = 5f;
+    private float speed = 8f;
     private float m_Time = 0f;
     private Transform targetTr;
     private Vector3 focusVec;
@@ -19,7 +19,7 @@ public class LauncherCtrl : MonoBehaviour {
             transform.Translate(relativePos.normalized * speed * Time.deltaTime);
         }
         m_Time += Time.deltaTime;
-        if(m_Time >= 3f) { gameObject.SetActive(false); }
+        if(m_Time >= 1f) { gameObject.SetActive(false); }
 	}
     void OnTriggerEnter(Collider coll)
     {

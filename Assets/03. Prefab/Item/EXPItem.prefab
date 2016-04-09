@@ -13,7 +13,7 @@ GameObject:
   - 23: {fileID: 2323180}
   - 102: {fileID: 10243850}
   m_Layer: 0
-  m_Name: ExpItem
+  m_Name: EXPItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
