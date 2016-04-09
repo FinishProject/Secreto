@@ -16,7 +16,12 @@ public class BulletObject : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
+        if(col.tag.Equals("Player"))
+        {
+            col.GetComponent<PlayerCtrl>().getDamage(100);
+        }
         gameObject.SetActive(false);
+
     }
 
     public IEnumerator Moveing(Transform startTr, Dir moveDir, float speed )
@@ -41,10 +46,10 @@ public class BulletObject : MonoBehaviour
                     moveVector.x = thisTr.position.x + (speed * Time.deltaTime);
                     break;
                 case Dir.UP:
-                    moveVector.y = thisTr.position.y + (-1 * speed * Time.deltaTime);
+                    moveVector.y = thisTr.position.y + (speed * Time.deltaTime);
                     break;
                 case Dir.DOWN:
-                    moveVector.y = thisTr.position.y + (speed * Time.deltaTime);
+                    moveVector.y = thisTr.position.y + (-1 * speed * Time.deltaTime);
                     break;
             }
 

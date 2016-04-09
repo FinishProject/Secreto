@@ -30,9 +30,10 @@ public class ItemDrop : MonoBehaviour {
     public float dropRange;             // 드랍 범위
 
     private Transform thisTr;           // 이 오브젝트의 위치
-
+    
     void Start () {
         thisTr = GetComponent<Transform>();
+        
     }
 	
     // 아이템 드랍

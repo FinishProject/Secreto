@@ -2,6 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*************************   정보   **************************
+
+    스킬 매니저 클래스
+
+    사용방법 :
+    
+    이 스크립트를 오브젝트에 추가하자
+
+*************************************************************/
+
+// 스킬 정보 틀
 public class SkillStruct
 {
     public int id;
@@ -9,68 +20,118 @@ public class SkillStruct
     public int function;
     public int value;
     public int precedeID;
+    public int level;
 
-    public void SetData(int id, string name, int function, int value, int precedeID)
+    public void SetData(int id, string name, int function, int value, int precedeID, int level)
     {
         this.id = id;
         this.name = name;
         this.function = function;
         this.value = value;
         this.precedeID = precedeID;
+        this.level = level;
     }
 }
 
-public class ExpTable
+// 스킬 기능
+public enum SkillFunction
 {
-    public int level;
-    public int exp;
-
-    public void SetData(int level, int exp)
-    {
-        this.level = level;
-        this.exp = exp;
-    }
+    None = 0,   // 기본
+    Ga,
+    Na,
+    Da,
+    Ra,
+    Size = 5,   // 기능 개수
 }
 
 public class SkillMgr : MonoBehaviour {
 
-    public static SkillMgr instance; // 싱글톤 인스턴스
+    public static SkillMgr instance;    // 싱글톤 인스턴스
+    public float needExpPoint;          // 스킬포인트를 받기까지의 필요 경험치
+    public GameObject SkillWindow;      // 스킬 UI 관리
 
-    ExpTable curLevelState;          // 현재 레벨 정보
-    ExpTable nxtLevelState;          // 다음 레벨 정보
+    private SkillStruct[] curSkills;    // 현재 각 기능별 스킬 정보
+    private float curExpPoint;          // 현재 경험치
+    private bool hasSkillPoint = false; // 스킬 포인트를 가지고 있는지
 
-    private CSVParser ExpTable;      // 경험치 테이블
-    private CSVParser SkillList;     // 스킬 리스트
-
-    
+    private CSVParser skillList;        // 스킬 리스트
+ 
     void Awake()
     {
         instance = this;
-        
-        ExpTable = new CSVParser("ExpTable");
-        ExpTable.Load();
-        SkillList = new CSVParser("SkillList");
-        SkillList.Load();
+        skillList = new CSVParser("SkillList");
+        skillList.Load();
+        SkillInit();
+    }
 
-        curLevelState = new ExpTable();
-        curLevelState.SetData(1, 0);
-        nxtLevelState = new ExpTable();
-        ExpTable.ParseByLevel(nxtLevelState, curLevelState.level + 1);
+    // 임시
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            hasSkillPoint = true;
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SkillWindow.SetActive(!SkillWindow.activeSelf);
+            if(Time.timeScale != 0)
+                Time.timeScale = 0;
+            else
+                Time.timeScale = 1;
+        }
+    }
+
+    // 스킬 레벨업 시켜줌
+    public void SkillLevelUp(int skillFunction)
+    {
+        skillList.ParseByFunctionAndPrecedelID(curSkills[skillFunction], skillFunction, curSkills[skillFunction].id);
+    }
+
+    // 스킬 정보 받아옴
+    public string getSkillInfo(int Function)
+    {
+        return skillList.ParseByIDReturnInfo(curSkills[Function].id);
+    }
+
+    // 스킬 포인트가 있는지 반환
+    public bool HasSkillPoint()
+    {
+        return hasSkillPoint;
+    }
+
+    // 스킬 포인트 사용
+    public void UseSkillPoint()
+    {
+        hasSkillPoint = false;
+    }
+
+    // 스킬 레벨 반환
+    public int getSkillLevel(int Function)
+    {
+        return curSkills[Function].level;
+    }
+
+    // 스킬 목록 초기화
+    void SkillInit()
+    {
+        curSkills = new SkillStruct[(int)SkillFunction.Size];
+
+        for (int i = 0; i < (int)SkillFunction.Size; i++)
+        {
+            curSkills[i] = new SkillStruct();
+            skillList.ParseByFunctionAndPrecedelID(curSkills[i], i, (int)SkillFunction.None);
+        }
     }
 
     // 경험치를 얻을때
-    public void GetEXPoint(int exp)
+    public void GetEXPoint()
     {
-        curLevelState.exp += exp;
-
-        // 경험치 비교, 레벨 업
-        if (curLevelState.exp >= nxtLevelState.exp)
+        curExpPoint++;
+        if(curExpPoint <= needExpPoint)
         {
-            curLevelState.level++;
-            // 다음 레벨 정보를 불러온다
-            ExpTable.ParseByLevel(nxtLevelState, curLevelState.level + 1);
+            hasSkillPoint = true;
+            curExpPoint = 0;
         }
-        Debug.Log(curLevelState.level + "   " + curLevelState.exp);
     }
+
 
 }

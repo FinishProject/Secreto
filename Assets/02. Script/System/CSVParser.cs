@@ -56,19 +56,55 @@ public class CSVParser : CSVReader
         }
     }
 
-    //===========================   경험치 테이블   ===========================
-    // 레벨로 검색, 반환
-    public void ParseByLevel(ExpTable data, int level)
+    //===========================   스킬 테이블   ===========================
+    // id로 검색, 반환
+    public void ParseByID(SkillStruct data, int id)
     {
         for (int row = 2; row < rowCnt; row++)
         {
-            if (!Convert.ToInt32(stringList[colCnt * row]).Equals(level))
+            if (!Convert.ToInt32(stringList[colCnt * row]).Equals(id))
                 continue;
 
             data.SetData(
-                Convert.ToInt32(stringList[colCnt * row]),
-                Convert.ToInt32(stringList[colCnt * row + 1]));
+                Convert.ToInt32 (stringList[colCnt * row]),
+                Convert.ToString(stringList[colCnt * row + 1]),
+                Convert.ToInt32 (stringList[colCnt * row + 2]),
+                Convert.ToInt32 (stringList[colCnt * row + 3]),
+                Convert.ToInt32 (stringList[colCnt * row + 4]),
+                Convert.ToInt32 (stringList[colCnt * row + 5]));
+            break;
+        }
+    }
 
+    // id로 검색, 반환
+    public string ParseByIDReturnInfo(int id)
+    {
+        for (int row = 2; row < rowCnt; row++)
+        {
+            if (!Convert.ToInt32(stringList[colCnt * row]).Equals(id))
+                continue;
+
+            return Convert.ToString(stringList[colCnt * row + 6]);
+        }
+        return null;
+    }
+
+    // 기능과 선행스킬로 검색, 반환
+    public void ParseByFunctionAndPrecedelID(SkillStruct data, int function, int precedeID)
+    {
+        for (int row = 2; row < rowCnt; row++)
+        {
+            if (!Convert.ToInt32(stringList[colCnt * row + 2] ).Equals(function) ||
+                !Convert.ToInt32(stringList[colCnt * row + 4] ).Equals(precedeID))
+                continue;
+
+            data.SetData(
+                Convert.ToInt32 (stringList[colCnt * row]),
+                Convert.ToString(stringList[colCnt * row + 1]),
+                Convert.ToInt32 (stringList[colCnt * row + 2]),
+                Convert.ToInt32 (stringList[colCnt * row + 3]),
+                Convert.ToInt32 (stringList[colCnt * row + 4]),
+                Convert.ToInt32 (stringList[colCnt * row + 5]));
             break;
         }
     }
