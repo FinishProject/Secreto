@@ -16,7 +16,7 @@ public class OpenByCollectionItem : MonoBehaviour , Sensorable
     public int needItemId;  // 필요한 아이템 ID
 
     // 센서를 작동, 작동되면 true, 작동이 안되면 false 반환
-    public bool ActiveSensor()
+    public bool ActiveSensor(int index)
     {
         if(Inventory.instance.Find(needItemId) != null)
         {
