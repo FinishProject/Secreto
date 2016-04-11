@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 53c88aecbee629540accd40e92737048
+timeCreated: 1460027071
+licenseType: Free
+ShaderImporter:
+  defaultTextures:
+  - _FrontTex: {instanceID: 0}
+  - _BackTex: {instanceID: 0}
+  - _LeftTex: {instanceID: 0}
+  - _RightTex: {instanceID: 0}
+  - _UpTex: {instanceID: 0}
+  - _DownTex: {instanceID: 0}
+  - _FrontTex2: {instanceID: 0}
+  - _BackTex2: {instanceID: 0}
+  - _LeftTex2: {instanceID: 0}
+  - _RightTex2: {instanceID: 0}
+  - _UpTex2: {instanceID: 0}
+  - _DownTex2: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
