@@ -3,8 +3,7 @@ using System.Collections;
 
 public class LauncherCtrl : MonoBehaviour {
 
-    private float speed = 8f;
-    private float m_Time = 0f;
+    private float speed = 14f;
     private Transform targetTr;
     private Vector3 focusVec;
 
@@ -17,9 +16,7 @@ public class LauncherCtrl : MonoBehaviour {
             Vector3 relativePos = this.targetTr.position - this.transform.position;
             //transform.position = Vector3.Lerp(transform.position, relativePos, speed * Time.deltaTime);
             transform.Translate(relativePos.normalized * speed * Time.deltaTime);
-        }
-        m_Time += Time.deltaTime;
-        if(m_Time >= 1f) { gameObject.SetActive(false); }
+        } 
 	}
     void OnTriggerEnter(Collider coll)
     {
@@ -27,16 +24,21 @@ public class LauncherCtrl : MonoBehaviour {
         {
             this.targetTr = null;
             gameObject.SetActive(false);
-
         }
+    }
+
+    IEnumerator CountDown()
+    {
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
     }
 
     void OnEnable()
     {
-        m_Time = 0f;
+        StartCoroutine(CountDown());
     }
 
-    public void GetFocusVector(Vector3 _focusVec)
+    void GetFocusVector(Vector3 _focusVec)
     {
         focusVec = _focusVec;
     }

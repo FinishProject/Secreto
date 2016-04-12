@@ -21,13 +21,15 @@ public class SkillCtrl : MonoBehaviour {
     void Update()
     {
         //F키 입력 시 공격체 생성
-        if (Input.GetKeyDown(KeyCode.F)) {   
+        if (Input.GetKeyDown(KeyCode.F)) {
             if (count >= objBullets.Length && !objBullets[0].activeSelf) { count = 0; }
-            objBullets[count].SetActive(true);
-            objBullets[count].SendMessage("GetFocusVector", this.transform.forward.normalized);
-            objBullets[count].transform.position = shotTr.position;  
-            FindTarget();
-            count++;
+            else if(count < objBullets.Length) {
+                objBullets[count].SetActive(true);
+                objBullets[count].SendMessage("GetFocusVector", -this.transform.up.normalized);
+                objBullets[count].transform.position = shotTr.position;
+                FindTarget();
+                count++;
+            }
         }
     }
     //타겟 탐색
