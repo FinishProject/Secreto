@@ -32,6 +32,7 @@ public class HorizonHold : MonoBehaviour
         // 플레이어가 발판 위에 있을 시 발판과 같이 이동
         if (coll.gameObject.tag == "Player")
         {
+            
             playerTr = coll.GetComponent<Transform>();
             isFocus = PlayerCtrl.isFocusRight;
             pSpeed = speed;
