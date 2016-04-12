@@ -17,26 +17,28 @@ public class RopeCtrl : MonoBehaviour {
     public GameObject prefab;
     [Tooltip("로프 구슬 개수")]
     public int ropeCnt;
-    [Tooltip("각도 제한")]
-    public float angleLimit = 100f;             // 각도 제한
+    [Tooltip("속도 제한 (초기치 1.4)")]
+    public float speedLimit = 1.4f;             // 속도 제한
     [System.NonSerialized]
     public bool isCtrlAuthority = false;        // 조작권한 (로프 조종)
 
-    private Transform[] lowRopes;
-    private float ropeScale;
+    private Transform[] lowRopes;               // 로프 구슬 배열
+    private float ropeScale;                    // 로프 구슬 하나의 스케일값
 
     private float L = 0;                        // 실 길이(m)
-    private float stepSize = 0.1f;              // 스텝사이즈
-    private float resist = -0.5f;               // 저항
+    private float stepSize = 0.5f;              // 스텝사이즈
+    private float curResist = -0.5f;            // 현재 저항
+    private float StopResist = -0.5f;           // 조작 중이지 않을 때
+    private float CtrlResist = -0.1f;           // 조작 중일 때
     private float theta = 50 * Mathf.Deg2Rad;   // 각도
     private float theta1 = 0;
     private float theta2 = 0;
     private float pre_theta1 = 0;
     private float pre_theta2 = 0;
 
-    private float addPower = 70.0f;
+    private float addPower = 2.5f;              // 좌우 반동 때 주는 힘
     private bool isLimited = false;             // 힘의 제한
-    private bool isLeft;
+    private bool isLeft;                        // 좌우 방향 체크
     private int playerIdx;                      // 플레이어의 인덱스 위치
 
     void Start()
@@ -46,7 +48,7 @@ public class RopeCtrl : MonoBehaviour {
 
         CreateRope();
         changeRopeRange(playerIdx);
-        InitState(40.0f);
+        InitState(00.0f);
 
     }
 
@@ -66,32 +68,32 @@ public class RopeCtrl : MonoBehaviour {
     {
         if (isCtrlAuthority)
         {
+            
+            curResist = CtrlResist;
+            // 위로 올라감
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 changeRopeRange(--playerIdx);
             }
+            // 아래로 내려감
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 changeRopeRange(++playerIdx);
             }
-            if (Input.GetKeyDown(KeyCode.RightArrow) && !isLimited && isLeft)
+            // 오른쪽으로 힘을 줌 ( 좌우 반동 )
+            if (Input.GetKey(KeyCode.RightArrow) && !isLimited && isLeft)
             {
-                if (Mathf.Abs(theta1) < addPower)
-                    theta1 += addPower * Mathf.Deg2Rad;
-                pre_theta1 = 0;
-                pre_theta2 = 0;
-                isLimited = true;
+                theta1 += addPower * Mathf.Deg2Rad;
             }
-            if (Input.GetKeyDown(KeyCode.LeftArrow) && !isLimited && !isLeft)
+            // 왼쪽으로 힘을 줌 ( 좌우 반동 )
+            if (Input.GetKey(KeyCode.LeftArrow) && !isLimited && !isLeft)
             {
-                if (Mathf.Abs(theta1) < addPower)
-                    theta1 -= addPower * Mathf.Deg2Rad;
-                pre_theta1 = 0;
-                pre_theta2 = 0;
-                isLimited = true;
+                theta1 -= addPower * Mathf.Deg2Rad;       
             }
+            // 날아감
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                curResist = StopResist;
                 isCtrlAuthority = false;
                 PlayerCtrl.instance.GetCtrlAuthorityByRope();  // 플레이어에게 조작 권한을 돌려줌
             }
@@ -110,31 +112,17 @@ public class RopeCtrl : MonoBehaviour {
         theta2 = (Physics.gravity.y / L) * Mathf.Sin(theta);                               // 가속도
         theta1 = theta1 + (pre_theta2 * stepSize)                                          // 속도
              + ((theta2 - pre_theta2) * stepSize * 0.5f)
-             - ((theta2 - pre_theta2) * resist);
+             - ((theta2 - pre_theta2) * curResist);
         theta = theta + (theta1 * stepSize) + ((theta1 - pre_theta1) * stepSize * 0.5f);   // 변위
         pre_theta2 = theta2;
         pre_theta1 = theta1;
 
-        // 각도 제한
-        if (theta < -angleLimit * Mathf.Deg2Rad)
-        {
 
-            theta = -angleLimit * Mathf.Deg2Rad;
-            pre_theta1 = 0;
-            pre_theta2 = 0;
-        }
-        else if (theta > angleLimit * Mathf.Deg2Rad)
-        {
-            theta = angleLimit * Mathf.Deg2Rad;
-            pre_theta1 = 0;
-            pre_theta2 = 0;
-        }
-
-
-        // 방향에 따른 리미트 해제
-        if (Mathf.Sin(theta) < 0f && !isLeft || Mathf.Sin(theta) >= 0f && isLeft)
+        // 속도제한 ( 제한이 없으면 계속 회전 할 수 있음 / 각도 제한 보다 제어가 쉬움 )
+        if (Mathf.Abs(theta1) > speedLimit)
+            isLimited = true;
+        else
             isLimited = false;
-
 
         // 줄 회전
         /*
@@ -156,7 +144,6 @@ public class RopeCtrl : MonoBehaviour {
         }
 
        
-
         if (Mathf.Sin(theta) < 0f)
             isLeft = true;
         else
@@ -180,7 +167,6 @@ public class RopeCtrl : MonoBehaviour {
 
         playerIdx = idx;
         L = Vector3.Distance(lowRopes[0].transform.position, lowRopes[playerIdx].transform.position);
-
     }
 
     // 각도 조절 (시작, 각도)
@@ -229,7 +215,7 @@ public class RopeCtrl : MonoBehaviour {
         }
     }
 
-    // 로프 움직이기 (각도에 맞춰서 꼬리를 물어야 하므로)
+    // 로프 움직이기 ( 각도에 맞춰서 꼬리를 물어야 하므로 )
     void MovePos(int index, float rot)
     {
         Vector3 temp = lowRopes[index - 1].transform.position;
@@ -267,14 +253,21 @@ public class RopeCtrl : MonoBehaviour {
         }
     }
 
-    //플레이어에게 조작권한을 넘겨줌
-    public void setPlayerAuthority(int playerIdx)
+    //플레이어에서 조작권한을 받음
+    public void setAuthority(int playerIdx, bool isFocusRight)
     {
-        this.playerIdx = playerIdx;
-        isCtrlAuthority = true;
+        this.playerIdx = playerIdx; // 플레이어의 위치를 받아옴 (구슬 위치)
         playerIdx = ropeCnt - 1;
+
+        isCtrlAuthority = true;     // 조작 권한을줌
+
+        if (isFocusRight)           // 플레이어가 로프에 처음 탔을 때 주는 힘의 방향
+            theta1 += 1f;
+        else
+            theta1 -= 1f;
     }
 
+    // 플레이어와 근접한 로프 구슬의 위치 반환
     public Transform getLowRopeTransform()
     {
         if(playerIdx.Equals(0))
@@ -283,6 +276,7 @@ public class RopeCtrl : MonoBehaviour {
             return lowRopes[playerIdx-1].transform;
     }
 
+    // 각도 반환
     public float getRadian()
     {
         if (playerIdx.Equals(0))
@@ -291,11 +285,11 @@ public class RopeCtrl : MonoBehaviour {
             return lowRopes[playerIdx - 1].transform.eulerAngles.z;
     }
 
+    // 속도 반환
     public float getSpeed()
     {
-        return theta;
+        return theta1 * L;
     }
-
 
 }
 
