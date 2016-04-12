@@ -119,7 +119,7 @@ public class PlayerCtrl : MonoBehaviour {
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        if (!isClimb)
+        if(!isClimb)
             moveDir += Physics.gravity * Time.deltaTime;
 
         else if (isClimb)
@@ -127,7 +127,7 @@ public class PlayerCtrl : MonoBehaviour {
             inputAxis = Input.GetAxis("Vertical");
             moveDir = Vector3.up * inputAxis;
         }
-
+            
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
@@ -135,10 +135,7 @@ public class PlayerCtrl : MonoBehaviour {
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
-        Vector3 scale = transform.localScale;
-        scale.z *= -1f;
-        transform.localScale = scale;
-        //transform.Rotate(new Vector3(0, 1, 0), 180.0f);
+        transform.Rotate(new Vector3(0, 1, 0), 180.0f);
     }
 
     // 점프
@@ -149,23 +146,20 @@ public class PlayerCtrl : MonoBehaviour {
         {
             case JumpType.BASIC:
                 isJumping = false;
-                if (!isJumping)
-                {
+                if (!isJumping) {
                     isJumping = true;
-                    //moveDir.y += jumpHight;
-                    //controller.Move(moveDir * Time.deltaTime);
                     StartCoroutine(Jumping());  
                 }
                 break;
             case JumpType.DASH:
-                if (isJumping)
-                {
+                if (isJumping) {
                     moveDir.y = dashJumpHight;
                     controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
                     isJumping = false;
                 }
                 break;
         }
+        
     }
 
     IEnumerator Jumping()
@@ -175,7 +169,7 @@ public class PlayerCtrl : MonoBehaviour {
         {
             moveDir.y = jumpHight;
             jumpTime += Time.deltaTime;
-            controller.Move(moveDir  * Time.deltaTime);
+            controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
             yield return null;
         }
         StopCoroutine(Jumping());
@@ -198,7 +192,7 @@ public class PlayerCtrl : MonoBehaviour {
     }
 
     // 권한 찾기
-    public void GetCtrlAuthorityByRope()
+    void getCtrlAuthorityByRope()
     {
         //        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z
         currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
@@ -267,7 +261,7 @@ public class PlayerCtrl : MonoBehaviour {
         // 로프에서 권한을 찾아옴 ( 상호작용 하고 있는 로프의 조작 권한이 없어지면 )
         if (currInteraction != null && !isCtrlAuthority && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
         {
-            GetCtrlAuthorityByRope();
+            getCtrlAuthorityByRope();
         }
 
         // 로프를 타고 있을때

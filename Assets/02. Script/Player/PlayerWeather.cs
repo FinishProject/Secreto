@@ -45,7 +45,7 @@ public class PlayerWeather : MonoBehaviour, WeatherObserver
         {
             if(!isLocked_NONE)
             {
-                //PlayerCtrl.instance.jumpState = JumpType.IDLE;
+                PlayerCtrl.instance.jumpState = JumpType.IDLE;
                 PlayerCtrl.instance.moveResistant = 0;
                 isLocked_WIND_UD = false;
                 isLocked_NONE = true;
