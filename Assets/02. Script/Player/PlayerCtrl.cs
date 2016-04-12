@@ -11,6 +11,7 @@ public enum PlayerEffectList
     BASIC_JUMP, DASH_JUMP, 
 }
 
+
 public class PlayerCtrl : MonoBehaviour {
 
     public static float inputAxis = 0f;     // 입력 받는 키의 값
@@ -95,8 +96,7 @@ public class PlayerCtrl : MonoBehaviour {
     {
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
-
-        RopeWorker();
+        else RopeWorker();
     }
 
    
@@ -186,17 +186,13 @@ public class PlayerCtrl : MonoBehaviour {
     //캐릭터 컨트롤러 충돌
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+
         Rigidbody body = hit.collider.attachedRigidbody;
         if (body == null || body.isKinematic)
             return;
         if (hit.moveDirection.y < -0.3F)
             return;
-        /*
-        if (hit.normal.y > 0.9f)
-        {
-            hit.gameObject.GetComponent<OnPlayer>().DoSomething();
-        }
-        */
+            
 
         //오브젝트 밀기
         if (Input.GetKey(KeyCode.LeftShift))
@@ -206,20 +202,7 @@ public class PlayerCtrl : MonoBehaviour {
         }
     }
 
-    // 권한 찾기
-    void getCtrlAuthorityByRope()
-    {
-        //        currRadian = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().eulerAngles.z
-        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
-        float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 10.0f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 5.0f);
-
-        moveDir.y = vy;
-        isFlyingByRope = true;
-        currInteraction = null;
-    }
-
+    
 
     //레이캐스팅 발사
     void ShotRay()
@@ -259,8 +242,8 @@ public class PlayerCtrl : MonoBehaviour {
         hp -= damage;
         if(hp <= 0)
         {
-            PlayerDie();
-            Debug.Log("Player Die");
+            //PlayerDie();
+//            Debug.Log("Player Die");
             return;
         }
     }
@@ -270,14 +253,14 @@ public class PlayerCtrl : MonoBehaviour {
         return isJumping;
     }
 
-<<<<<<< HEAD
+
     // 로프에서 권한 찾기
     public void GetCtrlAuthorityByRope()
     {
         currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
         float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 2f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 0.4f);
+        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 1.2f);
+        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 0.3f);
 
         /*
         Debug.Log(" 각속도 : " + speed);
@@ -292,15 +275,13 @@ public class PlayerCtrl : MonoBehaviour {
         currInteraction = null;
     }
 
-=======
->>>>>>> origin/master
     // 로프의 움직임 관련
     void RopeWorker()
     {
         // 로프에서 권한을 찾아옴 ( 상호작용 하고 있는 로프의 조작 권한이 없어지면 )
         if (currInteraction != null && !isCtrlAuthority && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
         {
-            getCtrlAuthorityByRope();
+            GetCtrlAuthorityByRope();
         }
 
         // 로프를 타고 있을때
@@ -318,9 +299,8 @@ public class PlayerCtrl : MonoBehaviour {
         if (isFlyingByRope)
         {
 
-            controller.Move(Vector3.right * vx * Time.deltaTime);
-            //            moveDir += Physics.gravity * Time.deltaTime;
-            moveDir += new Vector3(0f, -7f, 0f) * Time.deltaTime;
+            controller.Move(Vector3.right * vx * Time.deltaTime);  
+            moveDir += new Vector3(0f, -7f, 0f) * Time.deltaTime;   // 중력
             controller.Move(moveDir * 10.0f * Time.deltaTime);
 
             if (controller.isGrounded)
@@ -363,7 +343,6 @@ public class PlayerCtrl : MonoBehaviour {
     {
         if (coll.name == "Switch")
         {
-            coll.GetComponent<SwitchObject>().IsCanUseSwitch = false;
             switchState = gameObject.AddComponent<SwitchObject>();
         }
         isClimb = false;

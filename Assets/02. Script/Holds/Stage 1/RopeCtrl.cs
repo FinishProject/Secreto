@@ -17,7 +17,7 @@ public class RopeCtrl : MonoBehaviour {
     public GameObject prefab;
     [Tooltip("로프 구슬 개수")]
     public int ropeCnt;
-    [Tooltip("속도 제한 (초기치 1.4)")]
+    [Tooltip("속도 제한 (50개 때 1.4)")]
     public float speedLimit = 1.4f;             // 속도 제한
     [System.NonSerialized]
     public bool isCtrlAuthority = false;        // 조작권한 (로프 조종)
@@ -134,13 +134,18 @@ public class RopeCtrl : MonoBehaviour {
         if (!isCtrlAuthority)
         {
             playerIdx = ropeCnt - 1;
-            ChangeRot_2(0 , playerIdx, -(theta / Mathf.Deg2Rad));
+            ChangeRot_2(0 , playerIdx, -(theta * Mathf.Rad2Deg * 0.5f));
         }
         else
         {
-            ChangeRot(0, playerIdx, theta / Mathf.Deg2Rad);
+            ChangeRot(0, playerIdx, theta * Mathf.Rad2Deg);
+            /*
             if (playerIdx != ropeCnt - 1)
                 ChangeRot_2(playerIdx, ropeCnt - 1, theta / Mathf.Deg2Rad);
+            */
+
+            if (playerIdx != ropeCnt - 1)
+                ChangeRot_2(playerIdx, ropeCnt - 1, theta * Mathf.Rad2Deg);
         }
 
        
@@ -169,20 +174,6 @@ public class RopeCtrl : MonoBehaviour {
         L = Vector3.Distance(lowRopes[0].transform.position, lowRopes[playerIdx].transform.position);
     }
 
-    // 각도 조절 (시작, 각도)
-    void ChangeRot(int index, float rot)
-    {
-        Quaternion temp;
-        for (int i = index; i < ropeCnt; i++)
-        {
-            temp = lowRopes[i].transform.rotation;
-            temp.eulerAngles = new Vector3(0, 0, rot);
-            lowRopes[i].rotation = temp;
-            if (i == 0)
-                continue;
-            MovePos(i, rot);
-        }
-    }
 
     // 각도 조절 (시작, 끝, 각도)
     void ChangeRot(int startIdex, int endIdx, float rot)
@@ -219,8 +210,8 @@ public class RopeCtrl : MonoBehaviour {
     void MovePos(int index, float rot)
     {
         Vector3 temp = lowRopes[index - 1].transform.position;
-        temp.x += Mathf.Sin(rot * Mathf.Deg2Rad) * (ropeScale / 2);
-        temp.y -= Mathf.Cos(rot * Mathf.Deg2Rad) * (ropeScale / 2);
+        temp.x += Mathf.Sin(rot * Mathf.Deg2Rad) * (ropeScale * 0.5f);
+        temp.y -= Mathf.Cos(rot * Mathf.Deg2Rad) * (ropeScale * 0.5f);
 
         lowRopes[index].transform.position = temp;
     }
@@ -241,13 +232,13 @@ public class RopeCtrl : MonoBehaviour {
             Vector3 temp = gameObject.transform.position;
             if (i == 0)
             {
-                temp.y = gameObject.transform.position.y - gameObject.transform.localScale.y / 2;
+                temp.y = gameObject.transform.position.y - gameObject.transform.localScale.y * 0.5f;
                 lowRopes[i].position = temp;
                 ropeScale = lowRopes[i].localScale.y;
             }
             else
             {
-                temp.y = lowRopes[i - 1].position.y - ropeScale / 2;
+                temp.y = lowRopes[i - 1].position.y - ropeScale * 0.5f;
                 lowRopes[i].position = temp;
             }
         }

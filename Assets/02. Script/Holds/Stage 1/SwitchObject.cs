@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*************************   정보   **************************
+
+    스위치
+
+    사용방법 :
+    
+    1. 
+*************************************************************/
+
 public class SwitchObject : MonoBehaviour {
     private bool isSwitchOn;
     public bool IsSwitchOn
@@ -14,14 +23,4 @@ public class SwitchObject : MonoBehaviour {
         
     }
     public bool IsCanUseSwitch { set; get; }
-
-    // Use this for initialization
-    void Start () {
-	    
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
