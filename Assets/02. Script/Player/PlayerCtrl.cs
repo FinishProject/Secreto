@@ -253,10 +253,6 @@ public class PlayerCtrl : MonoBehaviour {
         return isJumping;
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
     // 로프에서 권한 찾기
     public void GetCtrlAuthorityByRope()
     {
