@@ -1,11 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*************************   정보   **************************
+
+    투사체를 발사하는 오브젝트~!
+
+    사용방법 :
+    
+    1. 오브젝트 메니저 오브젝트 풀에서
+       발사 오브젝트를 먼서 생성을 해줘야 한다
+
+    2. 오브젝트에 추가한 후 방향, 딜레이 타임을 설정하자
+    
+*************************************************************/
+
 public class ShootingObject : MonoBehaviour {
 
     public float delayTime = 10f;
     public Dir shootDir;
-    // Use this for initialization
     void Start()
     {
         StartCoroutine(CreateBullet());
