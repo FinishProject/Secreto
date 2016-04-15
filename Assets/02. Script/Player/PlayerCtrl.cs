@@ -82,10 +82,10 @@ public class PlayerCtrl : MonoBehaviour {
     void Update()
     {
         // 점프
-        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded) { Jump(JumpType.BASIC); }
-        else if (Input.GetKeyDown(KeyCode.Space) && !controller.isGrounded) { Jump(JumpType.DASH); }
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); }
+        else if ((Input.GetKeyDown(KeyCode.Space)|| Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
         // 상호작용 (버튼 조작)
-        else if (Input.GetKeyDown(KeyCode.Z)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
+        else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
         //NPC와 대화
         else if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기
@@ -173,7 +173,7 @@ public class PlayerCtrl : MonoBehaviour {
     IEnumerator Jumping()
     {
         float jumpTime = 0f; // 체공 시간
-        while (Input.GetKey(KeyCode.Space) && jumpTime <= 0.18f)
+        while ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && jumpTime <= 0.18f)
         {
             moveDir.y = jumpHight;
             jumpTime += Time.deltaTime;
@@ -202,7 +202,7 @@ public class PlayerCtrl : MonoBehaviour {
         }
     }
 
-    
+
 
     //레이캐스팅 발사
     void ShotRay()
@@ -326,7 +326,7 @@ public class PlayerCtrl : MonoBehaviour {
             isFlyingByRope = false;
             currInteraction = coll.transform.parent.gameObject;
             currInteraction.GetComponent<RopeCtrl>().
-                setAuthority(Convert.ToInt32(coll.name), isFocusRight); // 조작권한을 넘겨줌
+            setAuthority(Convert.ToInt32(coll.name), isFocusRight); // 조작권한을 넘겨줌
         }
     }
 

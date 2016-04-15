@@ -11,8 +11,11 @@ using System.Collections;
 
 *************************************************************/
 
+#region 초기화
+#endregion
 
 public class RopeCtrl : MonoBehaviour {
+    #region 변수 선언부
     [Tooltip("로프 구슬 프리펩")]
     public GameObject prefab;
     [Tooltip("로프 구슬 개수")]
@@ -40,7 +43,10 @@ public class RopeCtrl : MonoBehaviour {
     private bool isLimited = false;             // 힘의 제한
     private bool isLeft;                        // 좌우 방향 체크
     private int playerIdx;                      // 플레이어의 인덱스 위치
+    #endregion
 
+
+    #region 초기화
     void Start()
     {
         lowRopes = new Transform[ropeCnt];
@@ -63,12 +69,40 @@ public class RopeCtrl : MonoBehaviour {
         pre_theta2 = 0;
     }
 
+    // 로프 생성
+    void CreateRope()
+    {
+        for (int i = 0; i < ropeCnt; i++)
+        {
+            GameObject lowRope = Instantiate(prefab) as GameObject;
+            lowRope.name = i.ToString();
+            lowRope.tag = "Rope";
+            lowRope.transform.parent = gameObject.transform;
+
+            lowRopes[i] = lowRope.transform;
+
+            Vector3 temp = gameObject.transform.position;
+            if (i == 0)
+            {
+                temp.y = gameObject.transform.position.y - gameObject.transform.localScale.y * 0.5f;
+                lowRopes[i].position = temp;
+                ropeScale = lowRopes[i].localScale.y;
+            }
+            else
+            {
+                temp.y = lowRopes[i - 1].position.y - ropeScale * 0.5f;
+                lowRopes[i].position = temp;
+            }
+        }
+    }
+    #endregion
+
+
     // Update is called once per frame
     void Update()
     {
         if (isCtrlAuthority)
         {
-            
             curResist = CtrlResist;
             // 위로 올라감
             if (Input.GetKey(KeyCode.UpArrow))
@@ -91,7 +125,7 @@ public class RopeCtrl : MonoBehaviour {
                 theta1 -= addPower * Mathf.Deg2Rad;       
             }
             // 날아감
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X))
             {
                 curResist = StopResist;
                 isCtrlAuthority = false;
@@ -105,6 +139,7 @@ public class RopeCtrl : MonoBehaviour {
         PendulumMove();
     }
 
+    #region 물리 부분
     // 진자 운동
     void PendulumMove()
     {
@@ -215,34 +250,10 @@ public class RopeCtrl : MonoBehaviour {
 
         lowRopes[index].transform.position = temp;
     }
+    #endregion
 
 
-    // 로프 생성
-    void CreateRope()
-    {
-        for (int i = 0; i < ropeCnt; i++)
-        {
-            GameObject lowRope = Instantiate(prefab) as GameObject;
-            lowRope.name = i.ToString();
-            lowRope.tag = "Rope";
-            lowRope.transform.parent = gameObject.transform;
-
-            lowRopes[i] = lowRope.transform;
-
-            Vector3 temp = gameObject.transform.position;
-            if (i == 0)
-            {
-                temp.y = gameObject.transform.position.y - gameObject.transform.localScale.y * 0.5f;
-                lowRopes[i].position = temp;
-                ropeScale = lowRopes[i].localScale.y;
-            }
-            else
-            {
-                temp.y = lowRopes[i - 1].position.y - ropeScale * 0.5f;
-                lowRopes[i].position = temp;
-            }
-        }
-    }
+    #region 플레이어와 상호작용
 
     //플레이어에서 조작권한을 받음
     public void setAuthority(int playerIdx, bool isFocusRight)
@@ -282,5 +293,6 @@ public class RopeCtrl : MonoBehaviour {
         return theta1 * L;
     }
 
+    #endregion
 }
 
