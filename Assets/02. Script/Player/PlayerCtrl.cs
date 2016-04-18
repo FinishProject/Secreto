@@ -153,14 +153,14 @@ public class PlayerCtrl : MonoBehaviour {
                 if (!isJumping) {
                     isJumping = true;
                     ///////////////////////////////////////////////
-                    gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.BASIC_JUMP);
+                    //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.BASIC_JUMP);
                     StartCoroutine(Jumping());  
                 }
                 break;
             case JumpType.DASH:
                 if (isJumping) {
                     //////////////////////////////////////////////
-                    gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
+                    //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
                     moveDir.y = dashJumpHight;
                     controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
                     isJumping = false;
