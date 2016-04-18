@@ -78,7 +78,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 166054}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7499996, y: -55.800003, z: 0}
+  m_LocalPosition: {x: 0.4134434, y: 7.487855, z: 0}
   m_LocalScale: {x: 0.24000001, y: 9.263752, z: 0.37396705}
   m_Children: []
   m_Father: {fileID: 477052}
@@ -93,8 +93,8 @@ Transform:
   m_LocalPosition: {x: -65.46, y: 15.18, z: -2}
   m_LocalScale: {x: 3.0206172, y: 0.12953715, z: 2.6740324}
   m_Children:
-  - {fileID: 477052}
   - {fileID: 442778}
+  - {fileID: 477052}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &442778
@@ -108,7 +108,7 @@ Transform:
   m_LocalScale: {x: 1.6552908, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 428420}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!4 &477052
 Transform:
   m_ObjectHideFlags: 1
@@ -121,7 +121,7 @@ Transform:
   m_Children:
   - {fileID: 424260}
   m_Father: {fileID: 428420}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!23 &2347872
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -266,7 +266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   switchObject: {fileID: 166054}
-  TargetPos: {fileID: 442778}
+  targetTr: {fileID: 442778}
+  isDisposable: 0
   speed: 3
 --- !u!114 &11474182
 MonoBehaviour:
