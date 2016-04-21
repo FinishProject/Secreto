@@ -42,6 +42,7 @@ public class PlayerCtrl : MonoBehaviour {
     
     private GameObject currInteraction;
 
+
     //private Collider objColl = null;
 
     bool isClimb = false;
@@ -353,4 +354,11 @@ public class PlayerCtrl : MonoBehaviour {
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
     }
+
+
+
+
+    ///////////////////////////////////// 임시 //////////////////////////////
+    public bool isRed = true;
+
 }
