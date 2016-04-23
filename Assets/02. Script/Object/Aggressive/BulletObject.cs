@@ -18,7 +18,7 @@ public class BulletObject : MonoBehaviour
     {
         if(col.tag.Equals("Player"))
         {
-            col.GetComponent<PlayerCtrl>().getDamage(100);
+            PlayerCtrl.instance.getDamage(100);
         }
         gameObject.SetActive(false);
 

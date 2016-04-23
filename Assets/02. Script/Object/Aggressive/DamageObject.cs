@@ -20,8 +20,8 @@ public class DamageObject : MonoBehaviour {
         {
             Debug.Log("damaged");
 
-            //col.GetComponent<PlayerCtrl>().getDamage(damage);
-            col.GetComponent<PlayerCtrl>().getDamage(damage);
+            //PlayerCtrl.instance.getDamage(damage);
+            PlayerCtrl.instance.getDamage(damage);
 
         }
     }

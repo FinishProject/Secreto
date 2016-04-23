@@ -34,6 +34,17 @@ public class SkillCtrl : MonoBehaviour {
                 count++;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (count >= objBullets.Length && !objBullets[0].activeSelf) { count = 0; }
+            objBullets[count].GetComponent<LauncherCtrl>().isPowerStrike = true;
+            objBullets[count].SetActive(true);           
+            objBullets[count].SendMessage("GetFocusVector", this.transform.forward.normalized);
+            objBullets[count].transform.position = shotTr.position;
+            FindTarget();
+            count++;
+        }
     }
     //타겟 탐색
     void FindTarget()

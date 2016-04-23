@@ -14,44 +14,44 @@ using System.Collections;
 
 public class PlayerEffect : MonoBehaviour {
 
-    public GameObject Effect1;
-    public GameObject Effect2;
+    public GameObject effect1;
+    public GameObject effect2;
 
     // Use this for initialization
     void Start () {
-        Effect1 = Instantiate(Effect1);
-        Effect1.SetActive(false);
+        effect1 = Instantiate(effect1);
+        effect1.SetActive(false);
 
-        Effect2 = Instantiate(Effect2);
-        Effect2.SetActive(false);
+        effect2 = Instantiate(effect2);
+        effect2.SetActive(false);
     }
 
-    public void StartEffect(PlayerEffectList EffectState)
+    public void Starteffect(PlayerEffectList effectState)
     {
-        switch(EffectState)
+        switch(effectState)
         {
-            case PlayerEffectList.BASIC_JUMP : StartCoroutine(Effected());   break;
-            case PlayerEffectList.DASH_JUMP  : StartCoroutine(Effected_2()); break;
+            case PlayerEffectList.BASIC_JUMP : StartCoroutine(effected());   break;
+            case PlayerEffectList.DASH_JUMP  : StartCoroutine(effected_2()); break;
         }
     }
 
-    IEnumerator Effected_2()
+    IEnumerator effected_2()
     {
         Vector3 tempPos = gameObject.transform.position;
         tempPos.y += 1.0f;
-        Effect2.transform.position = tempPos;
-        Effect2.SetActive(true);
+        effect2.transform.position = tempPos;
+        effect2.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        Effect2.SetActive(false);
+        effect2.SetActive(false);
 
     }
-    IEnumerator Effected()
+    IEnumerator effected()
     {
         Vector3 tempPos = gameObject.transform.position;
         tempPos.y += 1.0f;
-        Effect1.transform.position = tempPos;
-        Effect1.SetActive(true);
+        effect1.transform.position = tempPos;
+        effect1.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        Effect1.SetActive(false);
+        effect1.SetActive(false);
     }
 }

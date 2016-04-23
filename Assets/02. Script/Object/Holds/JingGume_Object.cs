@@ -29,8 +29,8 @@ public class JingGume_Object : MonoBehaviour
         {
             Cnt++;
 
-            //parent.OnHolds(col.GetComponent<PlayerCtrl>().getCarryItemName());
-            parent.OnHolds(col.GetComponent<PlayerCtrl>().getCarryItemName());
+            //parent.OnHolds(PlayerCtrl.instance.getCarryItemName());
+            parent.OnHolds(PlayerCtrl.instance.getCarryItemName());
         }
     }
 
