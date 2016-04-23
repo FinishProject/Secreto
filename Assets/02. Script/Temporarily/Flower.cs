@@ -17,8 +17,8 @@ public class Flower : MonoBehaviour {
     {
         if(col.tag.Equals("Player"))
         {
-            if (isRed) col.GetComponent<PlayerCtrl>().isRed = true;
-            else col.GetComponent<PlayerCtrl>().isRed = false;
+            if (isRed) PlayerCtrl.instance.isRed = true;
+            else PlayerCtrl.instance.isRed = false;
             gameObject.SetActive(false);
         }
     }

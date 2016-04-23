@@ -81,6 +81,7 @@ public class MonsterFSM : FSMBase {
     IEnumerator Dying_EnterState()
     {
         Debug.Log("쮸금");
+        GetComponent<ItemDrop>().DropItem();
         gameObject.SetActive(false);
         yield return null;
     }
