@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LauncherCtrl : MonoBehaviour {
 
-    private float speed = 8f;
+    private float speed = 15f;
     private float m_Time = 0f;
     private Transform targetTr;
     private Vector3 focusVec;
@@ -23,7 +23,7 @@ public class LauncherCtrl : MonoBehaviour {
 	}
     void OnTriggerEnter(Collider coll)
     {
-        if (coll.tag == "MONSTER")
+        if (coll.CompareTag("MONSTER"))
         {
             this.targetTr = null;
             gameObject.SetActive(false);

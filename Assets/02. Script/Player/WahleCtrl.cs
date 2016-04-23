@@ -27,13 +27,8 @@ public class WahleCtrl : MonoBehaviour {
     void FixedUpdate()
     {
         // 플레이어와 고래의 거리 차이 구함
-        distance = Vector3.Distance(transform.position, playerTr.position);
+        distance = (transform.position - playerTr.position).sqrMagnitude;
         MovementType();
-
-        //키 입력에 따른 척력 인력 실행
-        //if (Input.GetKey(KeyCode.V)) { FullFushObject(); isFush = true; }
-        //else if (Input.GetKey(KeyCode.C)) { FullFushObject(); isFush = false; }
-        //else { StopCoroutine("GrabObject"); targetObj = null; } // 잡기 중지
     }
 
     void TurnFocus()
@@ -72,7 +67,7 @@ public class WahleCtrl : MonoBehaviour {
                 if (isMon)
                 {
                     transform.position = Vector3.Lerp(transform.position,
-                        playerTr.position - (playerTr.forward * -5f) + (playerTr.up * 2f),
+                        playerTr.position - (playerTr.up * 2f),
                         speed * Time.deltaTime);
                 }
                 //Vector3 lookPos = new Vector3(monTr.position.x, monTr.position.y + 20f, 0f);
@@ -113,37 +108,6 @@ public class WahleCtrl : MonoBehaviour {
             isWall = true;
         }
     }
-
-    //인력, 척력
-    void FullFushObject()
-    {
-        //주위 오브젝트 탐색
-        Collider[] hitCollider = Physics.OverlapSphere(this.transform.position, 3f);
-        int i = 0; 
-        while (i < hitCollider.Length)
-        {
-            if (hitCollider[i].tag == "OBJECT" || hitCollider[i].tag == "MONSTER" && targetObj == null)
-            {
-                StartCoroutine("GrabObject", hitCollider[i].gameObject);
-                break;
-            }
-            i++;
-        }
-    }
-    // 인력, 척력 유지
-    IEnumerator GrabObject(GameObject target)
-    {
-        targetObj = target;
-        while (true)
-        {
-            if (isFush)
-                targetObj.SendMessage("FullObject");
-            else if (!isFush)
-                targetObj.SendMessage("FushObject");
-            yield return null;
-        }
-    }
-
     IEnumerator ResetType()
     {
         yield return new WaitForSeconds(1f);

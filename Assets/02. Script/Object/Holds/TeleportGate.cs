@@ -7,7 +7,6 @@ public class TeleportGate : MonoBehaviour {
 
     private bool isTravel = true; // 이동 가능 여부
     private TeleportGate telepGate; // 출구 오브젝트의 스크립트를 담을 변수
-
     private Transform olaTr, camTr;
 
     void Start()
@@ -18,7 +17,7 @@ public class TeleportGate : MonoBehaviour {
 
 	void OnTriggerEnter(Collider coll)
     {
-        if(coll.tag == "Player" && isTravel)
+        if(coll.CompareTag("Player") && isTravel)
         {
             // 반대편에 도착 시 잠시 이동 불가능하게 만듬
             telepGate = exitGate.GetComponent<TeleportGate>();

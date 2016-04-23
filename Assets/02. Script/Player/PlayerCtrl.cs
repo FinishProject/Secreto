@@ -82,8 +82,8 @@ public class PlayerCtrl : MonoBehaviour {
     void Update()
     {
         // 점프
-		if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); Debug.Log("Jump");}
-        else if ((Input.GetKeyDown(KeyCode.Space)|| Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
+		if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); }
+        else if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
         //NPC와 대화
@@ -99,7 +99,6 @@ public class PlayerCtrl : MonoBehaviour {
         else RopeWorker();
     }
 
-   
     void Movement()
     {
         // 키 입력
@@ -110,7 +109,7 @@ public class PlayerCtrl : MonoBehaviour {
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);
-            //anim.SetFloat("Speed", inputAxis);            
+            anim.SetFloat("Speed", inputAxis);  
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
@@ -154,7 +153,8 @@ public class PlayerCtrl : MonoBehaviour {
                     isJumping = true;
                     ///////////////////////////////////////////////
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.BASIC_JUMP);
-                    StartCoroutine(Jumping());  
+                    moveDir.y = jumpHight;
+                    controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
                 }
                 break;
             case JumpType.DASH:
@@ -170,19 +170,6 @@ public class PlayerCtrl : MonoBehaviour {
         
     }
 
-    IEnumerator Jumping()
-    {
-        float jumpTime = 0f; // 체공 시간
-        while ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && jumpTime <= 0.18f)
-        {
-            moveDir.y = jumpHight;
-            jumpTime += Time.deltaTime;
-            controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
-            yield return null;
-        }
-        StopCoroutine(Jumping());
-    }
-
     //캐릭터 컨트롤러 충돌
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
@@ -193,7 +180,6 @@ public class PlayerCtrl : MonoBehaviour {
         if (hit.moveDirection.y < -0.3F)
             return;
             
-
         //오브젝트 밀기
         if (Input.GetKey(KeyCode.LeftShift))
         {

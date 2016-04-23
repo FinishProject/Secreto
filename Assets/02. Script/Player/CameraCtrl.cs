@@ -20,12 +20,6 @@ public class CameraCtrl : MonoBehaviour {
     void FixedUpdate()
     {
         standardPos[0] = playerTr.position + relCameraPos[0];
-        //standardPos[1] = whaleTr.position + relCameraPos[1];
-
-        //if (WahleCtrl.isChange) { index = 0; }
-        //else { index = 1; }
-        //if(PlayerCtrl.instance.controller.isGrounded)
-
         transform.position = Vector3.Lerp(transform.position, standardPos[index], speed * Time.deltaTime);
 
     }

@@ -9,7 +9,7 @@ public class Elevator : MonoBehaviour {
     private bool isActive = true; // 작동 여부
     private bool isTrample = false; // 플레이어가 밟고 있는지 여부
     private Vector3 originPos, finishPos; // 시작 위치, 최종 위치
-    private Transform playerTr; // 플레이어 트랜스폼
+    private Transform playerTr, olaTr; // 플레이어, 올라 트랜스폼
 
     void Start()
     {

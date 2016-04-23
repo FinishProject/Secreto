@@ -19,7 +19,7 @@ public class SwitchGate : MonoBehaviour {
 	void OnTriggerEnter(Collider col)
     {
         // 특정 오브젝트와 충돌시(위에 올려졌을 시)
-        if(col.gameObject.tag == "OBJECT")
+        if(col.CompareTag("OBJECT"))
         {
             StartCoroutine(OpenGate());
         }
