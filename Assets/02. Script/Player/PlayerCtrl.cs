@@ -108,6 +108,7 @@ public class PlayerCtrl : MonoBehaviour
         // 지상에 있을 시
         if (controller.isGrounded && isMove)
         {
+            isJumping = false;
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);

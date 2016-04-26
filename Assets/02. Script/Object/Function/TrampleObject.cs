@@ -16,7 +16,8 @@ public class TrampleObject : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.tag.Equals("Player") && PlayerCtrl.instance.IsJumping())
+        if (col.tag.Equals("Player") && PlayerCtrl.instance.IsJumping()
+            && PlayerCtrl.instance.transform.position.y > gameObject.transform.localScale.y)
         {
             gameObject.GetComponent<ItemDrop>().DropItem();
             gameObject.SetActive(false);
