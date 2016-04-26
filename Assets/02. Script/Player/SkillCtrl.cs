@@ -2,26 +2,50 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum AttributeState
+{
+    noraml = 0,
+    red = 1,
+    blue = 2
+}
+
 public class SkillCtrl : MonoBehaviour {
 
     public Transform playerTr;
     public Transform shotTr;
-    public GameObject bullet;
+    public GameObject normalBullet;
     
     private int count = 0;
     private GameObject[] objBullets = new GameObject[3];
 
+
+    [System.NonSerialized]
+    public float curEnhance = 0;
+    public float maxEnhance = 10;
+    [System.NonSerialized]
+    public AttributeState curAttribute;         // 속성   
+    public float attributeDuration = 5.0f;      // 속성 지속시간 (시간이 끝나면 noraml)
+    public static SkillCtrl instance;
+    private float _countDownForAttribute;
+
+    void Awake()
+    {
+        instance = this;
+        curAttribute = AttributeState.noraml;
+        _countDownForAttribute = attributeDuration;
+    }
+
     void Start()
     { 
         for (int i = 0; i < objBullets.Length; i++) {
-            objBullets[i] = (GameObject)Instantiate(bullet, shotTr.position, Quaternion.identity);
+            objBullets[i] = (GameObject)Instantiate(normalBullet, shotTr.position, Quaternion.identity);
             objBullets[i].SetActive(false);
         }
     }
 
     void Update()
     {
-        //F키 입력 시 공격체 생성
+        // F키 입력 시 공격체 생성
         if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.A)) {
             if (count >= objBullets.Length) {
                 if (!objBullets[0].activeSelf) count = 0;
@@ -35,17 +59,20 @@ public class SkillCtrl : MonoBehaviour {
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.G))
+        // G키 입력, 인핸스가 있으면 공격체 생성
+        if (Input.GetKeyDown(KeyCode.G) && curEnhance >= maxEnhance)
         {
             if (count >= objBullets.Length && !objBullets[0].activeSelf) { count = 0; }
+            curEnhance = 0;
             objBullets[count].GetComponent<LauncherCtrl>().isPowerStrike = true;
             objBullets[count].SetActive(true);           
-            objBullets[count].SendMessage("GetFocusVector", this.transform.forward.normalized);
+            objBullets[count].SendMessage("GetFocusVector", shotTr.right);
             objBullets[count].transform.position = shotTr.position;
             FindTarget();
             count++;
         }
     }
+
     //타겟 탐색
     void FindTarget()
     {
@@ -77,5 +104,56 @@ public class SkillCtrl : MonoBehaviour {
         }
         // 현재 발사체에게 타겟 포지션을 알려줌
         objBullets[count].SendMessage("GetTarget", _target[targetIndex]);
+    }
+
+    public void ChangeAttribute(AttributeState attribute)
+    {
+        StartCoroutine(StartChangeAttribute(attribute));
+    }
+
+    // 속성 지속
+    IEnumerator StartChangeAttribute(AttributeState attribute)
+    {
+        curAttribute = attribute;
+        while(true)
+        {
+            yield return new WaitForSeconds(1f);
+            _countDownForAttribute -= 1f;
+
+            if(_countDownForAttribute < 1f)
+            {
+                _countDownForAttribute = attributeDuration;
+                curAttribute = AttributeState.noraml;
+                yield return null;
+            }
+        }
+        
+    }
+
+    // 인핸스 증가 ( 마나 )
+    public void AddEnhance()
+    {
+        Debug.Log(11);
+        curEnhance+= 1;
+        if(curEnhance > maxEnhance)
+        {
+            curEnhance = maxEnhance;
+        }
+    }
+
+    void OnGUI()
+    {
+        
+        string tempText;
+        tempText = "현재 인핸스 : " + curEnhance.ToString();
+        tempText += "\n적용 속성  : " + curAttribute.ToString();
+
+
+        if(!curAttribute.Equals(AttributeState.noraml))
+        {
+            tempText += "\n남은 시간 : " + Mathf.Round(_countDownForAttribute).ToString();
+        }
+
+        GUI.TextField(new Rect(0, 0, 300.0f, 60.0f), tempText);
     }
 }

@@ -34,6 +34,11 @@ public class ItemDrop : MonoBehaviour {
     void Start () {
         thisTr = GetComponent<Transform>();
         
+        if(isRandomNumberDrap)
+        {
+            dropItemList.HpRecoverNumber = Random.Range(0, dropItemList.HpRecoverNumber);
+            dropItemList.ExpNumber = Random.Range(0, dropItemList.ExpNumber);
+        }
     }
 	
     // 아이템 드랍

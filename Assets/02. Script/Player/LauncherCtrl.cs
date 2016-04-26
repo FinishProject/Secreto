@@ -8,9 +8,11 @@ public class LauncherCtrl : MonoBehaviour {
     private Transform targetTr;
     private Vector3 focusVec;
 
-    public Material red;
-    public Material blue;
-    private bool isRed = true;
+    public Material matNormal;
+    public Material matRed;
+    public Material matBlue;
+
+    private AttributeState _curAttibute;
     public bool isPowerStrike = false;
 
     void FixedUpdate()
@@ -21,34 +23,55 @@ public class LauncherCtrl : MonoBehaviour {
         else
         {
             Vector3 relativePos = this.targetTr.position - this.transform.position;
-            //transform.position = Vector3.Lerp(transform.position, relativePos, speed * Time.deltaTime);
             transform.Translate(relativePos.normalized * speed * Time.deltaTime);
         }
         m_Time += Time.deltaTime;
         if (m_Time >= 1f) { gameObject.SetActive(false); }
     }
+
     void OnTriggerEnter(Collider coll)
     {
         if (coll.CompareTag("MONSTER"))
         {
             var monster = coll.GetComponent<MonsterFSM>();
-            if (monster.isRed == !isRed)
+
+            switch(monster.curAttibute)
             {
-                if(isPowerStrike) monster.getDamage(50);
-                else monster.getDamage(15);
+                // 속성 상관 없이 데미지
+                case AttributeState.noraml:
+                                        
+                    if (isPowerStrike) monster.getDamage(50);
+                    else monster.getDamage(15);
+                    break;
+
+                // 몬스터 빨강 / 발사체 파랑일 때 데미지
+                case AttributeState.red:
+
+                    if(_curAttibute.Equals(AttributeState.blue))
+                    {
+                        if (isPowerStrike) monster.getDamage(50);
+                        else monster.getDamage(15);
+                    }
+                    break;
+
+                // 몬스터 파랑 / 발사체 빨강일 때 데미지
+                case AttributeState.blue:
+
+                    if (_curAttibute.Equals(AttributeState.red))
+                    {
+                        if (isPowerStrike) monster.getDamage(50);
+                        else monster.getDamage(15);
+                    }
+                    break;
             }
-            else if(!monster.isRed == isRed)
-            {
-                if (isPowerStrike) monster.getDamage(50);
-                else monster.getDamage(15);
-            }
-                
+
 
             this.targetTr = null;
             gameObject.SetActive(false);
 
         }
     }
+
     void OnDisable()
     {
         targetTr = null;
@@ -59,15 +82,18 @@ public class LauncherCtrl : MonoBehaviour {
     void OnEnable()
     {
         m_Time = 0f;
-        if (PlayerCtrl.instance.isRed)
+        _curAttibute = SkillCtrl.instance.curAttribute;
+        switch(_curAttibute)
         {
-            gameObject.GetComponent<MeshRenderer>().material = red;
-            isRed = true;
-        }
-        else
-        {
-            gameObject.GetComponent<MeshRenderer>().material = blue;
-            isRed = false;
+            case AttributeState.noraml:
+                gameObject.GetComponent<MeshRenderer>().material = matNormal;
+                break;
+            case AttributeState.red:
+                gameObject.GetComponent<MeshRenderer>().material = matRed;
+                break;
+            case AttributeState.blue:
+                gameObject.GetComponent<MeshRenderer>().material = matBlue;
+                break;
         }
 
         if (isPowerStrike)

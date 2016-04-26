@@ -11,8 +11,8 @@ GameObject:
   - 33: {fileID: 3300540}
   - 135: {fileID: 13549292}
   - 23: {fileID: 2355496}
-  - 114: {fileID: 11406110}
   - 114: {fileID: 11475430}
+  - 114: {fileID: 11480164}
   m_Layer: 0
   m_Name: TempMonter
   m_TagString: MONSTER
@@ -65,25 +65,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165900}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &11406110
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 165900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae4e6073141374242a6c55c61474b8bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  transform: {fileID: 0}
-  rigidbody: {fileID: 0}
-  animation: {fileID: 0}
-  gameObject: {fileID: 0}
-  collider: {fileID: 0}
-  isRed: 0
-  red: {fileID: 2100000, guid: 1e4970333ebbc6d4b96bce0525e04f25, type: 2}
-  blue: {fileID: 2100000, guid: 93f958011e9e0114cbeb8c68e7f32a71, type: 2}
 --- !u!114 &11475430
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -102,6 +83,26 @@ MonoBehaviour:
     Exp: 1
     ExpNumber: 3
   dropRange: 3
+--- !u!114 &11480164
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4e6073141374242a6c55c61474b8bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transform: {fileID: 0}
+  rigidbody: {fileID: 0}
+  animation: {fileID: 0}
+  gameObject: {fileID: 0}
+  collider: {fileID: 0}
+  curAttibute: 0
+  matNormal: {fileID: 2100000, guid: 228edb61a47b5a14b8270b5c72daebdb, type: 2}
+  matRed: {fileID: 2100000, guid: 1e4970333ebbc6d4b96bce0525e04f25, type: 2}
+  matBlue: {fileID: 2100000, guid: 93f958011e9e0114cbeb8c68e7f32a71, type: 2}
 --- !u!135 &13549292
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -8,17 +8,17 @@ public class Flower : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         if(isRed)
-            gameObject.GetComponent<MeshRenderer>().material = red;
+            gameObject.GetComponentInChildren<MeshRenderer>().material = red;
         else
-            gameObject.GetComponent<MeshRenderer>().material = blue;
+            gameObject.GetComponentInChildren<MeshRenderer>().material = blue;
     }
 
     void OnTriggerEnter(Collider col)
     {
         if(col.tag.Equals("Player"))
         {
-            if (isRed) PlayerCtrl.instance.isRed = true;
-            else PlayerCtrl.instance.isRed = false;
+            if (isRed) SkillCtrl.instance.ChangeAttribute(AttributeState.red);
+            else SkillCtrl.instance.ChangeAttribute(AttributeState.blue);
             gameObject.SetActive(false);
         }
     }
