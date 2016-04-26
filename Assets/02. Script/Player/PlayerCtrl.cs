@@ -42,7 +42,9 @@ public class PlayerCtrl : MonoBehaviour
     private SwitchObject switchState;
 
     private GameObject currInteraction;
+	private Vector3 originPos;
 
+	public float reloadValue;
 
     //private Collider objColl = null;
 
@@ -66,6 +68,8 @@ public class PlayerCtrl : MonoBehaviour
         // 상호작용을 하기 위한 스위치
         switchState = gameObject.AddComponent<SwitchObject>();
         switchState.IsCanUseSwitch = false;
+
+		originPos = this.transform.position;
     }
 
     //void Start()
@@ -83,6 +87,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+		Debug.Log (transform.position.y);
         // 점프
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); }
         else if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
@@ -107,6 +112,11 @@ public class PlayerCtrl : MonoBehaviour
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
         else RopeWorker();
+
+		if (transform.position.y <= reloadValue) {
+			transform.position = originPos;
+
+		}
     }
 
     void Movement()

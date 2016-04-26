@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 95ed70016e2f18a44be99c8e2f140593
-timeCreated: 1461650659
+guid: 14f5d9a9068a83f4faea06f129771eac
+timeCreated: 1461652548
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: 2stage_Tree1
+    4300000: Object001
   materials:
     importMaterials: 1
     materialName: 0
