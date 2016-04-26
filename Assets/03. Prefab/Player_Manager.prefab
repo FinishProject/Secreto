@@ -52,7 +52,12 @@ GameObject:
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
+<<<<<<< HEAD
+  - 4: {fileID: 457802}
+  - 137: {fileID: 13756248}
+=======
   - 4: {fileID: 441084}
+>>>>>>> origin/master
   m_Layer: 0
   m_Name: Bip001 L Hand
   m_TagString: Untagged
@@ -551,7 +556,15 @@ GameObject:
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
+<<<<<<< HEAD
+  - 4: {fileID: 462934}
+  - 33: {fileID: 3313336}
+  - 23: {fileID: 2326642}
+  - 114: {fileID: 11485614}
+  - 114: {fileID: 11431298}
+=======
   - 4: {fileID: 481266}
+>>>>>>> origin/master
   m_Layer: 0
   m_Name: Player_Manager
   m_TagString: Untagged
@@ -1262,10 +1275,23 @@ GameObject:
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
+<<<<<<< HEAD
+  - 4: {fileID: 427628}
+  - 95: {fileID: 9574384}
+  - 143: {fileID: 14338712}
+  - 136: {fileID: 13635076}
+  - 114: {fileID: 11433484}
+  - 114: {fileID: 11475300}
+  - 114: {fileID: 11463902}
+  m_Layer: 0
+  m_Name: Luna
+  m_TagString: Player
+=======
   - 4: {fileID: 459962}
   m_Layer: 0
   m_Name: Bip001 L Toe0
   m_TagString: Untagged
+>>>>>>> origin/master
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2329,6 +2355,14 @@ Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
+<<<<<<< HEAD
+  m_GameObject: {fileID: 194280}
+  m_LocalRotation: {x: -0.49999982, y: 0.50000024, z: 0.4999999, w: -0.5000001}
+  m_LocalPosition: {x: -0, y: -0.1240005, z: 0.09899993}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 462934}
+=======
   m_GameObject: {fileID: 109476}
   m_LocalRotation: {x: -0.04359974, y: 0.9980068, z: 0.01405603, w: 0.04340396}
   m_LocalPosition: {x: 0.054170683, y: -0.04884245, z: 0.073580824}
@@ -2336,16 +2370,24 @@ Transform:
   m_Children:
   - {fileID: 470772}
   m_Father: {fileID: 498592}
+>>>>>>> origin/master
   m_RootOrder: 0
 --- !u!4 &468820
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
+<<<<<<< HEAD
+  m_GameObject: {fileID: 107368}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -58.61, y: 9.7, z: -2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+=======
   m_GameObject: {fileID: 155938}
   m_LocalRotation: {x: 0.000000022807939, y: -0.0000000059084067, z: 0.0682191, w: 0.99767035}
   m_LocalPosition: {x: -0.023529738, y: 0, z: 0}
   m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1}
+>>>>>>> origin/master
   m_Children:
   - {fileID: 490442}
   m_Father: {fileID: 439928}
@@ -2880,7 +2922,26 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+<<<<<<< HEAD
+--- !u!114 &11431298
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 137022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3b4d89326e301347aff4a00f480a394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTr: {fileID: 427628}
+  shotTr: {fileID: 472484}
+  bullet: {fileID: 147436, guid: c9ba5eacb39db40449cf2046b0516687, type: 2}
+  attributeDuration: 5
+--- !u!114 &11433484
+=======
 --- !u!114 &11407928
+>>>>>>> origin/master
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -2891,9 +2952,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3088417471d879408914f4696099c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
+  jumpHight: 3
+  dashJumpHight: 4
+  speed: 10
+  moveResistant: 0
+  moveDir: {x: 0, y: 0, z: 0}
+  controller: {fileID: 0}
+  jumpState: 0
+  rayTr: {fileID: 0}
+--- !u!114 &11463902
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b3fb53eca294f4c9a9596522761c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11475300
+=======
   speed: 5
   playerTr: {fileID: 404310}
 --- !u!114 &11418650
+>>>>>>> origin/master
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -3099,7 +3183,11 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
+<<<<<<< HEAD
+  m_Center: {x: 0, y: 0.81, z: 0}
+=======
   m_Center: {x: 0, y: 0.78, z: 0.09}
+>>>>>>> origin/master
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -14,9 +14,11 @@ using System.Collections;
 public class MonsterFSM : FSMBase {
 
     private float hp = 50;
-    public bool isRed;
-    public Material red;
-    public Material blue;
+
+    public AttributeState curAttibute;
+    public Material matNormal;
+    public Material matRed;
+    public Material matBlue;
 
     // 몬스터 상태
     public enum EnemyStates
@@ -28,10 +30,19 @@ public class MonsterFSM : FSMBase {
     }
 
 	void Start () {
-        if (isRed)
-            gameObject.GetComponent<MeshRenderer>().material = red;
-        else
-            gameObject.GetComponent<MeshRenderer>().material = blue;
+        switch (curAttibute)
+        {
+            case AttributeState.noraml:
+                gameObject.GetComponent<MeshRenderer>().material = matNormal;
+                break;
+            case AttributeState.red:
+                gameObject.GetComponent<MeshRenderer>().material = matRed;
+                break;
+            case AttributeState.blue:
+                gameObject.GetComponent<MeshRenderer>().material = matBlue;
+                break;
+        }
+
         curState = EnemyStates.Idle;
 	}
 

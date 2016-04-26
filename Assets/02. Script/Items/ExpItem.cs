@@ -23,7 +23,7 @@ public class ExpItem : MonoBehaviour {
     {
         if (col.tag.Equals("Player") && isGetPossible)
         {
-            col.GetComponent<SkillMgr>().GetEXPoint();  // 스킬 경험치 획득
+            SkillCtrl.instance.AddEnhance();
             StopAllCoroutines();                        // 사용중인 코루틴 정지
             isGetPossible = false;
             gameObject.SetActive(false);

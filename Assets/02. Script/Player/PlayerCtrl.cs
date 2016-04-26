@@ -12,7 +12,8 @@ public enum PlayerEffectList
 }
 
 
-public class PlayerCtrl : MonoBehaviour {
+public class PlayerCtrl : MonoBehaviour
+{
 
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
@@ -39,7 +40,7 @@ public class PlayerCtrl : MonoBehaviour {
     public Transform rayTr; // 레이캐스트 시작 위치
     private Animator anim;
     private SwitchObject switchState;
-    
+
     private GameObject currInteraction;
 
 
@@ -83,7 +84,7 @@ public class PlayerCtrl : MonoBehaviour {
     void Update()
     {
         // 점프
-		if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); }
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); }
         else if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
@@ -110,7 +111,7 @@ public class PlayerCtrl : MonoBehaviour {
             //이동
             moveDir = Vector3.right * inputAxis;
             //anim.SetBool("Jump", false);
-            anim.SetFloat("Speed", inputAxis);  
+            anim.SetFloat("Speed", inputAxis);
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
@@ -123,7 +124,7 @@ public class PlayerCtrl : MonoBehaviour {
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        if(!isClimb)
+        if (!isClimb)
             moveDir += Physics.gravity * Time.deltaTime;
 
         else if (isClimb)
@@ -131,7 +132,7 @@ public class PlayerCtrl : MonoBehaviour {
             inputAxis = Input.GetAxis("Vertical");
             moveDir = Vector3.up * inputAxis;
         }
-            
+
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
@@ -150,7 +151,8 @@ public class PlayerCtrl : MonoBehaviour {
         {
             case JumpType.BASIC:
                 isJumping = false;
-                if (!isJumping) {
+                if (!isJumping)
+                {
                     isJumping = true;
                     ///////////////////////////////////////////////
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.BASIC_JUMP);
@@ -159,7 +161,8 @@ public class PlayerCtrl : MonoBehaviour {
                 }
                 break;
             case JumpType.DASH:
-                if (isJumping) {
+                if (isJumping)
+                {
                     //////////////////////////////////////////////
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
                     moveDir.y = dashJumpHight;
@@ -168,7 +171,7 @@ public class PlayerCtrl : MonoBehaviour {
                 }
                 break;
         }
-        
+
     }
 
     //캐릭터 컨트롤러 충돌
@@ -180,7 +183,7 @@ public class PlayerCtrl : MonoBehaviour {
             return;
         if (hit.moveDirection.y < -0.3F)
             return;
-            
+
         //오브젝트 밀기
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -211,7 +214,7 @@ public class PlayerCtrl : MonoBehaviour {
             }
         }
     }
-    
+
     public void getRecovery(float recovery)
     {
         hp += recovery;
@@ -227,10 +230,10 @@ public class PlayerCtrl : MonoBehaviour {
     public void getDamage(float damage)
     {
         hp -= damage;
-        if(hp <= 0)
+        if (hp <= 0)
         {
             //PlayerDie();
-//            Debug.Log("Player Die");
+            //            Debug.Log("Player Die");
             return;
         }
     }
@@ -285,7 +288,7 @@ public class PlayerCtrl : MonoBehaviour {
         if (isFlyingByRope)
         {
 
-            controller.Move(Vector3.right * vx * Time.deltaTime);  
+            controller.Move(Vector3.right * vx * Time.deltaTime);
             moveDir += new Vector3(0f, -7f, 0f) * Time.deltaTime;   // 중력
             controller.Move(moveDir * 10.0f * Time.deltaTime);
 
@@ -340,11 +343,5 @@ public class PlayerCtrl : MonoBehaviour {
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
     }
-
-
-
-
-    ///////////////////////////////////// 임시 //////////////////////////////
-    public bool isRed = true;
 
 }
