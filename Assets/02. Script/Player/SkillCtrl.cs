@@ -11,12 +11,19 @@ public enum AttributeState
 
 public class SkillCtrl : MonoBehaviour {
 
+    struct BulletInfo {
+        public GameObject Bullet;
+        public bool isFire;
+    }
+
+    private BulletInfo[] bulletInfo;
+
     public Transform playerTr;
     public Transform shotTr;
     public GameObject normalBullet;
     
     private int count = 0;
-    private GameObject[] objBullets = new GameObject[3];
+    public GameObject[] objBullets;
 
     [System.NonSerialized]
     public float curEnhance = 0;
@@ -27,6 +34,9 @@ public class SkillCtrl : MonoBehaviour {
     public static SkillCtrl instance;
     private float _countDownForAttribute;
 
+    public int bulletNum = 3;
+    public float initTime = 3f;
+
     void Awake()
     {
         instance = this;
@@ -35,10 +45,14 @@ public class SkillCtrl : MonoBehaviour {
     }
 
     void Start()
-    { 
-        for (int i = 0; i < objBullets.Length; i++) {
-            objBullets[i] = (GameObject)Instantiate(normalBullet, shotTr.position, Quaternion.identity);
-            objBullets[i].SetActive(false);
+    {
+        bulletInfo = new BulletInfo[bulletNum];
+
+        for (int i=0; i< bulletInfo.Length; i++)
+        {
+            bulletInfo[i].Bullet = (GameObject)Instantiate(objBullets[0], shotTr.position, Quaternion.identity);
+            bulletInfo[i].isFire = true;
+            bulletInfo[i].Bullet.SetActive(false);
         }
     }
 
@@ -46,15 +60,17 @@ public class SkillCtrl : MonoBehaviour {
     {
         // F키 입력 시 공격체 생성
         if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.A)) {
-            if (count >= objBullets.Length) {
-                if (!objBullets[0].activeSelf) count = 0;
+            if (count >= bulletInfo.Length) {
+                if (!bulletInfo[0].Bullet.activeSelf) count = 0;
             }
             else {
-                objBullets[count].SetActive(true);
-                objBullets[count].SendMessage("GetFocusVector", shotTr.right);
-                objBullets[count].transform.position = shotTr.position;
-                FindTarget();
-                count++;
+                if (bulletInfo[count].isFire)
+                {
+                    bulletInfo[count].Bullet.SetActive(true);
+                    bulletInfo[count].Bullet.transform.position = shotTr.position;
+                    FindTarget();
+                    count++;
+                }
             }
         }
 
@@ -102,7 +118,9 @@ public class SkillCtrl : MonoBehaviour {
             }
         }
         // 현재 발사체에게 타겟 포지션을 알려줌
-        objBullets[count].SendMessage("GetTarget", _target[targetIndex].gameObject);
+        bulletInfo[count].Bullet.SendMessage("GetTarget", _target[targetIndex].gameObject);
+        bulletInfo[count].Bullet.SendMessage("GetIndex", count);
+        bulletInfo[count].isFire = false;
     }
 
     public void ChangeAttribute(AttributeState attribute)
@@ -132,7 +150,6 @@ public class SkillCtrl : MonoBehaviour {
     // 인핸스 증가 ( 마나 )
     public void AddEnhance()
     {
-        Debug.Log(11);
         curEnhance+= 1;
         if(curEnhance > maxEnhance)
         {
@@ -142,7 +159,6 @@ public class SkillCtrl : MonoBehaviour {
 
     void OnGUI()
     {
-        
         string tempText;
         tempText = "현재 인핸스 : " + curEnhance.ToString();
         tempText += "\n적용 속성  : " + curAttribute.ToString();
@@ -154,5 +170,16 @@ public class SkillCtrl : MonoBehaviour {
         }
 
         GUI.TextField(new Rect(0, 0, 300.0f, 60.0f), tempText);
+    }
+
+    public void StartReset(int index)
+    {
+        StartCoroutine(ResetBullet(index));
+    }
+
+    IEnumerator ResetBullet(int index)
+    {
+        yield return new WaitForSeconds(initTime);
+        bulletInfo[index].isFire = true;
     }
 }

@@ -87,6 +87,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+        if (controller.isGrounded) anim.SetBool("Jump", false);
         // 점프
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); }
         else if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
@@ -116,6 +117,8 @@ public class PlayerCtrl : MonoBehaviour
 			transform.position = originPos;
 
 		}
+
+        
     }
 
     void Movement()
@@ -128,7 +131,7 @@ public class PlayerCtrl : MonoBehaviour
             isJumping = false;
             //이동
             moveDir = Vector3.right * inputAxis;
-            //anim.SetBool("Jump", false);
+            
             anim.SetFloat("Speed", inputAxis);
         }
         // 공중에 있을 시
@@ -165,6 +168,7 @@ public class PlayerCtrl : MonoBehaviour
     void Jump(JumpType isJump)
     {
         jumpState = isJump;
+        anim.SetBool("Jump", true);
         switch (jumpState)
         {
             case JumpType.BASIC:
@@ -176,6 +180,7 @@ public class PlayerCtrl : MonoBehaviour
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.BASIC_JUMP);
                     moveDir.y = jumpHight;
                     controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
+                    
                 }
                 break;
             case JumpType.DASH:

@@ -29,7 +29,6 @@ public class WahleCtrl : MonoBehaviour {
         // 플레이어와 고래의 거리 차이 구함
         distance = (transform.position - playerTr.position).sqrMagnitude;
         MovementType();
-        Debug.Log(moveType);
     }
 
     void TurnFocus()
