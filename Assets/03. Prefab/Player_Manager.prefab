@@ -1684,8 +1684,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 167076}
-  m_LocalRotation: {x: -0.00091545517, y: 0.019487267, z: 0.0029080508, w: 0.99980545}
-  m_LocalPosition: {x: -1.2999992, y: 5.0900006, z: -17.52}
+  m_LocalRotation: {x: -0.061465777, y: 0.0053874734, z: -0.0003318981, w: -0.9980947}
+  m_LocalPosition: {x: 2.193348, y: 2.416257, z: -10.86314}
   m_LocalScale: {x: 1, y: 1, z: 0.5955338}
   m_Children: []
   m_Father: {fileID: 481266}
@@ -2068,7 +2068,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 191948}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0.644001, y: -1.0990002, z: 0}
+  m_LocalPosition: {x: 0, y: -1.0990002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 453298}
@@ -2448,7 +2448,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 142274}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -58.61, y: 9.91, z: -2}
+  m_LocalPosition: {x: -58.61, y: 1.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 447994}
@@ -2918,9 +2918,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTr: {fileID: 447994}
   shotTr: {fileID: 491724}
-  normalBullet: {fileID: 147436, guid: c9ba5eacb39db40449cf2046b0516687, type: 2}
+  normalBullet: {fileID: 0}
+  objBullets:
+  - {fileID: 106948, guid: 009a27f4ef3932d4eb5769af27cf5956, type: 2}
+  - {fileID: 0}
   maxEnhance: 10
   attributeDuration: 5
+  bulletNum: 3
+  initTime: 3
 --- !u!114 &11464522
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2932,7 +2937,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa67e902f799bd843b695218b21e60cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTr: {fileID: 481266}
+  playerTr: {fileID: 447994}
   speed: 3
 --- !u!114 &11483060
 MonoBehaviour:
@@ -2953,6 +2958,7 @@ MonoBehaviour:
   controller: {fileID: 0}
   jumpState: 0
   rayTr: {fileID: 0}
+  reloadValue: 0
 --- !u!124 &12496422
 Behaviour:
   m_ObjectHideFlags: 1
@@ -3015,7 +3021,7 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: e406d78e80d1e2a4fb5fbe5ebf1fd259, type: 2}
+  - {fileID: 2100000, guid: d313e3ff2fbfd8c419741f882223a0d9, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1

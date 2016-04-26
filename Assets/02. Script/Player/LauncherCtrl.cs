@@ -7,6 +7,7 @@ public class LauncherCtrl : MonoBehaviour {
     public float durationTime = 1f;
     private GameObject target;
     private Vector3 focusVec;
+    public Transform olaTr;
 
     public Transform targetTr;
     public Material matNormal;
@@ -21,14 +22,17 @@ public class LauncherCtrl : MonoBehaviour {
     void FixedUpdate()
     {
         //타겟 없을 시
-        if (target == null) {
-            transform.RotateAround(targetTr.position, Vector3.right, 200f * Time.deltaTime);
+        if (target == null)
+        {
+            transform.position = Vector3.Lerp(this.transform.position, olaTr.position, 20f * Time.deltaTime);
         }
         //타겟 있을 시
-        else
+        if (target != null)
         {
             Vector3 relativePos = this.target.transform.position - this.transform.position;
-            transform.Translate(relativePos.normalized * speed * Time.deltaTime);
+            transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
+            //transform.Translate(new Vector3(0f, relativePos.y * speed * Time.deltaTime, relativePos.y * speed * Time.deltaTime));
+            //transform.LookAt(new Vector3(target.transform.position.x, target.transform.position.y, 0f));
 
             if (!target.activeSelf)
             {
@@ -83,7 +87,6 @@ public class LauncherCtrl : MonoBehaviour {
 
     void OnDisable()
     {
-        SkillCtrl.instance.StartReset(count);
         target = null;
         isPowerStrike = false;
         gameObject.transform.localScale = new Vector3(0.3256f, 0.3256f, 0.3256f);
@@ -92,33 +95,28 @@ public class LauncherCtrl : MonoBehaviour {
 
     void OnEnable()
     {
-        StartCoroutine(Duration());
-        _curAttibute = SkillCtrl.instance.curAttribute;
-        switch (_curAttibute)
-        {
-            case AttributeState.noraml:
-                gameObject.GetComponent<MeshRenderer>().material = matNormal;
-                break;
-            case AttributeState.red:
-                gameObject.GetComponent<MeshRenderer>().material = matRed;
-                break;
-            case AttributeState.blue:
-                gameObject.GetComponent<MeshRenderer>().material = matBlue;
-                break;
-        }
+        //_curAttibute = SkillCtrl.instance.curAttribute;
+        //switch (_curAttibute)
+        //{
+        //    case AttributeState.noraml:
+        //        gameObject.GetComponent<MeshRenderer>().material = matNormal;
+        //        break;
+        //    case AttributeState.red:
+        //        gameObject.GetComponent<MeshRenderer>().material = matRed;
+        //        break;
+        //    case AttributeState.blue:
+        //        gameObject.GetComponent<MeshRenderer>().material = matBlue;
+        //        break;
+        //}
         
         if (isPowerStrike)
             gameObject.transform.localScale = new Vector3(1,1,1);
     }
-
-    public void GetFocusVector(Vector3 _focusVec)
-    {
-        focusVec = _focusVec;
-    }
-
-    void GetTarget(GameObject _target)
+    public void GetTarget(GameObject _target, int index)
     {
         this.target = _target;
+        this.count = index;
+        StartCoroutine(Duration());
     }
 
     void GetIndex(int index)
@@ -129,6 +127,7 @@ public class LauncherCtrl : MonoBehaviour {
     IEnumerator Duration()
     {
         yield return new WaitForSeconds(durationTime);
+        SkillCtrl.instance.StartReset(count);
         this.gameObject.SetActive(false);
     }
 }
