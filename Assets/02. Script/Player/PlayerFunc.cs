@@ -16,7 +16,7 @@ public class PlayerFunc : MonoBehaviour {
     {
         Collider[] hitColl = Physics.OverlapSphere(this.transform.position, 5f);
         for(int i = 0; i< hitColl.Length; i++) {
-            if(hitColl[i].tag == "OBJECT") {
+            if(hitColl[i].CompareTag("OBJECT")) {
                 hitColl[i].SendMessage("GetImpact");
             }
         }

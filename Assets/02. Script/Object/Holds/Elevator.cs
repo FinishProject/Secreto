@@ -13,6 +13,7 @@ public class Elevator : MonoBehaviour {
 
     void Start()
     {
+        olaTr = GameObject.FindGameObjectWithTag("WAHLE").transform;
         // 시작 위치 및 최종 위치 구함
         originPos = this.transform.position;
         finishPos = new Vector3(originPos.x, originPos.y + maxLength, originPos.z);
@@ -70,14 +71,18 @@ public class Elevator : MonoBehaviour {
     
    void OnTriggerStay(Collider col)
     {
-        if(col.gameObject.tag == "Player")
+        if(col.CompareTag("Player"))
         {
             StopCoroutine("CountDown");
-            if(isActive) // 오브젝트가 작동 중이고 플레이어 밟고 있을 시 true
-                isTrample = true;
-            //플레이어 이동
             playerTr = col.GetComponent<Transform>();
-            playerTr.Translate(Vector3.up * speed * Time.deltaTime);
+            // 오브젝트가 작동 중이고 플레이어 밟고 있을 시 true
+            if (isActive)
+            {
+                isTrample = true;
+                //플레이어 이동
+                playerTr.Translate(Vector3.up * speed * Time.deltaTime);
+                olaTr.Translate(Vector3.forward * speed * Time.deltaTime);
+            }
         }
     }
 

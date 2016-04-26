@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*************************   정보   **************************
+
+    특정 오브젝트를 스위치 위에 올리면 문이 열리게하는 클래스
+
+    사용방법 :
+            
+*************************************************************/
+
 public class SwitchGate : MonoBehaviour {
 
     public Transform leftGate, rightGate; // 양쪽 문 오브젝트

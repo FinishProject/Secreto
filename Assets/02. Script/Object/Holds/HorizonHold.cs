@@ -3,7 +3,7 @@ using System.Collections;
 
 public class HorizonHold : MonoBehaviour
 {
-    private Transform playerTr;
+    private Transform playerTr, olaTr;
     private Vector3 maxLengthPos, originPos;
 
     public float speed = 3f; // 발판 이동 속도
@@ -13,6 +13,7 @@ public class HorizonHold : MonoBehaviour
 
     void Start()
     {
+        olaTr = GameObject.FindGameObjectWithTag("WAHLE").transform;
         maxLengthPos.x = transform.position.x + length; //최대 이동 길이(우측)
         originPos.x = transform.position.x; //초기 이동 길이(좌측)
         pSpeed = speed;
@@ -27,18 +28,17 @@ public class HorizonHold : MonoBehaviour
         transform.Translate(Vector3.right * speed * Time.deltaTime);
     }
 
-    void OnTriggerStay(Collider coll)
+    void OnTriggerStay(Collider col)
     {
         // 플레이어가 발판 위에 있을 시 발판과 같이 이동
-        if (coll.gameObject.tag == "Player")
+        if (col.CompareTag("Player"))
         {
-            
-            playerTr = coll.GetComponent<Transform>();
+            playerTr = col.GetComponent<Transform>();
             isFocus = PlayerCtrl.isFocusRight;
             pSpeed = speed;
             if (!isFocus) { pSpeed *= -1; }
-            //발판 위에 있을 시 플레이어 이동
             playerTr.Translate(Vector3.forward * pSpeed * Time.deltaTime);
+            olaTr.Translate(Vector3.up * -speed * Time.deltaTime);
         }
     }
 
