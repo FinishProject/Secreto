@@ -56,7 +56,7 @@ public class SplitMon : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
-        if(coll.gameObject.tag == "OBJECT" && this.gameObject.name == "Parent_Mon") {
+        if(coll.gameObject.tag == "BULLET" && this.gameObject.name == "Parent_Mon") {
             parentScript.Split(this.transform.position);
             this.gameObject.SetActive(false);
         }

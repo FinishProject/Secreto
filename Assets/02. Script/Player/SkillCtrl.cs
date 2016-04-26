@@ -23,8 +23,7 @@ public class SkillCtrl : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            if (count >= objBullets.Length)
-            {
+            if (count >= objBullets.Length) {
                 if (!objBullets[0].activeSelf) count = 0;
             }
             objBullets[count].GetComponent<LauncherCtrl>().isPowerStrike = true;
@@ -50,14 +49,14 @@ public class SkillCtrl : MonoBehaviour {
             DistanceCompare(targetList);
     }
     // 가장 가까운 타겟의 위치를 찾아 타겟의 위치값을 넘겨줌
-    void DistanceCompare(List<Transform> _target)
+    void DistanceCompare(List<Transform> target)
     {
-        float nearDistance = (playerTr.position - _target[0].position).sqrMagnitude;
+        float nearDistance = (playerTr.position - target[0].position).sqrMagnitude;
         int targetIndex = 0;
         // 각 타겟의 거리를 비교하여 가장 가까운 타겟을 찾음
-        for (int i = 1; i < _target.Count; i++)
+        for (int i = 1; i < target.Count; i++)
         {
-            float curDistance = (playerTr.position - _target[i].position).sqrMagnitude;
+            float curDistance = (playerTr.position - target[i].position).sqrMagnitude;
             if (nearDistance > curDistance)
             {
                 nearDistance = curDistance;
@@ -65,6 +64,6 @@ public class SkillCtrl : MonoBehaviour {
             }
         }
         // 현재 발사체에게 타겟 포지션을 알려줌
-        objBullets[count].SendMessage("GetTarget", _target[targetIndex]);
+        objBullets[count].SendMessage("GetTarget", target[targetIndex].gameObject);
     }
 }
