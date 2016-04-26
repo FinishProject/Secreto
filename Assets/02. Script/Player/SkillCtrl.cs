@@ -103,7 +103,7 @@ public class SkillCtrl : MonoBehaviour {
             }
         }
         // 현재 발사체에게 타겟 포지션을 알려줌
-        objBullets[count].SendMessage("GetTarget", _target[targetIndex]);
+        objBullets[count].SendMessage("GetTarget", _target[targetIndex].gameObject);
     }
 
     public void ChangeAttribute(AttributeState attribute)

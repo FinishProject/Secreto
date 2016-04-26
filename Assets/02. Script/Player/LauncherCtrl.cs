@@ -4,8 +4,7 @@ using System.Collections;
 public class LauncherCtrl : MonoBehaviour {
 
     private float speed = 15f;
-    private float m_Time = 0f;
-    private Transform targetTr;
+    private GameObject target;
     private Vector3 focusVec;
 
     public Material matNormal;
@@ -18,15 +17,19 @@ public class LauncherCtrl : MonoBehaviour {
     void FixedUpdate()
     {
         //타겟 없을 시
-        if (targetTr == null) { transform.Translate(focusVec * speed * Time.deltaTime); }
+        if (target == null) { transform.Translate(focusVec * speed * Time.deltaTime); }
         //타겟 있을 시
         else
         {
-            Vector3 relativePos = this.targetTr.position - this.transform.position;
+            Vector3 relativePos = this.target.transform.position - this.transform.position;
             transform.Translate(relativePos.normalized * speed * Time.deltaTime);
+
+            if (!target.activeSelf)
+            {
+                target = null;
+                this.gameObject.SetActive(false);
+            }
         }
-        m_Time += Time.deltaTime;
-        if (m_Time >= 1f) { gameObject.SetActive(false); }
     }
 
     void OnTriggerEnter(Collider coll)
@@ -66,7 +69,7 @@ public class LauncherCtrl : MonoBehaviour {
             }
 
 
-            this.targetTr = null;
+            this.target = null;
             gameObject.SetActive(false);
 
         }
@@ -74,14 +77,14 @@ public class LauncherCtrl : MonoBehaviour {
 
     void OnDisable()
     {
-        targetTr = null;
+        target = null;
         isPowerStrike = false;
         gameObject.transform.localScale = new Vector3(0.3256f, 0.3256f, 0.3256f);
     }
 
     void OnEnable()
     {
-        m_Time = 0f;
+        StartCoroutine(TimeDuration());
         _curAttibute = SkillCtrl.instance.curAttribute;
         switch(_curAttibute)
         {
@@ -105,8 +108,14 @@ public class LauncherCtrl : MonoBehaviour {
         focusVec = _focusVec;
     }
 
-    void GetTarget(Transform _targetTr)
+    void GetTarget(GameObject _targetTr)
     {
-        this.targetTr = _targetTr;
+        this.target = _targetTr;
+    }
+
+    IEnumerator TimeDuration()
+    {
+        yield return new WaitForSeconds(1f);
+        this.gameObject.SetActive(false);
     }
 }
