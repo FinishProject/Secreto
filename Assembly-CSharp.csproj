@@ -47,13 +47,17 @@
   <ItemGroup>
      <Compile Include="Assets\02. Script\Items\CollectionItem.cs" />
      <Compile Include="Assets\02. Script\Items\ExpItem.cs" />
+     <Compile Include="Assets\02. Script\Items\Flower.cs" />
      <Compile Include="Assets\02. Script\Items\HpRecoveryItem.cs" />
+     <Compile Include="Assets\02. Script\Monster\MonsterFSM.cs" />
      <Compile Include="Assets\02. Script\Monster\MonsterMgr.cs" />
      <Compile Include="Assets\02. Script\Monster\NPCQuestMgr.cs" />
      <Compile Include="Assets\02. Script\Monster\SplitMon.cs" />
      <Compile Include="Assets\02. Script\Monster\TraceMon.cs" />
      <Compile Include="Assets\02. Script\Monster\TraceMonMgr.cs" />
      <Compile Include="Assets\02. Script\Nonuse\ChackAreaForSkyboxObject.cs" />
+     <Compile Include="Assets\02. Script\Nonuse\SkillMgr.cs" />
+     <Compile Include="Assets\02. Script\Nonuse\SkillUI.cs" />
      <Compile Include="Assets\02. Script\Nonuse\SkyBoxMgr.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\BulletObject.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\DamageObject.cs" />
@@ -95,17 +99,17 @@
      <Compile Include="Assets\02. Script\System\Database\CSVParser.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVReader.cs" />
      <Compile Include="Assets\02. Script\System\Database\PlayerData.cs" />
+     <Compile Include="Assets\02. Script\System\FSMBase.cs" />
      <Compile Include="Assets\02. Script\System\Item\ItemDrop.cs" />
      <Compile Include="Assets\02. Script\System\Item\ItemMgr.cs" />
      <Compile Include="Assets\02. Script\System\Item\ItemPool.cs" />
      <Compile Include="Assets\02. Script\System\Manager\ObjectMgr.cs" />
      <Compile Include="Assets\02. Script\System\Manager\QuestMgr.cs" />
-     <Compile Include="Assets\02. Script\System\Manager\SkillMgr.cs" />
      <Compile Include="Assets\02. Script\System\Manager\WeatherMgr.cs" />
      <Compile Include="Assets\02. Script\System\WayPoint.cs" />
+     <Compile Include="Assets\02. Script\UI\InGameUI.cs" />
      <Compile Include="Assets\02. Script\UI\Inventory.cs" />
      <Compile Include="Assets\02. Script\UI\ScriptMgr.cs" />
-     <Compile Include="Assets\02. Script\UI\SkillUI.cs" />
      <Compile Include="Assets\04. Model\UnityChan\Scripts\CameraController.cs" />
      <Compile Include="Assets\04. Model\UnityChan\Scripts\FaceUpdate.cs" />
      <Compile Include="Assets\04. Model\UnityChan\Scripts\IdleChanger.cs" />
@@ -206,7 +210,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrain.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VignettingShader.shader" />
-     <None Include="Assets\02. Script\Shader\SkyboxBlended.shader" />
+     <None Include="Assets\02. Script\Nonuse\SkyboxBlended.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Tonemapper.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BrightPassFilter.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA2.shader" />
