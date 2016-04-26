@@ -30,7 +30,6 @@ public class ScriptMgr : MonoBehaviour {
 
     public bool GetScript(string name)
     {
-        Debug.Log("sc");
         //대화할 NPC의 이름을 XML 데이터에서 찾아 대사를 getInfo에 저장
         if (!SpeakName(name))
         {

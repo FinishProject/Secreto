@@ -10,14 +10,13 @@ public class RandomHolds : MonoBehaviour {
     private List<GameObject> gaHold = new List<GameObject>();
     private List<int> beforeNum = new List<int>();
 
-	// Use this for initialization
 	void Start () {
         points = GetComponentsInChildren<Transform>();
     }
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.CompareTag("Player"))
         {
             Init();
             StartCoroutine("SpwanHolds");

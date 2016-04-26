@@ -1,13 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*************************   정보   **************************
+
+    서로 다른 위치에 있는 문 오브젝트를 이동할 수 있는 클래스
+
+    사용방법 :
+
+    출구가 될 오브젝트를 eixtGate에 삽입하여 사용해야한다.
+        
+*************************************************************/
+
 public class TeleportGate : MonoBehaviour {
 
     public GameObject exitGate; // 출구 오브젝트
 
     private bool isTravel = true; // 이동 가능 여부
     private TeleportGate telepGate; // 출구 오브젝트의 스크립트를 담을 변수
-
     private Transform olaTr, camTr;
 
     void Start()
@@ -18,7 +27,7 @@ public class TeleportGate : MonoBehaviour {
 
 	void OnTriggerEnter(Collider coll)
     {
-        if(coll.tag == "Player" && isTravel)
+        if(coll.CompareTag("Player") && isTravel)
         {
             // 반대편에 도착 시 잠시 이동 불가능하게 만듬
             telepGate = exitGate.GetComponent<TeleportGate>();

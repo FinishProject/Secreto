@@ -4,10 +4,11 @@ using System.Collections;
 public class PlayerFunc : MonoBehaviour {
 
     public static PlayerFunc instance;
-    PlayerCtrl playerCtrl = new PlayerCtrl();
+    PlayerCtrl playerCtrl;// = new PlayerCtrl();
 
     void Awake()
     {
+        playerCtrl = GetComponent<PlayerCtrl>();
         instance = this;
     }
 
@@ -15,7 +16,7 @@ public class PlayerFunc : MonoBehaviour {
     {
         Collider[] hitColl = Physics.OverlapSphere(this.transform.position, 5f);
         for(int i = 0; i< hitColl.Length; i++) {
-            if(hitColl[i].tag == "OBJECT") {
+            if(hitColl[i].CompareTag("OBJECT")) {
                 hitColl[i].SendMessage("GetImpact");
             }
         }

@@ -8,7 +8,7 @@ public class GrabObject : MonoBehaviour {
 
 	void OnTriggerStay(Collider col)
     {
-        if(col.gameObject.tag == "Player")
+        if(col.CompareTag("Player"))
         {
             // E 키 입력 시 오브젝트 잡기
             if (Input.GetKey(KeyCode.E))
@@ -20,7 +20,7 @@ public class GrabObject : MonoBehaviour {
                 // 오브젝트 이동
                 Vector3 relativePos = playerTr.position - transform.position;
                 transform.position = Vector3.Lerp(transform.position, 
-                    new Vector3(playerTr.position.x + 0.8f, playerTr.position.y, 0f),
+                    new Vector3(playerTr.position.x + 0.8f, playerTr.position.y + 0.8f, 0f),
                     100f);
             }
             // 플레이어의 자식 객체에서 나옴

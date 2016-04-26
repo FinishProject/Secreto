@@ -17,7 +17,7 @@ public class CollectionItem : MonoBehaviour {
     {
         if (col.tag.Equals("Player"))
         {
-            col.GetComponent<Inventory>().Insert(itemData);  // 플레이어 체력회복
+            col.GetComponent<Inventory>().Insert(itemData);
             gameObject.SetActive(false);
         }
     }

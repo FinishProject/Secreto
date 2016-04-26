@@ -5,11 +5,12 @@ public class JingGume : MonoBehaviour {
 
     public GameObject[] gObject;
     private int cnt = 1;
+    private bool isStep = false; // 밟은 여부
 
-    JingGume parent;
+    private JingGume parent;
 
     void Start () {
-        //발판 끄기
+        //발판 오브젝트 끄기
         for (int i = 1; i < gObject.Length; i++)
         {
             gObject[i].SetActive(false);
@@ -20,8 +21,9 @@ public class JingGume : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.CompareTag("Player") && !isStep)
         {
+            this.isStep = true;
             parent.OnHolds();
         }
     }

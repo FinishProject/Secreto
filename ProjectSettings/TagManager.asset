@@ -8,10 +8,10 @@ TagManager:
   - MONSTER
   - OBJECT
   - WAHLE
-  - Wahle
   - Rope
   - Ground
   - WALL
+  - BULLET
   layers:
   - Default
   - TransparentFX
