@@ -17,7 +17,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
-    public static bool isMove = true;       // 현재 대화중 확인
+    public static bool isMove = true;       // 현재 이동 여부
     public static bool isJumping = false;   // 현재 점프중인지 확인
     private bool isFlyingByRope = false;    // 날고 있는지
     private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
@@ -92,6 +92,14 @@ public class PlayerCtrl : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
+
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) {
+            anim.SetBool("Run", true);
+        }
+        else
+        {
+            anim.SetBool("Run", false);
+        }
     }
 
     void FixedUpdate()
