@@ -87,7 +87,6 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-		Debug.Log (transform.position.y);
         // 점프
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); }
         else if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
