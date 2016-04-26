@@ -18,7 +18,6 @@ public class SkillCtrl : MonoBehaviour {
     private int count = 0;
     private GameObject[] objBullets = new GameObject[3];
 
-
     [System.NonSerialized]
     public float curEnhance = 0;
     public float maxEnhance = 10;

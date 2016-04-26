@@ -432,6 +432,7 @@ GameObject:
   - 33: {fileID: 3341794}
   - 23: {fileID: 2314420}
   - 114: {fileID: 11407928}
+  - 114: {fileID: 11455166}
   m_Layer: 0
   m_Name: Ola_01
   m_TagString: Untagged
@@ -2447,7 +2448,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 142274}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -58.61, y: 1.14, z: 0}
+  m_LocalPosition: {x: -58.61, y: 9.91, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 447994}
@@ -2588,7 +2589,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 121508}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071067}
   m_LocalPosition: {x: 0, y: -0.124, z: 0.099}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -2904,6 +2905,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f73aad4b30e05844abff359589fda31a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11455166
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 131496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3b4d89326e301347aff4a00f480a394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTr: {fileID: 447994}
+  shotTr: {fileID: 491724}
+  normalBullet: {fileID: 147436, guid: c9ba5eacb39db40449cf2046b0516687, type: 2}
+  maxEnhance: 10
+  attributeDuration: 5
 --- !u!114 &11464522
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2936,7 +2953,6 @@ MonoBehaviour:
   controller: {fileID: 0}
   jumpState: 0
   rayTr: {fileID: 0}
-  isRed: 1
 --- !u!124 &12496422
 Behaviour:
   m_ObjectHideFlags: 1

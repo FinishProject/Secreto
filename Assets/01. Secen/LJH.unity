@@ -85,30 +85,6 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 23800000, guid: 2df5dc334454d5341984e686058931e8, type: 2}
---- !u!1 &290548496 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 131496, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-  m_PrefabInternal: {fileID: 1273525040}
---- !u!114 &290548501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 290548496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3b4d89326e301347aff4a00f480a394, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTr: {fileID: 1051113916}
-  shotTr: {fileID: 422116087}
-  normalBullet: {fileID: 147436, guid: c9ba5eacb39db40449cf2046b0516687, type: 2}
-  maxEnhance: 10
-  attributeDuration: 5
---- !u!4 &422116087 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 491724, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-  m_PrefabInternal: {fileID: 1273525040}
 --- !u!1 &507523251
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,10 +254,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 726357409}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1051113916 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 447994, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-  m_PrefabInternal: {fileID: 1273525040}
 --- !u!1 &1148795701
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,15 +369,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 481266, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
       propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 491724, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 491724, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071067
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
@@ -534,4 +498,4 @@ Transform:
   - {fileID: 726357410}
   - {fileID: 1597877272}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2

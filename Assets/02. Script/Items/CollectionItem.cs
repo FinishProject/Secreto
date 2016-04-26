@@ -17,7 +17,7 @@ public class CollectionItem : MonoBehaviour {
     {
         if (col.tag.Equals("Player"))
         {
-            col.GetComponent<Inventory>().Insert(itemData);
+            Inventory.instance.Insert(itemData);
             gameObject.SetActive(false);
         }
     }

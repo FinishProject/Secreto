@@ -44,6 +44,7 @@ public enum ItemFunction
 // 오브젝트 풀
 public partial class ItemMgr : MonoBehaviour
 {
+    [System.NonSerialized]
     public ItemPool[] items = null;
 
     public GameObject HpRecoveryItemPrefab;
