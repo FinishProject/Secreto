@@ -155,7 +155,7 @@ Material:
       data:
         first:
           name: _SkyTint
-        second: {r: 0.34117648, g: 0.37254903, b: 0.49411765, a: 1}
+        second: {r: 0.22967128, g: 0.27154866, b: 0.43382353, a: 1}
       data:
         first:
           name: _GroundColor
