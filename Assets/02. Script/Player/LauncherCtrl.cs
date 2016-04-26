@@ -3,15 +3,16 @@ using System.Collections;
 
 public class LauncherCtrl : MonoBehaviour {
 
-    private float speed = 15f;
-    private float m_Time = 0f;
+    public float speed = 15f;
+    public bool isPowerStrike = false;
+    private bool isRed = true;
+    
     private GameObject target;
     private Vector3 focusVec;
 
     public Material red;
     public Material blue;
-    private bool isRed = true;
-    public bool isPowerStrike = false;
+   
 
     void FixedUpdate()
     {
@@ -73,13 +74,13 @@ public class LauncherCtrl : MonoBehaviour {
 
         if (isPowerStrike)
             gameObject.transform.localScale = new Vector3(1, 1, 1);
-    }
-
-    public void GetFocusVector(Vector3 _focusVec)
+    } 
+    // 봐라보는 방향 벡터 얻어옴
+    void GetFocusVector(Vector3 _focusVec)
     {
         focusVec = _focusVec;
     }
-
+    // 타겟을 얻어옴
     void GetTarget(GameObject _target)
     {
         this.target = _target;
