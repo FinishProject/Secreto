@@ -54,7 +54,7 @@ public class SkillCtrl : MonoBehaviour {
         for (int i=0; i< bulletInfo.Length; i++)
         {
             bulletInfo[i].Bullet = objBullets[i];
-            bulletInfo[i].originPos = objBullets[i].transform.position;
+            //bulletInfo[i].originPos = objBullets[i].transform.position;
             bulletInfo[i].isFire = true;
             //bulletInfo[i].Bullet.SetActive(false);
         }
