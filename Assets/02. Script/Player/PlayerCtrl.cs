@@ -144,7 +144,7 @@ public class PlayerCtrl : MonoBehaviour
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            moveDir.x = inputAxis * 80f * Time.deltaTime;
+            moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
         }
 

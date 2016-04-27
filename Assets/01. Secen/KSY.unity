@@ -9322,11 +9322,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3b4d89326e301347aff4a00f480a394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotateTr: []
   playerTr: {fileID: 1105411248}
   shotTr: {fileID: 1332793177}
   normalBullet: {fileID: 147436, guid: c9ba5eacb39db40449cf2046b0516687, type: 2}
+  objBullets: []
   maxEnhance: 10
   attributeDuration: 5
+  bulletNum: 3
+  initTime: 3
 --- !u!1001 &861157679
 Prefab:
   m_ObjectHideFlags: 0
@@ -10410,7 +10414,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11483060, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
       propertyPath: jumpHight
-      value: 2.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 11483060, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
       propertyPath: dashJumpHight
