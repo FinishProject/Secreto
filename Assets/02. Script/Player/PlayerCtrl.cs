@@ -22,8 +22,12 @@ public class PlayerCtrl : MonoBehaviour
     private bool isFlyingByRope = false;    // 날고 있는지
     private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
     private string carryItemName = null;    // 들고 있는 아이템 이름
-    private float hp = 10; // 체력
-
+    private float curHp = 10; // 체력
+    private float fullHp = 100; // 체력
+    public float ProportionHP
+    {
+        get { return curHp / fullHp; }
+    }
     private float currRadian;
     private float vx;
     private float vy;
@@ -240,20 +244,22 @@ public class PlayerCtrl : MonoBehaviour
 
     public void getRecovery(float recovery)
     {
-        hp += recovery;
-        if (hp >= 100)
+        curHp += recovery;
+        InGameUI.instance.ChangeHpBar();
+        if (curHp >= 100)
         {
-            hp = 100;
-            Debug.Log(hp);
+            curHp = 100;
+            Debug.Log(curHp);
             return;
         }
-        Debug.Log(hp);
+        Debug.Log(curHp);
     }
 
     public void getDamage(float damage)
     {
-        hp -= damage;
-        if (hp <= 0)
+        curHp -= damage;
+        InGameUI.instance.ChangeHpBar();
+        if (curHp <= 0)
         {
             //PlayerDie();
             //            Debug.Log("Player Die");
