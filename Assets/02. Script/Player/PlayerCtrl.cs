@@ -49,6 +49,7 @@ public class PlayerCtrl : MonoBehaviour
 	private Vector3 originPos;
 
 	public float reloadValue;
+    public float gr = 5f;
 
     //private Collider objColl = null;
 
@@ -58,6 +59,8 @@ public class PlayerCtrl : MonoBehaviour
 
     public static PlayerCtrl instance;
 
+    Rigidbody rb;
+
     public string getCarryItemName()
     {
         return carryItemName;
@@ -66,6 +69,7 @@ public class PlayerCtrl : MonoBehaviour
     void Awake()
     {
         instance = this;
+        rb = GetComponent<Rigidbody>();
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
 
@@ -93,7 +97,10 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (controller.isGrounded) anim.SetBool("Jump", false);
         // 점프
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) { Jump(JumpType.BASIC); }
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) {
+            //rb.AddForce(Vector3.up * 10f * Time.deltaTime);
+            Jump(JumpType.BASIC); 
+        }
         else if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
@@ -117,7 +124,7 @@ public class PlayerCtrl : MonoBehaviour
         if (isCtrlAuthority) Movement();
         else RopeWorker();
 
-		if (transform.position.y <= reloadValue) {
+        if (transform.position.y <= reloadValue) {
 			transform.position = originPos;
 
 		}
@@ -150,7 +157,9 @@ public class PlayerCtrl : MonoBehaviour
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
         if (!isClimb)
-            moveDir += Physics.gravity * Time.deltaTime;
+        {
+            moveDir.y -= gr * Time.deltaTime;
+        }
 
         else if (isClimb)
         {
@@ -184,7 +193,7 @@ public class PlayerCtrl : MonoBehaviour
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.BASIC_JUMP);
                     moveDir.y = jumpHight;
                     controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
-                    
+
                 }
                 break;
             case JumpType.DASH:
