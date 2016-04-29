@@ -6,7 +6,9 @@ public class WahleCtrl : MonoBehaviour {
     private enum MoveType { IDLE, TRACE, WALL, ATTACK};
     private MoveType moveType = MoveType.IDLE;
 
-    public float speed; // 이동속도
+    public float initSpeed; // 이동속도
+    public float maxSpeed;
+    public float accel; // 가속도
     private float distance;
     private bool isFush; // 오브젝트 밀고 당기기 체크
     private  bool isFocusRight = true; // 오른쪽을 봐라보는지 확인
@@ -28,6 +30,7 @@ public class WahleCtrl : MonoBehaviour {
     {
         // 플레이어와 고래의 거리 차이 구함
         distance = (transform.position - playerTr.position).sqrMagnitude;
+        //transform.Rotate(Vector3.up, 70f * Time.deltaTime, Space.Self);
         MovementType();
     }
 
@@ -42,6 +45,7 @@ public class WahleCtrl : MonoBehaviour {
     {
         switch (moveType) {
             case MoveType.IDLE:
+                initSpeed = 2f;
                 if (distance >= 2f)
                     moveType = MoveType.TRACE;
                 break;
@@ -54,21 +58,17 @@ public class WahleCtrl : MonoBehaviour {
 
                 transform.position = Vector3.Lerp(transform.position,
                     playerTr.position - (playerTr.forward * 0.5f) + (playerTr.up * 0.59f ),
-                    speed * Time.deltaTime);
+                    initSpeed * Time.deltaTime);
+
+                initSpeed = IncrementToWards(initSpeed, maxSpeed, accel);
                 break;
-            //case MoveType.WALL:
-            //    transform.position = Vector3.Lerp(transform.position,
-            //        playerTr.position - (playerTr.forward * -2f) + (playerTr.up * 3.3f),
-            //        speed * Time.deltaTime);
-            //    StartCoroutine(ResetType());
-            //    break;
             case MoveType.ATTACK:
 
                 if (isMon)
                 {
                     transform.position = Vector3.Lerp(transform.position,
                         playerTr.position - (playerTr.up * 2f),
-                        speed * Time.deltaTime);
+                        initSpeed * Time.deltaTime);
                 }
                 //Vector3 lookPos = new Vector3(monTr.position.x, monTr.position.y + 20f, 0f);
                 //transform.LookAt(lookPos);
@@ -113,5 +113,15 @@ public class WahleCtrl : MonoBehaviour {
         yield return new WaitForSeconds(1f);
         isWall = false;
         StopCoroutine(ResetType());
+    }
+
+    float IncrementToWards(float initSpeed, float maxSpeed, float accel)
+    {
+        if (initSpeed == maxSpeed)
+            return initSpeed;
+        else {
+            initSpeed += accel * Time.deltaTime;
+            return (1 == Mathf.Sign(maxSpeed - initSpeed)) ? initSpeed : maxSpeed;
+        }
     }
 }

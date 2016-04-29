@@ -32,7 +32,7 @@ public class TraceMon : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if(col.gameObject.tag == "Player")
+        if(col.CompareTag("Player"))
         {
             Debug.Log("Player Die");
         }

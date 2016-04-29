@@ -23,6 +23,7 @@ public class PlayerCtrl : MonoBehaviour
     private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
     private string carryItemName = null;    // 들고 있는 아이템 이름
     private float hp = 10; // 체력
+    private float gravity = 5f;
 
     private float currRadian;
     private float vx;
@@ -45,8 +46,7 @@ public class PlayerCtrl : MonoBehaviour
 	private Vector3 originPos;
 
 	public float reloadValue;
-    public float gr = 5f;
-
+   
     //private Collider objColl = null;
 
     bool isClimb = false;
@@ -108,24 +108,17 @@ public class PlayerCtrl : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) {
             anim.SetBool("Run", true);
         }
-        else
-        {
+        else {
             anim.SetBool("Run", false);
         }
     }
 
     void FixedUpdate()
     {
+        Debug.Log(controller.isGrounded);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
         else RopeWorker();
-
-        if (transform.position.y <= reloadValue) {
-			transform.position = originPos;
-
-		}
-
-        
     }
 
     void Movement()
@@ -136,14 +129,15 @@ public class PlayerCtrl : MonoBehaviour
         if (controller.isGrounded && isMove)
         {
             isJumping = false;
+            gravity = 14f;
             //이동
             moveDir = Vector3.right * inputAxis;
-            
             anim.SetFloat("Speed", inputAxis);
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
+            gravity = 5f;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
         }
@@ -154,7 +148,7 @@ public class PlayerCtrl : MonoBehaviour
 
         if (!isClimb)
         {
-            moveDir.y -= gr * Time.deltaTime;
+           moveDir.y -= gravity * Time.deltaTime;
         }
 
         else if (isClimb)
@@ -223,8 +217,6 @@ public class PlayerCtrl : MonoBehaviour
             body.velocity = pushDir * 2f;
         }
     }
-
-
 
     //레이캐스팅 발사
     void ShotRay()

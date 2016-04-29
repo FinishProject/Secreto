@@ -3,13 +3,12 @@ using System.Collections;
 
 public class LauncherCtrl : MonoBehaviour {
 
-    public float speed = 15f;
+    public float speed = 10f;
     public float durationTime = 1f;
-    private GameObject target;
-    private Vector3 focusVec;
-    public Transform olaTr;
 
-    public Transform targetTr;
+    private GameObject target;
+    private Transform traceTargetTr;
+
     public Material matNormal;
     public Material matRed;
     public Material matBlue;
@@ -17,27 +16,31 @@ public class LauncherCtrl : MonoBehaviour {
     private AttributeState _curAttibute;
     public bool isPowerStrike = false;
 
-    int count = 0;
+    private int index = 0;
 
     void FixedUpdate()
     {
         //타겟 없을 시
         if (target == null)
         {
-            transform.position = Vector3.Lerp(this.transform.position, olaTr.position, 20f * Time.deltaTime);
+            transform.position = Vector3.Lerp(this.transform.position, traceTargetTr.position, Time.time);
         }
         //타겟 있을 시
         if (target != null)
         {
-            Vector3 relativePos = this.target.transform.position - this.transform.position;
-            transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
-            //transform.Translate(new Vector3(0f, relativePos.y * speed * Time.deltaTime, relativePos.y * speed * Time.deltaTime));
-            //transform.LookAt(new Vector3(target.transform.position.x, target.transform.position.y, 0f));
+            //Vector3 relativePos = this.target.transform.position - this.transform.position;
+            //transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
 
-            if (!target.activeSelf)
-            {
+            Vector3 center = (target.transform.position + this.transform.position) * 0.5f;
+            center -= new Vector3(1, 1, 1);
+            Vector3 fromRelCenter = this.transform.position - center;
+            Vector3 toRelCenter = target.transform.position - center;
+            transform.position = Vector3.Slerp(fromRelCenter, toRelCenter, speed * Time.deltaTime);
+            transform.position += center;
+
+            if (!target.activeSelf) {
                 target = null;
-                this.gameObject.SetActive(false);
+                SkillCtrl.instance.StartReset(index);
             }
         }
     }
@@ -77,20 +80,15 @@ public class LauncherCtrl : MonoBehaviour {
                     }
                     break;
             }
-
-
             this.target = null;
-            gameObject.SetActive(false);
-
+            SkillCtrl.instance.StartReset(index);
         }
     }
 
     void OnDisable()
     {
         target = null;
-        isPowerStrike = false;
-        gameObject.transform.localScale = new Vector3(0.3256f, 0.3256f, 0.3256f);
-        
+        isPowerStrike = false;        
     }
 
     void OnEnable()
@@ -112,22 +110,23 @@ public class LauncherCtrl : MonoBehaviour {
         if (isPowerStrike)
             gameObject.transform.localScale = new Vector3(1,1,1);
     }
-    public void GetTarget(GameObject _target, int index)
+    public void GetTarget(GameObject _target, int _index)
     {
         this.target = _target;
-        this.count = index;
+        this.index = _index;
+
         StartCoroutine(Duration());
     }
 
-    void GetIndex(int index)
+    void GetTraceTarget(Transform targetTr)
     {
-        count = index;
+        traceTargetTr = targetTr;
     }
-
+    // 탄환이 날아가면서 지속되는 시간
     IEnumerator Duration()
     {
         yield return new WaitForSeconds(durationTime);
-        SkillCtrl.instance.StartReset(count);
-        this.gameObject.SetActive(false);
+        SkillCtrl.instance.StartReset(index);
+        StopCoroutine(Duration());
     }
 }
