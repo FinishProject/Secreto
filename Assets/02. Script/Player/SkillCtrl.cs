@@ -34,6 +34,10 @@ public class SkillCtrl : MonoBehaviour {
     public AttributeState curAttribute;         // 속성   
     public float attributeDuration = 5.0f;      // 속성 지속시간 (시간이 끝나면 noraml)
     private float _countDownForAttribute;
+    public float ProportionAttribute
+    {
+        get { return _countDownForAttribute / attributeDuration; }
+    }
 
     public static SkillCtrl instance;
 
@@ -66,6 +70,7 @@ public class SkillCtrl : MonoBehaviour {
                     //bulletInfo[count].Bullet.transform.position = shotTr.position;
                     FindTarget();
                     count++;
+                    InGameUI.instance.ChangeEnhance();
                 }
             }
         }
@@ -120,6 +125,8 @@ public class SkillCtrl : MonoBehaviour {
 
     public void ChangeAttribute(AttributeState attribute)
     {
+        StopAllCoroutines();
+        InGameUI.instance.ChangeCountDownForAttributeBar();
         StartCoroutine(StartChangeAttribute(attribute));
     }
 
@@ -127,16 +134,18 @@ public class SkillCtrl : MonoBehaviour {
     IEnumerator StartChangeAttribute(AttributeState attribute)
     {
         curAttribute = attribute;
-        while(true)
+        InGameUI.instance.ChangeAttribute();
+        while (true)
         {
-            yield return new WaitForSeconds(1f);
-            _countDownForAttribute -= 1f;
+            yield return new WaitForSeconds(0.05f);
+            _countDownForAttribute -= 0.05f;
 
-            if(_countDownForAttribute < 1f)
+            if(_countDownForAttribute < 0.05f)
             {
                 _countDownForAttribute = attributeDuration;
                 curAttribute = AttributeState.noraml;
-                yield return null;
+                InGameUI.instance.ChangeAttribute();
+                break;
             }
         }
         
@@ -146,7 +155,8 @@ public class SkillCtrl : MonoBehaviour {
     public void AddEnhance()
     {
         curEnhance+= 1;
-        if(curEnhance > maxEnhance)
+        InGameUI.instance.ChangeEnhance();
+        if (curEnhance > maxEnhance)
         {
             curEnhance = maxEnhance;
         }
