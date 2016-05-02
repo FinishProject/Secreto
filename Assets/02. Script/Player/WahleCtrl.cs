@@ -6,10 +6,10 @@ public class WahleCtrl : MonoBehaviour {
     private enum MoveType { IDLE, TRACE, WALL, ATTACK};
     private MoveType moveType = MoveType.IDLE;
 
-    public float initSpeed; // 이동속도
-    public float maxSpeed;
+    private float initSpeed; // 초기 이동속도
+    public float maxSpeed; // 최대 이동속도
     public float accel; // 가속도
-    private float distance;
+    private float distance; // 플레이어와 고래의 거리 차이
     private bool isFush; // 오브젝트 밀고 당기기 체크
     private  bool isFocusRight = true; // 오른쪽을 봐라보는지 확인
     private bool isWall = false; // 벽에 충돌했는지 여부
@@ -31,13 +31,15 @@ public class WahleCtrl : MonoBehaviour {
         // 플레이어와 고래의 거리 차이 구함
         distance = (transform.position - playerTr.position).sqrMagnitude;
         //transform.Rotate(Vector3.up, 70f * Time.deltaTime, Space.Self);
+        
         MovementType();
     }
-
+    // 고래 회전
     void TurnFocus()
     {
         isFocusRight = !isFocusRight;
         transform.Rotate(new Vector3(0, 0, 1), 180f);
+        initSpeed = 0f;
     }
 
     //고래 이동 타입
@@ -45,34 +47,35 @@ public class WahleCtrl : MonoBehaviour {
     {
         switch (moveType) {
             case MoveType.IDLE:
-                initSpeed = 2f;
+                initSpeed = 0f;
                 if (distance >= 2f)
                     moveType = MoveType.TRACE;
                 break;
             case MoveType.TRACE: // 플레이어 추격
                 if (distance <= 1.1f && PlayerCtrl.inputAxis == 0f)
                     moveType = MoveType.IDLE;
-
-                if (PlayerCtrl.inputAxis < 0f && isFocusRight) { TurnFocus(); }
-                else if (PlayerCtrl.inputAxis > 0f && !isFocusRight) { TurnFocus(); }
+                // 플레이어가 고래의 좌우 어느쪽에 있는지 체크함.
+                Quaternion curSide = Quaternion.LookRotation(playerTr.position - transform.position, Vector3.up);
+                
+                if (PlayerCtrl.inputAxis < 0f && isFocusRight && curSide.y <= -0.6f) { TurnFocus(); }
+                else if (PlayerCtrl.inputAxis > 0f && !isFocusRight && curSide.y >= 0.6f) { TurnFocus(); }
 
                 transform.position = Vector3.Lerp(transform.position,
                     playerTr.position - (playerTr.forward * 0.5f) + (playerTr.up * 0.59f ),
                     initSpeed * Time.deltaTime);
-
+                // 가속도
                 initSpeed = IncrementToWards(initSpeed, maxSpeed, accel);
                 break;
-            case MoveType.ATTACK:
-
-                if (isMon)
-                {
-                    transform.position = Vector3.Lerp(transform.position,
-                        playerTr.position - (playerTr.up * 2f),
-                        initSpeed * Time.deltaTime);
-                }
+            //case MoveType.ATTACK:
+            //    if (isMon)
+            //    {
+            //        transform.position = Vector3.Lerp(transform.position,
+            //            playerTr.position - (playerTr.up * 2f),
+            //            initSpeed * Time.deltaTime);
+            //    }
                 //Vector3 lookPos = new Vector3(monTr.position.x, monTr.position.y + 20f, 0f);
                 //transform.LookAt(lookPos);
-                break;
+                //break;
         }
     }
 
@@ -115,12 +118,14 @@ public class WahleCtrl : MonoBehaviour {
         StopCoroutine(ResetType());
     }
 
+    // 이동 속도 가속도
     float IncrementToWards(float initSpeed, float maxSpeed, float accel)
     {
         if (initSpeed == maxSpeed)
             return initSpeed;
         else {
             initSpeed += accel * Time.deltaTime;
+            // 기본 속도가 최고 속도를 넘을 시 음수가 되어 maxSpeed만 반환
             return (1 == Mathf.Sign(maxSpeed - initSpeed)) ? initSpeed : maxSpeed;
         }
     }

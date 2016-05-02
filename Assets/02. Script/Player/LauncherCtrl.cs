@@ -4,10 +4,10 @@ using System.Collections;
 public class LauncherCtrl : MonoBehaviour {
 
     public float speed = 10f;
-    public float durationTime = 1f;
+    public float durationTime = 1f; // 발사 중 유지시간
 
     private GameObject target;
-    private Transform traceTargetTr;
+    private Transform traceTargetTr; // 회전을 위한 타겟
 
     public Material matNormal;
     public Material matRed;
@@ -16,7 +16,7 @@ public class LauncherCtrl : MonoBehaviour {
     private AttributeState _curAttibute;
     public bool isPowerStrike = false;
 
-    private int index = 0;
+    private int index = 0; // 현재 발사체 배열의 인덱스
 
     void FixedUpdate()
     {
@@ -28,9 +28,11 @@ public class LauncherCtrl : MonoBehaviour {
         //타겟 있을 시
         if (target != null)
         {
+            // 직선 공격
             //Vector3 relativePos = this.target.transform.position - this.transform.position;
             //transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
 
+            // 포물선 공격
             Vector3 center = (target.transform.position + this.transform.position) * 0.5f;
             center -= new Vector3(1, 1, 1);
             Vector3 fromRelCenter = this.transform.position - center;
@@ -38,6 +40,7 @@ public class LauncherCtrl : MonoBehaviour {
             transform.position = Vector3.Slerp(fromRelCenter, toRelCenter, speed * Time.deltaTime);
             transform.position += center;
 
+            // 타겟 사라졋을 시 탄환체도 사라지도록
             if (!target.activeSelf) {
                 target = null;
                 SkillCtrl.instance.StartReset(index);
@@ -88,7 +91,7 @@ public class LauncherCtrl : MonoBehaviour {
     void OnDisable()
     {
         target = null;
-        isPowerStrike = false;        
+        isPowerStrike = false; 
     }
 
     void OnEnable()
@@ -110,6 +113,7 @@ public class LauncherCtrl : MonoBehaviour {
         if (isPowerStrike)
             gameObject.transform.localScale = new Vector3(1,1,1);
     }
+    // 날아갈 타겟 위치와 현재 발사체의 배열 인덱스를 받아옴
     public void GetTarget(GameObject _target, int _index)
     {
         this.target = _target;
@@ -117,11 +121,12 @@ public class LauncherCtrl : MonoBehaviour {
 
         StartCoroutine(Duration());
     }
-
+    // 회전을 위한 타겟 위치 받아옴
     void GetTraceTarget(Transform targetTr)
     {
         traceTargetTr = targetTr;
     }
+
     // 탄환이 날아가면서 지속되는 시간
     IEnumerator Duration()
     {

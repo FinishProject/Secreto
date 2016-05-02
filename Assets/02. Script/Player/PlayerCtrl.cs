@@ -99,8 +99,7 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     void Update()
-    {
-        if (controller.isGrounded) anim.SetBool("Jump", false);
+    { 
         // 점프
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) {
             //rb.AddForce(Vector3.up * 10f * Time.deltaTime);
@@ -114,17 +113,16 @@ public class PlayerCtrl : MonoBehaviour
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
 
+        // 걷기 애니메이션이 아직 없어 임시의 이동 애니메이션 재생을 위한 것
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) {
             anim.SetBool("Run", true);
-        }
-        else {
+        } else {
             anim.SetBool("Run", false);
         }
     }
 
     void FixedUpdate()
     {
-        Debug.Log(controller.isGrounded);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
         else RopeWorker();
@@ -141,7 +139,8 @@ public class PlayerCtrl : MonoBehaviour
             gravity = 14f;
             //이동
             moveDir = Vector3.right * inputAxis;
-            anim.SetFloat("Speed", inputAxis);
+            anim.SetBool("Jump", false);
+            //anim.SetFloat("Speed", inputAxis);
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)

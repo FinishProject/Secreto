@@ -190,6 +190,7 @@ public class SkillCtrl : MonoBehaviour {
         bulletInfo[index].isFire = true;
         bulletInfo[index].Bullet.transform.position = rotateTr[index].position;
     }
+
     // 탄환 및 회전을 위한 로테이션 포지션 생성
     void InitLauncher()
     {
@@ -201,7 +202,7 @@ public class SkillCtrl : MonoBehaviour {
             rotateTr[i].parent = transform;
             rotateTr[i].name = "RotateTr_" + i.ToString();
         }
-
+        // 회전할 오브젝트의 위치를 잡아줌
         rotateTr[0].position = new Vector3(transform.position.x - 0.5f, transform.position.y + 0.5f, transform.position.z);
         rotateTr[1].position = new Vector3(transform.position.x - 0.5f, transform.position.y - 0.3f, transform.position.z + 0.5f);
         rotateTr[2].position = new Vector3(transform.position.x - 0.5f, transform.position.y - 0.3f, transform.position.z - 0.5f);
