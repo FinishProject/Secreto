@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 220d91e24c3581549a86daca9059a868
-timeCreated: 1462113520
+guid: a2eb774699a69fd43b8d99b39ef5b6a3
+timeCreated: 1462194160
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Object007
+    4300000: 2-1-1_land_mass03
   materials:
     importMaterials: 1
     materialName: 0

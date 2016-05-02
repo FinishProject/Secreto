@@ -119,6 +119,10 @@ public class PlayerCtrl : MonoBehaviour
         } else {
             anim.SetBool("Run", false);
         }
+
+		if (transform.position.y <= -5f) {
+			transform.position = originPos;
+		} 
     }
 
     void FixedUpdate()
