@@ -2,7 +2,16 @@
 using UnityEngine.UI;
 using System.Collections;
 
+/****************************   정보   ****************************
 
+    스킬창 UI
+    스킬, 스킬 레벨, 스킬 관련 팝업 출력
+
+    사용방법 :
+    컴포넌트를 연결 시켜주자
+    
+
+******************************************************************/
 
 public class SkillUI : MonoBehaviour {
     public Text skillInfo;

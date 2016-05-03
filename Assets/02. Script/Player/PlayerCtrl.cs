@@ -11,7 +11,6 @@ public enum PlayerEffectList
     BASIC_JUMP, DASH_JUMP, 
 }
 
-
 public class PlayerCtrl : MonoBehaviour
 {
 
@@ -82,34 +81,34 @@ public class PlayerCtrl : MonoBehaviour
         switchState = gameObject.AddComponent<SwitchObject>();
         switchState.IsCanUseSwitch = false;
 
-		originPos = this.transform.position;
     }
 
-    //void Start()
-    //{
-    //    pData = PlayerData.Load();
-    //    transform.position = pData.pPosition;
-    //}
+    void Start()
+    {
+        pData = PlayerData.Load();
+        transform.position = pData.pPosition;
+    }
 
     //플레이어 데이터 저장
     public void Save()
     {
         pData.pPosition = transform.position;
-        PlayerData.Save();
+        pData.hp = curHp;
+        PlayerData.Save(pData);
     }
 
     void Update()
     { 
         // 점프
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) {
+        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded) {
             //rb.AddForce(Vector3.up * 10f * Time.deltaTime);
             Jump(JumpType.BASIC); 
         }
-        else if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
+        else if (Input.GetKeyDown(KeyCode.Space) && !controller.isGrounded) { Jump(JumpType.DASH); }
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
         //NPC와 대화
-        else if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
+        else if (Input.GetKeyDown(KeyCode.Q)) { ShotRay(); }
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
 
@@ -119,10 +118,6 @@ public class PlayerCtrl : MonoBehaviour
         } else {
             anim.SetBool("Run", false);
         }
-
-		if (transform.position.y <= -5f) {
-			transform.position = originPos;
-		} 
     }
 
     void FixedUpdate()
@@ -140,11 +135,15 @@ public class PlayerCtrl : MonoBehaviour
         if (controller.isGrounded && isMove)
         {
             isJumping = false;
-            gravity = 14f;
+            gravity = 20f;
             //이동
             moveDir = Vector3.right * inputAxis;
             anim.SetBool("Jump", false);
-            //anim.SetFloat("Speed", inputAxis);
+            anim.SetFloat("Speed", inputAxis);
+            //애니메이션 임시 좌측 변수
+            if (!isFocusRight)
+                anim.SetFloat("Speed", inputAxis * -1f);
+
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
@@ -176,7 +175,10 @@ public class PlayerCtrl : MonoBehaviour
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
-        transform.Rotate(new Vector3(0, 1, 0), 180.0f);
+        Vector3 scale = transform.localScale;
+        scale.z *= -1f;
+        transform.localScale = scale;
+        //transform.Rotate(new Vector3(0, 1, 0), 180.0f);
     }
 
     // 점프
@@ -235,7 +237,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward, out hit, 3f))
+        if (Physics.Raycast(rayTr.position, forward, out hit, 8f))
         {
             //앞에 오를 수 있는 오브젝트 있을 시
             if (hit.collider.gameObject.tag == "WALL")
@@ -243,9 +245,10 @@ public class PlayerCtrl : MonoBehaviour
                 Debug.Log("Climb");
             }
             //NPC 체크 및 이름 확인
-            else if (hit.collider.gameObject.tag == "NPC")
+            else if (hit.collider.CompareTag("NPC"))
             {
                 string name = hit.collider.gameObject.name;
+                hit.collider.transform.Rotate(Vector3.forward, 180f);
                 PlayerFunc.instance.ShowScript(name);
             }
         }
@@ -266,12 +269,14 @@ public class PlayerCtrl : MonoBehaviour
 
     public void getDamage(float damage)
     {
+        Debug.Log("11");
         curHp -= damage;
-        InGameUI.instance.ChangeHpBar();
+        //InGameUI.instance.ChangeHpBar();
+        anim.SetTrigger("Hit");
         if (curHp <= 0)
         {
             //PlayerDie();
-            //            Debug.Log("Player Die");
+            Debug.Log("Player Die");
             return;
         }
     }
@@ -340,6 +345,15 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnTriggerEnter(Collider coll)
     {
+        // 퀘스트 아이템 습득
+        if (coll.CompareTag("ITEM"))
+        {
+            if(QuestMgr.questInfo.targetName == coll.name){
+                QuestMgr.instance.curCompletNum++;
+                coll.gameObject.SetActive(false);
+            }
+        }
+
         if (coll.name == "Switch")
         {
             coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;

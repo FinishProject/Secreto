@@ -3,11 +3,12 @@ using System.Collections;
 
 public class DownWall : MonoBehaviour {
 
-    public float speed = 5f;
-    public float maxHeight;
-    public bool isUp = false;
+    public float downSpeed = 5f;
+    public float upSpeed = 2f;
+    public float waitTime = 1f;
+    public float maxLength = 5f;
 
-    private bool isMove = true;
+    private bool isDown = false;
 
     private Vector3 originPos, finishPos;
 
@@ -15,29 +16,78 @@ public class DownWall : MonoBehaviour {
     {
         originPos = this.transform.position;
         finishPos = originPos;
-        finishPos.y = originPos.y + maxHeight;
+        finishPos.y += maxLength;
 
-        if (isUp)
-            transform.position = finishPos;
+        transform.position = finishPos;
     }
 
     void Update()
     {
-        if (transform.position.y <= originPos.y && speed < -1f) StartCoroutine("ChangeDirection");
-        else if (transform.position.y >= finishPos.y && speed > 1f) StartCoroutine("ChangeDirection");
-
-        if (isMove)
-            transform.Translate(Vector3.up * speed * Time.deltaTime);
+        // 아래 목표 위치 도달 시
+        if(transform.position.y - 0.1f <= originPos.y)
+        {
+            StartCoroutine(WaitMove(false));
+        }
+        // 위 목표 위치 도달 시
+        else if(transform.position.y + 0.1f >= finishPos.y)
+        {
+            StartCoroutine(WaitMove(true));
+        }
+        // 아래로 이동
+        if (isDown)
+        {
+            transform.position = Vector3.Lerp(transform.position, originPos, downSpeed * Time.deltaTime);
+        }
+        // 위로 이동
+        else if (!isDown)
+        { 
+            transform.position = Vector3.Lerp(transform.position, finishPos, upSpeed * Time.deltaTime);
+        }
     }
 
-    IEnumerator ChangeDirection()
+    IEnumerator WaitMove(bool isUp)
     {
-        isMove = false;
-        yield return new WaitForSeconds(2f);
-        speed *= -1f;
-        isMove = true;
-        StopCoroutine("ChangeDirection");
+        yield return new WaitForSeconds(waitTime);
+        if(isUp) { isDown = true; }
+        else if(!isUp) { isDown = false; }
     }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Player"))
+        {
+            PlayerCtrl.instance.getDamage(200f);
+        }
+    }
+
+
+    //void Start()
+    //{
+    //    originPos = this.transform.position;
+    //    finishPos = originPos;
+    //    finishPos.y = originPos.y + maxHeight;
+
+    //    if (isUp)
+    //        transform.position = finishPos;
+    //}
+
+    //void Update()
+    //{
+    //    if (transform.position.y <= originPos.y && speed < -1f) StartCoroutine("ChangeDirection");
+    //    else if (transform.position.y >= finishPos.y && speed > 1f) StartCoroutine("ChangeDirection");
+
+    //    if (isMove)
+    //        transform.Translate(Vector3.up * speed * Time.deltaTime);
+    //}
+
+    //IEnumerator ChangeDirection()
+    //{
+    //    isMove = false;
+    //    yield return new WaitForSeconds(2f);
+    //    speed *= -1f;
+    //    isMove = true;
+    //    StopCoroutine("ChangeDirection");
+    //}
 
  //   public GameObject[] wallObj = new GameObject[4]; // 벽 오브젝트
  //   public float speed = 5f;

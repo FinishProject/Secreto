@@ -13,6 +13,7 @@ public class WahleCtrl : MonoBehaviour {
     private bool isFush; // 오브젝트 밀고 당기기 체크
     private  bool isFocusRight = true; // 오른쪽을 봐라보는지 확인
     private bool isWall = false; // 벽에 충돌했는지 여부
+    private float fowardValue = 1f;
 
     public Transform playerTr; // 플레이어 위치
     private Vector3 moveDir; // 이동 벡터, 카메라 벡터
@@ -30,7 +31,6 @@ public class WahleCtrl : MonoBehaviour {
     {
         // 플레이어와 고래의 거리 차이 구함
         distance = (transform.position - playerTr.position).sqrMagnitude;
-        //transform.Rotate(Vector3.up, 70f * Time.deltaTime, Space.Self);
         
         MovementType();
     }
@@ -38,7 +38,12 @@ public class WahleCtrl : MonoBehaviour {
     void TurnFocus()
     {
         isFocusRight = !isFocusRight;
-        transform.Rotate(new Vector3(0, 0, 1), 180f);
+        //Vector3 scale = transform.localScale;
+        //scale.y *= -1f;
+        //transform.localScale = scale;
+        //fowardValue *= -1f;
+        moveType = MoveType.IDLE;
+        //transform.Rotate(new Vector3(0, 0, 1), 180f);
         initSpeed = 0f;
     }
 
@@ -48,21 +53,21 @@ public class WahleCtrl : MonoBehaviour {
         switch (moveType) {
             case MoveType.IDLE:
                 initSpeed = 0f;
-                if (distance >= 2f)
+                if (distance >= 4.1f)
                     moveType = MoveType.TRACE;
                 break;
             case MoveType.TRACE: // 플레이어 추격
-                if (distance <= 1.1f && PlayerCtrl.inputAxis == 0f)
+                if (distance <= 4f)
                     moveType = MoveType.IDLE;
                 // 플레이어가 고래의 좌우 어느쪽에 있는지 체크함.
-                Quaternion curSide = Quaternion.LookRotation(playerTr.position - transform.position, Vector3.up);
-                
-                if (PlayerCtrl.inputAxis < 0f && isFocusRight && curSide.y <= -0.6f) { TurnFocus(); }
-                else if (PlayerCtrl.inputAxis > 0f && !isFocusRight && curSide.y >= 0.6f) { TurnFocus(); }
+                float curSide = Mathf.Sign(playerTr.position.x - transform.position.x);
+
+                if (PlayerCtrl.inputAxis < -0.1f && isFocusRight && curSide <= -1f) { TurnFocus(); }
+                else if (PlayerCtrl.inputAxis > 0.1f && !isFocusRight && curSide >= 1f) { TurnFocus(); }
 
                 transform.position = Vector3.Lerp(transform.position,
-                    playerTr.position - (playerTr.forward * 0.5f) + (playerTr.up * 0.59f ),
-                    initSpeed * Time.deltaTime);
+                    playerTr.position + (playerTr.up * 1.7f) - (playerTr.forward * fowardValue), initSpeed * Time.deltaTime);
+
                 // 가속도
                 initSpeed = IncrementToWards(initSpeed, maxSpeed, accel);
                 break;

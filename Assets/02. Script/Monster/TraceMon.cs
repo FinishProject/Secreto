@@ -7,6 +7,8 @@ public class TraceMon : MonoBehaviour {
 
     private float time = 0f, gr = 9.8f; // 시간, 중력값
 
+    public float damage = 200f;
+
     void Awake () {
         startPos = this.transform.position;   // 시작 위치
         finishPos = new Vector3(startPos.x, 0f, startPos.z - 25f); // 도착 위치
@@ -34,7 +36,7 @@ public class TraceMon : MonoBehaviour {
     {
         if(col.CompareTag("Player"))
         {
-            Debug.Log("Player Die");
+            PlayerCtrl.instance.getDamage(damage);
         }
     }
 

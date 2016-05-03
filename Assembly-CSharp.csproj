@@ -50,9 +50,14 @@
      <Compile Include="Assets\02. Script\Items\ExpItem.cs" />
      <Compile Include="Assets\02. Script\Items\Flower.cs" />
      <Compile Include="Assets\02. Script\Items\HpRecoveryItem.cs" />
+     <Compile Include="Assets\02. Script\Monster\DummeyMonsterFSM.cs" />
+     <Compile Include="Assets\02. Script\Monster\Kkokkali.cs" />
      <Compile Include="Assets\02. Script\Monster\MonsterFSM.cs" />
      <Compile Include="Assets\02. Script\Monster\MonsterMgr.cs" />
+     <Compile Include="Assets\02. Script\Monster\MonsterRespawnMgr.cs" />
      <Compile Include="Assets\02. Script\Monster\NPCQuestMgr.cs" />
+     <Compile Include="Assets\02. Script\Monster\Slug.cs" />
+     <Compile Include="Assets\02. Script\Monster\SlugCtrl.cs" />
      <Compile Include="Assets\02. Script\Monster\SplitMon.cs" />
      <Compile Include="Assets\02. Script\Monster\TraceMon.cs" />
      <Compile Include="Assets\02. Script\Monster\TraceMonMgr.cs" />
@@ -60,7 +65,8 @@
      <Compile Include="Assets\02. Script\Nonuse\SkillMgr.cs" />
      <Compile Include="Assets\02. Script\Nonuse\SkillUI.cs" />
      <Compile Include="Assets\02. Script\Nonuse\SkyBoxMgr.cs" />
-     <Compile Include="Assets\02. Script\Object\Aggressive\BulletObject.cs" />
+     <Compile Include="Assets\02. Script\Object\Aggressive\BulletObject_FourWay.cs" />
+     <Compile Include="Assets\02. Script\Object\Aggressive\BulletObject_Parabola.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\DamageObject.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\DownWall.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\ShootingObject.cs" />
@@ -110,6 +116,7 @@
      <Compile Include="Assets\02. Script\System\Manager\QuestMgr.cs" />
      <Compile Include="Assets\02. Script\System\Manager\WeatherMgr.cs" />
      <Compile Include="Assets\02. Script\System\WayPoint.cs" />
+     <Compile Include="Assets\02. Script\UI\AnswerUI.cs" />
      <Compile Include="Assets\02. Script\UI\InGameUI.cs" />
      <Compile Include="Assets\02. Script\UI\Inventory.cs" />
      <Compile Include="Assets\02. Script\UI\ScriptMgr.cs" />
@@ -133,6 +140,7 @@
      <None Include="Assets\Resources\Player_Data.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ShowAlphaChannel.shader" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetParticleMultiplicative.shader" />
+     <None Include="Assets\Resources\script2.xml" />
      <None Include="Assets\06. FX\ap_1stage_save_piont\JP_RimNHalo.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SunShaftsComposite.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionCurves.shader" />
@@ -216,6 +224,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\TwirlEffect.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VortexEffect.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Adaptation.shader" />
+     <None Include="Assets\Resources\script3.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrain.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VignettingShader.shader" />

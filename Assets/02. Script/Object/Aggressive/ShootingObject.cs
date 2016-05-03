@@ -28,8 +28,8 @@ public class ShootingObject : MonoBehaviour {
         while (true)
         {
             StartCoroutine( 
-                ObjectMgr.instance.GetBullet().UseItem().
-                GetComponent<BulletObject>().Moveing(gameObject.transform, shootDir, 10f));
+                ObjectMgr.instance.GetFourWayBullet().UseItem().
+                GetComponent<BulletObject_FourWay>().Moveing(gameObject.transform, shootDir, 10f));
 
             yield return new WaitForSeconds(delayTime);
         }

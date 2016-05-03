@@ -7,11 +7,10 @@ public class WayPoint : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.CompareTag("Player"))
         {
-            PlayerData.Save();
-//            ScriptMgr.instance.SpokenNpcSave();
-//            PlayerCtrl.instance.Save();
+            PlayerCtrl.instance.Save();
+            //ScriptMgr.instance.SpokenNpcSave();
         }
     }
 }

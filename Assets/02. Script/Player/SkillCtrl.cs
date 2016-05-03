@@ -67,10 +67,9 @@ public class SkillCtrl : MonoBehaviour {
                 if (bulletInfo[count].isFire)
                 {
                     bulletInfo[count].Bullet.SetActive(true);
-                    //bulletInfo[count].Bullet.transform.position = shotTr.position;
                     FindTarget();
                     count++;
-                    InGameUI.instance.ChangeEnhance();
+                    //InGameUI.instance.ChangeEnhance();
                 }
             }
         }
@@ -162,6 +161,7 @@ public class SkillCtrl : MonoBehaviour {
         }
     }
 
+    /*
     void OnGUI()
     {
         string tempText;
@@ -176,6 +176,7 @@ public class SkillCtrl : MonoBehaviour {
 
         GUI.TextField(new Rect(0, 0, 300.0f, 60.0f), tempText);
     }
+    */
 
     public void StartReset(int index)
     {
@@ -214,6 +215,7 @@ public class SkillCtrl : MonoBehaviour {
             bulletInfo[i].Bullet = (GameObject)Instantiate(normalBullet, rotateTr[i].position, Quaternion.identity);
             bulletInfo[i].isFire = true;
             bulletInfo[i].Bullet.SendMessage("GetTraceTarget", rotateTr[i]);
+ 
         }
     }
 }

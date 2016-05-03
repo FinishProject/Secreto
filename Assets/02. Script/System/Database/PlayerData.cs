@@ -6,13 +6,13 @@ using System.Xml;
 public class Data
 {
     public Vector3 pPosition;
+    public float hp;
 }
 
 public class PlayerData {
 
-    public static void Save()
+    public static void Save(Data data)
     {
-        Data data = new Data();
         //xml 생성
         XmlDocument doc = new XmlDocument();
         //요소 생성
@@ -24,6 +24,10 @@ public class PlayerData {
         posDataElement.SetAttribute("y", data.pPosition.y.ToString());
         posDataElement.SetAttribute("z", data.pPosition.y.ToString());
         posElement.AppendChild(posDataElement);
+        //캐릭터 정보 저장
+        XmlElement infoDataElement = doc.CreateElement("Info");
+        infoDataElement.SetAttribute("hp", data.hp.ToString());
+        posElement.AppendChild(infoDataElement);
         //데이터 저장
         doc.Save(Application.dataPath + "/Resources/Player_Data.xml");
     }

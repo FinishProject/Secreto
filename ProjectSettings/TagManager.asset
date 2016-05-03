@@ -12,6 +12,7 @@ TagManager:
   - Ground
   - WALL
   - BULLET
+  - ITEM
   layers:
   - Default
   - TransparentFX
