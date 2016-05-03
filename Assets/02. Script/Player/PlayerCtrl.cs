@@ -231,7 +231,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward, out hit, 3f))
+        if (Physics.Raycast(rayTr.position, forward, out hit, 8f))
         {
             //앞에 오를 수 있는 오브젝트 있을 시
             if (hit.collider.gameObject.tag == "WALL")
@@ -239,9 +239,10 @@ public class PlayerCtrl : MonoBehaviour
                 Debug.Log("Climb");
             }
             //NPC 체크 및 이름 확인
-            else if (hit.collider.gameObject.tag == "NPC")
+            else if (hit.collider.CompareTag("NPC"))
             {
                 string name = hit.collider.gameObject.name;
+                hit.collider.transform.Rotate(Vector3.up, 180f);
                 PlayerFunc.instance.ShowScript(name);
             }
         }
@@ -263,11 +264,11 @@ public class PlayerCtrl : MonoBehaviour
     public void getDamage(float damage)
     {
         curHp -= damage;
-        InGameUI.instance.ChangeHpBar();
+        //InGameUI.instance.ChangeHpBar();
         if (curHp <= 0)
         {
             //PlayerDie();
-            //            Debug.Log("Player Die");
+            Debug.Log("Player Die");
             return;
         }
     }
@@ -336,6 +337,14 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnTriggerEnter(Collider coll)
     {
+        // 퀘스트 아이템 습득
+        if (coll.CompareTag("ITEM"))
+        {
+            if(QuestMgr.questInfo.targetName == coll.name){
+                QuestMgr.instance.curCompletNum++;
+            }
+        }
+
         if (coll.name == "Switch")
         {
             coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;

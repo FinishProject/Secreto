@@ -271,21 +271,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &121508
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 491724}
-  m_Layer: 0
-  m_Name: ShotTr
-  m_TagString: Untagged
-  m_Icon: {fileID: -3545028842045912814, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &124186
 GameObject:
   m_ObjectHideFlags: 1
@@ -435,7 +420,7 @@ GameObject:
   - 114: {fileID: 11455166}
   m_Layer: 0
   m_Name: Ola_01
-  m_TagString: Untagged
+  m_TagString: WAHLE
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1684,8 +1669,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 167076}
-  m_LocalRotation: {x: -0.061465777, y: 0.0053874734, z: -0.0003318981, w: -0.9980947}
-  m_LocalPosition: {x: 2.193348, y: 2.416257, z: -10.86314}
+  m_LocalRotation: {x: -0.0015054252, y: -0.009598629, z: 0.0000145124795, w: -0.99995285}
+  m_LocalPosition: {x: 0.3695259, y: 0.5935048, z: -6.0102625}
   m_LocalScale: {x: 1, y: 1, z: 0.5955338}
   m_Children: []
   m_Father: {fileID: 481266}
@@ -1941,8 +1926,7 @@ Transform:
   m_LocalRotation: {x: 0.49999982, y: -0.50000024, z: -0.4999999, w: -0.5000001}
   m_LocalPosition: {x: -0.48999786, y: 0.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 491724}
+  m_Children: []
   m_Father: {fileID: 481266}
   m_RootOrder: 1
 --- !u!4 &437660
@@ -2583,18 +2567,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 468820}
   m_RootOrder: 0
---- !u!4 &491724
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 121508}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: -0.124, z: 0.099}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 434532}
-  m_RootOrder: 0
 --- !u!4 &493660
 Transform:
   m_ObjectHideFlags: 1
@@ -2892,7 +2864,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3088417471d879408914f4696099c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  maxSpeed: 10
+  accel: 4
   playerTr: {fileID: 404310}
 --- !u!114 &11418650
 MonoBehaviour:
@@ -2917,12 +2890,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTr: {fileID: 447994}
-  shotTr: {fileID: 491724}
   normalBullet: {fileID: 125796, guid: a5bf069445a51714182485159bf979bd, type: 2}
   maxEnhance: 10
-  attributeDuration: 5
   bulletNum: 3
   initTime: 3
+  attributeDuration: 5
 --- !u!114 &11464522
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2954,9 +2926,8 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0, z: 0}
   controller: {fileID: 0}
   jumpState: 0
-  rayTr: {fileID: 0}
+  rayTr: {fileID: 404310}
   reloadValue: 0
-  gr: 5
 --- !u!124 &12496422
 Behaviour:
   m_ObjectHideFlags: 1

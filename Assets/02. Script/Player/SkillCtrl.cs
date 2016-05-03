@@ -67,10 +67,9 @@ public class SkillCtrl : MonoBehaviour {
                 if (bulletInfo[count].isFire)
                 {
                     bulletInfo[count].Bullet.SetActive(true);
-                    //bulletInfo[count].Bullet.transform.position = shotTr.position;
                     FindTarget();
                     count++;
-                    InGameUI.instance.ChangeEnhance();
+                    //InGameUI.instance.ChangeEnhance();
                 }
             }
         }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<UniSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<info>
+		<name>라나</name>
+		<context>[라나]거기 잠깐!</context>
+		<answer>4</answer>
+		<choice>1</choice>
+		<questType>1</questType>
+		<targetName>BLUE_FLOWER</targetName>
+		<completItem>MENTAL</completItem>
+		<completINum>2</completINum>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>[라나]너말이야 너! 나를 좀 도와주지 않겠어?</context>
+		<answer>4</answer>
+		<choice>0</choice>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>[라나] 고마워! 혹시 오면서 파란 꽃을 보지 않았니? 내게 파란 꽃 한송이를 꺾어다 줄 수 있어?</context>
+		<answer>0</answer>
+		<choice>0</choice>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>[라나] 부탁할게! 파란 꽃 한송이면 돼! 정말 고마워!</context>
+		<answer>0</answer>
+		<choice>0</choice>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>[라나]쳇, 매정하기는!</context>
+		<answer>1</answer>
+		<choice>2</choice>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>[라나] 와! 정말 구해줬구나! 고마워! 이 꽃이 정말 필요했어! 난 개구리지만 다리가 짧아서 돌아다니기 힘들거든…정말 고마워! 이건 내 선물이야!</context>
+		<answer>4</answer>
+		<choice>1</choice>
+	</info>
+</UniSet>
