@@ -23,7 +23,6 @@ public class JingGume : MonoBehaviour {
     {
         if (col.CompareTag("Player") && !isStep)
         {
-            Debug.Log("11");
             this.isStep = true;
             parent.OnHolds();
         }

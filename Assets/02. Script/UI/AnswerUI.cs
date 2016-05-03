@@ -30,51 +30,41 @@ public class AnswerUI : MonoBehaviour {
     {
         while (true)
         {
-            // 위 아래로 선택지를 고를 수 있음
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                if (index > 0)
-                    index--;
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                if (index < image.Length - 1)
-                    index++;
-            }
             // 선택지 선택
-            else if (Input.GetKeyDown(KeyCode.Return))
+
+            // 거절 시
+            if (Input.GetKeyDown(KeyCode.X))
             {
-                // 거절 시
-                if (index == 1)
-                {
-                    ScriptMgr.curIndex = Length - 2;
-                    ScriptMgr.instance.txt.text = ScriptMgr.instance.scriptInfo[ScriptMgr.curIndex];
-                }
-                // 수락 시
-                else {
-                    ScriptMgr.curIndex += index + 1;
-                }
+                ScriptMgr.curIndex = Length - 2;
+                ScriptMgr.instance.txt.text = ScriptMgr.instance.scriptInfo[ScriptMgr.curIndex];
                 gameObject.SetActive(false);
             }
+            // 수락 시
+            else if(Input.GetKeyDown(KeyCode.Z)){
+                ScriptMgr.curIndex += index + 1;
+                gameObject.SetActive(false);
+            }
+            
+
             // 현재 선택중인 선택지의 효과를 줌
-            CurChoiceAnswer();
+            //CurChoiceAnswer();
 
             yield return null;
         }
     }
     // 현재 선택중인 선택지의 효과를 줌
-    void CurChoiceAnswer()
-    {
-        for (int i = 0; i < image.Length; i++)
-        {
-            if (i == index)
-            {
-                image[index].transform.localScale = new Vector3(0.15f, 0.3f, 1f);
-            }
-            else
-            {
-                image[i].transform.localScale = originScale;
-            }
-        }
-    }
+    //void CurChoiceAnswer()
+    //{
+    //    for (int i = 0; i < image.Length; i++)
+    //    {
+    //        if (i == index)
+    //        {
+    //            image[index].transform.localScale = new Vector3(1.0f, 0.3f, 1f);
+    //        }
+    //        else
+    //        {
+    //            image[i].transform.localScale = originScale;
+    //        }
+    //    }
+    //}
 }
