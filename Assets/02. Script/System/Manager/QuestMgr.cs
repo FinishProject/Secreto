@@ -33,7 +33,7 @@ public class QuestMgr : MonoBehaviour {
         QuestTypes();
     }
 
-    // 퀘스트 종료
+    // 퀘스트 종류
     void QuestTypes()
     {
         switch (questType)
@@ -45,11 +45,6 @@ public class QuestMgr : MonoBehaviour {
                 StartCoroutine(CollectQuest());
                 break;
         }
-    }
-    // 퀘스트 완료
-    void Complete()
-    {
-        Debug.Log("Complete");
     }
     
     // 수집 퀘스트

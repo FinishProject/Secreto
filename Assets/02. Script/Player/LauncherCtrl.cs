@@ -18,6 +18,11 @@ public class LauncherCtrl : MonoBehaviour {
 
     private int index = 0; // 현재 발사체 배열의 인덱스
 
+    void Awake()
+    {
+        traceTargetTr = GetComponent<Transform>();
+    }
+
     void FixedUpdate()
     {
         //타겟 없을 시

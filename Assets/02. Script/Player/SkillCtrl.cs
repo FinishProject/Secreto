@@ -161,20 +161,20 @@ public class SkillCtrl : MonoBehaviour {
         }
     }
 
-    void OnGUI()
-    {
-        string tempText;
-        tempText = "현재 인핸스 : " + curEnhance.ToString();
-        tempText += "\n적용 속성  : " + curAttribute.ToString();
+    //void OnGUI()
+    //{
+    //    string tempText;
+    //    tempText = "현재 인핸스 : " + curEnhance.ToString();
+    //    tempText += "\n적용 속성  : " + curAttribute.ToString();
 
 
-        if(!curAttribute.Equals(AttributeState.noraml))
-        {
-            tempText += "\n남은 시간 : " + Mathf.Round(_countDownForAttribute).ToString();
-        }
+    //    if(!curAttribute.Equals(AttributeState.noraml))
+    //    {
+    //        tempText += "\n남은 시간 : " + Mathf.Round(_countDownForAttribute).ToString();
+    //    }
 
-        GUI.TextField(new Rect(0, 0, 300.0f, 60.0f), tempText);
-    }
+    //    GUI.TextField(new Rect(0, 0, 300.0f, 60.0f), tempText);
+    //}
 
     public void StartReset(int index)
     {

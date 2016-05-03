@@ -4,7 +4,12 @@ using System.Collections;
 public class GrabObject : MonoBehaviour {
 
     private Transform playerTr; // 플레이어 위치
-    public Rigidbody rb;
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
 	void OnTriggerStay(Collider col)
     {
@@ -18,9 +23,9 @@ public class GrabObject : MonoBehaviour {
                 this.transform.parent = playerTr.parent;
                 rb.isKinematic = true;
                 // 오브젝트 이동
-                Vector3 relativePos = playerTr.position - transform.position;
+                //Vector3 relativePos = playerTr.position - transform.position;
                 transform.position = Vector3.Lerp(transform.position, 
-                    new Vector3(playerTr.position.x + 0.8f, playerTr.position.y + 0.8f, 0f),
+                    new Vector3(playerTr.position.x + 1f, playerTr.position.y + 0.8f, transform.position.z),
                     100f);
             }
             // 플레이어의 자식 객체에서 나옴

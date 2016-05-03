@@ -49,6 +49,7 @@ public class ScriptMgr : MonoBehaviour {
     {
         instance = this;
         LoadScript();
+        txt.text = "!!";
     }
 
     void Start()
@@ -72,7 +73,7 @@ public class ScriptMgr : MonoBehaviour {
                     info.targetName = scriptData[0].targetName;
                     comItemName = scriptData[0].completeItem;
                     info.questType = scriptData[0].quesetType;
-                    info.completNum = scriptData[0].completNum;
+                    info.completNum = scriptData[0].completNum - 1;
                 }
             }
             spokeNpc.Add(name); // 대화를 한 NPC 이름을 저장함

@@ -11,7 +11,6 @@ public enum PlayerEffectList
     BASIC_JUMP, DASH_JUMP, 
 }
 
-
 public class PlayerCtrl : MonoBehaviour
 {
 
@@ -101,15 +100,15 @@ public class PlayerCtrl : MonoBehaviour
     void Update()
     { 
         // 점프
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) {
+        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded) {
             //rb.AddForce(Vector3.up * 10f * Time.deltaTime);
             Jump(JumpType.BASIC); 
         }
-        else if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && !controller.isGrounded) { Jump(JumpType.DASH); }
+        else if (Input.GetKeyDown(KeyCode.Space) && !controller.isGrounded) { Jump(JumpType.DASH); }
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
         //NPC와 대화
-        else if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
+        else if (Input.GetKeyDown(KeyCode.Q)) { ShotRay(); }
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
 
@@ -140,11 +139,15 @@ public class PlayerCtrl : MonoBehaviour
         if (controller.isGrounded && isMove)
         {
             isJumping = false;
-            gravity = 14f;
+            gravity = 20f;
             //이동
             moveDir = Vector3.right * inputAxis;
             anim.SetBool("Jump", false);
-            //anim.SetFloat("Speed", inputAxis);
+            anim.SetFloat("Speed", inputAxis);
+            //애니메이션 임시 좌측 변수
+            if (!isFocusRight)
+                anim.SetFloat("Speed", inputAxis * -1f);
+
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
@@ -176,7 +179,10 @@ public class PlayerCtrl : MonoBehaviour
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
-        transform.Rotate(new Vector3(0, 1, 0), 180.0f);
+        Vector3 scale = transform.localScale;
+        scale.z *= -1f;
+        transform.localScale = scale;
+        //transform.Rotate(new Vector3(0, 1, 0), 180.0f);
     }
 
     // 점프
@@ -246,7 +252,7 @@ public class PlayerCtrl : MonoBehaviour
             else if (hit.collider.CompareTag("NPC"))
             {
                 string name = hit.collider.gameObject.name;
-                hit.collider.transform.Rotate(Vector3.up, 180f);
+                hit.collider.transform.Rotate(Vector3.forward, 180f);
                 PlayerFunc.instance.ShowScript(name);
             }
         }
@@ -346,6 +352,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             if(QuestMgr.questInfo.targetName == coll.name){
                 QuestMgr.instance.curCompletNum++;
+                coll.gameObject.SetActive(false);
             }
         }
 
