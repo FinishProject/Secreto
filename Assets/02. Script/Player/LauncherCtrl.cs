@@ -3,13 +3,12 @@ using System.Collections;
 
 public class LauncherCtrl : MonoBehaviour {
 
-    public float speed = 25f;
-    public float durationTime = 1f;
-    private GameObject target;
-    private Vector3 focusVec;
-    public Transform olaTr;
+    public float speed = 10f;
+    public float durationTime = 1f; // 발사 중 유지시간
 
-    public Transform targetTr;
+    private GameObject target;
+    private Transform traceTargetTr; // 회전을 위한 타겟
+
     public Material matNormal;
     public Material matRed;
     public Material matBlue;
@@ -17,27 +16,34 @@ public class LauncherCtrl : MonoBehaviour {
     private AttributeState _curAttibute;
     public bool isPowerStrike = false;
 
-    int count = 0;
+    private int index = 0; // 현재 발사체 배열의 인덱스
 
     void FixedUpdate()
     {
         //타겟 없을 시
         if (target == null)
         {
-            transform.position = Vector3.Lerp(this.transform.position, olaTr.position, 20f * Time.deltaTime);
+            transform.position = Vector3.Lerp(this.transform.position, traceTargetTr.position, Time.time);
         }
         //타겟 있을 시
         if (target != null)
         {
-            Vector3 relativePos = this.target.transform.position - this.transform.position;
-            transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
-            //transform.Translate(new Vector3(0f, relativePos.y * speed * Time.deltaTime, relativePos.y * speed * Time.deltaTime));
-            //transform.LookAt(new Vector3(target.transform.position.x, target.transform.position.y, 0f));
+            // 직선 공격
+            //Vector3 relativePos = this.target.transform.position - this.transform.position;
+            //transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
 
-            if (!target.activeSelf)
-            {
+            // 포물선 공격
+            Vector3 center = (target.transform.position + this.transform.position) * 0.5f;
+            center -= new Vector3(1, 1, 1);
+            Vector3 fromRelCenter = this.transform.position - center;
+            Vector3 toRelCenter = target.transform.position - center;
+            transform.position = Vector3.Slerp(fromRelCenter, toRelCenter, speed * Time.deltaTime);
+            transform.position += center;
+
+            // 타겟 사라졋을 시 탄환체도 사라지도록
+            if (!target.activeSelf) {
                 target = null;
-                this.gameObject.SetActive(false);
+                SkillCtrl.instance.StartReset(index);
             }
         }
     }
@@ -46,15 +52,15 @@ public class LauncherCtrl : MonoBehaviour {
     {
         if (coll.CompareTag("MONSTER"))
         {
-            var monster = coll.GetComponent<FSMBase>();
+            var monster = coll.GetComponent<MonsterFSM>();
 
             switch(monster.curAttibute)
             {
                 // 속성 상관 없이 데미지
                 case AttributeState.noraml:
                                         
-                    if (isPowerStrike) monster.GetDamage(50);
-                    else monster.GetDamage(20);
+                    if (isPowerStrike) monster.getDamage(50);
+                    else monster.getDamage(15);
                     break;
 
                 // 몬스터 빨강 / 발사체 파랑일 때 데미지
@@ -62,8 +68,8 @@ public class LauncherCtrl : MonoBehaviour {
 
                     if(_curAttibute.Equals(AttributeState.blue))
                     {
-                        if (isPowerStrike) monster.GetDamage(50);
-                        else monster.GetDamage(20);
+                        if (isPowerStrike) monster.getDamage(50);
+                        else monster.getDamage(15);
                     }
                     break;
 
@@ -72,25 +78,20 @@ public class LauncherCtrl : MonoBehaviour {
 
                     if (_curAttibute.Equals(AttributeState.red))
                     {
-                        if (isPowerStrike) monster.GetDamage(50);
-                        else monster.GetDamage(20);
+                        if (isPowerStrike) monster.getDamage(50);
+                        else monster.getDamage(15);
                     }
                     break;
             }
-
-
             this.target = null;
-            gameObject.SetActive(false);
-
+            SkillCtrl.instance.StartReset(index);
         }
     }
 
     void OnDisable()
     {
         target = null;
-        isPowerStrike = false;
-        gameObject.transform.localScale = new Vector3(0.3256f, 0.3256f, 0.3256f);
-        
+        isPowerStrike = false; 
     }
 
     void OnEnable()
@@ -112,22 +113,25 @@ public class LauncherCtrl : MonoBehaviour {
         if (isPowerStrike)
             gameObject.transform.localScale = new Vector3(1,1,1);
     }
-    public void GetTarget(GameObject _target, int index)
+    // 날아갈 타겟 위치와 현재 발사체의 배열 인덱스를 받아옴
+    public void GetTarget(GameObject _target, int _index)
     {
         this.target = _target;
-        this.count = index;
+        this.index = _index;
+
         StartCoroutine(Duration());
     }
-
-    void GetIndex(int index)
+    // 회전을 위한 타겟 위치 받아옴
+    void GetTraceTarget(Transform targetTr)
     {
-        count = index;
+        traceTargetTr = targetTr;
     }
 
+    // 탄환이 날아가면서 지속되는 시간
     IEnumerator Duration()
     {
         yield return new WaitForSeconds(durationTime);
-        SkillCtrl.instance.StartReset(count);
-        this.gameObject.SetActive(false);
+        SkillCtrl.instance.StartReset(index);
+        StopCoroutine(Duration());
     }
 }

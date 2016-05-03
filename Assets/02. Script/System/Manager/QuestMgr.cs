@@ -6,7 +6,7 @@ public class QuestInfo
     public string targetName = null;
     public int completNum = 0;
     public int questType = 0;
-    public GameObject rewardItem;
+    //public GameObject rewardItem;
 }
 
 public enum QuestType { HUNT, COLLECT, }
@@ -14,7 +14,8 @@ public enum QuestType { HUNT, COLLECT, }
 
 public class QuestMgr : MonoBehaviour {
 
-    private QuestInfo questInfo;
+    public static QuestInfo questInfo;
+    public int curCompletNum = 0;
     private QuestType questType;
 
     public static QuestMgr instance;
@@ -23,6 +24,15 @@ public class QuestMgr : MonoBehaviour {
     {
         instance = this;
     }
+
+    // 퀘스트 정보를 받아옴
+    public void GetQuestInfo(QuestInfo info)
+    {
+        questInfo = info;
+        questType = (QuestType)questInfo.questType;
+        QuestTypes();
+    }
+
     // 퀘스트 종료
     void QuestTypes()
     {
@@ -32,7 +42,7 @@ public class QuestMgr : MonoBehaviour {
                 Debug.Log("Hunt");
                 break;
             case QuestType.COLLECT:
-                Debug.Log("COLLECT");
+                StartCoroutine(CollectQuest());
                 break;
         }
     }
@@ -41,10 +51,20 @@ public class QuestMgr : MonoBehaviour {
     {
         Debug.Log("Complete");
     }
-    // 퀘스트 정보를 받아옴
-    public void GetQuestInfo(QuestInfo info)
+    
+    // 수집 퀘스트
+    IEnumerator CollectQuest()
     {
-        questInfo = info;
-        questType = (QuestType)questInfo.questType;
+        while (true)
+        {
+            // 목표 아이템 개수 이상 수집 시 퀘스트 완료
+            if(questInfo.completNum <= curCompletNum)
+            {
+                Debug.Log("Complete");
+                ScriptMgr.instance.isQuest = true;
+                break;
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 }

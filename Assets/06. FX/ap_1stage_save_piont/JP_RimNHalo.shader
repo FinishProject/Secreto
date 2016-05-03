@@ -35,7 +35,7 @@
 		void surf (Input IN, inout SurfaceOutput o) {
 
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-			o.Emission = c.rgb * 20;
+			o.Emission = c.rgb;
 			o.Normal = UnpackNormal( tex2D (_BumpMap, IN.uv_BumpMap));
 			
 			float rim =  abs(_RimInverse-abs(dot( o.Normal , IN.viewDir)));
