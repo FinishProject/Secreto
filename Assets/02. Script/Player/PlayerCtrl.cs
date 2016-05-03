@@ -22,7 +22,7 @@ public class PlayerCtrl : MonoBehaviour
     private bool isFlyingByRope = false;    // 날고 있는지
     private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
     private string carryItemName = null;    // 들고 있는 아이템 이름
-    private float curHp = 10; // 체력
+    private float curHp = 80; // 체력
     private float fullHp = 100; // 체력
     public float ProportionHP
     {
@@ -97,7 +97,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (controller.isGrounded) anim.SetBool("Jump", false);
         // 점프
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X)) && controller.isGrounded) {
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X))) {
             //rb.AddForce(Vector3.up * 10f * Time.deltaTime);
             Jump(JumpType.BASIC); 
         }
@@ -193,7 +193,6 @@ public class PlayerCtrl : MonoBehaviour
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.BASIC_JUMP);
                     moveDir.y = jumpHight;
                     controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
-
                 }
                 break;
             case JumpType.DASH:
@@ -271,7 +270,7 @@ public class PlayerCtrl : MonoBehaviour
         if (curHp <= 0)
         {
             //PlayerDie();
-            //            Debug.Log("Player Die");
+            Debug.Log("Player Die");
             return;
         }
     }

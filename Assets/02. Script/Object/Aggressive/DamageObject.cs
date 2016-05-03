@@ -1,28 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/****************************   정보   ****************************
+
+    충돌시 데미지를 주는 오브젝트
+
+    사용방법 :
+
+    오브젝트에 추가 끝.
+    코드 4줄, 끝.
+******************************************************************/
+
 public class DamageObject : MonoBehaviour {
 
     public float damage;
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     void OnTriggerEnter(Collider col)
     {
-        if(col.tag == "Player")
+        if(col.tag.Equals("Player"))
         {
-            Debug.Log("damaged");
-
-            //PlayerCtrl.instance.getDamage(damage);
             PlayerCtrl.instance.getDamage(damage);
-
         }
     }
 }

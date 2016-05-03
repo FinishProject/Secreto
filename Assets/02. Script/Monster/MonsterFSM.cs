@@ -49,7 +49,7 @@ public class MonsterFSM : FSMBase {
     #region 대기
     IEnumerator Idle_EnterState()
     {
-        Debug.Log("Idle 상태 돌입");
+//        Debug.Log("Idle 상태 돌입");
         yield return null;
     }
 

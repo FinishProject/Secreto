@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LauncherCtrl : MonoBehaviour {
 
-    public float speed = 15f;
+    public float speed = 25f;
     public float durationTime = 1f;
     private GameObject target;
     private Vector3 focusVec;
@@ -46,15 +46,15 @@ public class LauncherCtrl : MonoBehaviour {
     {
         if (coll.CompareTag("MONSTER"))
         {
-            var monster = coll.GetComponent<MonsterFSM>();
+            var monster = coll.GetComponent<FSMBase>();
 
             switch(monster.curAttibute)
             {
                 // 속성 상관 없이 데미지
                 case AttributeState.noraml:
                                         
-                    if (isPowerStrike) monster.getDamage(50);
-                    else monster.getDamage(15);
+                    if (isPowerStrike) monster.GetDamage(50);
+                    else monster.GetDamage(20);
                     break;
 
                 // 몬스터 빨강 / 발사체 파랑일 때 데미지
@@ -62,8 +62,8 @@ public class LauncherCtrl : MonoBehaviour {
 
                     if(_curAttibute.Equals(AttributeState.blue))
                     {
-                        if (isPowerStrike) monster.getDamage(50);
-                        else monster.getDamage(15);
+                        if (isPowerStrike) monster.GetDamage(50);
+                        else monster.GetDamage(20);
                     }
                     break;
 
@@ -72,8 +72,8 @@ public class LauncherCtrl : MonoBehaviour {
 
                     if (_curAttibute.Equals(AttributeState.red))
                     {
-                        if (isPowerStrike) monster.getDamage(50);
-                        else monster.getDamage(15);
+                        if (isPowerStrike) monster.GetDamage(50);
+                        else monster.GetDamage(20);
                     }
                     break;
             }
