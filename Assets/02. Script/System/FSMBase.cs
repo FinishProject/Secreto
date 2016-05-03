@@ -42,11 +42,14 @@ public class FSMBase : MonoBehaviour {
     }
 
     // 원래 있는 변수들을 덮어 씌우기 위해 new 를 붙임
-    public new Transform transform;
-    public new Rigidbody rigidbody;
-    public new Animation animation;
-    public new GameObject gameObject;
-    public new Collider collider;
+    protected new Transform transform;
+    protected new Rigidbody rigidbody;
+    protected new Animation animation;
+    protected new GameObject gameObject;
+    protected new Collider collider;
+
+    public float hp = 100;
+    public AttributeState curAttibute;
 
     // 자식 클래스에서 초기화 ( Awake 함수 쓰기 위해 )
     protected virtual void OnAwake() { }
@@ -54,6 +57,7 @@ public class FSMBase : MonoBehaviour {
     {
         transform = base.transform;
         gameObject = base.gameObject;
+        
         rigidbody = GetComponent<Rigidbody>();
         animation = GetComponent<Animation>();     
         collider = GetComponent<Collider>();
@@ -118,7 +122,7 @@ public class FSMBase : MonoBehaviour {
 
         DoOnTriggerEnter = ChagneDelegate<Action<Collider>>("OnTriggerEnter", DoNothingCollider);
         DoOnTriggerExit = ChagneDelegate<Action<Collider>>("OnTriggerExir", DoNothingCollider);
-        DoOnTriggerStay = ChagneDelegate<Action<Collider>>("OnTriggerEnter", DoNothingCollider);
+        DoOnTriggerStay = ChagneDelegate<Action<Collider>>("OnTriggerStay", DoNothingCollider);
 
         DoOnCollisionEnter = ChagneDelegate<Action<Collision>>("OnCollisionEnter", DoNothingCollision);
         DoOnCollisionExit = ChagneDelegate<Action<Collision>>("OnCollisionExit", DoNothingCollision);
@@ -166,6 +170,12 @@ public class FSMBase : MonoBehaviour {
             yield return null;
         }
         state.weight = 0; 
+    }
+
+    // 데미지 입을때
+    virtual public void GetDamage(float damage)
+    {
+        hp -= damage;
     }
 
 }

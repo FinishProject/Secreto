@@ -9,7 +9,7 @@ public enum Dir
     RIGHT,
 }
 
-public class BulletObject : MonoBehaviour
+public class BulletObject_FourWay : MonoBehaviour
 {
     Transform thisTr;
     Vector3 moveVector;
