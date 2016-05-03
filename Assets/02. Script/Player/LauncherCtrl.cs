@@ -7,14 +7,15 @@ public class LauncherCtrl : MonoBehaviour {
     public float durationTime = 1f; // 발사 중 유지시간
 
     private GameObject target;
-    private Transform traceTargetTr; // 회전을 위한 타겟
+    private Transform traceTargetTr = null; // 회전을 위한 타겟
 
+    /*
     public Material matNormal;
     public Material matRed;
     public Material matBlue;
+    */
 
     private AttributeState _curAttibute;
-    public bool isPowerStrike = false;
 
     private int index = 0; // 현재 발사체 배열의 인덱스
 
@@ -57,15 +58,13 @@ public class LauncherCtrl : MonoBehaviour {
     {
         if (coll.CompareTag("MONSTER"))
         {
-            var monster = coll.GetComponent<MonsterFSM>();
+            var monster = coll.GetComponent<FSMBase>();
 
             switch(monster.curAttibute)
             {
                 // 속성 상관 없이 데미지
                 case AttributeState.noraml:
-                                        
-                    if (isPowerStrike) monster.getDamage(50);
-                    else monster.getDamage(15);
+                    monster.GetDamage(15);
                     break;
 
                 // 몬스터 빨강 / 발사체 파랑일 때 데미지
@@ -73,8 +72,7 @@ public class LauncherCtrl : MonoBehaviour {
 
                     if(_curAttibute.Equals(AttributeState.blue))
                     {
-                        if (isPowerStrike) monster.getDamage(50);
-                        else monster.getDamage(15);
+                        monster.GetDamage(15);
                     }
                     break;
 
@@ -83,8 +81,7 @@ public class LauncherCtrl : MonoBehaviour {
 
                     if (_curAttibute.Equals(AttributeState.red))
                     {
-                        if (isPowerStrike) monster.getDamage(50);
-                        else monster.getDamage(15);
+                        monster.GetDamage(15);
                     }
                     break;
             }
@@ -95,8 +92,7 @@ public class LauncherCtrl : MonoBehaviour {
 
     void OnDisable()
     {
-        target = null;
-        isPowerStrike = false; 
+        target = null; 
     }
 
     void OnEnable()
@@ -115,8 +111,6 @@ public class LauncherCtrl : MonoBehaviour {
         //        break;
         //}
         
-        if (isPowerStrike)
-            gameObject.transform.localScale = new Vector3(1,1,1);
     }
     // 날아갈 타겟 위치와 현재 발사체의 배열 인덱스를 받아옴
     public void GetTarget(GameObject _target, int _index)
@@ -127,7 +121,7 @@ public class LauncherCtrl : MonoBehaviour {
         StartCoroutine(Duration());
     }
     // 회전을 위한 타겟 위치 받아옴
-    void GetTraceTarget(Transform targetTr)
+    public void GetTraceTarget(Transform targetTr)
     {
         traceTargetTr = targetTr;
     }

@@ -10,7 +10,7 @@ public class Slug : FSMBase
     public Transform shootTr;
     public float traceDist = 10f;
     public float attackDist = 1f;
-    public float attackSpeed = 5;
+    private float attackSpeed = 1;
     public float damage = 16;
 
     // 몬스터 상태
@@ -41,12 +41,12 @@ public class Slug : FSMBase
 
     void Idle_Update()
     {
-        transform.position = Vector3.Lerp(transform.position, earlyPos, Time.deltaTime);
+        nvAgent.destination = earlyPos;
         float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
         if (distance <= traceDist) { curState = EnemyStates.Chase; return; }
-
     }
+
 
     //*******************************************************************************
     #endregion
@@ -56,19 +56,26 @@ public class Slug : FSMBase
 
     IEnumerator Chase_EnterState()
     {
-        Debug.Log("Chase 상태 돌입");
+        Debug.Log("Chase 상태 돌입");    
         nvAgent.Resume();
+        
         yield return null;
     }
 
     void Chase_Update()
     {
+        anim.SetBool("Move", true);
         nvAgent.destination = playerTr.position;
-
         float distance = Vector3.Distance(playerTr.position, transform.position);
-        if (distance <= attackDist) { nvAgent.Stop(); curState = EnemyStates.Attacking; return; }
-        if (distance > traceDist)   { nvAgent.Stop(); curState = EnemyStates.Idle; return; }
+        if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
+        if (distance > traceDist)   { curState = EnemyStates.Idle; return; }
 
+    }
+
+    IEnumerator Chase_ExitState()
+    {
+        anim.SetBool("Move", false);
+        yield return null;
     }
 
     //*******************************************************************************
@@ -80,16 +87,15 @@ public class Slug : FSMBase
     IEnumerator Attacking_EnterState()
     {
         Debug.Log("Attacking 상태 돌입");
+        nvAgent.Stop();
         StartCoroutine(ConsecutiveShoot());
         yield return null;
     }
 
     void Attacking_Update()
-    {
-        
+    {   
         float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance > attackDist) { curState = EnemyStates.Chase; return; }
-
     }
 
     IEnumerator Attacking_ExitState()
@@ -102,10 +108,13 @@ public class Slug : FSMBase
     {
         while(true)
         {
+            anim.SetBool("Attack", true);
+            yield return new WaitForSeconds(attackSpeed);
             ObjectMgr.instance.GetParabolaBullet().UseItem().
                 GetComponent<BulletObject_Parabola>().Moving(shootTr.position);
 
-            yield return new WaitForSeconds(0.5f);
+            anim.SetBool("Attack", false);
+            yield return new WaitForSeconds(attackSpeed);
         }
         
     }
@@ -118,6 +127,9 @@ public class Slug : FSMBase
     IEnumerator Dying_EnterState()
     {
         Debug.Log("쮸금");
+        anim.SetBool("Death", true);
+        yield return new WaitForSeconds(2.0f);
+
         GetComponent<ItemDrop>().DropItem();
         gameObject.SetActive(false);
         MonsterRespawnMgr.instance.Respawn(gameObject);
@@ -126,6 +138,7 @@ public class Slug : FSMBase
 
     void OnEnable()
     {
+        hp = 30;
         curState = EnemyStates.Idle;
     }
 
@@ -145,6 +158,9 @@ public class Slug : FSMBase
     public override void GetDamage(float damage)
     {
         base.GetDamage(damage);
+        Debug.Log("피격");
+        anim.SetTrigger("Prceive");
+
         if (hp <= 0)
         {
             curState = EnemyStates.Dying;

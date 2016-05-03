@@ -40,7 +40,7 @@ public class Kkokkali : FSMBase {
 
     void Idle_Update()
     {
-        transform.position = Vector3.Lerp(transform.position, earlyPos, Time.deltaTime);
+        nvAgent.destination = earlyPos;
         float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
         if (distance <= traceDist) { curState = EnemyStates.Chase; return; }
@@ -62,7 +62,7 @@ public class Kkokkali : FSMBase {
 
         float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
-        if (distance > traceDist) { nvAgent.Stop(); curState = EnemyStates.Idle; return; }
+        if (distance > traceDist) { curState = EnemyStates.Idle; return; }
 
     }
     #endregion

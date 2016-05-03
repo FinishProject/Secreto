@@ -46,7 +46,7 @@ public class ItemDrop : MonoBehaviour {
     {
         GameObject tempItem;
 
-        for (int i = 0; i < dropItemList.HpRecoverNumber; i++)
+        for (int i = 0; dropItemList.HpRecover && i < dropItemList.HpRecoverNumber; i++)
         {
             tempItem = ItemMgr.instance.GetItem(ItemFunction.HpRecovery).UseItem();
 
@@ -57,7 +57,7 @@ public class ItemDrop : MonoBehaviour {
             tempItem.GetComponent<HpRecoveryItem>().Dropped(thisTr.position, randPos, true);
         }
 
-        for (int i = 0; i < dropItemList.ExpNumber; i++)
+        for (int i = 0; dropItemList.Exp && i < dropItemList.ExpNumber; i++)
         {
             tempItem = ItemMgr.instance.GetItem(ItemFunction.Exp).UseItem();
 

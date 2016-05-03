@@ -33,6 +33,7 @@ public class HorizonHold_Switch : MonoBehaviour
     private bool isOnPlayer;
     void Start()
     {
+        pSpeed = speed;
         isMove2Target = true;
         targetPos = targetTr.transform.position;
         originPos = transform.position;

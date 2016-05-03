@@ -29,7 +29,7 @@ public class ChackAreaForSkyboxObject : MonoBehaviour, Sensorable
                 {
                     // 왼쪽에서 오른쪽으로 갈때
                     SkyBoxMgr.instance.SwapSkyBoxAndLight(skyboxNumber, Dir.RIGHT);
-                    saveIndex = 0;
+                    saveIndex = 2;
                 }
                 else
                     saveIndex = 1;
@@ -40,7 +40,7 @@ public class ChackAreaForSkyboxObject : MonoBehaviour, Sensorable
                 {
                     // 오른쪽에서 왼쪽으로 갈때
                     SkyBoxMgr.instance.SwapSkyBoxAndLight(skyboxNumber, Dir.LEFT);
-                    saveIndex = 0;
+                    saveIndex = 1;
                 }
                 else
                     saveIndex = 2;
