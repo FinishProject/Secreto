@@ -114,6 +114,10 @@ Material:
         second: 0.5
       data:
         first:
+          name: _Metallic
+        second: 0
+      data:
+        first:
           name: _Parallax
         second: 0.02
       data:
@@ -146,7 +150,15 @@ Material:
         second: 0
       data:
         first:
-          name: _Metallic
+          name: _Rimpower
+        second: 6.6
+      data:
+        first:
+          name: _RimInverse
+        second: 0
+      data:
+        first:
+          name: _Blink
         second: 0
       data:
         first:
@@ -160,18 +172,6 @@ Material:
         first:
           name: _Hide
         second: -1
-      data:
-        first:
-          name: _Rimpower
-        second: 6.6
-      data:
-        first:
-          name: _RimInverse
-        second: 0
-      data:
-        first:
-          name: _Blink
-        second: 0
     m_Colors:
       data:
         first:

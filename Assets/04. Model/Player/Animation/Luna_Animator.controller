@@ -285,7 +285,7 @@ AnimatorState:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Jump_End
+  m_Name: Take 001
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -336,7 +336,7 @@ AnimatorState:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Idel
+  m_Name: Take 001 0
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -399,7 +399,7 @@ AnimatorStateMachine:
     m_Position: {x: 36, y: 108, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110271008}
-    m_Position: {x: 288, y: 108, z: 0}
+    m_Position: {x: 276, y: 108, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

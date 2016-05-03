@@ -12,34 +12,37 @@ public enum AttributeState
 public class SkillCtrl : MonoBehaviour {
 
     struct BulletInfo {
-        public GameObject Bullet; // 발사체 오브젝트 
-        public bool isFire; // 발사중인지 확인
+        public GameObject Bullet;
+        public Vector3 originPos;
+        public bool isFire;
     }
 
-    private Transform[] rotateTr;
+    public Transform[] rotateTr;
+
     private BulletInfo[] bulletInfo;
 
     public Transform playerTr;
+    public Transform shotTr;
     public GameObject normalBullet;
     
     private int count = 0;
+    public GameObject[] objBullets;
 
     [System.NonSerialized]
     public float curEnhance = 0;
     public float maxEnhance = 10;
-    public int bulletNum = 3;
-    public float initTime = 3f;
-
     [System.NonSerialized]
     public AttributeState curAttribute;         // 속성   
     public float attributeDuration = 5.0f;      // 속성 지속시간 (시간이 끝나면 noraml)
+    public static SkillCtrl instance;
     private float _countDownForAttribute;
     public float ProportionAttribute
     {
         get { return _countDownForAttribute / attributeDuration; }
     }
 
-    public static SkillCtrl instance;
+    public int bulletNum = 3;
+    public float initTime = 3f;
 
     void Awake()
     {
@@ -50,24 +53,38 @@ public class SkillCtrl : MonoBehaviour {
 
     void Start()
     {
-        InitLauncher();
+        bulletInfo = new BulletInfo[objBullets.Length];
+
+        for (int i=0; i< bulletInfo.Length; i++)
+        {
+            bulletInfo[i].Bullet = objBullets[i];
+            //bulletInfo[i].originPos = objBullets[i].transform.position;
+            bulletInfo[i].isFire = true;
+            //bulletInfo[i].Bullet.SetActive(false);
+        }
     }
 
     void Update()
     {
-        for (int i=0; i<rotateTr.Length; i++)
+        for (int i=0; i<bulletInfo.Length; i++)
         {
-            rotateTr[i].RotateAround(transform.position, Vector3.right, 200f * Time.deltaTime);
+            
+                //bulletInfo[i].Bullet.transform.position = Vector3.Lerp(
+                //    bulletInfo[i].Bullet.transform.position, shotTr.position, 10f * Time.deltaTime);
+                rotateTr[i].transform.RotateAround(transform.position, Vector3.right, 200f * Time.deltaTime);
+  
         }
 
         // F키 입력 시 공격체 생성
         if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.A)) {
-            if (count >= bulletInfo.Length) { count = 0; } // 총알 갯수 넘을 시 Index 초기화
+            if (count >= bulletInfo.Length) {
+                 count = 0;
+            }
             else {
                 if (bulletInfo[count].isFire)
                 {
                     bulletInfo[count].Bullet.SetActive(true);
-                    //bulletInfo[count].Bullet.transform.position = shotTr.position;
+                    bulletInfo[count].Bullet.transform.position = shotTr.position;
                     FindTarget();
                     count++;
                     InGameUI.instance.ChangeEnhance();
@@ -76,16 +93,16 @@ public class SkillCtrl : MonoBehaviour {
         }
 
         // G키 입력, 인핸스가 있으면 공격체 생성
-        //if (Input.GetKeyDown(KeyCode.G) && curEnhance >= maxEnhance)
-        //{
-        //    if (count >= objBullets.Length && !objBullets[0].activeSelf) { count = 0; }
-        //    curEnhance = 0;
-        //    objBullets[count].GetComponent<LauncherCtrl>().isPowerStrike = true;
-        //    objBullets[count].SetActive(true);
-        //    objBullets[count].transform.position = shotTr.position;
-        //    FindTarget();
-        //    count++;
-        //}
+        if (Input.GetKeyDown(KeyCode.G) && curEnhance >= maxEnhance)
+        {
+            if (count >= objBullets.Length && !objBullets[0].activeSelf) { count = 0; }
+            curEnhance = 0;
+            objBullets[count].GetComponent<LauncherCtrl>().isPowerStrike = true;
+            objBullets[count].SetActive(true);
+            objBullets[count].transform.position = shotTr.position;
+            FindTarget();
+            count++;
+        }
     }
 
     //타겟 탐색
@@ -99,7 +116,9 @@ public class SkillCtrl : MonoBehaviour {
                 targetList.Add(hitCollider[i].transform);
             }
         }
-        if (targetList.Count > 0) {
+        if (targetList.Count > 0)
+        {
+            
             DistanceCompare(targetList);
         }
     }
@@ -112,7 +131,8 @@ public class SkillCtrl : MonoBehaviour {
         for (int i = 1; i < _target.Count; i++)
         {
             float curDistance = (playerTr.position - _target[i].position).sqrMagnitude;
-            if (nearDistance > curDistance) {
+            if (nearDistance > curDistance)
+            {
                 nearDistance = curDistance;
                 targetIndex = i;
             }
@@ -179,41 +199,14 @@ public class SkillCtrl : MonoBehaviour {
 
     public void StartReset(int index)
     {
-        bulletInfo[index].Bullet.SetActive(false);
         StartCoroutine(ResetBullet(index));
     }
-    // 탄환 발사 후 사라질 수 재생성
+
     IEnumerator ResetBullet(int index)
     {
         yield return new WaitForSeconds(initTime);
         bulletInfo[index].Bullet.SetActive(true);
         bulletInfo[index].isFire = true;
         bulletInfo[index].Bullet.transform.position = rotateTr[index].position;
-    }
-
-    // 탄환 및 회전을 위한 로테이션 포지션 생성
-    void InitLauncher()
-    {
-        rotateTr = new Transform[bulletNum];
-        // 회전 할 빈오브젝트 생성
-        for (int i = 0; i < rotateTr.Length; i++)
-        {
-            rotateTr[i] = new GameObject().transform;
-            rotateTr[i].parent = transform;
-            rotateTr[i].name = "RotateTr_" + i.ToString();
-        }
-        // 회전할 오브젝트의 위치를 잡아줌
-        rotateTr[0].position = new Vector3(transform.position.x - 0.5f, transform.position.y + 0.5f, transform.position.z);
-        rotateTr[1].position = new Vector3(transform.position.x - 0.5f, transform.position.y - 0.3f, transform.position.z + 0.5f);
-        rotateTr[2].position = new Vector3(transform.position.x - 0.5f, transform.position.y - 0.3f, transform.position.z - 0.5f);
-
-        // 발사체 생성
-        bulletInfo = new BulletInfo[rotateTr.Length];
-        for (int i = 0; i < bulletInfo.Length; i++)
-        {
-            bulletInfo[i].Bullet = (GameObject)Instantiate(normalBullet, rotateTr[i].position, Quaternion.identity);
-            bulletInfo[i].isFire = true;
-            bulletInfo[i].Bullet.SendMessage("GetTraceTarget", rotateTr[i]);
-        }
     }
 }

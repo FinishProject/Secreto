@@ -198,7 +198,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 106948}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -59.1, y: 1.67, z: -0.5}
+  m_LocalPosition: {x: -60.714973, y: 10.612939, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 401442}
@@ -595,6 +595,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   durationTime: 1
+  olaTr: {fileID: 0}
+  targetTr: {fileID: 434532, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
   matNormal: {fileID: 0}
   matRed: {fileID: 0}
   matBlue: {fileID: 0}
