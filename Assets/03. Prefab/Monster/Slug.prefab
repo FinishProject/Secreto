@@ -547,8 +547,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 186782}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -49.54, y: 9.13, z: -2}
+  m_LocalRotation: {x: 0, y: -0.61934245, z: 0, w: 0.785121}
+  m_LocalPosition: {x: 142.63, y: -2.34, z: -1.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 470374}
@@ -999,9 +999,7 @@ MonoBehaviour:
   shootTr: {fileID: 478798}
   traceDist: 1
   attackDist: 10
-  attackSpeed: 2
   damage: 16
-  hp: 40
 --- !u!135 &13563806
 SphereCollider:
   m_ObjectHideFlags: 1
