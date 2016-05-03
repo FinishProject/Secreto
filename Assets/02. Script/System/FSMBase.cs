@@ -48,7 +48,9 @@ public class FSMBase : MonoBehaviour {
     protected new GameObject gameObject;
     protected new Collider collider;
 
-    public float hp = 100;
+    public Animator anim;
+
+    public float hp = 40;
     public AttributeState curAttibute;
 
     // 자식 클래스에서 초기화 ( Awake 함수 쓰기 위해 )
@@ -61,6 +63,7 @@ public class FSMBase : MonoBehaviour {
         rigidbody = GetComponent<Rigidbody>();
         animation = GetComponent<Animation>();     
         collider = GetComponent<Collider>();
+        anim = GetComponent<Animator>();
         OnAwake();
     }
     void Update() { DoUpdate(); }

@@ -206,7 +206,7 @@ public class RopeCtrl : MonoBehaviour {
         }
 
         playerIdx = idx;
-        L = Vector3.Distance(lowRopes[0].transform.position, lowRopes[playerIdx].transform.position);
+        L = 2 * Vector3.Distance(lowRopes[0].transform.position, lowRopes[playerIdx].transform.position);
     }
 
 

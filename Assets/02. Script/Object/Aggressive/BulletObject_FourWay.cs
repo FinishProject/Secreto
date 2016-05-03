@@ -16,9 +16,13 @@ public class BulletObject_FourWay : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-        if(col.tag.Equals("Player"))
+        if (col.tag.Equals("Player"))
         {
-            PlayerCtrl.instance.getDamage(100);
+            PlayerCtrl.instance.getDamage(20);
+        }
+        else if(col.tag.Equals("MONSTER"))
+        {
+            return;
         }
         gameObject.SetActive(false);
 

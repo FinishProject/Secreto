@@ -27,7 +27,7 @@ public class PlayerCtrl : MonoBehaviour
     private float gravity = 5f;
 
 
-    private float curHp = 10; // 체력
+    private float curHp = 80; // 체력
     private float fullHp = 100; // 체력
     public float ProportionHP
     {
@@ -268,7 +268,7 @@ public class PlayerCtrl : MonoBehaviour
     public void getDamage(float damage)
     {
         curHp -= damage;
-        //InGameUI.instance.ChangeHpBar();
+        InGameUI.instance.ChangeHpBar();
         if (curHp <= 0)
         {
             //PlayerDie();

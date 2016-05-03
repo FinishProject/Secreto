@@ -45,7 +45,6 @@ GameObject:
   - 4: {fileID: 492368}
   - 95: {fileID: 9518996}
   - 96: {fileID: 9649278}
-  - 114: {fileID: 11408998}
   m_Layer: 0
   m_Name: ola_attack_normal
   m_TagString: Untagged
@@ -80,6 +79,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 493142}
   - 114: {fileID: 11457198}
+  - 135: {fileID: 13500846}
   m_Layer: 0
   m_Name: Ola_normal_Bullet
   m_TagString: Untagged
@@ -611,23 +611,6 @@ TrailRenderer:
       rgba: 16777215
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
---- !u!114 &11408998
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 113270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3fe7d7f23642ad47b4829a40136f38e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 15
-  durationTime: 1
-  matNormal: {fileID: 0}
-  matRed: {fileID: 0}
-  matBlue: {fileID: 0}
-  isPowerStrike: 0
 --- !u!114 &11457198
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -641,10 +624,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   durationTime: 1
-  matNormal: {fileID: 0}
-  matRed: {fileID: 0}
-  matBlue: {fileID: 0}
-  isPowerStrike: 0
+--- !u!135 &13500846
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 125796}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!198 &19846594
 ParticleSystem:
   m_ObjectHideFlags: 1
