@@ -31,17 +31,17 @@ public class WahleCtrl : MonoBehaviour {
     {
         // 플레이어와 고래의 거리 차이 구함
         distance = (transform.position - playerTr.position).sqrMagnitude;
-        //transform.Rotate(Vector3.up, 70f * Time.deltaTime, Space.Self);
+        
         MovementType();
     }
     // 고래 회전
     void TurnFocus()
     {
         isFocusRight = !isFocusRight;
-        Vector3 scale = transform.localScale;
-        scale.y *= -1f;
-        transform.localScale = scale;
-        fowardValue *= -1f;
+        //Vector3 scale = transform.localScale;
+        //scale.y *= -1f;
+        //transform.localScale = scale;
+        //fowardValue *= -1f;
         moveType = MoveType.IDLE;
         //transform.Rotate(new Vector3(0, 0, 1), 180f);
         initSpeed = 0f;
@@ -68,9 +68,6 @@ public class WahleCtrl : MonoBehaviour {
                 transform.position = Vector3.Lerp(transform.position,
                     playerTr.position + (playerTr.up * 1.7f) - (playerTr.forward * fowardValue), initSpeed * Time.deltaTime);
 
-                //transform.position = Vector3.Lerp(transform.position,
-                //    playerTr.position - (playerTr.forward * 0.5f) + (playerTr.up * 1.5f ),
-                //    initSpeed * Time.deltaTime);
                 // 가속도
                 initSpeed = IncrementToWards(initSpeed, maxSpeed, accel);
                 break;
