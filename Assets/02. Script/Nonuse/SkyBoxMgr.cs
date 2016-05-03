@@ -1,6 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/****************************   정보   ****************************
+
+    스카이박스 매니저
+
+    스카이박스와 라이팅을 바꿔 준다.
+
+    사용방법 :
+
+    1. 매니저 오브젝트에 추가 후 컴포넌트 연결 및 설정
+    2. 사용하기 위해서는 ChackAreaForSkyboxObject 오브젝트를 이용해야 한다
+    
+******************************************************************/
 
 public class SkyBoxMgr : MonoBehaviour {
     [System.Serializable]
@@ -22,11 +34,11 @@ public class SkyBoxMgr : MonoBehaviour {
     private Skybox skyBox;
     private float blend = 0f;
 
-    public static SkyBoxMgr instance;
+    public static SkyBoxMgr instance;    // 싱글톤
+
     void Start () {
         instance = this;
-
-
+        
         RenderSettings.ambientSkyColor = AmbientSettings[0].SkyColor;
         RenderSettings.ambientEquatorColor = AmbientSettings[0].EquatorColor;
         RenderSettings.ambientGroundColor = AmbientSettings[0].GroundColor;
@@ -38,7 +50,8 @@ public class SkyBoxMgr : MonoBehaviour {
         
     }
 
-    public void SwapSkyBox(int skyboxNumber, Dir dir)
+    // 스카이 박스와 라이팅 변경 ( 외부 호출 )
+    public void SwapSkyBoxAndLight(int skyboxNumber, Dir dir)
     {
         
         RenderSettings.skybox = skies[skyboxNumber];
@@ -47,6 +60,7 @@ public class SkyBoxMgr : MonoBehaviour {
         StartCoroutine(SwapSkyBox_Cor(dir));
     }
 
+    // 스카이 박스 스왑
     IEnumerator SwapSkyBox_Cor(Dir dir)
     {
         float time = 0;
@@ -79,6 +93,7 @@ public class SkyBoxMgr : MonoBehaviour {
         }
     }
 
+    // 라이팅 스왑
     IEnumerator SwapLight(int skyboxNumber, Dir dir)
     { 
         int dirVal, lightIdx;
@@ -103,7 +118,6 @@ public class SkyBoxMgr : MonoBehaviour {
 
             // 빛 세기 변경
             mainLight.intensity = Mathf.Lerp(mainLight.intensity, DirectionalLights[lightIdx].intensity, time);
-
 
             // 엠비언트
             RenderSettings.ambientSkyColor = 
