@@ -9,7 +9,7 @@ public class Slug : FSMBase
 
     public Transform shootTr;
     public float traceDist = 10f;
-    public float attackDist = 1f;
+    public float attackDist = 2f;
     private float attackSpeed = 1;
     public float damage = 16;
 

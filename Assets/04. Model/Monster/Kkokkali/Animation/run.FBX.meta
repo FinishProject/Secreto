@@ -153,7 +153,161 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Take 001
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bone001
+        weight: 1
+      - path: Bone001/Bone002
+        weight: 1
+      - path: Bone001/Bone002/Bone003
+        weight: 1
+      - path: Bone001/Bone005
+        weight: 1
+      - path: Bone001/Bone005/Bone006
+        weight: 1
+      - path: Bone001/Bone008
+        weight: 1
+      - path: Bone001/Bone008/Bone009
+        weight: 1
+      - path: com
+        weight: 1
+      - path: com/Bone011
+        weight: 1
+      - path: com/Bone011/Bone012
+        weight: 1
+      - path: com/Bone011/Bone012/Bone013
+        weight: 1
+      - path: com/Bone011/Bone012/Bone013/Bone014
+        weight: 1
+      - path: com/Bone011/Bone012/Bone021
+        weight: 1
+      - path: com/Bone011/Bone012/Bone021/Bone022
+        weight: 1
+      - path: com/Bone011/Bone012/Bone021/Bone022/Bone023
+        weight: 1
+      - path: com/Bone011/Bone071
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075/Bone076
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075/Bone076/Bone077
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075/Bone076/Bone077/Bone078
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075/Bone076/Bone077/Bone078/Bone079
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075/Bone076/Bone077/Bone078/Bone079/Bone080
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075/Bone076/Bone077/Bone078/Bone079/Bone080/Bone081
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075/Bone076/Bone077/Bone078/Bone079/Bone080/Bone081/Bone082
+        weight: 1
+      - path: com/Bone011/Bone071/Bone072/Bone073/Bone074/Bone075/Bone076/Bone077/Bone078/Bone079/Bone080/Bone081/Bone082/Bone083
+        weight: 1
+      - path: com/Bone016
+        weight: 1
+      - path: com/Bone016/Bone017
+        weight: 1
+      - path: com/Bone016/Bone017/Bone018
+        weight: 1
+      - path: com/Bone016/Bone017/Bone018/Bone019
+        weight: 1
+      - path: com/Bone016/Bone017/Bone024
+        weight: 1
+      - path: com/Bone016/Bone017/Bone024/Bone025
+        weight: 1
+      - path: com/Bone016/Bone017/Bone024/Bone025/Bone026
+        weight: 1
+      - path: com/Bone027
+        weight: 1
+      - path: com/Bone029
+        weight: 1
+      - path: com/Bone031
+        weight: 1
+      - path: com/Bone033
+        weight: 1
+      - path: com/Bone035
+        weight: 1
+      - path: com/Bone037
+        weight: 1
+      - path: com/Bone040
+        weight: 1
+      - path: com/Bone041
+        weight: 1
+      - path: com/Bone043
+        weight: 1
+      - path: com/Bone045
+        weight: 1
+      - path: com/Bone047
+        weight: 1
+      - path: com/Bone048
+        weight: 1
+      - path: com/Bone051
+        weight: 1
+      - path: com/Bone051/Bone056
+        weight: 1
+      - path: com/Bone051/Bone056/Bone057
+        weight: 1
+      - path: com/Bone051/Bone059
+        weight: 1
+      - path: com/Bone051/Bone059/Bone060
+        weight: 1
+      - path: com/Bone051/Bone062
+        weight: 1
+      - path: com/Bone051/Bone062/Bone063
+        weight: 1
+      - path: com/Bone051/Bone065
+        weight: 1
+      - path: com/Bone051/Bone065/Bone066
+        weight: 1
+      - path: com/Bone051/Bone068
+        weight: 1
+      - path: com/Bone051/Bone068/Bone069
+        weight: 1
+      - path: com/Bone052
+        weight: 1
+      - path: com/Bone052/Bone053
+        weight: 1
+      - path: com/Bone054
+        weight: 1
+      - path: com/Bone054/Bone055
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

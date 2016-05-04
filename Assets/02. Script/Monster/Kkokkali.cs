@@ -58,12 +58,19 @@ public class Kkokkali : FSMBase {
 
     void Chase_Update()
     {
+        anim.SetBool("Run", true);
         nvAgent.destination = playerTr.position;
 
         float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
         if (distance > traceDist) { curState = EnemyStates.Idle; return; }
 
+    }
+
+    IEnumerator Chase_ExitState()
+    {
+        anim.SetBool("Run", false);
+        yield return null;
     }
     #endregion
 
