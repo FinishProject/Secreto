@@ -110,13 +110,18 @@ public class Slug : FSMBase
         {
             anim.SetBool("Attack", true);
             yield return new WaitForSeconds(attackSpeed);
-            ObjectMgr.instance.GetParabolaBullet().UseItem().
-                GetComponent<BulletObject_Parabola>().Moving(shootTr.position);
+            //ShotBullet();
 
             anim.SetBool("Attack", false);
             yield return new WaitForSeconds(attackSpeed);
         }
         
+    }
+
+    void ShotBullet()
+    {
+        ObjectMgr.instance.GetParabolaBullet().UseItem().
+                GetComponent<BulletObject_Parabola>().Moving(shootTr.position);
     }
     //*******************************************************************************
     #endregion

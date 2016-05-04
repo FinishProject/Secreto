@@ -26,7 +26,7 @@ public class PlayerCtrl : MonoBehaviour
     private float gravity = 5f;
 
 
-    private float curHp = 80; // 체력
+    private float curHp = 10; // 체력
     private float fullHp = 100; // 체력
     public float ProportionHP
     {
@@ -81,20 +81,20 @@ public class PlayerCtrl : MonoBehaviour
         switchState = gameObject.AddComponent<SwitchObject>();
         switchState.IsCanUseSwitch = false;
 
-		originPos = this.transform.position;
     }
 
-    //void Start()
-    //{
-    //    pData = PlayerData.Load();
-    //    transform.position = pData.pPosition;
-    //}
+    void Start()
+    {
+        pData = PlayerData.Load();
+        transform.position = pData.pPosition;
+    }
 
     //플레이어 데이터 저장
     public void Save()
     {
         pData.pPosition = transform.position;
-        PlayerData.Save();
+        pData.hp = curHp;
+        PlayerData.Save(pData);
     }
 
     void Update()
@@ -118,10 +118,6 @@ public class PlayerCtrl : MonoBehaviour
         } else {
             anim.SetBool("Run", false);
         }
-
-		if (transform.position.y <= -5f) {
-			transform.position = originPos;
-		} 
     }
 
     void FixedUpdate()
@@ -273,8 +269,10 @@ public class PlayerCtrl : MonoBehaviour
 
     public void getDamage(float damage)
     {
+        Debug.Log("11");
         curHp -= damage;
-        InGameUI.instance.ChangeHpBar();
+        //InGameUI.instance.ChangeHpBar();
+        anim.SetTrigger("Hit");
         if (curHp <= 0)
         {
             //PlayerDie();
