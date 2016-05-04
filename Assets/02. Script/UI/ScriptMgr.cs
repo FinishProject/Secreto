@@ -32,6 +32,8 @@ public class ScriptMgr : MonoBehaviour {
     public GameObject bgUi; // 대사 출력 배경 UI
     public GameObject answerUi; // 선택지 UI
 
+    public TextAsset scirpt;
+
     public bool isQuest = false; // 퀘스트 완료 여부
 
     public static int curIndex = 0; // 현재 보여줄 대사 인덱스
@@ -45,16 +47,49 @@ public class ScriptMgr : MonoBehaviour {
     
     public static ScriptMgr instance;
 
+
+
+    // UI를 배치 했을때 해상도
+    private float baseWidth = 600;
+    private float baseHeight = 450;
+    // 현재 해상도와 UI를 배치했을때 해상도의 비율
+    private float proportionWidth;
+    private float proportionHeight;
+    public GameObject text;
+    private Vector3 textPos;
+
     void Awake()
     {
         instance = this;
+
+        bgUi.SetActive(false);
+        answerUi.SetActive(false);
+
         LoadScript();
-        txt.text = "!!";
+
+        textPos = text.transform.position;
+        proportionWidth = baseWidth / Screen.width;
+        proportionHeight = baseHeight / Screen.height;
+        ChangeUIByResolution(text, textPos);
     }
 
-    void Start()
+    void ChangeUIByResolution(GameObject changeUI, Vector3 basePos)
     {
-        answerUi.SetActive(false);
+        Vector3 tempSize = new Vector3();
+        Vector3 tempPos = new Vector3();
+
+        // 크기 비율 맞춤
+        tempSize.x = 1 / proportionWidth;
+        tempSize.y = 1 / proportionHeight;
+
+        // 위치 비율 맞춤
+        tempPos.x = basePos.x / proportionWidth;
+        tempPos.y = basePos.y / proportionHeight;
+
+        // 적용
+        changeUI.transform.position = tempPos;
+        changeUI.transform.localScale = tempSize;
+
     }
 
     public bool GetScript(string name)
@@ -140,7 +175,8 @@ public class ScriptMgr : MonoBehaviour {
     {
         //XML 생성
         XmlDocument xmldoc = new XmlDocument();
-        xmldoc.Load(Application.dataPath + "/Resources/script3.xml");
+        xmldoc.LoadXml(scirpt.text);
+        //xmldoc.Load(scirpt.ToString());
         XmlNodeList nodes = xmldoc.SelectNodes("UniSet/info");
         //XML데이터를 Script클래스 리스트의 옮겨 담음
         for (int i = 0; i < nodes.Count; i++)
@@ -173,7 +209,6 @@ public class ScriptMgr : MonoBehaviour {
             name = System.Convert.ToString(PosElement.GetAttribute("Speak_NPC"));
             spokeNpc.Add(name);
         }
-        bgUi.SetActive(false);
     }
 
     //대화 완료한 NPC이름 저장

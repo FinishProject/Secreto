@@ -22,11 +22,9 @@ public class PlayerCtrl : MonoBehaviour
     private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
     private string carryItemName = null;    // 들고 있는 아이템 이름
 
-    private float hp = 10; // 체력
     private float gravity = 5f;
 
-
-    private float curHp = 10; // 체력
+    private float curHp = 100f; // 체력
     private float fullHp = 100; // 체력
     public float ProportionHP
     {
@@ -85,6 +83,9 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
+        pData.pPosition = this.transform.position;
+        PlayerData.Save(pData);
+
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
     }
@@ -108,7 +109,7 @@ public class PlayerCtrl : MonoBehaviour
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
         //NPC와 대화
-        else if (Input.GetKeyDown(KeyCode.Q)) { ShotRay(); }
+        else if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         //펫 타기
         else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
 
@@ -117,6 +118,11 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetBool("Run", true);
         } else {
             anim.SetBool("Run", false);
+        }
+
+        if(transform.position.y <= -7f)
+        {
+            PlayerDie();
         }
     }
 
@@ -248,7 +254,6 @@ public class PlayerCtrl : MonoBehaviour
             else if (hit.collider.CompareTag("NPC"))
             {
                 string name = hit.collider.gameObject.name;
-                hit.collider.transform.Rotate(Vector3.forward, 180f);
                 PlayerFunc.instance.ShowScript(name);
             }
         }
@@ -269,9 +274,8 @@ public class PlayerCtrl : MonoBehaviour
 
     public void getDamage(float damage)
     {
-        Debug.Log("11");
         curHp -= damage;
-        //InGameUI.instance.ChangeHpBar();
+        InGameUI.instance.ChangeHpBar();
         anim.SetTrigger("Hit");
         if (curHp <= 0)
         {

@@ -42,7 +42,8 @@ public class Flower : MonoBehaviour {
         {
             if (isRed) SkillCtrl.instance.ChangeAttribute(AttributeState.red);
             else SkillCtrl.instance.ChangeAttribute(AttributeState.blue);
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
+            blueEffect.SetActive(false);
         }
     }
 }

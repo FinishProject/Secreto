@@ -22,12 +22,12 @@ public class PlayerData {
         XmlElement posDataElement = doc.CreateElement("Position");
         posDataElement.SetAttribute("x", data.pPosition.x.ToString());
         posDataElement.SetAttribute("y", data.pPosition.y.ToString());
-        posDataElement.SetAttribute("z", data.pPosition.y.ToString());
+        posDataElement.SetAttribute("z", data.pPosition.z.ToString());
         posElement.AppendChild(posDataElement);
         //캐릭터 정보 저장
-        XmlElement infoDataElement = doc.CreateElement("Info");
-        infoDataElement.SetAttribute("hp", data.hp.ToString());
-        posElement.AppendChild(infoDataElement);
+        //XmlElement infoDataElement = doc.CreateElement("Info");
+        //infoDataElement.SetAttribute("hp", data.hp.ToString());
+        //posElement.AppendChild(infoDataElement);
         //데이터 저장
         doc.Save(Application.dataPath + "/Resources/Player_Data.xml");
     }
@@ -39,7 +39,7 @@ public class PlayerData {
         xmlDoc.Load(Application.dataPath + "/Resources/Player_Data.xml");
         XmlElement posElement = xmlDoc["PlayerPosition"];
 
-        float posX, posY, posZ;
+        float posX, posY, posZ, pHp;
         Data data = new Data();
 
         foreach (XmlElement PosElement in posElement.ChildNodes)
@@ -47,7 +47,7 @@ public class PlayerData {
             posX = System.Convert.ToSingle(PosElement.GetAttribute("x"));
             posY = System.Convert.ToSingle(PosElement.GetAttribute("y"));
             posZ = System.Convert.ToSingle(PosElement.GetAttribute("z"));
-
+          
             Vector3 initVec = new Vector3(posX, posY, posZ);
             data.pPosition = initVec;
         }

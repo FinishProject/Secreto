@@ -38,10 +38,10 @@ public class WahleCtrl : MonoBehaviour {
     void TurnFocus()
     {
         isFocusRight = !isFocusRight;
-        //Vector3 scale = transform.localScale;
-        //scale.y *= -1f;
-        //transform.localScale = scale;
-        //fowardValue *= -1f;
+        Vector3 scale = transform.localScale;
+        scale.y *= -1f;
+        transform.localScale = scale;
+        fowardValue *= -1f;
         moveType = MoveType.IDLE;
         //transform.Rotate(new Vector3(0, 0, 1), 180f);
         initSpeed = 0f;
