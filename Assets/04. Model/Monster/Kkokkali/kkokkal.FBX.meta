@@ -1,25 +1,141 @@
 fileFormatVersion: 2
 guid: a1d653b761a957c46bd3d253c4834c2d
-timeCreated: 1462309711
+timeCreated: 1462450761
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: a
-    100002: //RootNode
-    100004: Particle View 001
-    100006: Plane004
+    100002: Bone001
+    100004: Bone002
+    100006: Bone003
+    100008: Bone005
+    100010: Bone006
+    100012: Bone008
+    100014: Bone009
+    100016: Bone011
+    100018: Bone012
+    100020: Bone013
+    100022: Bone014
+    100024: Bone016
+    100026: Bone017
+    100028: Bone018
+    100030: Bone019
+    100032: Bone021
+    100034: Bone022
+    100036: Bone023
+    100038: Bone024
+    100040: Bone025
+    100042: Bone026
+    100044: Bone027
+    100046: Bone029
+    100048: Bone031
+    100050: Bone033
+    100052: Bone035
+    100054: Bone037
+    100056: Bone040
+    100058: Bone041
+    100060: Bone043
+    100062: Bone045
+    100064: Bone047
+    100066: Bone048
+    100068: Bone051
+    100070: Bone052
+    100072: Bone053
+    100074: Bone054
+    100076: Bone055
+    100078: Bone056
+    100080: Bone057
+    100082: Bone059
+    100084: Bone060
+    100086: Bone062
+    100088: Bone063
+    100090: Bone065
+    100092: Bone066
+    100094: Bone068
+    100096: Bone069
+    100098: Bone071
+    100100: Bone072
+    100102: Bone073
+    100104: Bone074
+    100106: Bone075
+    100108: Bone076
+    100110: Bone077
+    100112: Bone078
+    100114: Bone079
+    100116: Bone080
+    100118: Bone081
+    100120: Bone082
+    100122: Bone083
+    100124: com
+    100126: //RootNode
     400000: a
-    400002: //RootNode
-    400004: Particle View 001
-    400006: Plane004
-    2300000: a
-    2300002: Plane004
-    3300000: a
-    3300002: Plane004
-    4300000: Plane004
-    4300002: a
+    400002: Bone001
+    400004: Bone002
+    400006: Bone003
+    400008: Bone005
+    400010: Bone006
+    400012: Bone008
+    400014: Bone009
+    400016: Bone011
+    400018: Bone012
+    400020: Bone013
+    400022: Bone014
+    400024: Bone016
+    400026: Bone017
+    400028: Bone018
+    400030: Bone019
+    400032: Bone021
+    400034: Bone022
+    400036: Bone023
+    400038: Bone024
+    400040: Bone025
+    400042: Bone026
+    400044: Bone027
+    400046: Bone029
+    400048: Bone031
+    400050: Bone033
+    400052: Bone035
+    400054: Bone037
+    400056: Bone040
+    400058: Bone041
+    400060: Bone043
+    400062: Bone045
+    400064: Bone047
+    400066: Bone048
+    400068: Bone051
+    400070: Bone052
+    400072: Bone053
+    400074: Bone054
+    400076: Bone055
+    400078: Bone056
+    400080: Bone057
+    400082: Bone059
+    400084: Bone060
+    400086: Bone062
+    400088: Bone063
+    400090: Bone065
+    400092: Bone066
+    400094: Bone068
+    400096: Bone069
+    400098: Bone071
+    400100: Bone072
+    400102: Bone073
+    400104: Bone074
+    400106: Bone075
+    400108: Bone076
+    400110: Bone077
+    400112: Bone078
+    400114: Bone079
+    400116: Bone080
+    400118: Bone081
+    400120: Bone082
+    400122: Bone083
+    400124: com
+    400126: //RootNode
+    4300000: a
     9500000: //RootNode
+    13700000: a
   materials:
     importMaterials: 1
     materialName: 0
@@ -30,17 +146,11 @@ ModelImporter:
     resampleRotations: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    animationImportErrors: '
-
-      Imported file ''kkokkal'' conversion failed: Required human bone ''Hips'' not
-      found
-
-
-'
+    animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -50,7 +160,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.3
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -73,27 +183,7 @@ ModelImporter:
   copyAvatar: 0
   humanDescription:
     human: []
-    skeleton:
-    - name: kkokkal(Clone)
-      position: {x: 0, y: 0, z: 0}
-      rotation: {x: 0, y: 0, z: 0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
-    - name: a
-      position: {x: 0, y: 0, z: 0.0833738}
-      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
-      scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
-    - name: Particle View 001
-      position: {x: 0, y: 0, z: 0}
-      rotation: {x: 0.000000015454312, y: -0.7071068, z: 0.000000015454312, w: 0.7071068}
-      scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
-    - name: Plane004
-      position: {x: -1.6787187, y: 0.5513058, z: -4.3034406}
-      rotation: {x: 0.00000008146034, y: 0, z: 0, w: 1}
-      scale: {x: 2.48995, y: 2.48995, z: 2.48995}
-      transformModified: 1
+    skeleton: []
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -104,7 +194,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 3
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

@@ -4,18 +4,18 @@ using System.Collections;
 public class BulletObject_Parabola : MonoBehaviour {
 
 
-    public void Moving(Vector3 startPos)
+    public void Moving(Vector3 startPos, float range)
     {
-        StartCoroutine(ParabolaMoving(startPos));
+        StartCoroutine(ParabolaMoving(startPos, range));
     }
 
-    IEnumerator ParabolaMoving(Vector3 startPos)
+    IEnumerator ParabolaMoving(Vector3 startPos, float range)
     {
         transform.position = startPos;
         float angle = 70f;
 
         var targetPos = PlayerCtrl.instance.transform.position;
-        targetPos.x += Random.Range(-1.5f, 1.5f);
+        targetPos.x += Random.Range(-range, range);
         targetPos.y += PlayerCtrl.instance.transform.localScale.y;
         var dir = targetPos - transform.position;  // 방향 벡터
         var h = dir.y;                             // 높이 차이

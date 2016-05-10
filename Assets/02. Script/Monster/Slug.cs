@@ -12,15 +12,18 @@ public class Slug : FSMBase
     public float attackDist = 2f;
     private float attackSpeed = 1;
     public float damage = 16;
+    public float attackErrorRange = 1.5f;
+    private System.Enum oldStates;
 
     // 몬스터 상태
     public enum EnemyStates
     {
         Dying = 0,      // 사망
-        Chase = 1,      // 추적
-        Attacking = 2,  // 공격
-        Idle = 3,       // 대기
-
+        Attacked = 1,   // 피격
+        Chase = 2,      // 추적
+        ComBback = 3,   // 복귀
+        Attacking = 4,  // 공격
+        Idle = 5,       // 대기
     }
 
     void Start()
@@ -41,7 +44,6 @@ public class Slug : FSMBase
 
     void Idle_Update()
     {
-        nvAgent.destination = earlyPos;
         float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
         if (distance <= traceDist) { curState = EnemyStates.Chase; return; }
@@ -68,7 +70,7 @@ public class Slug : FSMBase
         nvAgent.destination = playerTr.position;
         float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
-        if (distance > traceDist)   { curState = EnemyStates.Idle; return; }
+        if (distance > traceDist)   { curState = EnemyStates.ComBback; return; }
 
     }
 
@@ -78,6 +80,39 @@ public class Slug : FSMBase
         yield return null;
     }
 
+    //*******************************************************************************
+    #endregion
+
+    #region 복귀
+    //*******************************************************************************
+    IEnumerator ComBback_EnterState()
+    {
+        Debug.Log("ComBback 상태 돌입");
+        yield return null;
+    }
+
+    void ComBback_Update()
+    {
+        anim.SetBool("Move", true);
+        nvAgent.destination = earlyPos;
+
+        float distance = Vector3.Distance(playerTr.position, transform.position);
+
+        if (distance <= traceDist)
+        {
+            curState = EnemyStates.Chase;
+            return;
+        }
+
+        if (Vector3.Distance(earlyPos, transform.position) < 0.5f)
+        {
+            Debug.Log(1111);
+            anim.SetBool("Move", false);
+            curState = EnemyStates.Idle;
+            return;
+        }
+
+    }
     //*******************************************************************************
     #endregion
 
@@ -98,15 +133,9 @@ public class Slug : FSMBase
         if (distance > attackDist) { curState = EnemyStates.Chase; return; }
     }
 
-    IEnumerator Attacking_ExitState()
-    {
-        StopAllCoroutines();
-        yield return null;
-    }
-
     IEnumerator ConsecutiveShoot()
     {
-        while(true)
+        while (true)
         {
             anim.SetBool("Attack", true);
             yield return new WaitForSeconds(attackSpeed);
@@ -115,14 +144,48 @@ public class Slug : FSMBase
             anim.SetBool("Attack", false);
             yield return new WaitForSeconds(attackSpeed);
         }
-        
+
     }
 
     void ShotBullet()
     {
         ObjectMgr.instance.GetParabolaBullet().UseItem().
-                GetComponent<BulletObject_Parabola>().Moving(shootTr.position);
+                GetComponent<BulletObject_Parabola>().Moving(shootTr.position, attackErrorRange);
     }
+
+    IEnumerator Attacking_ExitState()
+    {
+        StopAllCoroutines();
+        anim.SetBool("Attack", false);
+        nvAgent.Resume();
+        yield return null;
+    }
+
+    //*******************************************************************************
+    #endregion
+
+    #region 피격
+    //*******************************************************************************
+
+    IEnumerator Attacked_EnterState()
+    {
+        Debug.Log("Attacked 상태 돌입");
+
+        nvAgent.Stop();
+        anim.SetTrigger("Prceive");
+
+        if (hp <= 0)
+        {
+            curState = EnemyStates.Dying;
+        }
+        else
+        {
+            curState = oldStates;
+        }
+            
+        yield return null;
+    }
+
     //*******************************************************************************
     #endregion
 
@@ -163,13 +226,21 @@ public class Slug : FSMBase
     public override void GetDamage(float damage)
     {
         base.GetDamage(damage);
+        
         Debug.Log("피격");
-        anim.SetTrigger("Prceive");
-
-        if (hp <= 0)
+        if(!curState.Equals(EnemyStates.Dying))
         {
-            curState = EnemyStates.Dying;
+            oldStates = curState;
+            curState = EnemyStates.Attacked;
         }
+        
+        
+    }
+
+    void StartMove()
+    {
+        if(curState.Equals(EnemyStates.Attacked))
+        nvAgent.Resume();
     }
 
     // 데미지 줄때
