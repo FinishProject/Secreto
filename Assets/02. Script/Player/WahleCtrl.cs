@@ -1,126 +1,91 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+enum WahleState { IDLE, MOVE, WALL, ATTACK };
+
 public class WahleCtrl : MonoBehaviour {
     //고래 이동 타입
-    private enum MoveType { IDLE, TRACE, WALL, ATTACK};
-    private MoveType moveType = MoveType.IDLE;
+    private static WahleState state = WahleState.IDLE;
+    private WahleState curState = state;
 
-    private float initSpeed; // 초기 이동속도
+    private float initSpeed = 0f; // 초기 이동속도
     public float maxSpeed; // 최대 이동속도
     public float accel; // 가속도
+
     private float distance; // 플레이어와 고래의 거리 차이
-    private bool isFush; // 오브젝트 밀고 당기기 체크
     private  bool isFocusRight = true; // 오른쪽을 봐라보는지 확인
-    private bool isWall = false; // 벽에 충돌했는지 여부
-    private float fowardValue = 1f;
+
+    int moveType = 0;
+    int cnt = 0;
+    float moveTime = 0f;
+    float rotValue = 0f;
 
     public Transform playerTr; // 플레이어 위치
-    private Vector3 moveDir; // 이동 벡터, 카메라 벡터
-    private Transform monTr; // 몬스터 위치
-    private GameObject targetObj = null; //인력, 척력 대상 오브젝트
 
-    private bool isMon = false;
-
-    void Start()
-    {
-        //StartCoroutine(FindMonster());
-    }
+    private Vector3 relativePos;
+    private Quaternion lookRot;
 
     void FixedUpdate()
     {
-        // 플레이어와 고래의 거리 차이 구함
         distance = (transform.position - playerTr.position).sqrMagnitude;
-        
-        MovementType();
-    }
-    // 고래 회전
-    void TurnFocus()
-    {
-        isFocusRight = !isFocusRight;
-        Vector3 scale = transform.localScale;
-        scale.y *= -1f;
-        transform.localScale = scale;
-        fowardValue *= -1f;
-        moveType = MoveType.IDLE;
-        //transform.Rotate(new Vector3(0, 0, 1), 180f);
-        initSpeed = 0f;
-    }
+        relativePos = (playerTr.position - transform.position);
+        lookRot = Quaternion.LookRotation(relativePos);
 
-    //고래 이동 타입
-    void MovementType()
-    {
-        switch (moveType) {
-            case MoveType.IDLE:
-                initSpeed = 0f;
-                if (distance >= 4.1f)
-                    moveType = MoveType.TRACE;
-                break;
-            case MoveType.TRACE: // 플레이어 추격
-                if (distance <= 4f)
-                    moveType = MoveType.IDLE;
-                // 플레이어가 고래의 좌우 어느쪽에 있는지 체크함.
-                float curSide = Mathf.Sign(playerTr.position.x - transform.position.x);
-
-                if (PlayerCtrl.inputAxis < -0.1f && isFocusRight && curSide <= -1f) { TurnFocus(); }
-                else if (PlayerCtrl.inputAxis > 0.1f && !isFocusRight && curSide >= 1f) { TurnFocus(); }
-
-                transform.position = Vector3.Lerp(transform.position,
-                    playerTr.position + (playerTr.up * 1.7f) - (playerTr.forward * fowardValue), initSpeed * Time.deltaTime);
-
-                // 가속도
-                initSpeed = IncrementToWards(initSpeed, maxSpeed, accel);
-                break;
-            //case MoveType.ATTACK:
-            //    if (isMon)
-            //    {
-            //        transform.position = Vector3.Lerp(transform.position,
-            //            playerTr.position - (playerTr.up * 2f),
-            //            initSpeed * Time.deltaTime);
-            //    }
-                //Vector3 lookPos = new Vector3(monTr.position.x, monTr.position.y + 20f, 0f);
-                //transform.LookAt(lookPos);
-                //break;
-        }
-    }
-
-    IEnumerator FindMonster()
-    {
-        while (true)
+        switch (state)
         {
-            if (!isMon)
-            {
-                Collider[] hitColl = Physics.OverlapSphere(playerTr.position, 10f);
-                for (int i = 0; i < hitColl.Length; i++)
-                {
-                    if (hitColl[i].tag == "MONSTER")
-                    {
-                        monTr = hitColl[i].transform;
-                        moveType = MoveType.ATTACK;
-                        isMon = true;
-                        break;
-                    }
-                }
-            }
-            yield return new WaitForSeconds(1f);
+            case WahleState.IDLE:
+                Idel();
+                break;
+
+            case WahleState.MOVE:
+                Move();
+                break;
         }
     }
 
-    void OnTriggerStay(Collider coll)
-    {
-        // 벽과 겹쳐지지 않도록 이동
-        if (coll.tag == "WALL") {
-            // 충돌 방향 구함
-            //Quaternion targetRotate = Quaternion.LookRotation(coll.transform.position - transform.position, Vector3.up);
-            moveType = MoveType.WALL;
-            isWall = true;
+    void Idel()
+    { 
+        if(distance > 6f && PlayerCtrl.inputAxis != 0f)
+        {
+            state = WahleState.MOVE;
         }
+
+        // 플레이어 주위 돌기
+        // 부드럽게 타겟을 향해 회전함
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, Time.deltaTime);
+        transform.Translate(0, 0f, 3f * Time.deltaTime);
     }
-    IEnumerator ResetType()
+
+    void Move()
     {
-        yield return new WaitForSeconds(1f);
-        isWall = false;
-        StopCoroutine(ResetType());
+        if(distance <= 6f && PlayerCtrl.inputAxis == 0f)
+        {
+            state = WahleState.IDLE;
+            initSpeed = 0f;
+            moveTime = 0f;
+            rotValue = 0f;
+        }
+        // 이동속도 증가
+        initSpeed = IncrementToWards(initSpeed, maxSpeed, accel);
+
+        moveTime += Time.deltaTime;
+        if(moveTime >= 1.5f)
+        {
+            transform.RotateAround(transform.position, Vector3.right, 200f * Time.deltaTime);
+            rotValue += transform.rotation.y;
+            if (rotValue <= -3f)
+            {
+                moveTime = 0f;
+            }
+        }
+        else
+        {
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+        }
+
+        // 플레이어를 추격
+        float fowardDir = Mathf.Sign(PlayerCtrl.inputAxis);
+        transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward * fowardDir), initSpeed * Time.deltaTime);
     }
 
     // 이동 속도 가속도

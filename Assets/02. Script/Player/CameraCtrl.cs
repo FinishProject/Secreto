@@ -11,7 +11,7 @@ public class CameraCtrl : MonoBehaviour {
 
     private int index = 0;
 
-    void Awake()
+    void Start()
     {
         relCameraPos[0] = transform.position - playerTr.position;
         //relCameraPos[1] = transform.position - whaleTr.position;
