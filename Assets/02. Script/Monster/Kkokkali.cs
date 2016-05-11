@@ -6,10 +6,9 @@ public class Kkokkali : FSMBase {
     private NavMeshAgent nvAgent;
     private Vector3 earlyPos;
     private Transform playerTr;
-
-    public float traceDist = 10f;
-    public float attackDist = 1f;
-    public float attackSpeed = 5;
+    public float discoverDist = 12f; 
+    public float traceDist = 9f;
+    public float attackDist = 2f;
     public float damage = 16;
     
 
@@ -18,16 +17,18 @@ public class Kkokkali : FSMBase {
     public enum EnemyStates
     {
         Dying = 0,      // 사망
-        Chase = 1,      // 추적
-        Attacking = 2,  // 공격
-        Idle = 3,       // 대기
+        Discover = 1,   // 발견
+        Chase = 2,      // 추적
+        ComBback = 3,   // 복귀
+        Attacking = 4,  // 공격
+        Idle = 5,       // 대기
 
     }
 
     void Start()
     {
         earlyPos = transform.position;
-        nvAgent = GetComponent<NavMeshAgent>();
+        nvAgent = GetComponent<NavMeshAgent>(); //anim.SetBool()
         playerTr = PlayerCtrl.instance.transform;
     }
 
@@ -40,11 +41,40 @@ public class Kkokkali : FSMBase {
 
     void Idle_Update()
     {
-        nvAgent.destination = earlyPos;
         float distance = Vector3.Distance(playerTr.position, transform.position);
-        if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
-        if (distance <= traceDist) { curState = EnemyStates.Chase; return; }
+        if (distance <= discoverDist)
+        {
+            anim.SetBool("Prepare",true);
+            curState = EnemyStates.Discover;
+        }
+        else
+            anim.SetBool("Prepare", false);
+    }
+    #endregion
 
+    #region 발견
+    IEnumerator Discover_EnterState()
+    {
+        Debug.Log("Discover 상태 돌입");
+        yield return null;
+    }
+
+    void Discover_Update()
+    {
+        float distance = Vector3.Distance(playerTr.position, transform.position);
+        if (distance <= traceDist)
+        {
+            anim.SetBool("Run", true);
+            anim.SetBool("Prepare", false);
+            curState = EnemyStates.Chase;
+            return;
+        }
+        else if (distance > discoverDist)
+        {
+            anim.SetBool("Prepare", false);
+            curState = EnemyStates.Idle;
+        }
+            
     }
     #endregion
 
@@ -58,21 +88,58 @@ public class Kkokkali : FSMBase {
 
     void Chase_Update()
     {
-        anim.SetBool("Run", true);
         nvAgent.destination = playerTr.position;
 
         float distance = Vector3.Distance(playerTr.position, transform.position);
-        if (distance <= attackDist) { curState = EnemyStates.Attacking; return; }
-        if (distance > traceDist) { curState = EnemyStates.Idle; return; }
 
-    }
+        if (distance <= attackDist)
+        {
+            anim.SetBool("Attack", true);
+            anim.SetBool("Run", false);
+            curState = EnemyStates.Attacking;
+            return;
+        }
 
-    IEnumerator Chase_ExitState()
-    {
-        anim.SetBool("Run", false);
-        yield return null;
+        if (distance > traceDist)
+        {
+            curState = EnemyStates.ComBback;
+            return;
+        }
+
     }
     #endregion
+
+    #region 복귀
+    IEnumerator ComBback_EnterState()
+    {
+        Debug.Log("ComBback 상태 돌입");
+        yield return null;
+    }
+
+    void ComBback_Update()
+    {
+        nvAgent.destination = earlyPos;
+
+        float distance = Vector3.Distance(playerTr.position, transform.position);
+
+        if (distance <= traceDist)
+        {
+            curState = EnemyStates.Chase;
+            return;
+        }
+
+        if (Vector3.Distance(earlyPos, transform.position) < 0.5f)
+        {
+            anim.SetBool("Prepare", true);
+            anim.SetBool("Run", false);
+            curState = EnemyStates.Idle;
+            return;
+        }
+
+    }
+    #endregion
+
+    
 
     #region 공격
 
@@ -80,22 +147,26 @@ public class Kkokkali : FSMBase {
     IEnumerator Attacking_EnterState()
     {
         Debug.Log("Attacking 상태 돌입");
-        nvAgent.speed = 7f;
+        nvAgent.Stop();
         yield return null;
     }
 
     void Attacking_Update()
     {
-        nvAgent.destination = playerTr.position;
-
         float distance = Vector3.Distance(playerTr.position, transform.position);
-        if (distance > attackDist) { curState = EnemyStates.Chase; return; }
+        if (distance > attackDist) {
+            anim.SetBool("Run", true);
+            anim.SetBool("Attack", false);  
+            curState = EnemyStates.Chase;
+            return;
+        }
 
     }
     
     IEnumerator Attacking_ExitState()
     {
-        nvAgent.speed = 3.5f;
+        nvAgent.Resume();
+        nvAgent.destination = playerTr.position;
         yield return null;
     }
 
@@ -105,13 +176,14 @@ public class Kkokkali : FSMBase {
             GiveDamage();
     }
 
-
     #endregion
 
     #region 사망
     IEnumerator Dying_EnterState()
     {
         Debug.Log("쮸금");
+        anim.SetBool("Death", true);
+        yield return new WaitForSeconds(1f);
         GetComponent<ItemDrop>().DropItem();
         gameObject.SetActive(false);
         MonsterRespawnMgr.instance.Respawn(gameObject);
@@ -137,8 +209,12 @@ public class Kkokkali : FSMBase {
     public override void GetDamage(float damage)
     {
         base.GetDamage(damage);
+        anim.SetTrigger("Attacked");
         if (hp <= 0)
         {
+            anim.SetBool("Prepare", false);
+            anim.SetBool("Run", false);
+            anim.SetBool("Attack", false);
             curState = EnemyStates.Dying;
         }
     }
