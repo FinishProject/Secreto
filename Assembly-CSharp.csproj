@@ -104,6 +104,7 @@
      <Compile Include="Assets\02. Script\Player\SkillCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\StrikeLauncherCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\WahleCtrl.cs" />
+     <Compile Include="Assets\02. Script\Player\tempMoveCtrl.cs" />
      <Compile Include="Assets\02. Script\RotateCtr.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVParser.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVReader.cs" />
