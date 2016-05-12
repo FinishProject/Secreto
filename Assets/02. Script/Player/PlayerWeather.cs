@@ -59,7 +59,7 @@ public class PlayerWeather : MonoBehaviour, WeatherObserver
         // 바람 영향 받을 시(좌우)
         if ((WeatherState.WIND_LR & weatherState) == WeatherState.WIND_LR)
         {
-            PlayerCtrl.instance.controller.Move(-Vector3.right * weatherValue * Time.deltaTime);
+            PlayerCtrl.controller.Move(-Vector3.right * weatherValue * Time.deltaTime);
         }
         // 바람 영향 받을 시(상하) 나뭇잎 보유했을때
         if ((WeatherState.WIND_UD & weatherState) == WeatherState.WIND_UD && isUsingLeaf)
