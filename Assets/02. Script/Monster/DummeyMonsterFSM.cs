@@ -193,7 +193,7 @@ public class DummeyMonsterFSM : FSMBase
     public override void GetDamage(float damage)
     {
         base.GetDamage(damage);
-        if (hp <= 0)
+        if (curHp <= 0)
         {
             curState = EnemyStates.Dying;
         }
