@@ -12,7 +12,7 @@ public class PlayerFunc : MonoBehaviour {
         instance = this;
     }
 
-	public void FindObject()
+	public void SetImpactObject()
     {
         Collider[] hitColl = Physics.OverlapSphere(this.transform.position, 5f);
         for(int i = 0; i< hitColl.Length; i++) {
