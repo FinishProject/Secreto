@@ -11,7 +11,7 @@ public class Slug : FSMBase
     public float discoverDist = 12f;
     public float traceDist = 10f;
     public float attackDist = 2f;
-    private float attackSpeed = 1;
+    private float attackSpeed = 2f;
     public float damage = 16;
     public float attackErrorRange = 1.5f;
     private System.Enum oldStates;
@@ -35,6 +35,8 @@ public class Slug : FSMBase
         playerTr = PlayerCtrl.instance.transform;
     }
 
+    //*******************************************************************************
+
     #region 대기
     IEnumerator Idle_EnterState()
     {
@@ -54,6 +56,8 @@ public class Slug : FSMBase
             anim.SetBool("Prepare", false);
     }
     #endregion
+
+    //*******************************************************************************
 
     #region 발견
     IEnumerator Discover_EnterState()
@@ -80,6 +84,8 @@ public class Slug : FSMBase
 
     }
     #endregion
+
+    //*******************************************************************************
 
     #region 추적
     IEnumerator Chase_EnterState()
@@ -112,6 +118,8 @@ public class Slug : FSMBase
     }
     #endregion
 
+    //*******************************************************************************
+
     #region 복귀
     IEnumerator ComBback_EnterState()
     {
@@ -142,8 +150,9 @@ public class Slug : FSMBase
     }
     #endregion
 
-    #region 공격
     //*******************************************************************************
+
+    #region 공격
 
     IEnumerator Attacking_EnterState()
     {
@@ -154,20 +163,25 @@ public class Slug : FSMBase
     }
 
     void Attacking_Update()
-    {   
+    {
+        AnimatorStateInfo animaterStateInfo = anim.GetCurrentAnimatorStateInfo(0);
+
         float distance = Vector3.Distance(playerTr.position, transform.position);
-        if (distance > attackDist) { curState = EnemyStates.Chase; return; }
+        if (distance > attackDist && animaterStateInfo.normalizedTime > 1.0f)
+        {
+            anim.SetBool("Run", true);
+            anim.SetBool("Attack", false);
+            curState = EnemyStates.Chase;
+            return;
+        }
     }
 
     IEnumerator ConsecutiveShoot()
     {
         while (true)
         {
+            Debug.Log(111);
             anim.SetBool("Attack", true);
-            yield return new WaitForSeconds(attackSpeed);
-            //ShotBullet();
-
-            anim.SetBool("Attack", false);
             yield return new WaitForSeconds(attackSpeed);
         }
 
@@ -186,12 +200,11 @@ public class Slug : FSMBase
         nvAgent.Resume();
         yield return null;
     }
-
-    //*******************************************************************************
     #endregion
 
-    #region 피격
     //*******************************************************************************
+
+    #region 피격
 
     IEnumerator Attacked_EnterState()
     {
@@ -200,9 +213,9 @@ public class Slug : FSMBase
         nvAgent.Stop();
         anim.SetTrigger("Attacked");
         yield return new WaitForSeconds(0.5f);
+
         if (curHp <= 0)
         {
-            anim.SetBool("Attacked", false);
             anim.SetBool("Run", false);
             anim.SetBool("Attack", false);
             curState = EnemyStates.Dying;
@@ -215,8 +228,9 @@ public class Slug : FSMBase
         yield return null;
     }
 
-    //*******************************************************************************
     #endregion
+
+    //*******************************************************************************
 
     #region 사망
     IEnumerator Dying_EnterState()
@@ -246,8 +260,9 @@ public class Slug : FSMBase
 
     #endregion
 
-    #region 기타 함수
     //*******************************************************************************
+
+    #region 기타 함수
 
     // 데미지 입었을때 ( 외부 호출 )
     public override void GetDamage(float damage)
@@ -276,7 +291,6 @@ public class Slug : FSMBase
         PlayerCtrl.instance.getDamage(10);
     }
 
-    //*******************************************************************************
     #endregion
 }
 
