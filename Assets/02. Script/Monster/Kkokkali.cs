@@ -33,6 +33,8 @@ public class Kkokkali : FSMBase {
         playerTr = PlayerCtrl.instance.transform;
     }
 
+    //*******************************************************************************
+
     #region 대기
     IEnumerator Idle_EnterState()
     {
@@ -52,6 +54,8 @@ public class Kkokkali : FSMBase {
             anim.SetBool("Prepare", false);
     }
     #endregion
+
+    //*******************************************************************************
 
     #region 발견
     IEnumerator Discover_EnterState()
@@ -78,6 +82,8 @@ public class Kkokkali : FSMBase {
             
     }
     #endregion
+
+    //*******************************************************************************
 
     #region 추적
     IEnumerator Chase_EnterState()
@@ -110,6 +116,8 @@ public class Kkokkali : FSMBase {
     }
     #endregion
 
+    //*******************************************************************************
+
     #region 복귀
     IEnumerator ComBback_EnterState()
     {
@@ -140,11 +148,10 @@ public class Kkokkali : FSMBase {
     }
     #endregion
 
-    
+    //*******************************************************************************
 
     #region 공격
 
-    private float vx, vy;
     IEnumerator Attacking_EnterState()
     {
         Debug.Log("Attacking 상태 돌입");
@@ -158,10 +165,8 @@ public class Kkokkali : FSMBase {
         if (distance > attackDist) {
             anim.SetBool("Run", true);
             anim.SetBool("Attack", false);  
-            curState = EnemyStates.Chase;
             return;
         }
-
     }
     
     IEnumerator Attacking_ExitState()
@@ -179,8 +184,9 @@ public class Kkokkali : FSMBase {
 
     #endregion
 
-    #region 피격
     //*******************************************************************************
+
+    #region 피격
 
     IEnumerator Attacked_EnterState()
     {
@@ -191,8 +197,6 @@ public class Kkokkali : FSMBase {
         
         if (curHp <= 0)
         {
-            
-            anim.SetBool("Attacked", false);
             anim.SetBool("Run", false);
             anim.SetBool("Attack", false);
             curState = EnemyStates.Dying;
@@ -204,16 +208,20 @@ public class Kkokkali : FSMBase {
         yield return new WaitForSeconds(0.2f);
     }
 
-    //*******************************************************************************
     #endregion
+
+    //*******************************************************************************
 
     #region 사망
     IEnumerator Dying_EnterState()
     {
         Debug.Log("쮸금");
+        nvAgent.Stop();
         anim.SetBool("Death", true);
         GetComponent<ItemDrop>().DropItem();
-        yield return new WaitForSeconds(2f);       
+
+        yield return new WaitForSeconds(2f);
+              
         gameObject.SetActive(false);
         MonsterRespawnMgr.instance.Respawn(gameObject);
         yield return null;
@@ -232,6 +240,8 @@ public class Kkokkali : FSMBase {
 
 
     #endregion
+
+    //*******************************************************************************
 
     #region 기타 함수
 

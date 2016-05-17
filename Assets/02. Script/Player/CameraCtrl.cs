@@ -4,45 +4,54 @@ using System.Collections;
 public class CameraCtrl : MonoBehaviour {
 
     public Transform playerTr; // 플레이어의 위치값
-    public float speed = 10f; // 카메라의 속도
+    public float speed = 10f;  // 카메라의 속도
 
-    private Vector3[] relCameraPos = new Vector3[2];
-    private Vector3[] standardPos = new Vector3[2];
+    private Vector3 relCameraPos;
+    private Vector3 standardPos;
 
     private int index = 0;
     Vector3 curVec;
     bool focusRight = true;
 
+    float focusDir;
+    float moveRange = 0;
+
     void Awake()
     {
-        relCameraPos[0] = transform.position - playerTr.position;
+        relCameraPos = transform.position - playerTr.position;
         curVec = playerTr.position;
+    }
+
+    void Update()
+    {
+        focusDir = PlayerCtrl.inputAxis;
+      
     }
 
     void FixedUpdate()
     {
-        standardPos[0] = FocusPlayerVec() + relCameraPos[0];
+        standardPos = FocusPlayerVec() + relCameraPos;
         //standardPos[0] = playerTr.position + relCameraPos[0];
-        transform.position = Vector3.Lerp(transform.position, standardPos[index], speed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, standardPos, speed * Time.deltaTime);
     }
 
     Vector3 FocusPlayerVec()
     {
-        float focusDir = PlayerCtrl.inputAxis;
-        if (focusDir >= 0.1f)
+        if (focusDir >= 0.9f || moveRange >= 10)
         {
             curVec = playerTr.position;
-            return curVec;
+            moveRange = 0;
         }
-        else if (focusDir <= -0.8f)
+        else if (focusDir <= -0.9f || moveRange <= -10)
         {
-            curVec = new Vector3(playerTr.position.x - 3f, playerTr.position.y, playerTr.position.z);
-            return curVec;
+            curVec = new Vector3(playerTr.position.x - 6f, playerTr.position.y, playerTr.position.z);
+            moveRange = 0;
         }
-        else {
-            return curVec;
+        else if(focusDir != 0)
+        {
+            moveRange += focusDir;
         }
 
-
+        return curVec;
     }
 }

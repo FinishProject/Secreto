@@ -53,5 +53,59 @@ public class PlayerData {
         }
         return data;
     }
-    
+
+    //NPC 대사 XML 문서 불러오기
+    public static List<Script> LoadScript()
+    {
+        List<Script> scriptData = new List<Script>();
+        //XML 생성
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.LoadXml(ScriptMgr.instance.scirptFile.text);
+        //xmldoc.Load(scirpt.ToString());
+        XmlNodeList nodes = xmldoc.SelectNodes("UniSet/info");
+        //XML데이터를 Script클래스 리스트의 옮겨 담음
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            string m_Name, m_Context, m_TargetName;
+            int m_scriptType, m_QuestType, m_CompletNum;
+            int mYes, mNo;
+
+            m_Name = nodes[i].SelectSingleNode("name").InnerText;
+            m_Context = nodes[i].SelectSingleNode("context").InnerText;
+            m_scriptType = System.Convert.ToInt32(nodes[i].SelectSingleNode("type").InnerText);
+         
+            m_QuestType = System.Convert.ToInt32(nodes[i].SelectSingleNode("questType").InnerText);
+            m_CompletNum = System.Convert.ToInt32(nodes[i].SelectSingleNode("completINum").InnerText);
+            m_TargetName = nodes[i].SelectSingleNode("targetName").InnerText;
+
+            mYes = System.Convert.ToInt32(nodes[i].SelectSingleNode("yes").InnerText);
+            mNo = System.Convert.ToInt32(nodes[i].SelectSingleNode("no").InnerText);
+
+            scriptData.Add(new Script
+            {
+                name = m_Name,
+                context = m_Context,
+                scriptType = m_scriptType,
+                quesetType = m_QuestType,
+                targetName = m_TargetName,
+                completNum = m_CompletNum,
+                yes = mYes,
+                no = mNo,
+            });
+        }
+        return scriptData;
+
+        //// 대화한 NPC 이름 XML 데이터 불러오기
+        //XmlDocument xmlDocName = new XmlDocument();
+        //xmlDocName.Load(Application.dataPath + "/Resources/ScriptSpeak.xml");
+        //XmlElement posElemnet = xmlDocName["Script"];
+
+        //string name;
+        //foreach (XmlElement PosElement in posElemnet.ChildNodes)
+        //{
+        //    name = System.Convert.ToString(PosElement.GetAttribute("Speak_NPC"));
+        //    spokeNpc.Add(name);
+        //}
+    }
+
 }

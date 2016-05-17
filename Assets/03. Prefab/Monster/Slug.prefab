@@ -547,8 +547,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 186782}
-  m_LocalRotation: {x: 0, y: -0.61934245, z: 0, w: 0.785121}
-  m_LocalPosition: {x: 142.63, y: -2.34, z: -1.56}
+  m_LocalRotation: {x: 0, y: 0.7071066, z: 0, w: -0.70710695}
+  m_LocalPosition: {x: -49.54, y: 9.13, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 470374}
@@ -798,7 +798,7 @@ Transform:
   m_GameObject: {fileID: 164090}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.55, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children:
   - {fileID: 455906}
   - {fileID: 438868}
@@ -956,7 +956,7 @@ Animator:
   m_GameObject: {fileID: 186782}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 0fa319d1d9e80304a96cbaa5a8e622b5, type: 3}
-  m_Controller: {fileID: 9100000, guid: 93351628efa87ca43a8059dc68e0b52d, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6b9bc4351e5a7d546b8a7b9cfad78096, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -994,12 +994,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
-  hp: 40
+  curHp: 30
   curAttibute: 0
   shootTr: {fileID: 478798}
-  traceDist: 1
-  attackDist: 10
+  discoverDist: 11
+  traceDist: 9
+  attackDist: 5
   damage: 16
+  attackErrorRange: 0
 --- !u!135 &13563806
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -1083,7 +1085,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 5000
+  m_AngularSpeed: 700
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
