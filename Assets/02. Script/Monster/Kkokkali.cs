@@ -10,18 +10,19 @@ public class Kkokkali : FSMBase {
     public float traceDist = 9f;
     public float attackDist = 2f;
     public float damage = 16;
-    
+    private System.Enum oldStates;
 
 
     // 몬스터 상태
     public enum EnemyStates
     {
         Dying = 0,      // 사망
-        Discover = 1,   // 발견
-        Chase = 2,      // 추적
-        ComBback = 3,   // 복귀
-        Attacking = 4,  // 공격
-        Idle = 5,       // 대기
+        Attacked = 2,   // 피격
+        Discover = 3,   // 발견
+        Chase = 4,      // 추적
+        ComBback = 5,   // 복귀
+        Attacking = 6,  // 공격
+        Idle = 7,       // 대기
 
     }
 
@@ -178,13 +179,41 @@ public class Kkokkali : FSMBase {
 
     #endregion
 
+    #region 피격
+    //*******************************************************************************
+
+    IEnumerator Attacked_EnterState()
+    {
+        Debug.Log("Attacked 상태 돌입");
+
+        nvAgent.Stop();
+        anim.SetTrigger("Attacked");
+        
+        if (curHp <= 0)
+        {
+            
+            anim.SetBool("Attacked", false);
+            anim.SetBool("Run", false);
+            anim.SetBool("Attack", false);
+            curState = EnemyStates.Dying;
+        }
+        else
+        {
+            curState = oldStates;
+        }
+        yield return new WaitForSeconds(0.2f);
+    }
+
+    //*******************************************************************************
+    #endregion
+
     #region 사망
     IEnumerator Dying_EnterState()
     {
         Debug.Log("쮸금");
         anim.SetBool("Death", true);
-        yield return new WaitForSeconds(1f);
         GetComponent<ItemDrop>().DropItem();
+        yield return new WaitForSeconds(2f);       
         gameObject.SetActive(false);
         MonsterRespawnMgr.instance.Respawn(gameObject);
         yield return null;
@@ -197,6 +226,7 @@ public class Kkokkali : FSMBase {
 
     void OnDisable()
     {
+        curHp = oldHp;
         transform.position = earlyPos;
     }
 
@@ -209,7 +239,15 @@ public class Kkokkali : FSMBase {
     public override void GetDamage(float damage)
     {
         base.GetDamage(damage);
-        anim.SetTrigger("Attacked");
+
+        Debug.Log("피격");
+        if (!curState.Equals(EnemyStates.Dying) && !curState.Equals(EnemyStates.Attacked))
+        {
+            oldStates = curState;
+            curState = EnemyStates.Attacked;
+        }
+
+        /*
         if (hp <= 0)
         {
             anim.SetBool("Prepare", false);
@@ -217,6 +255,7 @@ public class Kkokkali : FSMBase {
             anim.SetBool("Attack", false);
             curState = EnemyStates.Dying;
         }
+        */
     }
 
     // 데미지 줄때

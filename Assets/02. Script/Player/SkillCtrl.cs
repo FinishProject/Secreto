@@ -118,7 +118,7 @@ public class SkillCtrl : MonoBehaviour {
         }
         // 현재 발사체에게 타겟 포지션을 알려줌
         LauncherCtrl launcher = bulletInfo[count].Bullet.GetComponent<LauncherCtrl>();
-        launcher.GetTarget(_target[targetIndex].gameObject, count);
+        launcher.GetTarget(_target[targetIndex].gameObject);
         bulletInfo[count].isFire = false;
     }
 
@@ -178,10 +178,10 @@ public class SkillCtrl : MonoBehaviour {
     }
     */
 
-    public void StartReset(int index)
+    public void StartReset(int curIndex)
     {
-        bulletInfo[index].Bullet.SetActive(false);
-        StartCoroutine(ResetBullet(index));
+        bulletInfo[curIndex].Bullet.SetActive(false);
+        StartCoroutine(ResetBullet(curIndex));
     }
     // 탄환 발사 후 사라질 수 재생성
     IEnumerator ResetBullet(int index)
@@ -214,8 +214,9 @@ public class SkillCtrl : MonoBehaviour {
         {
             bulletInfo[i].Bullet = (GameObject)Instantiate(normalBullet, rotateTr[i].position, Quaternion.identity);
             bulletInfo[i].isFire = true;
-            bulletInfo[i].Bullet.SendMessage("GetTraceTarget", rotateTr[i]);
- 
+            //bulletInfo[i].Bullet.SendMessage("GetTraceTarget", rotateTr[i]);
+            LauncherCtrl launcher = bulletInfo[i].Bullet.GetComponent<LauncherCtrl>();
+            launcher.GetTraceTarget(rotateTr[i], i);
         }
     }
 }

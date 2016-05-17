@@ -40,7 +40,7 @@ public class LauncherCtrl : MonoBehaviour {
 
             // 포물선 공격
             Vector3 center = (target.transform.position + this.transform.position) * 0.5f;
-            center -= new Vector3(1, 1, 1);
+            center -= new Vector3(0, 1, 1);
             Vector3 fromRelCenter = this.transform.position - center;
             Vector3 toRelCenter = target.transform.position - center;
             transform.position = Vector3.Slerp(fromRelCenter, toRelCenter, speed * Time.deltaTime);
@@ -59,78 +59,74 @@ public class LauncherCtrl : MonoBehaviour {
         if (coll.CompareTag("MONSTER"))
         {
             var monster = coll.GetComponent<FSMBase>();
+            
+            //switch (monster.curAttibute)
+            //{
+            //    // 속성 상관 없이 데미지
+            //    case AttributeState.noraml:
+            //        monster.GetDamage(15);
+            //        break;
 
-            switch(monster.curAttibute)
-            {
-                // 속성 상관 없이 데미지
-                case AttributeState.noraml:
-                    monster.GetDamage(15);
-                    break;
+            //    // 몬스터 빨강 / 발사체 파랑일 때 데미지
+            //    case AttributeState.red:
 
-                // 몬스터 빨강 / 발사체 파랑일 때 데미지
-                case AttributeState.red:
+            //        if(_curAttibute.Equals(AttributeState.blue))
+            //        {
+            //            monster.GetDamage(15);
+            //        }
+            //        break;
 
-                    if(_curAttibute.Equals(AttributeState.blue))
-                    {
-                        monster.GetDamage(15);
-                    }
-                    break;
+            //    // 몬스터 파랑 / 발사체 빨강일 때 데미지
+            //    case AttributeState.blue:
 
-                // 몬스터 파랑 / 발사체 빨강일 때 데미지
-                case AttributeState.blue:
-
-                    if (_curAttibute.Equals(AttributeState.red))
-                    {
-                        monster.GetDamage(15);
-                    }
-                    break;
-            }
-            this.target = null;
-            SkillCtrl.instance.StartReset(index);
+            //        if (_curAttibute.Equals(AttributeState.red))
+            //        {
+            //            monster.GetDamage(15);
+            //        }
+            //        break;
+            //}
+            
         }
+        target = null;
+        SkillCtrl.instance.StartReset(index);
     }
 
-    void OnDisable()
-    {
-        target = null; 
-    }
+    //void OnEnable()
+    //{
+    //    _curAttibute = SkillCtrl.instance.curAttribute;
+    //    switch (_curAttibute)
+    //    {
+    //        case AttributeState.noraml:
+    //            gameObject.GetComponent<MeshRenderer>().material = matNormal;
+    //            break;
+    //        case AttributeState.red:
+    //            gameObject.GetComponent<MeshRenderer>().material = matRed;
+    //            break;
+    //        case AttributeState.blue:
+    //            gameObject.GetComponent<MeshRenderer>().material = matBlue;
+    //            break;
+    //    }
 
-    void OnEnable()
-    {
-        //_curAttibute = SkillCtrl.instance.curAttribute;
-        //switch (_curAttibute)
-        //{
-        //    case AttributeState.noraml:
-        //        gameObject.GetComponent<MeshRenderer>().material = matNormal;
-        //        break;
-        //    case AttributeState.red:
-        //        gameObject.GetComponent<MeshRenderer>().material = matRed;
-        //        break;
-        //    case AttributeState.blue:
-        //        gameObject.GetComponent<MeshRenderer>().material = matBlue;
-        //        break;
-        //}
-        
-    }
+    //}
     // 날아갈 타겟 위치와 현재 발사체의 배열 인덱스를 받아옴
-    public void GetTarget(GameObject _target, int _index)
+
+    public void GetTarget(GameObject _target)
     {
         this.target = _target;
-        this.index = _index;
 
         StartCoroutine(Duration());
     }
     // 회전을 위한 타겟 위치 받아옴
-    public void GetTraceTarget(Transform targetTr)
+    public void GetTraceTarget(Transform targetTr, int _index)
     {
         traceTargetTr = targetTr;
+        this.index = _index;
     }
 
     // 탄환이 날아가면서 지속되는 시간
     IEnumerator Duration()
     {
         yield return new WaitForSeconds(durationTime);
-        SkillCtrl.instance.StartReset(index);
-        StopCoroutine(Duration());
+        //SkillCtrl.instance.StartReset(index);
     }
 }

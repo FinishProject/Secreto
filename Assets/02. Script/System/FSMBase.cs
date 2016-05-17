@@ -50,13 +50,16 @@ public class FSMBase : MonoBehaviour {
 
     public Animator anim;
 
-    public float hp = 40;
+    public float curHp = 40;
+    protected float oldHp;
     public AttributeState curAttibute;
 
     // 자식 클래스에서 초기화 ( Awake 함수 쓰기 위해 )
     protected virtual void OnAwake() { }
     void Awake()
     {
+        oldHp = curHp;
+
         transform = base.transform;
         gameObject = base.gameObject;
         
@@ -178,7 +181,7 @@ public class FSMBase : MonoBehaviour {
     // 데미지 입을때
     virtual public void GetDamage(float damage)
     {
-        hp -= damage;
+        curHp -= damage;
     }
 
 }
