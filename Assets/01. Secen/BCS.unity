@@ -272,6 +272,10 @@ Prefab:
       propertyPath: m_FillOrigin
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 122888, guid: b24fa465df5b1e24e83d61970d8b88f3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b24fa465df5b1e24e83d61970d8b88f3, type: 2}
   m_IsPrefabParent: 0
@@ -319,50 +323,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11417864, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 131496, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 412270, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 1.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 412270, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -9.21
-      objectReference: {fileID: 0}
-    - target: {fileID: 13715796, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_AABB.m_Center.x
-      value: 0.0000019073486
-      objectReference: {fileID: 0}
-    - target: {fileID: 13715796, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_AABB.m_Extent.x
-      value: 1.1722178
-      objectReference: {fileID: 0}
-    - target: {fileID: 13715796, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_AABB.m_Extent.z
-      value: 1.1688128
-      objectReference: {fileID: 0}
-    - target: {fileID: 11455166, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11483060, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 11417864, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-    - {fileID: 11447410, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-    - {fileID: 11414320, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-    - {fileID: 11409734, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-    - {fileID: 11427626, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-    - {fileID: 11484588, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
-    - {fileID: 11490796, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &303574820 stripped
@@ -445,7 +406,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11493474, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}
       propertyPath: attackDist
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 11493474, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}
       propertyPath: attackSpeed
@@ -459,10 +420,6 @@ Prefab:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 6b9bc4351e5a7d546b8a7b9cfad78096, type: 2}
-    - target: {fileID: 19569498, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}
-      propertyPath: m_AngularSpeed
-      value: 700
-      objectReference: {fileID: 0}
     - target: {fileID: 470374, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}
       propertyPath: m_LocalScale.x
       value: 0.2
@@ -486,6 +443,18 @@ Prefab:
     - target: {fileID: 11493474, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}
       propertyPath: attackErrorRange
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19569498, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}
+      propertyPath: m_AutoBraking
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19569498, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}
+      propertyPath: m_AngularSpeed
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 19569498, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}
+      propertyPath: m_Acceleration
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 38703e4e072cf2b439c2a265347b3269, type: 2}

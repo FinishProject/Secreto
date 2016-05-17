@@ -122,8 +122,11 @@ public class PlayerCtrl : MonoBehaviour
             PlayerDie();
         }
 
-        inputAxis = Input.GetAxis("Horizontal");
-        if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
+        
+        inputAxis = Input.GetAxis("Horizontal");     // 좌우 입력
+
+        // 좌우 동시 입력을 막기위함
+        if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))    
         {
             inputAxis = 0;
             anim.SetBool("Run", false);
