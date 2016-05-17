@@ -69,7 +69,7 @@ public class FSMBase : MonoBehaviour {
         anim = GetComponent<Animator>();
         OnAwake();
     }
-    void Update() { DoUpdate(); }
+    void Update() { DoUpdate(); ChildUpdate(); }
     void LateUpdate() { DoLateUpdate(); }
     void FixedUpdate() { DoFixedUpdate(); }
     void OnTriggerEnter(Collider col) { DoOnTriggerEnter(col); }
@@ -183,5 +183,7 @@ public class FSMBase : MonoBehaviour {
     {
         curHp -= damage;
     }
+
+    virtual public void ChildUpdate(){}
 
 }
