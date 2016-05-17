@@ -36,7 +36,7 @@ public class AnswerUI : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.X))
             {
                 ScriptMgr.curIndex = Length - 2;
-                ScriptMgr.instance.txt.text = ScriptMgr.instance.scriptInfo[ScriptMgr.curIndex];
+                //ScriptMgr.instance.txt.text = ScriptMgr.instance.scriptInfo[ScriptMgr.curIndex];
                 gameObject.SetActive(false);
             }
             // 수락 시
