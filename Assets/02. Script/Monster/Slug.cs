@@ -293,7 +293,6 @@ public class Slug : FSMBase
     public override void ChildUpdate()
     {
         isPlayerLiftSide = Mathf.Sign(playerTr.position.x - transform.position.x) == -1 ? true : false;
-        isLookLiftSide = 
     }
 
     void StartRun()
