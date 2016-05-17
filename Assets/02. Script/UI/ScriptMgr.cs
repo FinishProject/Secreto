@@ -38,6 +38,8 @@ public class ScriptMgr : MonoBehaviour {
 
     public static ScriptMgr instance;
 
+    public bool isAnimQuest = false;
+
     void Awake()
     {
         instance = this;
@@ -126,6 +128,7 @@ public class ScriptMgr : MonoBehaviour {
 
                 else if (isQuest)
                 {
+                    isAnimQuest = true;
                     curIndex = scriptInfo.Count - 1;
                     txtUi.text = scriptInfo[curIndex].context;
                     isQuest = false;

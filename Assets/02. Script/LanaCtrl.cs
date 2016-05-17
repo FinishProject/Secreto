@@ -17,7 +17,7 @@ public class LanaCtrl : MonoBehaviour {
 
         anim.SetFloat("Distance", dis);
 
-        anim.SetBool("Complete", ScriptMgr.instance.isQuest);
+        anim.SetBool("Complete", ScriptMgr.instance.isAnimQuest);
     }
 
     public void StartSpeak()
