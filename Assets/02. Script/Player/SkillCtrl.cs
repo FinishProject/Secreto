@@ -20,13 +20,13 @@ public class SkillCtrl : MonoBehaviour {
     private BulletInfo[] bulletInfo;
 
     public Transform playerTr;
+    public Transform shotTr;
     public GameObject normalBullet;
     
     private int count = 0;
 
-    [System.NonSerialized]
-    public float curEnhance = 0;
-    public float maxEnhance = 10;
+    public int curEnhance = 0;
+    public int maxEnhance = 10;
     public int bulletNum = 3;
     public float initTime = 3f;
 
@@ -50,23 +50,24 @@ public class SkillCtrl : MonoBehaviour {
 
     void Start()
     {
-        InitLauncher();
+        bulletInfo = new BulletInfo[bulletNum];
+
+        for (int i = 0; i < bulletInfo.Length; i++)
+        {
+            bulletInfo[i].Bullet = (GameObject)Instantiate(normalBullet, transform.position, Quaternion.identity);
+            bulletInfo[i].isFire = true;
+            bulletInfo[i].Bullet.SetActive(false);
+        }
     }
 
     void Update()
     {
-        for (int i=0; i<rotateTr.Length; i++)
-        {
-            rotateTr[i].RotateAround(transform.position, Vector3.right, 200f * Time.deltaTime);
-        }
-
         // F키 입력 시 공격체 생성
-        if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.A)) {
+        if (Input.GetKeyDown(KeyCode.F)) {
             if (count >= bulletInfo.Length) { count = 0; } // 총알 갯수 넘을 시 Index 초기화
             else {
                 if (bulletInfo[count].isFire)
                 {
-                    bulletInfo[count].Bullet.SetActive(true);
                     FindTarget();
                     count++;
                     //InGameUI.instance.ChangeEnhance();
@@ -116,9 +117,11 @@ public class SkillCtrl : MonoBehaviour {
                 targetIndex = i;
             }
         }
+        bulletInfo[count].Bullet.SetActive(true);
+        bulletInfo[count].Bullet.transform.position = shotTr.position;
         // 현재 발사체에게 타겟 포지션을 알려줌
         LauncherCtrl launcher = bulletInfo[count].Bullet.GetComponent<LauncherCtrl>();
-        launcher.GetTarget(_target[targetIndex].gameObject);
+        launcher.GetTarget(_target[targetIndex].gameObject, count);
         bulletInfo[count].isFire = false;
     }
 
@@ -153,12 +156,14 @@ public class SkillCtrl : MonoBehaviour {
     // 인핸스 증가 ( 마나 )
     public void AddEnhance()
     {
-        curEnhance+= 1;
+        curEnhance++;
+       
         InGameUI.instance.ChangeEnhance();
         if (curEnhance > maxEnhance)
         {
             curEnhance = maxEnhance;
         }
+
     }
 
     /*
@@ -189,34 +194,6 @@ public class SkillCtrl : MonoBehaviour {
         yield return new WaitForSeconds(initTime);
         bulletInfo[index].Bullet.SetActive(true);
         bulletInfo[index].isFire = true;
-        bulletInfo[index].Bullet.transform.position = rotateTr[index].position;
     }
 
-    // 탄환 및 회전을 위한 로테이션 포지션 생성
-    void InitLauncher()
-    {
-        rotateTr = new Transform[bulletNum];
-        // 회전 할 빈오브젝트 생성
-        for (int i = 0; i < rotateTr.Length; i++)
-        {
-            rotateTr[i] = new GameObject().transform;
-            rotateTr[i].parent = transform;
-            rotateTr[i].name = "RotateTr_" + i.ToString();
-        }
-        // 회전할 오브젝트의 위치를 잡아줌
-        rotateTr[0].position = new Vector3(transform.position.x - 0.5f, transform.position.y + 0.5f, transform.position.z);
-        rotateTr[1].position = new Vector3(transform.position.x - 0.5f, transform.position.y - 0.3f, transform.position.z + 0.5f);
-        rotateTr[2].position = new Vector3(transform.position.x - 0.5f, transform.position.y - 0.3f, transform.position.z - 0.5f);
-
-        // 발사체 생성
-        bulletInfo = new BulletInfo[rotateTr.Length];
-        for (int i = 0; i < bulletInfo.Length; i++)
-        {
-            bulletInfo[i].Bullet = (GameObject)Instantiate(normalBullet, rotateTr[i].position, Quaternion.identity);
-            bulletInfo[i].isFire = true;
-            //bulletInfo[i].Bullet.SendMessage("GetTraceTarget", rotateTr[i]);
-            LauncherCtrl launcher = bulletInfo[i].Bullet.GetComponent<LauncherCtrl>();
-            launcher.GetTraceTarget(rotateTr[i], i);
-        }
-    }
 }

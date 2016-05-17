@@ -26,7 +26,6 @@ public class ScriptMgr : MonoBehaviour {
     public Text txtUi; // 대사 텍스트 출력 UI
     public GameObject bgUi; // 대사 출력 배경 UI
     public GameObject answerUi; // 선택지 UI
-    public TextAsset scirptFile; // XML 데이터 파일
     
     public bool isQuest = false; // 퀘스트 완료 여부
     public static int curIndex = -1; // 현재 보여줄 대사 인덱스
@@ -39,11 +38,15 @@ public class ScriptMgr : MonoBehaviour {
 
     public static ScriptMgr instance;
 
+    public bool isAnimQuest = false;
+
     void Awake()
     {
         instance = this;
         bgUi.SetActive(false);
+        answerUi.SetActive(false);
         scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
+        spokeNpc = PlayerData.LoadSpokeNpc(); // 이미 대화한 NPC 이름 불러오기
     }
 
     // NPC 이름에 해당하는 대사들과 퀘스트 정보를 가져옴
@@ -91,7 +94,6 @@ public class ScriptMgr : MonoBehaviour {
     IEnumerator SpeakingNPC()
     {
         bgUi.SetActive(true);
-
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Return) && !isAnswer)
@@ -126,6 +128,7 @@ public class ScriptMgr : MonoBehaviour {
 
                 else if (isQuest)
                 {
+                    isAnimQuest = true;
                     curIndex = scriptInfo.Count - 1;
                     txtUi.text = scriptInfo[curIndex].context;
                     isQuest = false;
@@ -138,6 +141,7 @@ public class ScriptMgr : MonoBehaviour {
     // 선택지 출력 
     IEnumerator Answer()
     {
+        answerUi.SetActive(true);
         isAnswer = true;
         while (isAnswer)
         {
@@ -160,6 +164,7 @@ public class ScriptMgr : MonoBehaviour {
             }
             yield return null;
         }
+        answerUi.SetActive(false);
         txtUi.text = scriptInfo[curIndex].context;
     }
 

@@ -41,7 +41,6 @@ public class PlayerData {
 
         float posX, posY, posZ, pHp;
         Data data = new Data();
-
         foreach (XmlElement PosElement in posElement.ChildNodes)
         {
             posX = System.Convert.ToSingle(PosElement.GetAttribute("x"));
@@ -60,8 +59,8 @@ public class PlayerData {
         List<Script> scriptData = new List<Script>();
         //XML 생성
         XmlDocument xmldoc = new XmlDocument();
-        xmldoc.LoadXml(ScriptMgr.instance.scirptFile.text);
-        //xmldoc.Load(scirpt.ToString());
+        xmldoc.Load(Application.dataPath + "/Resources/Script_Data.xml"); // XML 파일 불러오기
+        //xmldoc.LoadXml(ScriptMgr.instance.scirptFile.text);
         XmlNodeList nodes = xmldoc.SelectNodes("UniSet/info");
         //XML데이터를 Script클래스 리스트의 옮겨 담음
         for (int i = 0; i < nodes.Count; i++)
@@ -94,18 +93,23 @@ public class PlayerData {
             });
         }
         return scriptData;
+    }
 
-        //// 대화한 NPC 이름 XML 데이터 불러오기
-        //XmlDocument xmlDocName = new XmlDocument();
-        //xmlDocName.Load(Application.dataPath + "/Resources/ScriptSpeak.xml");
-        //XmlElement posElemnet = xmlDocName["Script"];
+    public static List<string> LoadSpokeNpc()
+    {
+        // 대화한 NPC 이름 XML 데이터 불러오기
+        XmlDocument xmlDocName = new XmlDocument();
+        xmlDocName.Load(Application.dataPath + "/Resources/SpokeNpcName.xml");
+        XmlElement NameElemnet = xmlDocName["Script"];
 
-        //string name;
-        //foreach (XmlElement PosElement in posElemnet.ChildNodes)
-        //{
-        //    name = System.Convert.ToString(PosElement.GetAttribute("Speak_NPC"));
-        //    spokeNpc.Add(name);
-        //}
+        List<string> npcName = new List<string>();
+
+        foreach (XmlElement nameElemnet in NameElemnet.ChildNodes)
+        {
+            npcName.Add(System.Convert.ToString(nameElemnet.GetAttribute("Speak_NPC")));
+        }
+
+        return npcName;
     }
 
 }
