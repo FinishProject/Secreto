@@ -42,7 +42,7 @@ public class ScriptMgr : MonoBehaviour {
     {
         instance = this;
         bgUi.SetActive(false);
-
+        answerUi.SetActive(false);
         scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
         spokeNpc = PlayerData.LoadSpokeNpc(); // 이미 대화한 NPC 이름 불러오기
     }
@@ -92,7 +92,6 @@ public class ScriptMgr : MonoBehaviour {
     IEnumerator SpeakingNPC()
     {
         bgUi.SetActive(true);
-
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Return) && !isAnswer)
@@ -139,6 +138,7 @@ public class ScriptMgr : MonoBehaviour {
     // 선택지 출력 
     IEnumerator Answer()
     {
+        answerUi.SetActive(true);
         isAnswer = true;
         while (isAnswer)
         {
@@ -161,6 +161,7 @@ public class ScriptMgr : MonoBehaviour {
             }
             yield return null;
         }
+        answerUi.SetActive(false);
         txtUi.text = scriptInfo[curIndex].context;
     }
 

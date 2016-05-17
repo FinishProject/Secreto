@@ -8,6 +8,7 @@ public class LauncherCtrl : MonoBehaviour {
 
     private GameObject target;
     private Transform traceTargetTr = null; // 회전을 위한 타겟
+    private Vector3 focusVec;
 
     /*
     public Material matNormal;
@@ -26,25 +27,20 @@ public class LauncherCtrl : MonoBehaviour {
 
     void FixedUpdate()
     {
-        //타겟 없을 시
-        if (target == null)
-        {
-            transform.position = Vector3.Lerp(this.transform.position, traceTargetTr.position, Time.time);
-        }
         //타겟 있을 시
         if (target != null)
         {
             // 직선 공격
-            //Vector3 relativePos = this.target.transform.position - this.transform.position;
-            //transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
-
+            Vector3 relativePos = this.target.transform.position - this.transform.position;
+            transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
+                        
             // 포물선 공격
-            Vector3 center = (target.transform.position + this.transform.position) * 0.5f;
-            center -= new Vector3(0, 1, 1);
-            Vector3 fromRelCenter = this.transform.position - center;
-            Vector3 toRelCenter = target.transform.position - center;
-            transform.position = Vector3.Slerp(fromRelCenter, toRelCenter, speed * Time.deltaTime);
-            transform.position += center;
+            //Vector3 center = (target.transform.position + this.transform.position) * 0.5f;
+            //center -= new Vector3(0, 1, 1);
+            //Vector3 fromRelCenter = this.transform.position - center;
+            //Vector3 toRelCenter = target.transform.position - center;
+            //transform.position = Vector3.Slerp(fromRelCenter, toRelCenter, speed * Time.deltaTime);
+            //transform.position += center;
 
             // 타겟 사라졋을 시 탄환체도 사라지도록
             if (!target.activeSelf) {
@@ -109,25 +105,19 @@ public class LauncherCtrl : MonoBehaviour {
     //    }
 
     //}
-    // 날아갈 타겟 위치와 현재 발사체의 배열 인덱스를 받아옴
 
-    public void GetTarget(GameObject _target)
+    // 날아갈 타겟 위치와 현재 발사체의 배열 인덱스를 받아옴
+    public void GetTarget(GameObject _target, int _index)
     {
         this.target = _target;
-
-        StartCoroutine(Duration());
-    }
-    // 회전을 위한 타겟 위치 받아옴
-    public void GetTraceTarget(Transform targetTr, int _index)
-    {
-        traceTargetTr = targetTr;
         this.index = _index;
+        StartCoroutine(Duration());
     }
 
     // 탄환이 날아가면서 지속되는 시간
     IEnumerator Duration()
     {
         yield return new WaitForSeconds(durationTime);
-        //SkillCtrl.instance.StartReset(index);
+        SkillCtrl.instance.StartReset(index);
     }
 }

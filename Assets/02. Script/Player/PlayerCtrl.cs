@@ -57,6 +57,7 @@ public class PlayerCtrl : MonoBehaviour
     //private Collider objColl = null;
 
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
+    private PlayerEffect pEffect;
 
     public static PlayerCtrl instance;
 
@@ -70,6 +71,7 @@ public class PlayerCtrl : MonoBehaviour
         instance = this;
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        pEffect = GetComponent<PlayerEffect>();
 
         // 상호작용을 하기 위한 스위치
         switchState = gameObject.AddComponent<SwitchObject>();
@@ -143,11 +145,7 @@ public class PlayerCtrl : MonoBehaviour
     void Movement()
     {
         // 키 입력
-        
-        
-            
 
-        
         // 지상에 있을 시
         if (controller.isGrounded && isMove)
         {
@@ -206,7 +204,7 @@ public class PlayerCtrl : MonoBehaviour
             case JumpType.BASIC:
                 isJumping = true;
                 ///////////////////////////////////////////////
-                //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.BASIC_JUMP);
+                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 moveDir.y = jumpHight;
                 break;
             case JumpType.DASH:
@@ -256,6 +254,7 @@ public class PlayerCtrl : MonoBehaviour
             {
                 string name = hit.collider.gameObject.name;
                 PlayerFunc.instance.ShowScript(name);
+                hit.collider.SendMessage("StartSpeak");
                 anim.SetBool("Run", isMove);
             }
         }

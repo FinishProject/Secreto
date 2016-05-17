@@ -22,11 +22,11 @@ public class PlayerEffect : MonoBehaviour {
         effect1 = Instantiate(effect1);
         effect1.SetActive(false);
 
-        effect2 = Instantiate(effect2);
-        effect2.SetActive(false);
+        //effect2 = Instantiate(effect2);
+        //effect2.SetActive(false);
     }
 
-    public void Starteffect(PlayerEffectList effectState)
+    public void StartEffect(PlayerEffectList effectState)
     {
         switch(effectState)
         {
