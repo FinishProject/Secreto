@@ -3,9 +3,9 @@ using System.Collections;
 
 public class QuestInfo
 {
+    public int questType = 0;
     public string targetName = null;
     public int completNum = 0;
-    public int questType = 0;
     //public GameObject rewardItem;
 }
 
@@ -42,6 +42,7 @@ public class QuestMgr : MonoBehaviour {
                 Debug.Log("Hunt");
                 break;
             case QuestType.COLLECT:
+                Debug.Log("Collect");
                 StartCoroutine(CollectQuest());
                 break;
         }

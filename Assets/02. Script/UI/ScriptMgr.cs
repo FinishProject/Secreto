@@ -5,159 +5,162 @@ using System.Xml;
 using UnityEngine.UI;
 
 // 스크립트 정보들
-class Script
+public class Script
 {
     public string name;
     public string context;
-    public int answer;
-    public int choice;
+    public int scriptType;
     public int quesetType;
     public string targetName;
-    public string completeItem;
-    public int completNum; 
+    public int completNum;
+    public int yes, no;
 }
 
-enum ScriptSate
+enum ScriptState
 {
-    sTrue, sFalse, sReturn, sNull,
+    basic, answer, refuse, end,
 }
 
 public class ScriptMgr : MonoBehaviour {
 
-    QuestInfo info = new QuestInfo();
-    // 선택지에 대한 상태
-    ScriptSate choiceState = ScriptSate.sFalse;
-
-    public Text txt; // 대사 텍스트 출력 UI
+    public Text txtUi; // 대사 텍스트 출력 UI
     public GameObject bgUi; // 대사 출력 배경 UI
     public GameObject answerUi; // 선택지 UI
-
-    public TextAsset scirpt;
-
+    public TextAsset scirptFile; // XML 데이터 파일
+    
     public bool isQuest = false; // 퀘스트 완료 여부
-
-    public static int curIndex = 0; // 현재 보여줄 대사 인덱스
+    public static int curIndex = -1; // 현재 보여줄 대사 인덱스
+    private bool isAnswer = false; // 현재 선택지 출력중 여부
 
     private List<Script> scriptData = new List<Script>(); //XML 데이터 저장
-    public List<string> scriptInfo = new List<string>(); //현재 NPC의 대사를 저장
+    public List<Script> scriptInfo = new List<Script>(); //현재 NPC의 대사를 저장
     private List<string> spokeNpc = new List<string>(); // 만난 NPC이름 저장
+    private List<QuestInfo> questInfo = new List<QuestInfo>(); // 퀘스트 정보 저장
 
-    private List<int> answerScript = new List<int>(); // 답변 상태 여부 저장
-    private List<int> choiceScript = new List<int>(); // 선택지 상태 여부 저장
-    
     public static ScriptMgr instance;
-
-
-
-    // UI를 배치 했을때 해상도
-    private float baseWidth = 600;
-    private float baseHeight = 450;
-    // 현재 해상도와 UI를 배치했을때 해상도의 비율
-    private float proportionWidth;
-    private float proportionHeight;
-    public GameObject text;
-    private Vector3 textPos;
 
     void Awake()
     {
         instance = this;
-
         bgUi.SetActive(false);
-        answerUi.SetActive(false);
-
-        LoadScript();
-
-        textPos = text.transform.position;
-        proportionWidth = baseWidth / Screen.width;
-        proportionHeight = baseHeight / Screen.height;
-        ChangeUIByResolution(text, textPos);
+        scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
     }
 
-    void ChangeUIByResolution(GameObject changeUI, Vector3 basePos)
+    // NPC 이름에 해당하는 대사들과 퀘스트 정보를 가져옴
+    public void GetScript(string name)
     {
-        Vector3 tempSize = new Vector3();
-        Vector3 tempPos = new Vector3();
-
-        // 크기 비율 맞춤
-        tempSize.x = 1 / proportionWidth;
-        tempSize.y = 1 / proportionHeight;
-
-        // 위치 비율 맞춤
-        tempPos.x = basePos.x / proportionWidth;
-        tempPos.y = basePos.y / proportionHeight;
-
-        // 적용
-        changeUI.transform.position = tempPos;
-        changeUI.transform.localScale = tempSize;
-
-    }
-
-    public bool GetScript(string name)
-    {
-        //대화할 NPC의 이름을 XML 데이터에서 찾아 대사를 getInfo에 저장
+        // 이전에 대화를 하지 않는 NPC일 경우 대화를 위해 정보들을 가져옴
         if (!SpeakName(name))
         {
-            string comItemName;
             for (int i = 0; i < scriptData.Count; i++)
             {
                 if (scriptData[i].name == name)
                 {
-                    scriptInfo.Add(scriptData[i].context);
-                    choiceScript.Add(scriptData[i].choice);
-                    // 퀘스트 정보를 받아옴.
-                    info.targetName = scriptData[0].targetName;
-                    comItemName = scriptData[0].completeItem;
-                    info.questType = scriptData[0].quesetType;
-                    info.completNum = scriptData[0].completNum - 1;
+                    // 대사 정보들을 저장
+                    scriptInfo.Add(new Script
+                    {
+                        name = name,
+                        context = scriptData[i].context,
+                        scriptType = scriptData[i].scriptType,
+                        yes = scriptData[i].yes,
+                        no = scriptData[i].no
+                    });
+                    // 퀘스트 정보를 저장
+                    questInfo.Add(new QuestInfo
+                    {
+                        questType = scriptData[i].quesetType,
+                        targetName = scriptData[i].targetName,
+                        completNum = scriptData[i].completNum,
+                    });
                 }
             }
-            spokeNpc.Add(name); // 대화를 한 NPC 이름을 저장함
-            curIndex = 0;
-            bgUi.SetActive(true);
-            QuestMgr.instance.GetQuestInfo(info); // 퀘스트 정보를 넘김
-            AnswerUI.Length = scriptData.Count; // 현재 대사의 최대 길이(량)을 넘겨줌
+            PlayerCtrl.instance.isMove = false;
+            StartCoroutine(SpeakingNPC());
         }
-        
-        //다음 대화가 있을 경우 대화 출력
-        if(curIndex < scriptInfo.Count-2)
+        // 퀘스트 수락 후 완료 시
+        else if(SpeakName(name) && isQuest)
         {
-            txt.text = scriptInfo[curIndex];
-            choiceState = (ScriptSate)choiceScript[curIndex];
-            // 거절 시 처음으로 돌아감
-            if (choiceState == ScriptSate.sReturn)
-            {
-                curIndex = 0;
-                bgUi.SetActive(false);
-                return true;
-            }
-            // 선택지 찬성 시
-            else if (choiceState == ScriptSate.sTrue)
-            {
-                answerUi.SetActive(true);
-            }
-            else {
-                curIndex++;
-            }
-            return false;
+            StartCoroutine(SpeakingNPC());
         }
-        //대화 종료 후 초기화
         else
         {
-            // 퀘스트 완료 후 마지막 대사 출력
-            if (isQuest)
-            {
-                txt.text = scriptInfo[scriptInfo.Count-1];
-                bgUi.SetActive(true);
-                isQuest = false;
-                scriptInfo.Clear();
-            }
-            // 대사 UI 종료
-            else if (!isQuest)
-            {
-                bgUi.SetActive(false);
-            }
-            return true;
+            Debug.Log("END SPEAK");
         }
+    }
+    // NPC와 대화
+    IEnumerator SpeakingNPC()
+    {
+        bgUi.SetActive(true);
+
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Return) && !isAnswer)
+            {
+                if (!isQuest)
+                {
+                    curIndex++;
+                    // 종료
+                    if (curIndex >= scriptInfo.Count - 1)
+                    {
+                        bgUi.SetActive(false);
+                        PlayerCtrl.instance.isMove = true;
+                        curIndex = -1;
+                        break;
+                    }
+                    // 거절
+                    if (scriptInfo[curIndex].scriptType == (int)ScriptState.refuse)
+                    {
+                        curIndex = scriptInfo.Count - 1;
+                    }
+                    // 기본
+                    else if (scriptInfo[curIndex].scriptType <= (int)ScriptState.answer)
+                    {
+                        txtUi.text = scriptInfo[curIndex].context;
+                        // 선택지가 있음
+                        if (scriptInfo[curIndex].scriptType == (int)ScriptState.answer)
+                        {
+                            StartCoroutine(Answer());
+                        }
+                    }
+                }
+
+                else if (isQuest)
+                {
+                    curIndex = scriptInfo.Count - 1;
+                    txtUi.text = scriptInfo[curIndex].context;
+                    isQuest = false;
+                }
+            }
+            
+            yield return null;
+        }
+    }
+    // 선택지 출력 
+    IEnumerator Answer()
+    {
+        isAnswer = true;
+        while (isAnswer)
+        {
+            // 수락
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                curIndex = (int)scriptInfo[curIndex].yes;
+                if(scriptInfo[curIndex].quesetType >= 0)
+                {
+                    QuestMgr.instance.GetQuestInfo(questInfo[curIndex]); // 퀘스트 정보를 건내줌
+                    spokeNpc.Add(scriptInfo[curIndex].name); // 대화를 한 NPC 이름을 저장함
+                }
+                isAnswer = false;
+            }
+            // 거절
+            else if (Input.GetKeyDown(KeyCode.X))
+            {
+                curIndex = scriptInfo[curIndex].no;
+                isAnswer = false;
+            }
+            yield return null;
+        }
+        txtUi.text = scriptInfo[curIndex].context;
     }
 
     //이미 대화한 NPC인지 확인
@@ -170,49 +173,8 @@ public class ScriptMgr : MonoBehaviour {
         return false;
     }
 
-    //NPC 대사 XML 문서 불러오기
-    void LoadScript()
-    {
-        //XML 생성
-        XmlDocument xmldoc = new XmlDocument();
-        xmldoc.LoadXml(scirpt.text);
-        //xmldoc.Load(scirpt.ToString());
-        XmlNodeList nodes = xmldoc.SelectNodes("UniSet/info");
-        //XML데이터를 Script클래스 리스트의 옮겨 담음
-        for (int i = 0; i < nodes.Count; i++)
-        {
-            string m_Name, m_Context, m_TargetName, m_CompleteItem;
-            int m_Choice, m_Answer, m_Type, m_CompletNum;
-
-            m_Name = nodes[i].SelectSingleNode("name").InnerText;
-            m_Context = nodes[i].SelectSingleNode("context").InnerText;
-            m_Answer = System.Convert.ToInt32(nodes[i].SelectSingleNode("answer").InnerText);
-            m_Choice = System.Convert.ToInt32(nodes[i].SelectSingleNode("choice").InnerText);
-
-            m_Type = System.Convert.ToInt32(nodes[0].SelectSingleNode("questType").InnerText);
-            m_CompletNum = System.Convert.ToInt32(nodes[0].SelectSingleNode("completINum").InnerText);
-            m_TargetName = nodes[0].SelectSingleNode("targetName").InnerText;
-            m_CompleteItem = nodes[0].SelectSingleNode("completItem").InnerText;
-
-            scriptData.Add(new Script { name = m_Name, context = m_Context, answer = m_Answer, choice = m_Choice,
-            quesetType = m_Type, targetName = m_TargetName, completeItem = m_CompleteItem, completNum = m_CompletNum});
-        }
-
-        // 대화한 NPC 이름 XML 데이터 불러오기
-        XmlDocument xmlDocName = new XmlDocument();
-        xmlDocName.Load(Application.dataPath + "/Resources/ScriptSpeak.xml");
-        XmlElement posElemnet = xmlDocName["Script"];
-
-        string name;
-        foreach (XmlElement PosElement in posElemnet.ChildNodes)
-        {
-            name = System.Convert.ToString(PosElement.GetAttribute("Speak_NPC"));
-            spokeNpc.Add(name);
-        }
-    }
-
     //대화 완료한 NPC이름 저장
-    public void SpokenNpcSave()
+    public void SaveSpokenNpc()
     {
         XmlDocument doc = new XmlDocument();
         XmlElement scriptElement = doc.CreateElement("Script");

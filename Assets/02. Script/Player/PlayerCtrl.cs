@@ -40,6 +40,8 @@ public class PlayerCtrl : MonoBehaviour
     private float vx;
     private float vy;
 
+    private bool hasSuperArmor = false;
+
     public float ProportionHP
     {
         get { return curHp / fullHp; }
@@ -76,6 +78,9 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
+        pData.pPosition = this.transform.position;
+        PlayerData.Save(pData);
+
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
     }
@@ -116,6 +121,16 @@ public class PlayerCtrl : MonoBehaviour
         {
             PlayerDie();
         }
+
+        
+        inputAxis = Input.GetAxis("Horizontal");     // 좌우 입력
+
+        // 좌우 동시 입력을 막기위함
+        if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))    
+        {
+            inputAxis = 0;
+            anim.SetBool("Run", false);
+        }
     }
 
     void FixedUpdate()
@@ -128,7 +143,11 @@ public class PlayerCtrl : MonoBehaviour
     void Movement()
     {
         // 키 입력
-        inputAxis = Input.GetAxis("Horizontal");
+        
+        
+            
+
+        
         // 지상에 있을 시
         if (controller.isGrounded && isMove)
         {
@@ -257,15 +276,26 @@ public class PlayerCtrl : MonoBehaviour
 
     public void getDamage(float damage)
     {
-        curHp -= damage;
-        InGameUI.instance.ChangeHpBar();
-        anim.SetTrigger("Hit");
-        if (curHp <= 0)
+        if(!hasSuperArmor)
         {
-            //PlayerDie();
-            Debug.Log("Player Die");
-            return;
+            StartCoroutine(SuperArmor());
+            curHp -= damage;
+            InGameUI.instance.ChangeHpBar();
+            anim.SetTrigger("Hit");
+            if (curHp <= 0)
+            {
+                //PlayerDie();
+                Debug.Log("Player Die");
+                return;
+            }
         }
+    }
+
+    IEnumerator SuperArmor()
+    {
+        hasSuperArmor = true;
+        yield return new WaitForSeconds(10.0f);
+        hasSuperArmor = false;
     }
 
     public bool IsJumping()
