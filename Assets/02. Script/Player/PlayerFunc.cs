@@ -42,10 +42,12 @@ public class PlayerFunc : MonoBehaviour {
     {
         if (name != null)
         {
-            //대화 중이면 true, 캐릭터 정지
-            PlayerCtrl.instance.isMove = ScriptMgr.instance.GetScript(name);
-            PlayerCtrl.inputAxis = 0f;
-            //NPCQuestMgr.instance.SetQuest();
+            if (!ScriptMgr.instance.bgUi.activeSelf)
+            {
+                //대화 중이면 true, 캐릭터 정지
+                ScriptMgr.instance.GetScript(name);
+                //NPCQuestMgr.instance.SetQuest();
+            }
         }
     }
 }
