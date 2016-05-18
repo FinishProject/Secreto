@@ -33,7 +33,9 @@ public class LauncherCtrl : MonoBehaviour {
             // 직선 공격
             Vector3 relativePos = this.target.transform.position - this.transform.position;
             transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
-                        
+            Quaternion lookRot = Quaternion.LookRotation(relativePos);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 20f);
+
             // 포물선 공격
             //Vector3 center = (target.transform.position + this.transform.position) * 0.5f;
             //center -= new Vector3(0, 1, 1);

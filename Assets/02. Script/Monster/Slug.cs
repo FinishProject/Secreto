@@ -122,8 +122,8 @@ public class Slug : FSMBase
     // 공격 가능한 회전 각인지 체크하는 함수 ( 회전을 마치고 공격을 하기위해 )
     bool isAttackAngle()
     {
-        if (Mathf.Abs(transform.localEulerAngles.y - 270f) < 5 &&  isPlayerLiftSide ||
-            Mathf.Abs(transform.localEulerAngles.y - 90f)  < 5 && !isPlayerLiftSide)
+        if (Mathf.Abs(transform.localEulerAngles.y - 270f) < 5 && isPlayerLiftSide ||
+            Mathf.Abs(transform.localEulerAngles.y - 90f) < 5 && !isPlayerLiftSide)
             return true;
         return false;
     }
@@ -245,10 +245,14 @@ public class Slug : FSMBase
     #region 사망
     IEnumerator Dying_EnterState()
     {
+        WahleCtrl.instance.isDie = true;
+        WahleCtrl.state = WahleState.IDLE;
+        
         Debug.Log("쮸금");
         anim.SetBool("Death", true);
         GetComponent<ItemDrop>().DropItem();
 
+        //Destroy(this.gameObject, 3f);
         yield return new WaitForSeconds(3f);
 
         gameObject.SetActive(false);
@@ -278,15 +282,15 @@ public class Slug : FSMBase
     public override void GetDamage(float damage)
     {
         base.GetDamage(damage);
-        
+
         Debug.Log("피격");
-        if(!curState.Equals(EnemyStates.Dying) && !curState.Equals(EnemyStates.Attacked))
+        if (!curState.Equals(EnemyStates.Dying) && !curState.Equals(EnemyStates.Attacked))
         {
             oldStates = curState;
             curState = EnemyStates.Attacked;
         }
-        
-        
+
+
     }
 
     // 업데이트 함수 ( 모든 상태일때 적용 할 )
@@ -297,8 +301,8 @@ public class Slug : FSMBase
 
     void StartRun()
     {
-        if(curState.Equals(EnemyStates.Attacked))
-        nvAgent.Resume();
+        if (curState.Equals(EnemyStates.Attacked))
+            nvAgent.Resume();
     }
 
     // 데미지 줄때

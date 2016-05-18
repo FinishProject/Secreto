@@ -25,13 +25,17 @@ public class CameraCtrl : MonoBehaviour {
     void Update()
     {
         focusDir = PlayerCtrl.inputAxis;
-      
+        //Vector3 view = Camera.main.WorldToScreenPoint(transform.position);
+        //if(view.y <= -50)
+        //{
+
+        //}
+        //Debug.Log(view);
     }
 
     void FixedUpdate()
     {
         standardPos = FocusPlayerVec() + relCameraPos;
-        //standardPos[0] = playerTr.position + relCameraPos[0];
         transform.position = Vector3.Lerp(transform.position, standardPos, speed * Time.deltaTime);
     }
 
@@ -47,10 +51,11 @@ public class CameraCtrl : MonoBehaviour {
             curVec = new Vector3(playerTr.position.x - 6f, playerTr.position.y, playerTr.position.z);
             moveRange = 0;
         }
-        else if(focusDir != 0)
+        else if (focusDir != 0)
         {
             moveRange += focusDir;
         }
+        curVec.y = playerTr.position.y;
 
         return curVec;
     }

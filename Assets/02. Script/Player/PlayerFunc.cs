@@ -44,6 +44,7 @@ public class PlayerFunc : MonoBehaviour {
         {
             if (!ScriptMgr.instance.bgUi.activeSelf)
             {
+                
                 //대화 중이면 true, 캐릭터 정지
                 ScriptMgr.instance.GetScript(name);
                 //NPCQuestMgr.instance.SetQuest();
