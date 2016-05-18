@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-enum WahleState { IDLE, MOVE, WALL, ATTACK };
+public enum WahleState { IDLE, MOVE, WALL, ATTACK };
 
 public class WahleCtrl : MonoBehaviour {
     //고래 이동 타입
-    private static WahleState state = WahleState.IDLE;
+    public static WahleState state = WahleState.IDLE;
     private WahleState curState = state;
 
     private float initSpeed = 0f; // 초기 이동속도
@@ -21,9 +21,23 @@ public class WahleCtrl : MonoBehaviour {
 
     public Transform playerTr; // 플레이어 위치
 
-    private Transform targetTr; // 적 위치값
+    public  Transform targetTr; // 적 위치값
     private Vector3 relativePos;
     private Quaternion lookRot;
+
+    public bool isDie = false;
+
+    public static WahleCtrl instance;
+
+    void Awake()
+    {
+        instance = this;
+    }
+
+    //void Start()
+    //{
+    //    StartCoroutine(SearchEnemy());
+    //}
 
     void FixedUpdate()
     {
@@ -59,7 +73,6 @@ public class WahleCtrl : MonoBehaviour {
 
     void Move()
     {
-        
         if (distance <= 6f && PlayerCtrl.inputAxis == 0f)
         {
             state = WahleState.IDLE;
@@ -92,35 +105,43 @@ public class WahleCtrl : MonoBehaviour {
 
     void Attack()
     {
-        if(distance >= 15f)
+        if (targetTr != null)
         {
-            state = WahleState.MOVE;
+            float dis = (playerTr.position - transform.position).sqrMagnitude;
+            if (dis >= 5f)
+            {
+                state = WahleState.MOVE;
+            }
+
+            relativePos = (targetTr.position - transform.position);
+            lookRot = Quaternion.LookRotation(relativePos);
+            focusDir = Mathf.Sign(targetTr.position.x - transform.position.x);
+
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, targetTr.position -
+                ((targetTr.forward * -focusDir * 3f) - (targetTr.up)), 7f * Time.deltaTime);
+        }
+        else
+        {
+            state = WahleState.IDLE;
         }
 
-        relativePos = (targetTr.position - transform.position);
-        lookRot = Quaternion.LookRotation(relativePos);
-        focusDir = Mathf.Sign(targetTr.position.x - transform.position.x);
-
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
-        transform.position = Vector3.Lerp(transform.position, targetTr.position - 
-            ((targetTr.right * focusDir * 3f) - (targetTr.up * 0.8f)), maxSpeed * Time.deltaTime);
+        
     }
     // 주변 몬스터 탐색
     void SearchEnemy()
     {
-        if (state != WahleState.ATTACK)
+        if (state != WahleState.ATTACK && !isDie)
         {
             Collider[] hitCollider = Physics.OverlapSphere(playerTr.position, 5f);
-            Collider enemy = null;
             for (int i = 0; i < hitCollider.Length; i++)
             {
                 if (hitCollider[i].CompareTag("MONSTER"))
                 {
-                    enemy = hitCollider[i];
                     targetTr = hitCollider[i].transform;
                     state = WahleState.ATTACK;
                 }
-            }                          
+            }
         }
     }
 

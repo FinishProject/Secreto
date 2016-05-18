@@ -15,22 +15,14 @@ public class LanaCtrl : MonoBehaviour {
     {
         float dis = (playerTr.position - transform.position).sqrMagnitude;
 
-        anim.SetFloat("Distance", dis);
 
-        anim.SetBool("Complete", ScriptMgr.instance.isAnimQuest);
-    }
-
-    public void StartSpeak()
-    {
-        StartCoroutine(Speak());
-    }
-	
-	IEnumerator Speak()
-    {
-        while (true)
+        if (ScriptMgr.instance.bgUi.activeSelf)
         {
-            anim.SetBool("Speak", ScriptMgr.instance.bgUi.activeSelf);
-            yield return null;
+            transform.LookAt(playerTr);
         }
+       
+        anim.SetFloat("Distance", dis);
+        anim.SetBool("Speak", ScriptMgr.instance.bgUi.activeSelf);
+        anim.SetBool("Complete", ScriptMgr.instance.isAnimQuest);
     }
 }

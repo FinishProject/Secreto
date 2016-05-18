@@ -186,7 +186,7 @@ public class SkillCtrl : MonoBehaviour {
     public void StartReset(int curIndex)
     {
         bulletInfo[curIndex].Bullet.SetActive(false);
-        StartCoroutine(ResetBullet(curIndex));
+        //StartCoroutine(ResetBullet(curIndex));
     }
     // 탄환 발사 후 사라질 수 재생성
     IEnumerator ResetBullet(int index)

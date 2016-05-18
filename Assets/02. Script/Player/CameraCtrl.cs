@@ -25,7 +25,7 @@ public class CameraCtrl : MonoBehaviour {
     void Update()
     {
         focusDir = PlayerCtrl.inputAxis;
-      
+        
     }
 
     void FixedUpdate()
@@ -46,7 +46,7 @@ public class CameraCtrl : MonoBehaviour {
             curVec = new Vector3(playerTr.position.x - 6f, playerTr.position.y, playerTr.position.z);
             moveRange = 0;
         }
-        else if(focusDir != 0)
+        else if (focusDir != 0)
         {
             moveRange += focusDir;
         }
