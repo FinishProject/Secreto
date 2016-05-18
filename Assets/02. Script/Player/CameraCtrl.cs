@@ -31,7 +31,6 @@ public class CameraCtrl : MonoBehaviour {
     void FixedUpdate()
     {
         standardPos = FocusPlayerVec() + relCameraPos;
-        //standardPos[0] = playerTr.position + relCameraPos[0];
         transform.position = Vector3.Lerp(transform.position, standardPos, speed * Time.deltaTime);
     }
 
@@ -51,6 +50,7 @@ public class CameraCtrl : MonoBehaviour {
         {
             moveRange += focusDir;
         }
+        curVec.y = playerTr.position.y;
 
         return curVec;
     }

@@ -47,11 +47,11 @@ public enum SkillFunction
 public class SkillMgr : MonoBehaviour {
 
     public static SkillMgr instance;    // 싱글톤 인스턴스
-    public float needExpPoint;          // 스킬포인트를 받기까지의 필요 경험치
+    public float needMentalPoint;          // 스킬포인트를 받기까지의 필요 경험치
     public GameObject SkillWindow;      // 스킬 UI 관리
 
     private SkillStruct[] curSkills;    // 현재 각 기능별 스킬 정보
-    private float curExpPoint;          // 현재 경험치
+    private float curMentalPoint;          // 현재 경험치
     private bool hasSkillPoint = false; // 스킬 포인트를 가지고 있는지
 
     private CSVParser skillList;        // 스킬 리스트
@@ -123,13 +123,13 @@ public class SkillMgr : MonoBehaviour {
     }
 
     // 경험치를 얻을때
-    public void GetEXPoint()
+    public void GetMentaloint()
     {
-        curExpPoint++;
-        if(curExpPoint <= needExpPoint)
+        curMentalPoint++;
+        if(curMentalPoint <= needMentalPoint)
         {
             hasSkillPoint = true;
-            curExpPoint = 0;
+            curMentalPoint = 0;
         }
     }
 

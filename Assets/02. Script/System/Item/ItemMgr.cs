@@ -34,7 +34,7 @@ public class ItemStruct
 public enum ItemFunction
 {
     HpRecovery = 0,     // 체력회복
-    Exp,                // 스킬 경험치 습득
+    Mental,                // 스킬 경험치 습득
     LearnSkill,         // 스킬 습득
     Interaction,        // 상호작용 아이템 (ex. 나뭇잎)
     Collection,         // 수집템 (ex. 열쇠)
@@ -49,16 +49,16 @@ public partial class ItemMgr : MonoBehaviour
 
     public GameObject HpRecoveryItemPrefab;
     public int HpRecoveryItemNumber;
-    public GameObject EXPItemPrefab;
-    public int EXPItemNumber;
+    public GameObject MentalItemPrefab;
+    public int MentalItemNumber;
 
     public void ItemPoolInit()
     {
         items = new ItemPool[2];
         items[(int)ItemFunction.HpRecovery] = gameObject.AddComponent<ItemPool>();
         items[(int)ItemFunction.HpRecovery].CreateItemPool(HpRecoveryItemPrefab, HpRecoveryItemNumber);
-        items[(int)ItemFunction.Exp] = gameObject.AddComponent<ItemPool>();
-        items[(int)ItemFunction.Exp].CreateItemPool(EXPItemPrefab, EXPItemNumber);
+        items[(int)ItemFunction.Mental] = gameObject.AddComponent<ItemPool>();
+        items[(int)ItemFunction.Mental].CreateItemPool(MentalItemPrefab, MentalItemNumber);
     }
 
     public ItemPool GetItem(ItemFunction itemType)

@@ -22,7 +22,7 @@ Shader "Hidden/Tonemapper" {
 	float2 intensity;
 	float4 _MainTex_TexelSize;
 	float _AdaptionSpeed;
-	float _ExposureAdjustment;
+	float _MentalosureAdjustment;
 	float _RangeScale;
 	
 	v2f vert( appdata_img v ) 
@@ -48,7 +48,7 @@ Shader "Hidden/Tonemapper" {
 		return float4(avg, avg, avg, avg);
 	}
 
-	float4 fragExp(v2f i) : SV_Target 
+	float4 fragMental(v2f i) : SV_Target 
 	{
 		float2 lum = float2(0.0f, 0.0f);
 		
@@ -57,7 +57,7 @@ Shader "Hidden/Tonemapper" {
 		lum += tex2D(_MainTex, i.uv + _MainTex_TexelSize.xy * float2(1,-1)).xy;	
 		lum += tex2D(_MainTex, i.uv  + _MainTex_TexelSize.xy * float2(-1,1)).xy;	
 
-		lum = exp(lum / 4.0f);
+		lum = Mental(lum / 4.0f);
 		
 		return float4(lum.x, lum.y, lum.x, saturate(0.0125 * _AdaptionSpeed));
 	}
@@ -181,10 +181,10 @@ Shader "Hidden/Tonemapper" {
 		const float W = 11.2;
 
 		float3 texColor = tex2D(_MainTex, i.uv).rgb;
-		texColor *= _ExposureAdjustment;
+		texColor *= _MentalosureAdjustment;
 
-		float ExposureBias = 2.0;
-		float3 x = ExposureBias*texColor;
+		float MentalosureBias = 2.0;
+		float3 x = MentalosureBias*texColor;
 		float3 curr = ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
 		
 		x = W;
@@ -201,7 +201,7 @@ Shader "Hidden/Tonemapper" {
 	{
 		float4 texColor = tex2D(_MainTex, i.uv);
 		float lum = Luminance(texColor.rgb); 
-		float lumTm = lum * _ExposureAdjustment;
+		float lumTm = lum * _MentalosureAdjustment;
 		float scale = lumTm / (1+lumTm);  
 		return float4(texColor.rgb * scale / lum, texColor.a);
 	}
@@ -209,7 +209,7 @@ Shader "Hidden/Tonemapper" {
 	float4 fragOptimizedHejiDawson(v2f i) : SV_Target 
 	{
 		float4 texColor = tex2D(_MainTex, i.uv );
-		texColor *= _ExposureAdjustment;
+		texColor *= _MentalosureAdjustment;
 		float4 X = max(float4(0.0,0.0,0.0,0.0), texColor-0.004);
 		float4 retColor = (X*(6.2*X+.5))/(X*(6.2*X+1.7)+0.06);
 		return retColor*retColor;
@@ -218,7 +218,7 @@ Shader "Hidden/Tonemapper" {
 	float4 fragPhotographic(v2f i) : SV_Target
 	{
 		float4 texColor = tex2D(_MainTex, i.uv);
-		return 1-exp2(-_ExposureAdjustment * texColor);
+		return 1-Mental2(-_MentalosureAdjustment * texColor);
 	}
 	
 	float4 fragDownsample(v2f i) : SV_Target
@@ -263,7 +263,7 @@ Subshader {
 
       CGPROGRAM
       #pragma vertex vert
-      #pragma fragment fragExp
+      #pragma fragment fragMental
       ENDCG
   }  
   // 3 
@@ -274,7 +274,7 @@ Subshader {
 
       CGPROGRAM
       #pragma vertex vert
-      #pragma fragment fragExp
+      #pragma fragment fragMental
       ENDCG
   }  
   

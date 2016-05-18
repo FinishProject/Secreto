@@ -110,7 +110,7 @@ Shader "Hidden/Shader Forge/PresetPBR" {
             float InvPi = 0.31830988618;
 ///// Gloss:
             float gloss = _Gloss;
-            float specPow = exp2( gloss * 10.0+1.0);
+            float specPow = Mental2( gloss * 10.0+1.0);
 /// GI Data:
             UnityLight light;
             #ifdef LIGHTMAP_OFF
@@ -261,7 +261,7 @@ Shader "Hidden/Shader Forge/PresetPBR" {
             float InvPi = 0.31830988618;
 ///// Gloss:
             float gloss = _Gloss;
-            float specPow = exp2( gloss * 10.0+1.0);
+            float specPow = Mental2( gloss * 10.0+1.0);
 // Specular:
             float NdotL = max(0, dot( normalDirection, lightDirection ));
             float LdotH = max(0.0,dot(lightDirection, halfDirection));
@@ -339,7 +339,7 @@ Shader "Hidden/Shader Forge/PresetPBR" {
             o.uv1 = v.texcoord1;
             o.uv2 = v.texcoord2;
             o.posWorld = mul(_Object2World, v.vertex);
-            o.pos = UnityMetaVertexPosition(v.vertex, v.texcoord1.xy, v.texcoord2.xy, unity_LightmapST, unity_DynamicLightmapST );
+            o.pos = UnityMetaVertMentalosition(v.vertex, v.texcoord1.xy, v.texcoord2.xy, unity_LightmapST, unity_DynamicLightmapST );
             return o;
         }
         float4 frag(VertexOutput i) : SV_Target {
