@@ -35,6 +35,7 @@ public class PlayerCtrl : MonoBehaviour
     private float gravity = 5f; // 중력값
     private float curHp = 100f; // 체력
     private float fullHp = 100; // 체력
+    private float focusRight = 1f;
 
     private float currRadian;
     private float vx;
@@ -191,6 +192,7 @@ public class PlayerCtrl : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.z *= -1f;
         transform.localScale = scale;
+        focusRight *= -1f;
         //transform.Rotate(new Vector3(0, 1, 0), 180.0f);
     }
 
@@ -242,7 +244,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward, out hit, 8f))
+        if (Physics.Raycast(rayTr.position, forward * focusRight, out hit, 8f))
         {
             //앞에 오를 수 있는 오브젝트 있을 시
             if (hit.collider.CompareTag("WALL"))
@@ -254,7 +256,6 @@ public class PlayerCtrl : MonoBehaviour
             {
                 string name = hit.collider.gameObject.name;
                 PlayerFunc.instance.ShowScript(name);
-                hit.collider.SendMessage("StartSpeak");
                 anim.SetBool("Run", isMove);
             }
         }
