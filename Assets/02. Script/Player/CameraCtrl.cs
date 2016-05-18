@@ -25,12 +25,7 @@ public class CameraCtrl : MonoBehaviour {
     void Update()
     {
         focusDir = PlayerCtrl.inputAxis;
-        //Vector3 view = Camera.main.WorldToScreenPoint(transform.position);
-        //if(view.y <= -50)
-        //{
-
-        //}
-        //Debug.Log(view);
+        
     }
 
     void FixedUpdate()

@@ -16,10 +16,10 @@ public class LanaCtrl : MonoBehaviour {
         float dis = (playerTr.position - transform.position).sqrMagnitude;
 
 
-            Vector3 camPos = Camera.main.WorldToScreenPoint(transform.position);
-
-            if (camPos.x >= Camera.main.pixelWidth || camPos.x <= -1f ||
-                camPos.y >= Camera.main.pixelHeight) { Debug.Log("11"); }
+        if (ScriptMgr.instance.bgUi.activeSelf)
+        {
+            transform.LookAt(playerTr);
+        }
        
         anim.SetFloat("Distance", dis);
         anim.SetBool("Speak", ScriptMgr.instance.bgUi.activeSelf);
