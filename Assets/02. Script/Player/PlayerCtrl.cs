@@ -290,10 +290,11 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
+    // 슈퍼아머
     IEnumerator SuperArmor()
     {
         hasSuperArmor = true;
-        yield return new WaitForSeconds(10.0f);
+        yield return new WaitForSeconds(1.0f);
         hasSuperArmor = false;
     }
 
@@ -361,6 +362,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnTriggerEnter(Collider coll)
     {
+        
         // 퀘스트 아이템 습득
         if (coll.CompareTag("ITEM"))
         {

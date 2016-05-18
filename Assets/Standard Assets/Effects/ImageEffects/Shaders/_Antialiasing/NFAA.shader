@@ -45,7 +45,7 @@ struct v2f {
 	half4 frag (v2f i) : SV_Target
 	{	
 		// get luminance values
-		//  maybe: experiment with different luminance calculations
+		//  maybe: Mentaleriment with different luminance calculations
 		float topL = Luminance( tex2D(_MainTex, i.uv[0]).rgb );
 		float bottomL = Luminance( tex2D(_MainTex, i.uv[1]).rgb );
 		float rightL = Luminance( tex2D(_MainTex, i.uv[2]).rgb );
@@ -80,7 +80,7 @@ struct v2f {
 	half4 fragDebug (v2f i) : SV_Target
 	{	
 		// get luminance values
-		//  maybe: experiment with different luminance calculations
+		//  maybe: Mentaleriment with different luminance calculations
 		float topL = Luminance( tex2D(_MainTex, i.uv[0]).rgb );
 		float bottomL = Luminance( tex2D(_MainTex, i.uv[1]).rgb );
 		float rightL = Luminance( tex2D(_MainTex, i.uv[2]).rgb );

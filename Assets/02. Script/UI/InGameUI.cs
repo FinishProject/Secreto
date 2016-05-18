@@ -54,7 +54,7 @@ public class InGameUI : MonoBehaviour {
     {
         InitUIValue();
         enhanceObj = enhanceGauge.gameObject.GetComponentsInChildren<Image>();
-
+        Debug.Log(enhanceObj.Length);
         for(int i=0; i < enhanceObj.Length; i++)
         {
             enhanceObj[i].gameObject.SetActive(false);
@@ -66,7 +66,6 @@ public class InGameUI : MonoBehaviour {
     {
         ChangeHpBar();
         ChangeAttribute();
-        //ChangeEnhance();
     }
 
     // HP바 수치를 바꿔줌 (외부 호출)

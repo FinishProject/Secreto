@@ -17,6 +17,8 @@ public class HpRecoveryItem : MonoBehaviour{
     private ItemStruct itemData;            // 아이템의 정보
     private Transform thisTr;               // 위치 확인
     private bool isGetPossible = false;     // 플레이어가 아이템을 습득 가능한지 판단
+    private bool isCollSomething = false;
+    private float gr = 5f;
 
     void initData(bool isBulkRecovery)
     {
@@ -30,12 +32,18 @@ public class HpRecoveryItem : MonoBehaviour{
 
     void OnTriggerEnter(Collider col)
     {
-        if(col.tag.Equals("Player") && isGetPossible)
+        
+        if (col.tag.Equals("Player") && isGetPossible)
         {
             PlayerCtrl.instance.getRecovery(itemData.value);  // 플레이어 체력회복
-            StopAllCoroutines();                                         // 사용중인 코루틴 정지
+            StopAllCoroutines();                              // 사용중인 코루틴 정지
             isGetPossible = false;                                       
             gameObject.SetActive(false);
+        }
+
+        if(col.tag.Equals("Ground") || col.tag.Equals("OBJECT"))
+        {
+            isCollSomething = true;
         }
     }
 
@@ -61,12 +69,31 @@ public class HpRecoveryItem : MonoBehaviour{
             if (oldTime >= 0.4f)
             {
                 isGetPossible = true;
+                StartCoroutine(fall());
                 break;   
             }
             if (Vector3.Distance(thisTr.position, tagetPos) > 0.5f)
             {
                 thisTr.position = Vector3.Lerp(thisTr.position, tagetPos, Time.deltaTime);
             }
+
+            yield return null;
+        }
+    }
+
+    // 바닥으로 떨어짐
+    IEnumerator fall()
+    {
+        yield return new WaitForSeconds(1.0f);
+        thisTr = GetComponent<Transform>();
+        Vector3 tempPos = thisTr.position;
+        while (true)
+        {
+            if (isCollSomething)
+                break;
+
+            tempPos.y -= gr * Time.deltaTime;
+            thisTr.position = Vector3.Lerp(thisTr.position, tempPos, Time.deltaTime);
 
             yield return null;
         }

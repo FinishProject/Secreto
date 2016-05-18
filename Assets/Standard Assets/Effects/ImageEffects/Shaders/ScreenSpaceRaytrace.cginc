@@ -98,7 +98,7 @@ bool castDenseScreenSpaceRay
 	float3 csEndPoint = csDirection * rayLength + csOrigin;
 
     // Project into screen space
-    // This matrix has a lot of zeroes in it. We could expand
+    // This matrix has a lot of zeroes in it. We could Mentaland
     // out these multiplies to avoid multiplying by zero
     // ...but 16 MADDs are not a big deal compared to what's ahead 
     float4 H0 = mul(projectToPixelMatrix, float4(csOrigin, 1.0));
