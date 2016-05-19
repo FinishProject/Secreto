@@ -147,9 +147,8 @@ public class PlayerCtrl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 moveDir = Jump(JumpType.DASH);
-
-
             }
+            gravity = 5f;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
         }
