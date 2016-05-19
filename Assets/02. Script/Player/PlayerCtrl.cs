@@ -75,6 +75,8 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
+        Save();
+
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
     }
@@ -96,7 +98,7 @@ public class PlayerCtrl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
-        
+
         //펫 타기
         //else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
 
@@ -109,7 +111,7 @@ public class PlayerCtrl : MonoBehaviour
     void Movement()
     {
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
-        // 좌우 동시 입력을 막기위함
+                                                 // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
         {
             inputAxis = 0f;
@@ -125,7 +127,8 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetBool("Jump", false);
 
             // 점프
-            if (Input.GetKeyDown(KeyCode.Space)) {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
                 moveDir = Jump(JumpType.BASIC);
             }
 
@@ -141,8 +144,11 @@ public class PlayerCtrl : MonoBehaviour
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            if (Input.GetKeyDown(KeyCode.Space)) {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
                 moveDir = Jump(JumpType.DASH);
+
+
             }
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
@@ -152,14 +158,13 @@ public class PlayerCtrl : MonoBehaviour
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
+        if (!isClimb) { moveDir.y -= gravity * Time.deltaTime; }
         // 벽에 메달릴 시
-        if (isClimb)
+        else if (isClimb)
         {
             inputAxis = Input.GetAxis("Vertical");
             moveDir = Vector3.up * inputAxis;
         }
-        else { moveDir.y -= gravity * Time.deltaTime; }
-
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
@@ -184,6 +189,7 @@ public class PlayerCtrl : MonoBehaviour
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 jumpDir.y = jumpHight;
+                gravity = 5f;
                 return jumpDir;
 
             case JumpType.DASH:
