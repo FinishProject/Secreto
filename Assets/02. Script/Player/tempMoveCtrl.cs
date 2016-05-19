@@ -17,6 +17,9 @@ public class tempMoveCtrl : MonoBehaviour
     public float speed = 10f;          // 이동 속도
     public float moveResistant = 0f;   // 이동 저항력
 
+    public bool isMove = true;
+    private bool isClimb = false;
+
     public Vector3 moveDir = Vector3.zero; // 이동 벡터
     public CharacterController controller; // 캐릭터컨트롤러
     public JumpType jumpState = JumpType.IDLE; // 점프 타입
@@ -37,9 +40,8 @@ public class tempMoveCtrl : MonoBehaviour
 
     void Update()
     {
-        // 점프
-        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded)       { Debug.Log("입력"); SetJumpState(JumpType.BASIC); }
-        else if (Input.GetKeyDown(KeyCode.Space) && !controller.isGrounded) { SetJumpState(JumpType.DASH);  }
+
+        Movement();
 
         // 걷기 애니메이션이 아직 없어 임시의 이동 애니메이션 재생을 위한 것
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
@@ -53,43 +55,55 @@ public class tempMoveCtrl : MonoBehaviour
 
     }
 
-    void FixedUpdate()
-    {
-        
-        Movement();
-        Jump();
-        controller.Move(moveDir * (speed - moveResistant) * Time.fixedDeltaTime);
-    }
-
     // 좌우 이동
     void Movement()
     {
-        // 키 입력
-        inputAxis = Input.GetAxis("Horizontal");
+        inputAxis = Input.GetAxis("Horizontal"); // 키 입력
+        // 좌우 동시 입력을 막기위함
+        if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
+        {
+            inputAxis = 0f;
+            anim.SetBool("Run", false);
+        }
 
         // 지상에 있을 시
-        if (controller.isGrounded)
+        if (controller.isGrounded && isMove)
         {
+            gravity = 20f;
             //이동
             moveDir = Vector3.right * inputAxis;
+            anim.SetBool("Jump", false);
 
-            anim.SetFloat("Speed", inputAxis);
-            //애니메이션 임시 좌측 변수
-            if (!isFocusRight)
-                anim.SetFloat("Speed", inputAxis * -1f);
-
+            // 점프
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SetJumpState(JumpType.BASIC);
+            }
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
+            if (Input.GetKeyDown(KeyCode.Space)) { SetJumpState(JumpType.DASH); }
+
             moveDir.x = inputAxis * 50f * Time.deltaTime;
+            controller.Move(moveDir * Time.deltaTime);
         }
 
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        
+        if (!isClimb)
+        {
+            moveDir.y -= gravity * Time.deltaTime;
+        }
+        // 벽에 메달릴시
+        else if (isClimb)
+        {
+            inputAxis = Input.GetAxis("Vertical");
+            moveDir = Vector3.up * inputAxis;
+        }
+        controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
     
@@ -106,7 +120,6 @@ public class tempMoveCtrl : MonoBehaviour
     
     void SetJumpState(JumpType jumpType)
     {
-        
         switch (jumpType)
         {
             case JumpType.BASIC:
@@ -114,20 +127,21 @@ public class tempMoveCtrl : MonoBehaviour
                 {
                     Debug.Log("점프");
                     moveDir.y = jumpHight;
-                    controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
                     anim.SetBool("Jump", true);
                     isJumping = true;
+                    controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
                 }
                 break;
             case JumpType.DASH:
                 if (isJumping && !lockJumping)
                 {
                     moveDir.y = dashJumpHight;
-                    controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
                     lockJumping = true;
+                    controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
                 }
                 break;
         }
+        
         jumpState = jumpType;
     }
 
@@ -149,9 +163,9 @@ public class tempMoveCtrl : MonoBehaviour
             gravity = -6f;
         }
 
-        moveDir.y += gravity * Time.fixedDeltaTime;
-
-//        controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
+        moveDir.y += gravity * Time.deltaTime;
+        
+        //        controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
     RaycastHit HitInfo;

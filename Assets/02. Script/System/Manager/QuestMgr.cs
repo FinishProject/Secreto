@@ -17,7 +17,7 @@ public class QuestMgr : MonoBehaviour {
     public static QuestInfo questInfo;
     public int curCompletNum = 0;
     private QuestType questType;
-
+    public static bool isQuest = false;
     public static QuestMgr instance;
 
     void Awake()
@@ -30,6 +30,7 @@ public class QuestMgr : MonoBehaviour {
     {
         questInfo = info;
         questType = (QuestType)questInfo.questType;
+        isQuest = true;
         QuestTypes();
     }
 
@@ -57,6 +58,7 @@ public class QuestMgr : MonoBehaviour {
             if(questInfo.completNum <= curCompletNum)
             {
                 Debug.Log("Complete");
+                isQuest = false;
                 ScriptMgr.instance.isQuest = true;
                 break;
             }

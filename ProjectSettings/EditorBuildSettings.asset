@@ -7,9 +7,9 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: Assets/01. Secen/SYSY.unity
-  - enabled: 0
+  - enabled: 1
     path: Assets/01. Secen/BCS.unity
   - enabled: 0
     path: Assets/01. Secen/testScene.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/01. Secen/0517_2.unity

@@ -93,13 +93,13 @@ public class SkillCtrl : MonoBehaviour {
     {
         Collider[] hitCollider = Physics.OverlapSphere(playerTr.position, 8f);
         List<Transform> targetList = new List<Transform>();
-        
-        for(int i = 0; i < hitCollider.Length; i++) { 
+        for (int i = 0; i < hitCollider.Length; i++) { 
             if (hitCollider[i].CompareTag("MONSTER")) {
                 targetList.Add(hitCollider[i].transform);
             }
         }
         if (targetList.Count > 0) {
+            
             DistanceCompare(targetList);
         }
     }

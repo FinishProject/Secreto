@@ -11,12 +11,13 @@ public class Slug : FSMBase
     private bool isPlayerLiftSide;          // 플레이어가 좌측에 있는지
     private bool isLookLiftSide;            // 좌측 방향을 바라 보는지
     private float discoverDist = 10f;       // 발견 범위
-    private float traceDist = 8f;           // 추적 범위
-    private float attackDist = 6f;          // 공격 범위
-    private float attackSpeed = 2f;         // 공격 속도
+    private float traceDist = 10f;           // 추적 범위
+    private float attackDist = 7f;          // 공격 범위
+    private float attackSpeed = 5f;         // 공격 속도
     public float damage = 16;               // 공격력
     public float attackErrorRange = 1.5f;   // 공격 오차 범위
     private System.Enum oldStates;          // 기존 스테이트 저장용
+    private Vector3 oldPos;
 
     // 몬스터 상태
     public enum EnemyStates
@@ -100,6 +101,7 @@ public class Slug : FSMBase
     void Chase_Update()
     {
         nvAgent.destination = playerTr.position;
+        oldPos = transform.position;
 
         float distance = Vector3.Distance(playerTr.position, transform.position);
 
@@ -122,8 +124,8 @@ public class Slug : FSMBase
     // 공격 가능한 회전 각인지 체크하는 함수 ( 회전을 마치고 공격을 하기위해 )
     bool isAttackAngle()
     {
-        if (Mathf.Abs(transform.localEulerAngles.y - 270f) < 5 && isPlayerLiftSide ||
-            Mathf.Abs(transform.localEulerAngles.y - 90f) < 5 && !isPlayerLiftSide)
+        if (Mathf.Abs(transform.localEulerAngles.y - 270f) < 5 &&  isPlayerLiftSide  ||
+            Mathf.Abs(transform.localEulerAngles.y - 90f)  < 5 && !isPlayerLiftSide )
             return true;
         return false;
     }
@@ -141,6 +143,7 @@ public class Slug : FSMBase
     void ComBback_Update()
     {
         nvAgent.destination = earlyPos;
+        oldPos = transform.position;
 
         float distance = Vector3.Distance(playerTr.position, transform.position);
 
@@ -170,14 +173,13 @@ public class Slug : FSMBase
     {
         Debug.Log("Attacking 상태 돌입");
         nvAgent.Stop();
-        StartCoroutine(ConsecutiveShoot());
         yield return null;
     }
-
+    
     void Attacking_Update()
     {
         float distance = Vector3.Distance(playerTr.position, transform.position);
-        if (distance > attackDist)
+        if (distance > attackDist || !isAttackAngle())
         {
             anim.SetBool("Run", true);
             anim.SetBool("Attack", false);
@@ -186,28 +188,19 @@ public class Slug : FSMBase
         }
     }
 
-    IEnumerator ConsecutiveShoot()
-    {
-        while (true)
-        {
-            anim.SetBool("Attack", true);
-            yield return new WaitForSeconds(attackSpeed);
-        }
-
-    }
-
     IEnumerator Attacking_ExitState()
     {
-        StopAllCoroutines();
-        nvAgent.Resume();
+        anim.SetBool("Attack", false);
         yield return null;
     }
+    
 
     // 발사를 위한 함수 ( 애니메이션 끝난 후 이벤트로 호출할 함수)
     void ShotBullet()
     {
         ObjectMgr.instance.GetParabolaBullet().UseItem().
                 GetComponent<BulletObject_Parabola>().Moving(shootTr.position, attackErrorRange);
+        
     }
 
     #endregion
@@ -245,18 +238,14 @@ public class Slug : FSMBase
     #region 사망
     IEnumerator Dying_EnterState()
     {
-        WahleCtrl.instance.isDie = true;
-        WahleCtrl.state = WahleState.IDLE;
-        
         Debug.Log("쮸금");
         anim.SetBool("Death", true);
         GetComponent<ItemDrop>().DropItem();
 
-        //Destroy(this.gameObject, 3f);
         yield return new WaitForSeconds(3f);
 
         gameObject.SetActive(false);
-        MonsterRespawnMgr.instance.Respawn(gameObject);
+        //MonsterRespawnMgr.instance.Respawn(gameObject);
         yield return null;
     }
 
@@ -282,27 +271,29 @@ public class Slug : FSMBase
     public override void GetDamage(float damage)
     {
         base.GetDamage(damage);
-
+        
         Debug.Log("피격");
-        if (!curState.Equals(EnemyStates.Dying) && !curState.Equals(EnemyStates.Attacked))
+        if(!curState.Equals(EnemyStates.Dying) && !curState.Equals(EnemyStates.Attacked))
         {
             oldStates = curState;
             curState = EnemyStates.Attacked;
         }
-
-
+        
+        
     }
 
     // 업데이트 함수 ( 모든 상태일때 적용 할 )
     public override void ChildUpdate()
     {
-        isPlayerLiftSide = Mathf.Sign(playerTr.position.x - transform.position.x) == -1 ? true : false;
+        isPlayerLiftSide = playerTr.position.x < transform.position.x ? true : false;
+        //        isPlayerLiftSide = Mathf.Sign(playerTr.position.x - transform.position.x) == -1 ? true : false;
+        //        isLookLiftSide = transform.forward == new Vector3(-1,0) ? true : false;
     }
 
     void StartRun()
     {
-        if (curState.Equals(EnemyStates.Attacked))
-            nvAgent.Resume();
+        if(curState.Equals(EnemyStates.Attacked))
+        nvAgent.Resume();
     }
 
     // 데미지 줄때

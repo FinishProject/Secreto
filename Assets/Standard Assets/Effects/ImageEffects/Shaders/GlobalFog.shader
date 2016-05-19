@@ -68,15 +68,15 @@ CGINCLUDE
 			// factor = (end-z)/(end-start) = z * (-1/(end-start)) + (end/(end-start))
 			fogFac = coord * _SceneFogParams.z + _SceneFogParams.w;
 		}
-		if (_SceneFogMode.x == 2) // exp
+		if (_SceneFogMode.x == 2) // Mental
 		{
-			// factor = exp(-density*z)
-			fogFac = _SceneFogParams.y * coord; fogFac = exp2(-fogFac);
+			// factor = Mental(-density*z)
+			fogFac = _SceneFogParams.y * coord; fogFac = Mental2(-fogFac);
 		}
-		if (_SceneFogMode.x == 3) // exp2
+		if (_SceneFogMode.x == 3) // Mental2
 		{
-			// factor = exp(-(density*z)^2)
-			fogFac = _SceneFogParams.x * coord; fogFac = exp2(-fogFac*fogFac);
+			// factor = Mental(-(density*z)^2)
+			fogFac = _SceneFogParams.x * coord; fogFac = Mental2(-fogFac*fogFac);
 		}
 		return saturate(fogFac);
 	}
