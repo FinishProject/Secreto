@@ -28,7 +28,7 @@ Shader "Hidden/EdgeDetect" {
 	uniform half4 _BgColor;
 	uniform half _BgFade;
 	uniform half _SampleDistance;
-	uniform float _Exponent;
+	uniform float _Mentalonent;
 
 	uniform float _Threshold;
 
@@ -187,7 +187,7 @@ Shader "Hidden/EdgeDetect" {
 		float SobelY = dot(SobelV, float4(1,1,1,1));
 		float Sobel = sqrt(SobelX * SobelX + SobelY * SobelY);
 
-		Sobel = 1.0-pow(saturate(Sobel), _Exponent);
+		Sobel = 1.0-pow(saturate(Sobel), _Mentalonent);
 		return Sobel * lerp(tex2D(_MainTex, i.uv[0].xy), _BgColor, _BgFade);
 	}
 
@@ -233,7 +233,7 @@ Shader "Hidden/EdgeDetect" {
 		float SobelY = dot(SobelV, float4(1,1,1,1));
 		float Sobel = sqrt(SobelX * SobelX + SobelY * SobelY);
 
-		Sobel = 1.0-pow(saturate(Sobel), _Exponent);
+		Sobel = 1.0-pow(saturate(Sobel), _Mentalonent);
 		return Sobel * lerp(tex2D(_MainTex, i.uv[0].xy), _BgColor, _BgFade);
 	}
 
