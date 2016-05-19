@@ -98,7 +98,7 @@ Material:
       data:
         first:
           name: _Metallic
-        second: 0
+        second: 0.3
       data:
         first:
           name: _ZWrite
@@ -131,8 +131,8 @@ Material:
       data:
         first:
           name: _EmissionColor
-        second: {r: 0.2, g: 0.15334687, b: 0.052941192, a: 1}
+        second: {r: 0.2, g: 0.15334687, b: 0.052941203, a: 1}
       data:
         first:
           name: _Color
-        second: {r: 0.4044118, g: 0.4044118, b: 0.4044118, a: 1}
+        second: {r: 0.7647059, g: 0.7647059, b: 0.7647059, a: 1}
