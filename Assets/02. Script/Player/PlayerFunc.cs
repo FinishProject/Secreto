@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerFunc : MonoBehaviour {
 
     public static PlayerFunc instance;
-    PlayerCtrl playerCtrl;// = new PlayerCtrl();
+    PlayerCtrl playerCtrl;
 
     void Awake()
     {

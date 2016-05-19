@@ -64,7 +64,7 @@ public class ItemDrop : MonoBehaviour {
                 Random.Range(thisTr.position.x - dropRange, thisTr.position.x + dropRange),
                 Random.Range(thisTr.position.y + dropRange, thisTr.position.y + (dropRange * 2)),
                 -2);
-            tempItem.GetComponent<ExpItem>().Dropped(thisTr.position, randPos, true);
+            tempItem.GetComponent<MentalItem>().Dropped(thisTr.position, randPos, true);
         }
 
     }

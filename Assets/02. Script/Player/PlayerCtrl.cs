@@ -34,7 +34,6 @@ public class PlayerCtrl : MonoBehaviour
     private bool isClimb = false; // 벽 오르기 확인
 
     private float gravity = 5f; // 중력값
-    private float curHp = 100f; // 체력
     private float fullHp = 100; // 체력
     private float focusRight = 1f;
 
@@ -46,7 +45,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public float ProportionHP
     {
-        get { return curHp / fullHp; }
+        get { return pData.hp / fullHp; }
     }
    
     public Transform rayTr; // 레이캐스트 시작 위치
@@ -56,17 +55,11 @@ public class PlayerCtrl : MonoBehaviour
     private Animator anim;
     private SwitchObject switchState;
     private GameObject currInteraction;
-    //private Collider objColl = null;
 
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
 
     public static PlayerCtrl instance;
-
-    public string getCarryItemName()
-    {
-        return carryItemName;
-    }
 
     void Awake()
     {
@@ -82,9 +75,6 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
-        pData.pPosition = this.transform.position;
-        PlayerData.Save(pData);
-
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
     }
@@ -93,101 +83,83 @@ public class PlayerCtrl : MonoBehaviour
     public void Save()
     {
         pData.pPosition = transform.position;
-        pData.hp = curHp;
         PlayerData.Save(pData);
     }
 
     void Update()
     {
-
         // 플레이어에게 조작권한이 있다면 움직임
-        if (isCtrlAuthority) Movement();
+        if (isCtrlAuthority && isMove) Movement();
         else RopeWorker();
 
-        // 점프
-        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded) {
-            //rb.AddForce(Vector3.up * 10f * Time.deltaTime);
-            Jump(JumpType.BASIC); 
-        }
-        else if (Input.GetKeyDown(KeyCode.Space) && !controller.isGrounded) { Jump(JumpType.DASH); }
+        //NPC와 대화
+        if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
-        //NPC와 대화
-        else if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
+        
         //펫 타기
-        else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
-
-        // 걷기 애니메이션이 아직 없어 임시의 이동 애니메이션 재생을 위한 것
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            anim.SetBool("Run", true);
-        }
-        else {
-            anim.SetBool("Run", false);
-        }
+        //else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
 
         if (transform.position.y <= -7f)
         {
             PlayerDie();
         }
-
-        
-        inputAxis = Input.GetAxis("Horizontal");     // 좌우 입력
-
-        // 좌우 동시 입력을 막기위함
-        if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))    
-        {
-            inputAxis = 0;
-            anim.SetBool("Run", false);
-        }
     }
 
     void Movement()
     {
-        // 키 입력
+        inputAxis = Input.GetAxis("Horizontal"); // 키 입력
+        // 좌우 동시 입력을 막기위함
+        if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
+        {
+            inputAxis = 0f;
+            anim.SetBool("Run", false);
+        }
 
         // 지상에 있을 시
-        if (controller.isGrounded && isMove)
+        if (controller.isGrounded)
         {
             gravity = 20f;
             //이동
             moveDir = Vector3.right * inputAxis;
             anim.SetBool("Jump", false);
 
-            //anim.SetFloat("Speed", inputAxis);
-            ////애니메이션 임시 좌측 변수
-            //if (!isFocusRight)
-            //    anim.SetFloat("Speed", inputAxis * -1f);
+            // 점프
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                moveDir = Jump(JumpType.BASIC);
+            }
+
+            // 걷기 애니메이션이 아직 없어 임시의 이동 애니메이션 재생을 위한 것
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                anim.SetBool("Run", true);
+            }
+            else {
+                anim.SetBool("Run", false);
+            }
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            float fallSpeed = Mathf.Sign(controller.velocity.y);
-            if(fallSpeed <= -0.1f)
-            {
-                gravity = 3f;
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                moveDir = Jump(JumpType.DASH);
             }
-            else
-                gravity = 5f;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
-            
         }
 
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        if (!isClimb)
-        {
-           moveDir.y -= gravity * Time.deltaTime;
-        }
-        // 벽에 메달릴시
-        else if (isClimb)
+        // 벽에 메달릴 시
+        if (isClimb)
         {
             inputAxis = Input.GetAxis("Vertical");
             moveDir = Vector3.up * inputAxis;
         }
+        else { moveDir.y -= gravity * Time.deltaTime; }
+
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
@@ -199,50 +171,32 @@ public class PlayerCtrl : MonoBehaviour
         scale.z *= -1f;
         transform.localScale = scale;
         focusRight *= -1f;
-        //transform.Rotate(new Vector3(0, 1, 0), 180.0f);
     }
 
     // 점프
-    void Jump(JumpType isJump)
+    Vector3 Jump(JumpType curJumpState)
     {
-        jumpState = isJump;
         anim.SetBool("Jump", true);
-        switch (jumpState)
+        Vector3 jumpDir = Vector3.zero;
+        switch (curJumpState)
         {
             case JumpType.BASIC:
                 isJumping = true;
-                ///////////////////////////////////////////////
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-                moveDir.y = jumpHight;
-                break;
+                jumpDir.y = jumpHight;
+                return jumpDir;
+
             case JumpType.DASH:
                 if (isJumping)
                 {
-                    //////////////////////////////////////////////
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
-                    moveDir.y = dashJumpHight;
                     isJumping = false;
+                    jumpDir.y = jumpHight;
+                    return jumpDir;
                 }
                 break;
         }
-        controller.Move(moveDir * (3f - moveResistant) * Time.deltaTime);
-    }
-
-    //캐릭터 컨트롤러 충돌
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Rigidbody body = hit.collider.attachedRigidbody;
-        if (body == null || body.isKinematic)
-            return;
-        if (hit.moveDirection.y < -0.3F)
-            return;
-
-        //오브젝트 밀기
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-            body.velocity = pushDir * 2f;
-        }
+        return jumpDir;
     }
 
     //레이캐스팅 발사
@@ -250,7 +204,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward * focusRight, out hit, 8f))
+        if (Physics.Raycast(rayTr.position, forward * focusRight, out hit, 5f))
         {
             //앞에 오를 수 있는 오브젝트 있을 시
             if (hit.collider.CompareTag("WALL"))
@@ -269,15 +223,15 @@ public class PlayerCtrl : MonoBehaviour
 
     public void getRecovery(float recovery)
     {
-        curHp += recovery;
+        pData.hp += recovery;
         InGameUI.instance.ChangeHpBar();
-        if (curHp >= 100)
+        if (pData.hp >= 100)
         {
-            curHp = 100;
-            Debug.Log(curHp);
+            pData.hp = 100;
+            Debug.Log(pData.hp);
             return;
         }
-        Debug.Log(curHp);
+        Debug.Log(pData.hp);
     }
 
     public void getDamage(float damage)
@@ -285,10 +239,10 @@ public class PlayerCtrl : MonoBehaviour
         if(!hasSuperArmor)
         {
             StartCoroutine(SuperArmor());
-            curHp -= damage;
+            pData.hp -= damage;
             InGameUI.instance.ChangeHpBar();
             anim.SetTrigger("Hit");
-            if (curHp <= 0)
+            if (pData.hp <= 0)
             {
                 //PlayerDie();
                 Debug.Log("Player Die");
@@ -302,11 +256,6 @@ public class PlayerCtrl : MonoBehaviour
         hasSuperArmor = true;
         yield return new WaitForSeconds(amorTime);
         hasSuperArmor = false;
-    }
-
-    public bool IsJumping()
-    {
-        return isJumping;
     }
 
     // 로프에서 권한 찾기
@@ -328,6 +277,10 @@ public class PlayerCtrl : MonoBehaviour
         isFlyingByRope = true;
         isJumping = true;
         currInteraction = null;
+    }
+    public string getCarryItemName()
+    {
+        return carryItemName;
     }
 
     // 로프의 움직임 관련
@@ -366,7 +319,7 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider coll)
+    void OnTriggerStay(Collider coll)
     {
         // 퀘스트 아이템 습득
         if (QuestMgr.isQuest)
@@ -381,14 +334,14 @@ public class PlayerCtrl : MonoBehaviour
             }
         }
 
-        if (coll.name == "Switch")
+        else if(coll.name == "Switch")
         {
             coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
             switchState = coll.GetComponent<SwitchObject>();
         }
 
         // 로프와 충돌
-        if (coll.CompareTag("Rope") && Input.GetKey(KeyCode.UpArrow) && isJumping)
+        else if(coll.CompareTag("Rope") && Input.GetKey(KeyCode.UpArrow) && isJumping)
         {
             isCtrlAuthority = false;
             isJumping = false;
@@ -397,12 +350,7 @@ public class PlayerCtrl : MonoBehaviour
             currInteraction.GetComponent<RopeCtrl>().
             setAuthority(Convert.ToInt32(coll.name), isFocusRight); // 조작권한을 넘겨줌
         }
-    }
-
-    void OnTriggerStay(Collider coll)
-    {
-
-        if (coll.CompareTag("WALL"))
+        else if (coll.CompareTag("WALL"))
         {
             isClimb = true;
         }
@@ -414,9 +362,11 @@ public class PlayerCtrl : MonoBehaviour
         {
             switchState = gameObject.AddComponent<SwitchObject>();
         }
-        isClimb = false;
+        else if (coll.CompareTag("WALL"))
+        {
+            isClimb = false;
+        }
     }
-
 
     void PlayerDie()
     {
