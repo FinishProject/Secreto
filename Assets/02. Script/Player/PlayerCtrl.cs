@@ -32,6 +32,7 @@ public class PlayerCtrl : MonoBehaviour
     private string carryItemName = null;    // 들고 있는 아이템 이름
     private bool isClimb = false; // 벽 오르기 확인
 
+    public float gravity_jump = 5;
     private float gravity = 5f; // 중력값
     private float curHp = 100f; // 체력
     private float fullHp = 100; // 체력
@@ -97,7 +98,8 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     void Update()
-    { 
+    {
+        Debug.Log(gravity);
         // 점프
         if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded) {
             //rb.AddForce(Vector3.up * 10f * Time.deltaTime);
@@ -163,7 +165,7 @@ public class PlayerCtrl : MonoBehaviour
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            gravity = 5f;
+            gravity = gravity_jump;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
         }

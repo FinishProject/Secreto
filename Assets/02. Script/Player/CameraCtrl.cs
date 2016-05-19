@@ -43,7 +43,7 @@ public class CameraCtrl : MonoBehaviour {
         }
         else if (focusDir <= -0.9f || moveRange <= -10)
         {
-            curVec = new Vector3(playerTr.position.x - 6f, playerTr.position.y, playerTr.position.z);
+            curVec = new Vector3(playerTr.position.x - 7f, playerTr.position.y, playerTr.position.z);
             moveRange = 0;
         }
         else if (focusDir != 0)
