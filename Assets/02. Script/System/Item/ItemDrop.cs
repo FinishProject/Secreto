@@ -45,7 +45,7 @@ public class ItemDrop : MonoBehaviour {
     public void DropItem()
     {
         GameObject tempItem;
-
+        
         for (int i = 0; dropItemList.HpRecover && i < dropItemList.HpRecoverNumber; i++)
         {
             tempItem = ItemMgr.instance.GetItem(ItemFunction.HpRecovery).UseItem();
@@ -60,7 +60,6 @@ public class ItemDrop : MonoBehaviour {
         for (int i = 0; dropItemList.Exp && i < dropItemList.ExpNumber; i++)
         {
             tempItem = ItemMgr.instance.GetItem(ItemFunction.Exp).UseItem();
-
             Vector3 randPos = new Vector3(
                 Random.Range(thisTr.position.x - dropRange, thisTr.position.x + dropRange),
                 Random.Range(thisTr.position.y + dropRange, thisTr.position.y + (dropRange * 2)),

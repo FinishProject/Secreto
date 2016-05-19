@@ -252,11 +252,10 @@ public class Slug : FSMBase
         anim.SetBool("Death", true);
         GetComponent<ItemDrop>().DropItem();
 
-        //Destroy(this.gameObject, 3f);
         yield return new WaitForSeconds(3f);
 
         gameObject.SetActive(false);
-        MonsterRespawnMgr.instance.Respawn(gameObject);
+        //MonsterRespawnMgr.instance.Respawn(gameObject);
         yield return null;
     }
 

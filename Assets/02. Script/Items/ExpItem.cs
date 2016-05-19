@@ -21,7 +21,6 @@ public class ExpItem : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        Debug.Log("11");
         if (col.tag.Equals("Player") && isGetPossible)
         {
             SkillCtrl.instance.AddEnhance();
