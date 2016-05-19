@@ -206,7 +206,7 @@ public class PlayerCtrl : MonoBehaviour
             case JumpType.BASIC:
                 isJumping = true;
                 ///////////////////////////////////////////////
-                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
+                //pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 moveDir.y = jumpHight;
                 break;
             case JumpType.DASH:
