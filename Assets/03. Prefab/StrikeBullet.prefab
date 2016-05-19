@@ -13,6 +13,7 @@ GameObject:
   - 23: {fileID: 2350572}
   - 54: {fileID: 5466044}
   - 114: {fileID: 11424486}
+  - 114: {fileID: 11400904}
   m_Layer: 0
   m_Name: StrikeBullet
   m_TagString: BULLET
@@ -80,6 +81,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &11400904
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 134482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c4018724840260498f9840b2b4d0038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11424486
 MonoBehaviour:
   m_ObjectHideFlags: 1

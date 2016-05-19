@@ -25,11 +25,6 @@ public class CameraCtrl : MonoBehaviour {
     void Update()
     {
         focusDir = PlayerCtrl.inputAxis;
-        
-    }
-
-    void FixedUpdate()
-    {
         standardPos = FocusPlayerVec() + relCameraPos;
         transform.position = Vector3.Lerp(transform.position, standardPos, speed * Time.deltaTime);
     }

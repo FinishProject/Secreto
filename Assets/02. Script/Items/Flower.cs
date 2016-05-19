@@ -36,22 +36,22 @@ public class Flower : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter(Collider col)
-    {
-        if(col.tag.Equals("Player"))
-        {
-            if (isRed)
-            {
-                SkillCtrl.instance.ChangeAttribute(AttributeState.red);
-                redEffect.SetActive(false);
-            }
-            else
-            {
-                SkillCtrl.instance.ChangeAttribute(AttributeState.blue);
-                blueEffect.SetActive(false);
-            }
-            gameObject.SetActive(false);
+    //void OnTriggerEnter(Collider col)
+    //{
+    //    if(col.tag.Equals("Player"))
+    //    {
+    //        if (isRed)
+    //        {
+    //            SkillCtrl.instance.ChangeAttribute(AttributeState.red);
+    //            redEffect.SetActive(false);
+    //        }
+    //        else
+    //        {
+    //            SkillCtrl.instance.ChangeAttribute(AttributeState.blue);
+    //            blueEffect.SetActive(false);
+    //        }
+    //        gameObject.SetActive(false);
            
-        }
-    }
+    //    }
+    //}
 }

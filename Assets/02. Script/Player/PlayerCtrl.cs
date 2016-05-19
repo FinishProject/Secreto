@@ -21,6 +21,7 @@ public class PlayerCtrl : MonoBehaviour
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
     public float speed = 10f;          // 이동 속도
     public float moveResistant = 0f;   // 이동 저항력
+    public float amorTime = 10f;
 
     [System.NonSerialized]
     public bool isMove = true;       // 현재 이동 여부
@@ -97,7 +98,12 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     void Update()
-    { 
+    {
+
+        // 플레이어에게 조작권한이 있다면 움직임
+        if (isCtrlAuthority) Movement();
+        else RopeWorker();
+
         // 점프
         if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded) {
             //rb.AddForce(Vector3.up * 10f * Time.deltaTime);
@@ -136,13 +142,6 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-        // 플레이어에게 조작권한이 있다면 움직임
-        if (isCtrlAuthority) Movement();
-        else RopeWorker();
-    }
-
     void Movement()
     {
         // 키 입력
@@ -163,9 +162,16 @@ public class PlayerCtrl : MonoBehaviour
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            gravity = 5f;
+            float fallSpeed = Mathf.Sign(controller.velocity.y);
+            if(fallSpeed <= -0.1f)
+            {
+                gravity = 3f;
+            }
+            else
+                gravity = 5f;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
+            
         }
 
         //캐릭터 방향 회전
@@ -294,7 +300,7 @@ public class PlayerCtrl : MonoBehaviour
     IEnumerator SuperArmor()
     {
         hasSuperArmor = true;
-        yield return new WaitForSeconds(10.0f);
+        yield return new WaitForSeconds(amorTime);
         hasSuperArmor = false;
     }
 
@@ -363,11 +369,15 @@ public class PlayerCtrl : MonoBehaviour
     void OnTriggerEnter(Collider coll)
     {
         // 퀘스트 아이템 습득
-        if (coll.CompareTag("ITEM"))
+        if (QuestMgr.isQuest)
         {
-            if(QuestMgr.questInfo.targetName == coll.name){
-                QuestMgr.instance.curCompletNum++;
-                coll.gameObject.SetActive(false);
+            if (coll.CompareTag("ITEM"))
+            {
+                if (QuestMgr.questInfo.targetName == coll.name)
+                {
+                    QuestMgr.instance.curCompletNum++;
+                    coll.gameObject.SetActive(false);
+                }
             }
         }
 

@@ -81,11 +81,12 @@ public class ScriptMgr : MonoBehaviour {
             StartCoroutine(SpeakingNPC());
         }
         // 퀘스트 수락 후 완료 시
-        else if(SpeakName(name) && isQuest)
+        else if (SpeakName(name) && isQuest)
         {
+            Debug.Log("11");
             StartCoroutine(SpeakingNPC());
         }
-        else
+        else if (SpeakName(name) && !isQuest) 
         {
             Debug.Log("END SPEAK");
         }
@@ -165,6 +166,7 @@ public class ScriptMgr : MonoBehaviour {
             yield return null;
         }
         answerUi.SetActive(false);
+        QuestMgr.isQuest = true;
         txtUi.text = scriptInfo[curIndex].context;
     }
 
