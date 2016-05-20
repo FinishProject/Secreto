@@ -173,8 +173,8 @@ public class PlayerCtrl : MonoBehaviour
         isFocusRight = !isFocusRight;
         Vector3 scale = transform.localScale;
         scale.z *= -1f;
-        transform.localScale = scale;
         focusRight *= -1f;
+        transform.localScale = scale;
     }
 
     // 점프
