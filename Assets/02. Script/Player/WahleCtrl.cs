@@ -55,27 +55,11 @@ public class WahleCtrl : MonoBehaviour {
     //    }
     //}
 
-    void SetState(WahleState state)
-    {
-        switch (state)
-        {
-            case WahleState.IDLE:
-                StartCoroutine(Idel());
-                break;
-            case WahleState.MOVE:
-                StartCoroutine(Move());
-                break;
-            //case WahleState.ATTACK:
-            //    Attack();
-            //    break;
-        }
-    }
-
     IEnumerator Idel()
     {
         initSpeed = 0f;
 
-        float[] value = { 60, 40 };
+        float[] value = { 50, 50 };
         //int num = GetRandomValue(value);
 
         while (true)
@@ -86,14 +70,14 @@ public class WahleCtrl : MonoBehaviour {
                 break;
             }
 
-            //if(!isWait)
-            //    StartCoroutine(WaitRandom(5f, value));
+            if (!isWait)
+                StartCoroutine(WaitRandom(3f, value));
 
-            relativePos = (playerTr.position - transform.position);
+            relativePos = playerTr.position - transform.position;
             distance = relativePos.sqrMagnitude;
             lookRot = Quaternion.LookRotation(relativePos);
 
-            Debug.Log(transform.localRotation.x);
+            initSpeed = IncrementSpeed(initSpeed, 3f, 0.2f);
 
             if (stateValue == 1)
             {
@@ -105,9 +89,9 @@ public class WahleCtrl : MonoBehaviour {
                 sinSpeed = Mathf.Sin(delTime += Time.deltaTime);
 
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, Time.deltaTime);
-                transform.Translate(0, (sinSpeed * 0.5f) * Time.deltaTime, 3f * Time.deltaTime);
-            }
-            yield return null;
+                transform.Translate(0, (sinSpeed * 0.5f) * Time.deltaTime, initSpeed * Time.deltaTime);
+        }
+        yield return null;
         }
     }
 
@@ -167,32 +151,30 @@ public class WahleCtrl : MonoBehaviour {
         isWait = false;
     }
 
-    // 공격
-    void Attack()
-    {
-        if (targetTr != null)
-        {
-            float dis = (playerTr.position - transform.position).sqrMagnitude;
-            if (dis >= 5f)
-            {
-                SetState(WahleState.MOVE);
-            }
+    //// 공격
+    //void Attack()
+    //{
+    //    if (targetTr != null)
+    //    {
+    //        float dis = (playerTr.position - transform.position).sqrMagnitude;
+    //        if (dis >= 5f)
+    //        {
+    //            SetState(WahleState.MOVE);
+    //        }
 
-            relativePos = (targetTr.position - transform.position);
-            lookRot = Quaternion.LookRotation(relativePos);
-            focusDir = Mathf.Sign(targetTr.position.x - transform.position.x);
+    //        relativePos = (targetTr.position - transform.position);
+    //        lookRot = Quaternion.LookRotation(relativePos);
+    //        focusDir = Mathf.Sign(targetTr.position.x - transform.position.x);
 
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
-            transform.position = Vector3.Lerp(transform.position, targetTr.position -
-                ((targetTr.forward * -focusDir * 3f) - (targetTr.up)), 7f * Time.deltaTime);
-        }
-        else
-        {
-            SetState(WahleState.IDLE);
-        }
-
-        
-    }
+    //        transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+    //        transform.position = Vector3.Lerp(transform.position, targetTr.position -
+    //            ((targetTr.forward * -focusDir * 3f) - (targetTr.up)), 7f * Time.deltaTime);
+    //    }
+    //    else
+    //    {
+    //        SetState(WahleState.IDLE);
+    //    }
+    //}
     // 주변 몬스터 탐색
     //void SearchEnemy()
     //{
