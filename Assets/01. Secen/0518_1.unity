@@ -5270,6 +5270,7 @@ MonoBehaviour:
   dashJumpHight: 1.5
   speed: 7
   moveResistant: 0
+  amorTime: 10
   rayTr: {fileID: 708251621}
 --- !u!54 &344301424
 Rigidbody:
@@ -15320,7 +15321,6 @@ MonoBehaviour:
   maxSpeed: 10
   accel: 5
   playerTr: {fileID: 708251621}
-  targetTr: {fileID: 0}
   isDie: 0
 --- !u!1001 &990903181
 Prefab:
@@ -18783,7 +18783,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1226697615}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76b5ec6153a1d55438228df10fe66844, type: 3}
   m_Name: 
@@ -20235,8 +20235,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: -0.00000017881393, y: 0.28595734, z: 0.7690997}
-    m_Extent: {x: 0.59446204, y: 0.23917396, z: 0.40319967}
+    m_Center: {x: -0.00000017881393, y: 0.2859478, z: 0.7690995}
+    m_Extent: {x: 0.59446204, y: 0.23917396, z: 0.40319943}
   m_DirtyAABB: 0
 --- !u!33 &1257135519
 MeshFilter:
@@ -20607,7 +20607,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1276942313}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 102.19, y: 6.9, z: -0.92}
+  m_LocalPosition: {x: 22.009, y: 1.751, z: -0.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 986976516}
@@ -24437,7 +24437,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1551591205
 Transform:
   m_ObjectHideFlags: 0
@@ -28877,7 +28877,6 @@ MonoBehaviour:
   maxSpeed: 10
   accel: 2
   playerTr: {fileID: 0}
-  targetTr: {fileID: 0}
   isDie: 0
 --- !u!23 &1859178938
 MeshRenderer:

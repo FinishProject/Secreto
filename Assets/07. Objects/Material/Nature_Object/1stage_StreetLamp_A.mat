@@ -9,7 +9,7 @@ Material:
   m_Name: 1stage_StreetLamp_A
   m_Shader: {fileID: 4800000, guid: f935a81e824c51845bd96c6c85a53f78, type: 3}
   m_ShaderKeywords: _ALPHATEST_ON _EMISSION
-  m_LightmapFlags: 2
+  m_LightmapFlags: 1
   m_CustomRenderQueue: 2450
   stringTagMap:
     RenderType: TransparentCutout
@@ -136,7 +136,7 @@ Material:
       data:
         first:
           name: _EmissionColor
-        second: {r: 1.7, g: 1.6706896, b: 0.63750005, a: 1}
+        second: {r: 1.9331917, g: 1.951, b: 0.6598972, a: 1}
       data:
         first:
           name: _Color

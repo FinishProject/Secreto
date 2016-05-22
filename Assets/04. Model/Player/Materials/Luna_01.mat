@@ -152,4 +152,4 @@ Material:
       data:
         first:
           name: _UpperColor
-        second: {r: 0.33153114, g: 0.47557577, b: 0.61764705, a: 0}
+        second: {r: 0.64705884, g: 0.82474655, b: 1, a: 0}
