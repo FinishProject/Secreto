@@ -69,7 +69,7 @@ public class FSMBase : MonoBehaviour {
         anim = GetComponent<Animator>();
         OnAwake();
     }
-    void Update() { DoUpdate(); ChildUpdate(); }
+    void Update() { ChildUpdate();  DoUpdate(); }
     void LateUpdate() { DoLateUpdate(); }
     void FixedUpdate() { DoFixedUpdate(); }
     void OnTriggerEnter(Collider col) { DoOnTriggerEnter(col); }
@@ -141,42 +141,6 @@ public class FSMBase : MonoBehaviour {
         StartCoroutine(EnterState());  
     }
 
-    public IEnumerator WaitForAnimation(string name, float ratio)
-    {
-        var state = animation[name];
-        return WaitForAnimation(state, ratio);
-    }
-
-    public static IEnumerator WaitForAnimation(AnimationState state, float ratio)
-    {
-        state.wrapMode = WrapMode.ClampForever;
-        state.enabled = true;
-        state.speed = state.speed == 0 ? 1 : state.speed;
-        while (state.normalizedTime < ratio - float.Epsilon)
-        {
-            yield return null;
-        }
-    }
-
-    public IEnumerator PlayAnimation(string name)
-    {
-        var state = animation[name];
-        return PlayAnimation(state);
-    }
-
-    public static IEnumerator PlayAnimation(AnimationState state)
-    {
-        state.time = 0;
-        state.weight = 1;
-        state.speed = 1;
-        state.enabled = true;
-        var wait = WaitForAnimation(state, 1.0f);
-        while (wait.MoveNext())
-        {
-            yield return null;
-        }
-        state.weight = 0; 
-    }
 
     // 데미지 입을때
     virtual public void GetDamage(float damage)
