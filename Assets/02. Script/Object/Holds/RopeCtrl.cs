@@ -3,16 +3,18 @@ using System.Collections;
 
 /*************************   정보   **************************
 
-    로프.. 쥬긴다
+    로프
+    플레이어는 이 스크립트가 추가된 오브젝트를 이용하여
+    오르 내릴 수 있고
+    좌우 반동을 이용하여 날아갈 수 있다.
 
     사용방법 :
+    1. 로프의 뿌리가 될 오브젝트에 이 스크립트를 추가
+    2. 이 스크립트 prefab 변수에 로프를 구성할 구슬 오브젝트를 삽입
     
-
+    기타 사항은 코드 참조
 
 *************************************************************/
-
-#region 초기화
-#endregion
 
 public class RopeCtrl : MonoBehaviour {
     #region 변수 선언부
@@ -21,7 +23,7 @@ public class RopeCtrl : MonoBehaviour {
     [Tooltip("로프 구슬 개수")]
     public int ropeCnt;
     [Tooltip("속도 제한 (50개 때 1.4)")]
-    public float speedLimit = 1.4f;             // 속도 제한
+    public float speedLimit = 1.4f;
     [System.NonSerialized]
     public bool isCtrlAuthority = false;        // 조작권한 (로프 조종)
 
@@ -54,10 +56,11 @@ public class RopeCtrl : MonoBehaviour {
 
         CreateRope();
         changeRopeRange(playerIdx);
-        InitState(00.0f);
+        InitState(90.0f);
 
     }
 
+    // 초기 설정
     void InitState(float getAngle)
     {
         stepSize = 0.025f;
@@ -159,13 +162,7 @@ public class RopeCtrl : MonoBehaviour {
         else
             isLimited = false;
 
-        // 줄 회전
-        /*
-        ChangeRot(0, playerIdx, theta / Mathf.Deg2Rad);
-        if (playerIdx != ropeCnt - 1)
-            ChangeRot(playerIdx, ropeCnt - 1, ((theta - theta) - (theta * 0.15f)) / Mathf.Deg2Rad);
-        */
-
+        // 조작 권한이 없을 때
         if (!isCtrlAuthority)
         {
             playerIdx = ropeCnt - 1;
@@ -174,16 +171,12 @@ public class RopeCtrl : MonoBehaviour {
         else
         {
             ChangeRot(0, playerIdx, theta * Mathf.Rad2Deg);
-            /*
-            if (playerIdx != ropeCnt - 1)
-                ChangeRot_2(playerIdx, ropeCnt - 1, theta / Mathf.Deg2Rad);
-            */
 
             if (playerIdx != ropeCnt - 1)
                 ChangeRot_2(playerIdx, ropeCnt - 1, theta * Mathf.Rad2Deg);
         }
 
-       
+       // 로프의 방향 체크
         if (Mathf.Sin(theta) < 0f)
             isLeft = true;
         else
