@@ -75,14 +75,17 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
-        Save();
-
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
     }
 
+    void OnEnable()
+    {
+        WayPoint.OnSave += Save;
+    }
+
     //플레이어 데이터 저장
-    public void Save()
+    void Save()
     {
         pData.pPosition = transform.position;
         PlayerData.Save(pData);

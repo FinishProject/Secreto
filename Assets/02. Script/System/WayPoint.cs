@@ -3,14 +3,14 @@ using System.Collections;
 
 public class WayPoint : MonoBehaviour {
 
-    PlayerData pData = new PlayerData();
+    public delegate void SaveSystem();
+    public static event SaveSystem OnSave;
 
     void OnTriggerEnter(Collider col)
     {
         if (col.CompareTag("Player"))
         {
-            PlayerCtrl.instance.Save();
-            //ScriptMgr.instance.SpokenNpcSave();
+            OnSave();
         }
     }
 }

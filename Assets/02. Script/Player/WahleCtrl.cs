@@ -4,9 +4,6 @@ using System.Collections;
 public enum WahleState { IDLE, MOVE, WALL, ATTACK };
 
 public class WahleCtrl : MonoBehaviour {
-    //고래 이동 타입
-    //public static WahleState state = WahleState.IDLE;
-    //private WahleState curState = state;
 
     private float initSpeed = 0f; // 초기 이동속도
     public float maxSpeed; // 최대 이동속도
@@ -14,11 +11,11 @@ public class WahleCtrl : MonoBehaviour {
 
     private float distance = 0f; // 플레이어와 고래의 거리 차이
     private bool isFocusRight = true; // 오른쪽을 봐라보는지 확인
-    private bool isWait = false; 
-    private float focusDir = 0f;
-    private float delTime = 0f;
-    private float sinSpeed = 0f;
-    private int stateValue = 0;
+    private bool isWait = false; // 코루틴 실행 중인지 확인
+    private float focusDir = 1f; // 현재 봐라보고 있는 방향 변수
+    private float delTime = 0f; // 누적 되는 deltaTime 값 저장
+    private float sinSpeed = 0f; // sin함수로 생성되는 값 저장
+    private int stateValue = 0; // 상태 값
 
     public Transform playerTr; // 플레이어 위치
     private  Transform targetTr; // 적 위치값
@@ -32,35 +29,13 @@ public class WahleCtrl : MonoBehaviour {
         instance = this;
         StartCoroutine(Idel());
     }
-
-    //void Update()
-    //{
-    //    distance = (transform.position - playerTr.position).sqrMagnitude;
-    //    relativePos = (playerTr.position - transform.position);
-    //    lookRot = Quaternion.LookRotation(relativePos);
-
-    //    SearchEnemy();
-
-    //    switch (state)
-    //    {
-    //        case WahleState.IDLE:
-    //            Idel();
-    //            break;
-    //        case WahleState.MOVE:
-    //            Move();
-    //            break;
-    //        case WahleState.ATTACK:
-    //            Attack();
-    //            break;
-    //    }
-    //}
-
+    
     IEnumerator Idel()
     {
         initSpeed = 0f;
 
-        float[] value = { 50, 50 };
-        //int num = GetRandomValue(value);
+        float[] value = { 0, 100 };
+        stateValue = GetRandomValue(value);
 
         while (true)
         {
@@ -77,27 +52,29 @@ public class WahleCtrl : MonoBehaviour {
             distance = relativePos.sqrMagnitude;
             lookRot = Quaternion.LookRotation(relativePos);
 
-            initSpeed = IncrementSpeed(initSpeed, 3f, 0.2f);
-
-            if (stateValue == 1)
+            switch (stateValue)
             {
-                transform.RotateAround(transform.position, Vector3.forward, 100f * Time.deltaTime);
-                transform.Translate(new Vector3(0f, 2f * Time.deltaTime, 2f * Time.deltaTime));
-            }
-            // 플레이어 주위 돌기
-            else {
-                sinSpeed = Mathf.Sin(delTime += Time.deltaTime);
+                case 0: // 플레이어 주위를 선회
+                    sinSpeed = Mathf.Sin(delTime += Time.deltaTime);
 
-                transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, Time.deltaTime);
-                transform.Translate(0, (sinSpeed * 0.5f) * Time.deltaTime, initSpeed * Time.deltaTime);
-        }
-        yield return null;
+                    transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, Time.deltaTime);
+                    transform.Translate(0, (sinSpeed * 0.5f) * Time.deltaTime, 3f * Time.deltaTime);
+                    break;
+                case 1: // 360도 회전   
+                    transform.RotateAround(transform.position, Vector3.forward, 100f * Time.deltaTime);
+                    transform.Translate(new Vector3(0f, 2f * Time.deltaTime, 2f * Time.deltaTime));
+                    break;
+            }
+
+            yield return null;
         }
     }
 
     // 이동
     IEnumerator Move()
     {
+        float[] value = { 60, 40 };
+        float speed = 1f;
         while (true)
         {
             if (distance <= 6f && PlayerCtrl.inputAxis == 0f)
@@ -105,51 +82,44 @@ public class WahleCtrl : MonoBehaviour {
                 StartCoroutine(Idel());
                 break;
             }
-            // 이동속도 증가
-            initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel);
 
-            delTime += Time.deltaTime;
-            sinSpeed = Mathf.Sin(delTime);
-
-            distance = (transform.position - playerTr.position).sqrMagnitude;
-            relativePos = (playerTr.position - transform.position);
+            relativePos = (playerTr.position - transform.position); // 두 객체간의 거리 차
+            distance = relativePos.sqrMagnitude; // 거리 차
             lookRot = Quaternion.LookRotation(relativePos);
-
-            //moveTime += Time.deltaTime;
-            //if (moveTime >= 1.5f)
-            //{
-            //    transform.RotateAround(transform.position, Vector3.right, 200f * Time.deltaTime);
-            //    float rotValue += transform.rotation.y;
-            //    if (rotValue <= -3f)
-            //    {
-            //        moveTime = 0f;
-            //    }
-            //}
-            //else
-            //{
-            //    transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
-            //}
 
             // 캐릭터 회전시 겹쳐짐을 방지하기 위해 좌우 방향에 따른 양수 또는 음수를 줌
             focusDir = Mathf.Sign(PlayerCtrl.inputAxis);
+            // -1 ~ 1까지 반복 되는 수
+            sinSpeed = Mathf.Sin(delTime += Time.deltaTime);
 
-            transform.Translate(new Vector3(0f, (sinSpeed * 3f) * Time.deltaTime, 0f));
+            // 이동속도 증가
+            initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel);
 
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 2f * Time.deltaTime);
+            // 캐릭터를 향해 회전
+            if (initSpeed < maxSpeed)
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+            // 선형 보간을 사용한 캐릭터 추격
             transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward * focusDir),
                 initSpeed * Time.deltaTime);
+
+            if (initSpeed >= maxSpeed)
+            {
+                if (speed <= 5f)
+                    speed += (Time.deltaTime * 2f);
+                transform.Translate(new Vector3(0f, (sinSpeed * speed) * Time.deltaTime, 0f));
+                transform.Translate(new Vector3(0f, 0f, (sinSpeed * speed * 2f) * Time.deltaTime));
+            }
+
+            //float rotValue += transform.rotation.y;
+            //if (rotValue <= -3f)
+            //{
+            //transform.RotateAround(transform.position, Vector3.right * sinSpeed, 50f * Time.deltaTime);
+            //}
 
             yield return null;
         }
     }
 
-    IEnumerator WaitRandom(float waitTime, float[] value)
-    {
-        isWait = true;
-        yield return new WaitForSeconds(waitTime);
-        stateValue = GetRandomValue(value);
-        isWait = false;
-    }
 
     //// 공격
     //void Attack()
@@ -175,22 +145,34 @@ public class WahleCtrl : MonoBehaviour {
     //        SetState(WahleState.IDLE);
     //    }
     //}
+
     // 주변 몬스터 탐색
-    //void SearchEnemy()
-    //{
-    //    if (state != WahleState.ATTACK && !isDie)
-    //    {
-    //        Collider[] hitCollider = Physics.OverlapSphere(playerTr.position, 5f);
-    //        for (int i = 0; i < hitCollider.Length; i++)
-    //        {
-    //            if (hitCollider[i].CompareTag("MONSTER"))
-    //            {
-    //                targetTr = hitCollider[i].transform;
-    //                state = WahleState.ATTACK;
-    //            }
-    //        }
-    //    }
-    //}
+    IEnumerator SearchEnemy()
+    {
+        while (true)
+        {
+            Collider[] hitCollider = Physics.OverlapSphere(playerTr.position, 5f);
+            for (int i = 0; i < hitCollider.Length; i++)
+            {
+                if (hitCollider[i].CompareTag("MONSTER"))
+                {
+                    targetTr = hitCollider[i].transform;
+                    
+                }
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+
+    }
+
+    IEnumerator WaitRandom(float waitTime, float[] value)
+    {
+        isWait = true;
+        yield return new WaitForSeconds(waitTime);
+        stateValue = GetRandomValue(value);
+        isWait = false;
+    }
+
 
     // 랜덤 값 생성
     int GetRandomValue(float[] values)

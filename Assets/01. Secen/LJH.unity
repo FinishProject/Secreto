@@ -4720,6 +4720,10 @@ Prefab:
       propertyPath: cloth
       value: 
       objectReference: {fileID: 494063990}
+    - target: {fileID: 199526, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
   m_IsPrefabParent: 0
