@@ -204,7 +204,7 @@ public class WahleCtrl : MonoBehaviour {
             transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
             // 선형 보간을 사용한 캐릭터 추격
             transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward * focusDir),
-                2f * Time.deltaTime);
+                5f * Time.deltaTime);
             yield return null;
         }
     }

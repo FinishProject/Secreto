@@ -20,8 +20,8 @@ public class SwitchGate : MonoBehaviour {
     void Start()
     {
         // 최종 위치를 구함
-        //finishPos = rightGate.position;
-        //finishPos.x += maxLength;
+        finishPos = gate.position;
+        finishPos.y -= maxLength;
     }
 
 	void OnTriggerEnter(Collider col)
@@ -42,7 +42,6 @@ public class SwitchGate : MonoBehaviour {
                 break;
             // 양쪽 문 오브젝트 이동
             gate.Translate(Vector3.up * -speed * Time.deltaTime);
-            //rightGate.Translate(Vector3.right * speed * Time.deltaTime);
             yield return null;
         }
     }

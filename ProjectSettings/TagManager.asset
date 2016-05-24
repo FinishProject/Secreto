@@ -13,6 +13,7 @@ TagManager:
   - WALL
   - BULLET
   - ITEM
+  - SmashObj
   layers:
   - Default
   - TransparentFX

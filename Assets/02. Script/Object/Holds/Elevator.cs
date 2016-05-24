@@ -66,7 +66,7 @@ public class Elevator : MonoBehaviour {
                 }
                 else if (isActive && isTrample)
                 {
-                    transform.Translate(Vector3.up * speed * Time.deltaTime);
+                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
                 }
 
                 //초기 위치까지 이동
@@ -77,7 +77,7 @@ public class Elevator : MonoBehaviour {
                 }
                 else if (!isActive && !isTrample)
                 {
-                    transform.Translate(Vector3.up * speed * Time.deltaTime);
+                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
                 }
                 break;
 
@@ -89,7 +89,7 @@ public class Elevator : MonoBehaviour {
                     speed *= -1f;
                 }
                 if (isActive && isTrample)
-                    transform.Translate(Vector3.up * speed * Time.deltaTime);
+                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
                 //최고 높이까지 이동
                 if (transform.position.y >= finishPos.y && speed > -1)
                 {
@@ -97,7 +97,7 @@ public class Elevator : MonoBehaviour {
                     speed *= -1;
                 }
                 else if (!isActive && !isTrample)
-                    transform.Translate(Vector3.up * speed * Time.deltaTime);
+                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
                 break;
         }
     }
