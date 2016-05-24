@@ -135,7 +135,7 @@ Material:
       data:
         first:
           name: _Emitt
-        second: 0.1
+        second: 0.8
     m_Colors:
       data:
         first:
@@ -144,7 +144,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 0.88235295, g: 0.88235295, b: 0.88235295, a: 1}
+        second: {r: 0.5588235, g: 0.5588235, b: 0.5588235, a: 1}
       data:
         first:
           name: _EmissionColorUI
@@ -152,4 +152,4 @@ Material:
       data:
         first:
           name: _UpperColor
-        second: {r: 1, g: 0.9026369, b: 0.64705884, a: 0}
+        second: {r: 0, g: 0, b: 0, a: 0}
