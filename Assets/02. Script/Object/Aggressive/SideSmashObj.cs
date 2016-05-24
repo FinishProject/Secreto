@@ -2,13 +2,22 @@
 using System.Collections;
 
 public class SideSmashObj : MonoBehaviour {
+    [System.Serializable]
+    public struct ObjInfo {
+        public Transform topObj;
+        public Transform botObj;
+        public Vector3 topOriginPos, botOriginPos;
+    };
 
-    public Transform upWall, downWall;
+    public ObjInfo[] objInfo;
+    private Vector3[] finishPos;
+
     public float speed;
     public float length;
     public float waitTime = 1.5f; // 충돌 후 대기 시간
-    public bool isRight = true; // 오른쪽에 위치한 오브젝트인지 확인
-  
+    private bool isFirstUP = false; // 오른쪽에 위치한 오브젝트인지 확인
+    private bool isSecondUP = false;
+
     private bool isSmash = false; // 충돌 했는 지
     private bool isMove = false; // 대기 시간 지난 후 이동 체크
     private Vector3 upOrigin, downOrigin;
@@ -16,69 +25,156 @@ public class SideSmashObj : MonoBehaviour {
 
     Vector3 center;
 
+    bool isSecond = false;
+
     void Start()
     {
-        //originPos = this.transform.position;
-        //center = (upWall.position - downWall.position);
-        //center.y = (upWall.position.y - downWall.position.y) * 0.5f;
-        //center = Vector3.Cross(upWall.position, downWall.position);
-        //center *= 0.5f;
-        if (upWall != null)
+        for(int i=0; i<objInfo.Length; i++)
         {
-            upOrigin = upWall.position;
-            upTarget = upWall.position;
-            upTarget.y += length;
+            objInfo[i].topOriginPos = objInfo[i].topObj.position;
+            if(objInfo[i].botObj != null)
+                objInfo[i].botOriginPos = objInfo[i].botObj.position;
         }
 
-        downOrigin = downWall.position;
-        downTarget = downWall.position;
-        downTarget.y -= length;
+        finishPos = new Vector3[objInfo.Length];
+        if (objInfo[0].botObj != null)
+        {
+            for (int i = 0; i < finishPos.Length; i++)
+            {
+                finishPos[i] = (objInfo[i].topOriginPos - objInfo[i].botOriginPos) * 0.5f;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < finishPos.Length; i++)
+            {
+                finishPos[i] = (objInfo[i].topOriginPos);
+                finishPos[i].y = (objInfo[i].topOriginPos.y - 5f);
+            }
+        }
     }
 
     void Update()
     {
-        if(downWall.position.y <= downTarget.y + 0.2f)
+        if (objInfo[0].botObj != null)
         {
-            isSmash = true;
-        }
-        else if(downWall.position.y >= downOrigin.y - 0.2f)
-        {
-            isSmash = false;
-        }
-
-        if (!isSmash)
-        {
-            if (upWall != null)
-                upWall.position = Vector3.Lerp(upWall.position, upTarget, 2f * Time.deltaTime);
-            downWall.position = Vector3.Lerp(downWall.position, downTarget, 2f * Time.deltaTime);
+            SideMove();
         }
         else
         {
-            if (upWall != null)
-                upWall.position = Vector3.Lerp(upWall.position, upOrigin, Time.deltaTime);
-            downWall.position = Vector3.Lerp(downWall.position, downOrigin, Time.deltaTime);
+            SoloMove();
         }
     }
-    // 충돌 시 이동 중지
-    //void OnTriggerEnter(Collider col)
-    //{
-    //    if (col.CompareTag("SmashObj"))
-    //    {
-    //        isSmash = true;
-    //        StartCoroutine(WaitMove(false));
-    //    }
-    //}
-    // 잠시 대기 후 다시 이동
-    IEnumerator WaitMove(bool isType)
+
+    void SideMove()
     {
-        yield return new WaitForSeconds(waitTime);
-        if (isType) // 충돌 하기 위해 이동
+        if (objInfo[0].topObj.position.y >= finishPos[0].y - 0.2f)
         {
-            isSmash = false;
+            isFirstUP = true;
+            isSecond = true;
         }
-        else { // 돌아가기 위해 이동
-            isMove = true;
+        else if (objInfo[0].topObj.position.y <= objInfo[0].topOriginPos.y + 0.2f)
+        {
+            isFirstUP = false;
         }
-        StopCoroutine("WaitMove");
+
+        if (objInfo[1].topObj.position.y >= finishPos[1].y - 0.2f)
+        {
+            isSecondUP = true;
+        }
+        else if (objInfo[1].topObj.position.y <= objInfo[1].topOriginPos.y + 0.2f)
+        {
+            isSecondUP = false;
+        }
+
+        for (int i = 0; i < objInfo.Length; i += 2)
+        {
+            if (i <= objInfo.Length)
+            {
+                if (isFirstUP)
+                {
+                    objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, new Vector3(objInfo[i].topObj.position.x, objInfo[i].topOriginPos.y, objInfo[i].topObj.position.z), Time.deltaTime);
+                    objInfo[i].botObj.position = Vector3.Lerp(objInfo[i].botObj.position, new Vector3(objInfo[i].botObj.position.x, objInfo[i].botOriginPos.y, objInfo[i].botObj.position.z), Time.deltaTime);
+                }
+                else if (!isFirstUP)
+                {
+                    objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, new Vector3(objInfo[i].topObj.position.x, finishPos[i].y, objInfo[i].topObj.position.z), Time.deltaTime);
+                    objInfo[i].botObj.position = Vector3.Lerp(objInfo[i].botObj.position, new Vector3(objInfo[i].botObj.position.x, finishPos[i].y, objInfo[i].botObj.position.z), Time.deltaTime);
+                }
+            }
+        }
+        if (isSecond)
+        {
+            for (int j = 1; j < objInfo.Length; j += 2)
+            {
+                if (j <= objInfo.Length)
+                {
+                    if (isSecondUP)
+                    {
+                        objInfo[j].topObj.position = Vector3.Lerp(objInfo[j].topObj.position, new Vector3(objInfo[j].topObj.position.x, objInfo[j].topOriginPos.y, objInfo[j].topObj.position.z), Time.deltaTime);
+                        objInfo[j].botObj.position = Vector3.Lerp(objInfo[j].botObj.position, new Vector3(objInfo[j].botObj.position.x, objInfo[j].botOriginPos.y, objInfo[j].botObj.position.z), Time.deltaTime);
+                    }
+                    else if (!isSecondUP)
+                    {
+                        objInfo[j].topObj.position = Vector3.Lerp(objInfo[j].topObj.position, new Vector3(objInfo[j].topObj.position.x, finishPos[j].y, objInfo[j].topObj.position.z), Time.deltaTime);
+                        objInfo[j].botObj.position = Vector3.Lerp(objInfo[j].botObj.position, new Vector3(objInfo[j].botObj.position.x, finishPos[j].y, objInfo[j].botObj.position.z), Time.deltaTime);
+                    }
+                }
+            }
+        }
+    }
+
+    void SoloMove()
+    {
+        if (objInfo[0].topObj.position.y <= finishPos[0].y + 0.2f)
+        {
+            isFirstUP = true;
+            isSecond = true;
+        }
+        else if (objInfo[0].topObj.position.y >= objInfo[0].topOriginPos.y - 0.2f)
+        {
+            isFirstUP = false;
+        }
+
+        if (objInfo[1].topObj.position.y <= finishPos[1].y + 0.2f)
+        {
+            isSecondUP = true;
+        }
+        else if (objInfo[1].topObj.position.y >= objInfo[1].topOriginPos.y - 0.2f)
+        {
+            isSecondUP = false;
+        }
+
+        for (int i = 0; i < objInfo.Length; i += 2)
+        {
+            if (i <= objInfo.Length)
+            {
+                if (isFirstUP)
+                {
+                    objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, new Vector3(objInfo[i].topObj.position.x, objInfo[i].topOriginPos.y, objInfo[i].topObj.position.z), Time.deltaTime);
+                }
+                else if (!isFirstUP)
+                {
+                    objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, new Vector3(objInfo[i].topObj.position.x, finishPos[i].y, objInfo[i].topObj.position.z), Time.deltaTime);
+                }
+            }
+        }
+        if (isSecond)
+        {
+            for (int j = 1; j < objInfo.Length; j += 2)
+            {
+                if (j <= objInfo.Length)
+                {
+                    if (isSecondUP)
+                    {
+                        objInfo[j].topObj.position = Vector3.Lerp(objInfo[j].topObj.position, new Vector3(objInfo[j].topObj.position.x, objInfo[j].topOriginPos.y, objInfo[j].topObj.position.z), Time.deltaTime);
+                    }
+                    else if (!isSecondUP)
+                    {
+                        objInfo[j].topObj.position = Vector3.Lerp(objInfo[j].topObj.position, new Vector3(objInfo[j].topObj.position.x, finishPos[j].y, objInfo[j].topObj.position.z), Time.deltaTime);
+                    }
+                }
+            }
+        }
     }
 }
