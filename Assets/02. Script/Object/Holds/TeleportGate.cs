@@ -21,6 +21,8 @@ public class TeleportGate : MonoBehaviour {
 
     void Start()
     {
+        telepGate = exitGate.GetComponent<TeleportGate>();
+
         olaTr = GameObject.FindGameObjectWithTag("WAHLE").transform;
         camTr = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
@@ -30,7 +32,6 @@ public class TeleportGate : MonoBehaviour {
         if(coll.CompareTag("Player") && isTravel)
         {
             // 반대편에 도착 시 잠시 이동 불가능하게 만듬
-            telepGate = exitGate.GetComponent<TeleportGate>();
             telepGate.Block();
 
             // 출구 위치로 이동

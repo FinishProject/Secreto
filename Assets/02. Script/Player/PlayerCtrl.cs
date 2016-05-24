@@ -34,6 +34,7 @@ public class PlayerCtrl : MonoBehaviour
     private bool isClimb = false; // 벽 오르기 확인
 
     private float gravity = 5f; // 중력값
+	public float gr = 5;
     private float fullHp = 100; // 체력
     private float focusRight = 1f;
 
@@ -81,8 +82,13 @@ public class PlayerCtrl : MonoBehaviour
         transform.position = pData.pPosition;
     }
 
+    void OnEnable()
+    {
+        WayPoint.OnSave += Save;
+    }
+
     //플레이어 데이터 저장
-    public void Save()
+    void Save()
     {
         pData.pPosition = transform.position;
         PlayerData.Save(pData);
@@ -101,11 +107,7 @@ public class PlayerCtrl : MonoBehaviour
 
         //펫 타기
         //else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
-
-        if (transform.position.y <= -7f)
-        {
-            PlayerDie();
-        }
+	
     }
 
     void Movement()
@@ -148,7 +150,7 @@ public class PlayerCtrl : MonoBehaviour
             {
                 moveDir = Jump(JumpType.DASH);
             }
-            gravity = 5f;
+			gravity = gr;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
         }

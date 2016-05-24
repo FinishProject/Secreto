@@ -46,7 +46,7 @@ public class ScriptMgr : MonoBehaviour {
         bgUi.SetActive(false);
         answerUi.SetActive(false);
         scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
-        spokeNpc = PlayerData.LoadSpokeNpc(); // 이미 대화한 NPC 이름 불러오기
+        spokeNpc = PlayerData.LoadNpcName(); // 이미 대화한 NPC 이름 불러오기
     }
 
     // NPC 이름에 해당하는 대사들과 퀘스트 정보를 가져옴
@@ -83,7 +83,6 @@ public class ScriptMgr : MonoBehaviour {
         // 퀘스트 수락 후 완료 시
         else if (SpeakName(name) && isQuest)
         {
-            Debug.Log("11");
             StartCoroutine(SpeakingNPC());
         }
         else if (SpeakName(name) && !isQuest) 
@@ -180,19 +179,14 @@ public class ScriptMgr : MonoBehaviour {
         return false;
     }
 
-    //대화 완료한 NPC이름 저장
-    public void SaveSpokenNpc()
+    // 대화한 NPC 이름 저장
+    void SaveNpcName()
     {
-        XmlDocument doc = new XmlDocument();
-        XmlElement scriptElement = doc.CreateElement("Script");
-        doc.AppendChild(scriptElement);
+        PlayerData.SaveNpcName(spokeNpc);
+    }
 
-        XmlElement scriptSpeak = doc.CreateElement("SpokeNPC");
-        for (int i = 0; i < spokeNpc.Count; i++) {
-            scriptSpeak.SetAttribute("Spoke_NPC", spokeNpc[i].ToString());
-        }
-        scriptElement.AppendChild(scriptSpeak);
-
-        doc.Save(Application.dataPath + "/Resources/SpokeNpcName.xml");
+    void OnEnable()
+    {
+        WayPoint.OnSave += SaveNpcName;
     }
 }

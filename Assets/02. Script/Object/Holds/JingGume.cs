@@ -10,12 +10,13 @@ public class JingGume : MonoBehaviour {
     private JingGume parent;
 
     void Start () {
+
         //발판 오브젝트 끄기
         for (int i = 1; i < gObject.Length; i++)
         {
             gObject[i].SetActive(false);
         }
-        if(transform.parent)
+        if (transform.parent)
             parent = transform.parent.GetComponentInParent<JingGume>();
 	}
 

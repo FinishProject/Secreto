@@ -7,9 +7,10 @@ public class Data
 {
     public Vector3 pPosition;
     public float hp;
+    public float enhance;
 }
 
-public class PlayerData {
+public abstract class PlayerData {
 
     public static void Save(Data data)
     {
@@ -40,17 +41,17 @@ public class PlayerData {
         XmlElement posElement = xmlDoc["PlayerPosition"];
 
         float posX, posY, posZ, pHp;
-        Data data = new Data();
+        Data loadData = new Data();
         foreach (XmlElement PosElement in posElement.ChildNodes)
         {
             posX = System.Convert.ToSingle(PosElement.GetAttribute("x"));
             posY = System.Convert.ToSingle(PosElement.GetAttribute("y"));
             posZ = System.Convert.ToSingle(PosElement.GetAttribute("z"));
-          
+            
             Vector3 initVec = new Vector3(posX, posY, posZ);
-            data.pPosition = initVec;
+            loadData.pPosition = initVec;
         }
-        return data;
+        return loadData;
     }
 
     //NPC 대사 XML 문서 불러오기
@@ -95,7 +96,24 @@ public class PlayerData {
         return scriptData;
     }
 
-    public static List<string> LoadSpokeNpc()
+    //대화 완료한 NPC이름 저장
+    public static void SaveNpcName(List<string> npcName)
+    {
+        XmlDocument doc = new XmlDocument();
+        XmlElement scriptElement = doc.CreateElement("Script");
+        doc.AppendChild(scriptElement);
+
+        XmlElement scriptSpeak = doc.CreateElement("SpokeNPC");
+        for (int i = 0; i < npcName.Count; i++)
+        {
+            scriptSpeak.SetAttribute("Spoke_NPC", npcName[i].ToString());
+        }
+        scriptElement.AppendChild(scriptSpeak);
+
+        doc.Save(Application.dataPath + "/Resources/SpokeNpcName.xml");
+    }
+
+    public static List<string> LoadNpcName()
     {
         // 대화한 NPC 이름 XML 데이터 불러오기
         XmlDocument xmlDocName = new XmlDocument();
