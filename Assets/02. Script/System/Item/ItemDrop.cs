@@ -23,8 +23,8 @@ public class ItemDrop : MonoBehaviour {
     {
         public bool HpRecover;          // 회복 아이템 드랍 할 것인가?
         public int  HpRecoverNumber;    // 드랍할 회복 아이템 개수
-        public bool Exp;                // 경험치 
-        public int  ExpNumber;          // 경험치 개수
+        public bool Mental;                // 경험치 
+        public int  MentalNumber;          // 경험치 개수
     }
     public DarpItemInfo dropItemList;   // 입력받은 구조체
     public float dropRange;             // 드랍 범위
@@ -37,7 +37,7 @@ public class ItemDrop : MonoBehaviour {
         if(isRandomNumberDrap)
         {
             dropItemList.HpRecoverNumber = Random.Range(0, dropItemList.HpRecoverNumber);
-            dropItemList.ExpNumber = Random.Range(0, dropItemList.ExpNumber);
+            dropItemList.MentalNumber = Random.Range(0, dropItemList.MentalNumber);
         }
     }
 	
@@ -57,14 +57,14 @@ public class ItemDrop : MonoBehaviour {
             tempItem.GetComponent<HpRecoveryItem>().Dropped(thisTr.position, randPos, true);
         }
 
-        for (int i = 0; dropItemList.Exp && i < dropItemList.ExpNumber; i++)
+        for (int i = 0; dropItemList.Mental && i < dropItemList.MentalNumber; i++)
         {
-            tempItem = ItemMgr.instance.GetItem(ItemFunction.Exp).UseItem();
+ //           tempItem = ItemMgr.instance.GetItem(ItemFunction.Mental).UseItem();
             Vector3 randPos = new Vector3(
                 Random.Range(thisTr.position.x - dropRange, thisTr.position.x + dropRange),
                 Random.Range(thisTr.position.y + dropRange, thisTr.position.y + (dropRange * 2)),
                 -2);
-            tempItem.GetComponent<MentalItem>().Dropped(thisTr.position, randPos, true);
+//            tempItem.GetComponent<MentalItem>().Dropped(thisTr.position, randPos, true);
         }
 
     }
