@@ -11,7 +11,7 @@ using System.Collections;
 
 public class SwitchGate : MonoBehaviour {
 
-    public Transform leftGate, rightGate; // 양쪽 문 오브젝트
+    public Transform gate; // 양쪽 문 오브젝트
     public float speed;
     public float maxLength; // 최대 이동 거리
 
@@ -38,10 +38,10 @@ public class SwitchGate : MonoBehaviour {
         while (true)
         {
             // 최종 위치 이상 도달 시 종료
-            if (rightGate.position.x >= finishPos.x)
+            if (gate.position.y <= finishPos.y)
                 break;
             // 양쪽 문 오브젝트 이동
-            leftGate.Translate(Vector3.forward * -speed * Time.deltaTime);
+            gate.Translate(Vector3.up * -speed * Time.deltaTime);
             //rightGate.Translate(Vector3.right * speed * Time.deltaTime);
             yield return null;
         }

@@ -9,11 +9,11 @@ public class Elevator : MonoBehaviour {
     private bool isActive = true; // 작동 여부
     private bool isTrample = false; // 플레이어가 밟고 있는지 여부
     private Vector3 originPos, finishPos; // 시작 위치, 최종 위치
-    private Transform playerTr, olaTr; // 플레이어, 올라 트랜스폼
+    private Transform playerTr; // 플레이어, 올라 트랜스폼
 
     void Start()
     {
-        olaTr = GameObject.FindGameObjectWithTag("WAHLE").transform;
+        playerTr = GameObject.FindGameObjectWithTag("Player").transform;
 
         // 시작 위치 및 최종 위치 구함
         originPos = this.transform.position;
@@ -111,10 +111,10 @@ public class Elevator : MonoBehaviour {
             // 오브젝트가 작동 중이고 플레이어 밟고 있을 시 true
             if (isActive)
             {
+                WahleCtrl.curState = WahleCtrl.instance.StepHold();
                 isTrample = true;
                 //플레이어 이동
                 playerTr.Translate(Vector3.up * speed * Time.deltaTime);
-                olaTr.Translate(Vector3.forward * speed * Time.deltaTime);
             }
         }
     }
@@ -122,20 +122,7 @@ public class Elevator : MonoBehaviour {
     void OnTriggerExit(Collider col)
     {
         StartCoroutine(WaitMove());
-        playerTr = null;
-    }
-
-    // 이동 속도 가속도
-    float IncrementToWards(float initSpeed, float maxSpeed, float accel)
-    {
-        if (initSpeed == maxSpeed)
-            return initSpeed;
-        else {
-            initSpeed += accel * Time.deltaTime;
-            Debug.Log(initSpeed);
-            // 기본 속도가 최고 속도를 넘을 시 음수가 되어 maxSpeed만 반환
-            return (1 == Mathf.Sign(maxSpeed - initSpeed)) ? initSpeed : maxSpeed;
-        }
+        WahleCtrl.curState = WahleCtrl.instance.Move();
     }
 
     // 플레이어 벗어난 후 초기 위치로 돌아가기 위한 카운트 다운
