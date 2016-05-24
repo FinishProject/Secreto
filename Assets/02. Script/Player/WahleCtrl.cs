@@ -36,6 +36,7 @@ public class WahleCtrl : MonoBehaviour {
         StartCoroutine(CoroutineUpdate());
         StartCoroutine(SearchEnemy());
     }
+
     // curState가 null이 아니면 curState에 있는 코루틴을 실행함
     IEnumerator CoroutineUpdate()
     {
@@ -49,13 +50,15 @@ public class WahleCtrl : MonoBehaviour {
                 yield return null;
         }
     }
-    
+
+    // 대기
     IEnumerator Idle()
     {
         initSpeed = 0f;
 
         float[] value = { 100, 0 };
         stateValue = GetRandomValue(value);
+        anim.SetBool("Move", true);
 
         while (true)
         {
@@ -73,7 +76,7 @@ public class WahleCtrl : MonoBehaviour {
             distance = relativePos.sqrMagnitude;
             lookRot = Quaternion.LookRotation(relativePos);
 
-            anim.SetBool("Move", true);
+            
 
             switch (stateValue)
             {
@@ -97,6 +100,8 @@ public class WahleCtrl : MonoBehaviour {
     {
         float[] value = { 60, 40 };
         float speed = 1f;
+        anim.SetBool("Move", true);
+
         while (true)
         {
             // Idle 상태로 변경
@@ -117,8 +122,7 @@ public class WahleCtrl : MonoBehaviour {
 
             // 이동속도 증가
             initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel);
-            anim.SetBool("Move", true);
-
+            
             // 캐릭터를 향해 회전
             if (initSpeed < maxSpeed)
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
@@ -148,54 +152,41 @@ public class WahleCtrl : MonoBehaviour {
     // 공격
     IEnumerator Attack()
     {
+        //anim.SetBool("Move", false);
+
         while (true)
         {
-            Debug.Log("Join Attack");
-
-            if (!targetObj.activeSelf || distance >= 10f)
+            if (!targetObj.activeSelf || distance >= 12f)
             {
                 curState = Move();
             }
 
-            //relativePos = (playerTr.position - transform.position);
-            //distance = relativePos.sqrMagnitude; // 거리 차
+            relativePos = (targetObj.transform.position - transform.position);
+            distance = (playerTr.position - transform.position).sqrMagnitude; // 거리 차
 
-            //lookRot = Quaternion.LookRotation(relativePos);
-            //focusDir = Mathf.Sign(targetObj.transform.position.x - transform.position.x);
+            lookRot = Quaternion.LookRotation(relativePos);
+            focusDir = Mathf.Sign(relativePos.x);
 
-            //transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
-            //transform.position = Vector3.Lerp(transform.position, targetObj.transform.position -
-            //    ((targetObj.transform.forward * -focusDir * 3f) - (targetObj.transform.up)), 7f * Time.deltaTime);
+            if(transform.localRotation.x <= 0.24f)
+                lookRot.x = 0f;
+
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+
+            if (relativePos.sqrMagnitude >= 10.3f)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetObj.transform.position -
+                    ((targetObj.transform.right * 3f) - (targetObj.transform.up)), 3f * Time.deltaTime);
+            }
 
             yield return null;
         }
-
-        
-
-        //if (targetTr != null)
-        //{
-        //    float dis = (playerTr.position - transform.position).sqrMagnitude;
-        //    if (dis >= 5f)
-        //    {
-        //        SetState(WahleState.MOVE);
-        //    }
-
-        //    relativePos = (targetTr.position - transform.position);
-        
-        //}
-        //else
-        //{
-        //    SetState(WahleState.IDLE);
-        //}
     }
 
     // 주변 몬스터 탐색
     IEnumerator SearchEnemy()
     {
-        bool isSearch = false;
-        while (!isSearch)
+        while (true)
         {
-            Debug.Log("search");
             Collider[] hitCollider = Physics.OverlapSphere(playerTr.position, 5f);
             for (int i = 0; i < hitCollider.Length; i++)
             {
@@ -203,13 +194,10 @@ public class WahleCtrl : MonoBehaviour {
                 {
                     targetObj = hitCollider[i].gameObject;
                     curState = Attack();
-                    isSearch = true;
-                    break;
                 }
             }
             yield return new WaitForSeconds(0.1f);
         }
-
     }
 
     IEnumerator WaitRandom(float waitTime, float[] value)
