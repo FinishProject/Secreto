@@ -36,7 +36,8 @@ public class TeleportGate : MonoBehaviour {
 
             // 출구 위치로 이동
             coll.transform.position = exitGate.transform.position;
-            camTr.position = new Vector3(exitGate.transform.position.x, exitGate.transform.position.y, camTr.position.z);
+            CameraCtrl.speed = 200f;
+            //camTr.position = new Vector3(exitGate.transform.position.x, camTr.position.y, camTr.position.z);
             olaTr.position = exitGate.transform.position; 
         }
     }

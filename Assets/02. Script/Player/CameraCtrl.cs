@@ -4,7 +4,7 @@ using System.Collections;
 public class CameraCtrl : MonoBehaviour {
 
     public Transform playerTr; // 플레이어의 위치값
-    public float speed = 10f;  // 카메라의 속도
+    public static float speed = 10f;  // 카메라의 속도
 
     private Vector3 relCameraPos;
     private Vector3 standardPos;

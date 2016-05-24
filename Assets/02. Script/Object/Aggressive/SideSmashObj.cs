@@ -39,12 +39,10 @@ public class SideSmashObj : MonoBehaviour {
     {
         if(downWall.position.y <= downTarget.y + 0.2f)
         {
-            Debug.Log("11");
             isSmash = true;
         }
         else if(downWall.position.y >= downOrigin.y - 0.2f)
         {
-            Debug.Log("22");
             isSmash = false;
         }
 

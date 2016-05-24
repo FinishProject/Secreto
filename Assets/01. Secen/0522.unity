@@ -1177,7 +1177,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 481266, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 571.73
+      value: 557.6
       objectReference: {fileID: 0}
     - target: {fileID: 481266, guid: 59205133e4fa48240b7d99b3bae892b1, type: 2}
       propertyPath: m_LocalPosition.y
@@ -7200,6 +7200,7 @@ GameObject:
   - 65: {fileID: 458691292}
   - 23: {fileID: 458691291}
   - 114: {fileID: 458691295}
+  - 65: {fileID: 458691296}
   m_Layer: 0
   m_Name: unstable_land
   m_TagString: Untagged
@@ -7276,6 +7277,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cnt: 3
+--- !u!65 &458691296
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 458691290}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.35, z: 0}
 --- !u!4 &459847841 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 712e8fb8b021f064092df59aa5a4da4a, type: 3}
@@ -14246,7 +14259,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 944441278}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -2.0204468, y: 33.20816, z: -120.90057}
+  m_LocalPosition: {x: -1.83, y: 33.20816, z: -120.90057}
   m_LocalScale: {x: 10, y: 8, z: 1}
   m_Children: []
   m_Father: {fileID: 803868471}
@@ -18099,7 +18112,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1185415765}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -2.1, y: 51.20816, z: -120.90057}
+  m_LocalPosition: {x: -1.62, y: 51.20816, z: -120.90057}
   m_LocalScale: {x: 10, y: 8, z: 1}
   m_Children: []
   m_Father: {fileID: 803868471}
