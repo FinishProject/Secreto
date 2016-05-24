@@ -9,6 +9,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable
     float speed;
     float speed_InLine = 100f;
     float speed_OutLine = 10f;
+    float heightGap;
     float delay;
     public bool ActiveSensor(int index)
     {
@@ -45,6 +46,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable
         inLine_R = GameObject.Find("inLine_R");
         inLine_L_Tr = inLine_L.transform;
         inLine_R_Tr = inLine_R.transform;
+        heightGap = transform.position.y - playerTr.position.y;
         delay = speed_OutLine * 0.1f;
     }
 
@@ -56,6 +58,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable
     void MoveInsideLine()
     {
         Vector3 tempPos = transform.position;
+        
         if (isLeftSide)
         {
             if(playerTr.position.x > inLine_L_Tr.position.x)
@@ -70,6 +73,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable
                 tempPos.x = playerTr.position.x - (inLine_R_Tr.position.x - tempPos.x);
             }
         }
+        tempPos.y = playerTr.position.y + heightGap;
         transform.position = Vector3.MoveTowards(transform.position, tempPos, speed * Time.deltaTime);
     }
 
