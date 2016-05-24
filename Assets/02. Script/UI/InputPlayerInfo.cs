@@ -23,7 +23,7 @@ public class InputPlayerInfo : MonoBehaviour {
         jump2.text = PlayerCtrl.instance.dashJumpHight.ToString();
         //gr.   text = PlayerCtrl.instance.gravity_jump.ToString();
         speed.text = PlayerCtrl.instance.speed.ToString();
-        speed_c.text = camera.GetComponent<CameraCtrl>().speed.ToString();
+        //speed_c.text = camera.GetComponent<CameraCtrl>().speed.ToString();
     }
 
 
@@ -33,7 +33,8 @@ public class InputPlayerInfo : MonoBehaviour {
         PlayerCtrl.instance.dashJumpHight = Convert.ToSingle(jump2.text);
         //PlayerCtrl.instance.gravity_jump = Convert.ToSingle(gr.text);
         PlayerCtrl.instance.speed = Convert.ToSingle(speed.text);
-        camera.GetComponent<CameraCtrl>().speed = Convert.ToSingle(speed_c.text);
+        //camera.GetComponent<CameraCtrl>().speed = Convert.ToSingle(speed_c.text);
+        CameraCtrl.speed = Convert.ToSingle(speed_c.text);
 
     }
 }

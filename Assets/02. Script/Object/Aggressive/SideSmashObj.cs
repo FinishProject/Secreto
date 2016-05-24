@@ -5,12 +5,14 @@ public class SideSmashObj : MonoBehaviour {
 
     public Transform upWall, downWall;
     public float speed;
+    public float length;
     public float waitTime = 1.5f; // 충돌 후 대기 시간
     public bool isRight = true; // 오른쪽에 위치한 오브젝트인지 확인
   
     private bool isSmash = false; // 충돌 했는 지
     private bool isMove = false; // 대기 시간 지난 후 이동 체크
-    private Vector3 originPos; // 초기 위치
+    private Vector3 upOrigin, downOrigin;
+    private Vector3 upTarget, downTarget;
 
     Vector3 center;
 
@@ -18,68 +20,54 @@ public class SideSmashObj : MonoBehaviour {
     {
         //originPos = this.transform.position;
         //center = (upWall.position - downWall.position);
-        center.y = (upWall.position.y - downWall.position.y) * 0.5f;
-        Debug.Log(center);
+        //center.y = (upWall.position.y - downWall.position.y) * 0.5f;
+        //center = Vector3.Cross(upWall.position, downWall.position);
+        //center *= 0.5f;
+        if (upWall != null)
+        {
+            upOrigin = upWall.position;
+            upTarget = upWall.position;
+            upTarget.y += length;
+        }
+
+        downOrigin = downWall.position;
+        downTarget = downWall.position;
+        downTarget.y -= length;
     }
 
     void Update()
     {
+        if(downWall.position.y <= downTarget.y + 0.2f)
+        {
+            isSmash = true;
+        }
+        else if(downWall.position.y >= downOrigin.y - 0.2f)
+        {
+            isSmash = false;
+        }
+
         if (!isSmash)
         {
-            upWall.position = Vector3.Lerp(upWall.position, new Vector3(upWall.position.x, center.y, upWall.position.z), Time.deltaTime);
-            downWall.position = Vector3.Lerp(downWall.position, new Vector3(upWall.position.x, center.y, upWall.position.z), Time.deltaTime);
+            if (upWall != null)
+                upWall.position = Vector3.Lerp(upWall.position, upTarget, 2f * Time.deltaTime);
+            downWall.position = Vector3.Lerp(downWall.position, downTarget, 2f * Time.deltaTime);
         }
-        
-        
-
-        //// 충돌 할때까지 이동
-        //if (!isSmash)
-        //{
-        //    if (isRight) // 오른쪽에 위치한 오브젝트시 이동
-        //    {
-        //        transform.Translate(Vector3.up * speed * Time.deltaTime);
-        //    }
-        //    else // 왼쪽에 위치한 오브젝트시 이동
-        //        transform.Translate(Vector3.up * -speed * Time.deltaTime);
-        //}
-        //// 충돌 했을 시 초기 위치까지 되돌아감
-        //else if(isSmash && isMove)
-        //{
-        //    if (isRight) // 오른쪽에 위치한 오브젝트시 이동
-        //    {
-        //        if (transform.position.x <= originPos.x)
-        //            transform.Translate(Vector3.right * speed * Time.deltaTime);
-        //        // 초기 위치 도달 시 초기화
-        //        else if (transform.position.x >= originPos.x)
-        //        {
-        //            isMove = false;
-        //            StartCoroutine(WaitMove(true));
-        //        }
-        //    }
-        //    else // 왼쪽에 위치한 오브젝트시 이동
-        //    {
-        //        if (transform.position.x >= originPos.x)
-        //            transform.Translate(Vector3.left * speed * Time.deltaTime);
-
-        //        else if (transform.position.x <= originPos.x)
-        //        {
-        //            isMove = false;
-        //            StartCoroutine(WaitMove(true));
-        //        }
-        //    }
-        //}
-        
+        else
+        {
+            if (upWall != null)
+                upWall.position = Vector3.Lerp(upWall.position, upOrigin, Time.deltaTime);
+            downWall.position = Vector3.Lerp(downWall.position, downOrigin, Time.deltaTime);
+        }
     }
     // 충돌 시 이동 중지
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.CompareTag("SmashObj"))
-        {
-            Debug.Log("11");
-            isSmash = true;
-            StartCoroutine(WaitMove(false));
-        }
-    }
+    //void OnTriggerEnter(Collider col)
+    //{
+    //    if (col.CompareTag("SmashObj"))
+    //    {
+    //        isSmash = true;
+    //        StartCoroutine(WaitMove(false));
+    //    }
+    //}
     // 잠시 대기 후 다시 이동
     IEnumerator WaitMove(bool isType)
     {
