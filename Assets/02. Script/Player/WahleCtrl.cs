@@ -17,31 +17,55 @@ public class WahleCtrl : MonoBehaviour {
     private float sinSpeed = 0f; // sin함수로 생성되는 값 저장
     private int stateValue = 0; // 상태 값
 
+    private IEnumerator curState; // 현재 실행 중인 코루틴 함수를 담음
+
     public Transform playerTr; // 플레이어 위치
-    private  Transform targetTr; // 적 위치값
+    private  GameObject targetObj; // 적 위치값
     private Vector3 relativePos;
     private Quaternion lookRot;
+    private Animator anim;
 
     public static WahleCtrl instance;
 
     void Start()
     {
         instance = this;
-        StartCoroutine(Idel());
+        anim = gameObject.GetComponentInChildren<Animator>();
+
+        curState = Idle();
+        StartCoroutine(CoroutineUpdate());
+        StartCoroutine(SearchEnemy());
     }
-    
-    IEnumerator Idel()
+
+    // curState가 null이 아니면 curState에 있는 코루틴을 실행함
+    IEnumerator CoroutineUpdate()
+    {
+        while (true)
+        {
+            if (curState != null && curState.MoveNext())
+            {
+                yield return curState.Current;
+            }
+            else
+                yield return null;
+        }
+    }
+
+    // 대기
+    IEnumerator Idle()
     {
         initSpeed = 0f;
 
-        float[] value = { 0, 100 };
+        float[] value = { 100, 0 };
         stateValue = GetRandomValue(value);
+        anim.SetBool("Move", true);
 
         while (true)
         {
+            // Move 상태로 변경
             if (distance > 6f && PlayerCtrl.inputAxis != 0f)
             {
-                StartCoroutine(Move());
+                curState = Move();
                 break;
             }
 
@@ -51,6 +75,8 @@ public class WahleCtrl : MonoBehaviour {
             relativePos = playerTr.position - transform.position;
             distance = relativePos.sqrMagnitude;
             lookRot = Quaternion.LookRotation(relativePos);
+
+            
 
             switch (stateValue)
             {
@@ -65,7 +91,6 @@ public class WahleCtrl : MonoBehaviour {
                     transform.Translate(new Vector3(0f, 2f * Time.deltaTime, 2f * Time.deltaTime));
                     break;
             }
-
             yield return null;
         }
     }
@@ -75,11 +100,14 @@ public class WahleCtrl : MonoBehaviour {
     {
         float[] value = { 60, 40 };
         float speed = 1f;
+        anim.SetBool("Move", true);
+
         while (true)
         {
+            // Idle 상태로 변경
             if (distance <= 6f && PlayerCtrl.inputAxis == 0f)
             {
-                StartCoroutine(Idel());
+                curState = Idle();
                 break;
             }
 
@@ -94,7 +122,7 @@ public class WahleCtrl : MonoBehaviour {
 
             // 이동속도 증가
             initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel);
-
+            
             // 캐릭터를 향해 회전
             if (initSpeed < maxSpeed)
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
@@ -106,7 +134,7 @@ public class WahleCtrl : MonoBehaviour {
             {
                 if (speed <= 5f)
                     speed += (Time.deltaTime * 2f);
-                transform.Translate(new Vector3(0f, (sinSpeed * speed) * Time.deltaTime, 0f));
+                //transform.Translate(new Vector3(0f, (sinSpeed * speed) * Time.deltaTime, 0f));
                 transform.Translate(new Vector3(0f, 0f, (sinSpeed * speed * 2f) * Time.deltaTime));
             }
 
@@ -121,30 +149,38 @@ public class WahleCtrl : MonoBehaviour {
     }
 
 
-    //// 공격
-    //void Attack()
-    //{
-    //    if (targetTr != null)
-    //    {
-    //        float dis = (playerTr.position - transform.position).sqrMagnitude;
-    //        if (dis >= 5f)
-    //        {
-    //            SetState(WahleState.MOVE);
-    //        }
+    // 공격
+    IEnumerator Attack()
+    {
+        //anim.SetBool("Move", false);
 
-    //        relativePos = (targetTr.position - transform.position);
-    //        lookRot = Quaternion.LookRotation(relativePos);
-    //        focusDir = Mathf.Sign(targetTr.position.x - transform.position.x);
+        while (true)
+        {
+            if (!targetObj.activeSelf || distance >= 12f)
+            {
+                curState = Move();
+            }
 
-    //        transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
-    //        transform.position = Vector3.Lerp(transform.position, targetTr.position -
-    //            ((targetTr.forward * -focusDir * 3f) - (targetTr.up)), 7f * Time.deltaTime);
-    //    }
-    //    else
-    //    {
-    //        SetState(WahleState.IDLE);
-    //    }
-    //}
+            relativePos = (targetObj.transform.position - transform.position);
+            distance = (playerTr.position - transform.position).sqrMagnitude; // 거리 차
+
+            lookRot = Quaternion.LookRotation(relativePos);
+            focusDir = Mathf.Sign(relativePos.x);
+
+            if(transform.localRotation.x <= 0.24f)
+                lookRot.x = 0f;
+
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+
+            if (relativePos.sqrMagnitude >= 10.3f)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetObj.transform.position -
+                    ((targetObj.transform.right * 3f) - (targetObj.transform.up)), 3f * Time.deltaTime);
+            }
+
+            yield return null;
+        }
+    }
 
     // 주변 몬스터 탐색
     IEnumerator SearchEnemy()
@@ -156,13 +192,12 @@ public class WahleCtrl : MonoBehaviour {
             {
                 if (hitCollider[i].CompareTag("MONSTER"))
                 {
-                    targetTr = hitCollider[i].transform;
-                    
+                    targetObj = hitCollider[i].gameObject;
+                    curState = Attack();
                 }
             }
             yield return new WaitForSeconds(0.1f);
         }
-
     }
 
     IEnumerator WaitRandom(float waitTime, float[] value)
@@ -178,11 +213,11 @@ public class WahleCtrl : MonoBehaviour {
     int GetRandomValue(float[] values)
     {
         float total = 0;
-
+        // 전체 합을 구함
         for (int i = 0; i < values.Length; i++) {
             total += values[i];
         }
-
+        // 전체 합의 임이의 0~1의 변수를 곱함
         float randomPoint = Random.value * total;
 
         for (int i = 0; i < values.Length; i++)
