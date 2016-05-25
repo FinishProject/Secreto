@@ -108,6 +108,7 @@
      <Compile Include="Assets\02. Script\Player\WahleCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\tempMoveCtrl.cs" />
      <Compile Include="Assets\02. Script\RotateCtr.cs" />
+     <Compile Include="Assets\02. Script\System\BackGroundCtrl.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVParser.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVReader.cs" />
      <Compile Include="Assets\02. Script\System\Database\PlayerData.cs" />
