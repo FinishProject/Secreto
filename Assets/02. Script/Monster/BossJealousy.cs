@@ -7,6 +7,8 @@ public class BossJealousy : FSMBase
     private Vector3 earlyPos;
     private Transform playerTr;
 
+    SkillTableParser skillTable;
+
     public Transform shootTr;
     private bool isPlayerLiftSide;          // 플레이어가 좌측에 있는지
     private bool isLookLiftSide;            // 좌측 방향을 바라 보는지
@@ -40,6 +42,12 @@ public class BossJealousy : FSMBase
         earlyPos = transform.position;
         nvAgent = GetComponent<NavMeshAgent>();
         playerTr = PlayerCtrl.instance.transform;
+        skillTable = new SkillTableParser("BossJealousy_SkillTable");
+        skillTable.Load();
+        int[] temp;
+        temp = skillTable.PhaseSkillCounter();
+        Debug.Log(temp[0]);
+        Debug.Log(temp[1]);
     }
 
     //*******************************************************************************
@@ -173,7 +181,7 @@ public class BossJealousy : FSMBase
         nvAgent.Stop();
         yield return null;
     }
-
+    
     void Attacking_Update()
     {
         if (distance > attackDist || !isAttackAngle())
