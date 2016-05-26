@@ -143,13 +143,14 @@ public class SideSmashObj : MonoBehaviour {
             // 원위치로 올라감
             else
             {
+                speed2 = Time.deltaTime;
                 // 원 위치 좌표를 가져옴
                 topTarget[i] = objInfo[i].topOriginPos;
                 botTarget[i] = objInfo[i].botOriginPos;
             }
             // 이동
-            objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, topTarget[i], Time.deltaTime);
-            objInfo[i].botObj.position = Vector3.Lerp(objInfo[i].botObj.position, botTarget[i], Time.deltaTime);
+            objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, topTarget[i], speed2);
+            objInfo[i].botObj.position = Vector3.Lerp(objInfo[i].botObj.position, botTarget[i], speed2);
         }
     }
 

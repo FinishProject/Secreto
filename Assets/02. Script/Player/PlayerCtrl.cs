@@ -127,7 +127,7 @@ public class PlayerCtrl : MonoBehaviour
             //이동
             moveDir = Vector3.right * inputAxis;
             anim.SetBool("Jump", false);
-
+            anim.SetBool("Dash", false);
             // 점프
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -182,11 +182,12 @@ public class PlayerCtrl : MonoBehaviour
     // 점프
     Vector3 Jump(JumpType curJumpState)
     {
-        anim.SetBool("Jump", true);
+        
         Vector3 jumpDir = Vector3.zero;
         switch (curJumpState)
         {
             case JumpType.BASIC:
+                anim.SetBool("Jump", true);
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 jumpDir.y = jumpHight;
@@ -197,6 +198,8 @@ public class PlayerCtrl : MonoBehaviour
                 if (isJumping)
                 {
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
+                    anim.SetBool("Jump", false);
+                    anim.SetBool("Dash", true);
                     isJumping = false;
                     jumpDir.y = jumpHight;
                     return jumpDir;
