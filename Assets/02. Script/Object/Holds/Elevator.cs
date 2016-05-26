@@ -7,9 +7,12 @@ public class Elevator : MonoBehaviour {
     public float maxLength = 10f; // 마지막 위치 길이
 
     private bool isActive = true; // 작동 여부
-    private bool isTrample = false; // 플레이어가 밟고 있는지 여부
+    private bool isStep = false; // 플레이어가 밟고 있는지 여부
     private Vector3 originPos, finishPos; // 시작 위치, 최종 위치
+    private Vector3 targetPos;
     private Transform playerTr; // 플레이어, 올라 트랜스폼
+
+    private Vector3 velocity = Vector3.up;
 
     void Start()
     {
@@ -18,101 +21,113 @@ public class Elevator : MonoBehaviour {
         // 시작 위치 및 최종 위치 구함
         originPos = this.transform.position;
         finishPos = new Vector3(originPos.x, originPos.y + maxLength, originPos.z);
+        //finishPos = originPos;
+        //finishPos.y += 15f;
 
         // 위에서 시작할 시 초기 값 설정
         if (!isType) {
             transform.position = finishPos;
             speed *= -1;
         }
+
+        targetPos = finishPos;
+        //speed = 0f;
+    }
+
+    IEnumerator OnActive()
+    {
+        while (true)
+        {
+            if (isStep)
+            {
+               // speed += Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+
+            }
+
+            if (transform.position.y >= finishPos.y - 0.2f)
+            {
+                isActive = false;
+                targetPos = originPos;
+                speed *= -1f;
+            }
+            yield return new WaitForFixedUpdate();
+        }
     }
 
     void FixedUpdate()
     {
-        Move();
+        
+        //Move();
     }
 
     //void Move()
     //{
-    //    // 아래 목표 위치 도달 시
-    //    if (transform.position.y - 0.1f <= originPos.y)
+    //    switch (isType)
     //    {
-    //        isActive = true;
-    //        StartCoroutine(WaitMove());
-    //        Debug.Log("Origin");
+    //        case true: // 아래에서 시작 시 이동
+    //            //최고 높이까지 이동
+    //            if (transform.position.y >= finishPos.y && speed > -1f)
+    //            {
+    //                isActive = false;
+    //                speed *= -1f; // 이동 방향 변경    
+    //            }
+    //            else if (isActive && isStep)
+    //            {
+    //                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    //            }
+
+    //            //초기 위치까지 이동
+    //            if (transform.position.y <= originPos.y && speed < 1f)
+    //            {
+    //                isActive = true;
+    //                speed *= -1;
+    //            }
+    //            else if (!isActive && !isStep)
+    //            {
+    //                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    //            }
+    //            break;
+
+    //        case false: // 위에서 시작 시 이동
+    //            //최저 높이까지 이동
+    //            if (transform.position.y <= originPos.y && speed < 1f)
+    //            {
+    //                isActive = false;
+    //                speed *= -1f;
+    //            }
+    //            else if (isActive && isStep)
+    //                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    //            //최고 높이까지 이동
+    //            if (transform.position.y >= finishPos.y && speed > -1)
+    //            {
+    //                isActive = true;
+    //                speed *= -1;
+    //            }
+    //            else if (!isActive && !isStep)
+    //                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    //            break;
     //    }
-    //    // 위 목표 위치 도달 시
-    //    else if (transform.position.y + 0.1f >= finishPos.y)
-    //    {
-    //        isActive = false;
-    //        StartCoroutine(WaitMove());
-    //        Debug.Log("Finish");
-    //    }
-    //    if(isActive && isTrample)
-    //        transform.position = Vector3.Lerp(transform.position, finishPos, speed * Time.deltaTime);
-    //    else if(!isActive && !isTrample)
-    //        transform.position = Vector3.Lerp(transform.position, originPos, speed * Time.deltaTime);
     //}
 
-    void Move()
+    void OnTriggerEnter(Collider col)
     {
-        switch (isType)
+        if (col.CompareTag("Player"))
         {
-            case true: // 아래에서 시작 시 이동
-                //최고 높이까지 이동
-                if (transform.position.y >= finishPos.y && speed > -1f)
-                {
-                    isActive = false;
-                    speed *= -1f; // 이동 방향 변경    
-                }
-                else if (isActive && isTrample)
-                {
-                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                }
-
-                //초기 위치까지 이동
-                if (transform.position.y <= originPos.y && speed < 1f)
-                {
-                    isActive = true;
-                    speed *= -1;
-                }
-                else if (!isActive && !isTrample)
-                {
-                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                }
-                break;
-
-            case false: // 위에서 시작 시 이동
-                //최저 높이까지 이동
-                if (transform.position.y <= originPos.y && speed < 1f)
-                {
-                    isActive = false;
-                    speed *= -1f;
-                }
-                if (isActive && isTrample)
-                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                //최고 높이까지 이동
-                if (transform.position.y >= finishPos.y && speed > -1)
-                {
-                    isActive = true;
-                    speed *= -1;
-                }
-                else if (!isActive && !isTrample)
-                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                break;
+            StartCoroutine(OnActive());
         }
     }
 
     void OnTriggerStay(Collider col)
     {
-        if(col.CompareTag("Player"))
+        if (col.CompareTag("Player"))
         {
             StopCoroutine(WaitMove());
-            playerTr = col.GetComponent<Transform>();
             // 오브젝트가 작동 중이고 플레이어 밟고 있을 시 true
             if (isActive)
             {
                 WahleCtrl.curState = WahleCtrl.instance.StepHold();
-                isTrample = true;
+                isStep = true;
                 //플레이어 이동
                 playerTr.Translate(Vector3.up * speed * Time.deltaTime);
             }
@@ -129,7 +144,7 @@ public class Elevator : MonoBehaviour {
     IEnumerator WaitMove()
     {
         yield return new WaitForSeconds(3f);
-        isTrample = false;
+        isStep = false;
     }
 
 }

@@ -21,10 +21,13 @@ public class TeleportGate : MonoBehaviour {
 
     void Start()
     {
-        telepGate = exitGate.GetComponent<TeleportGate>();
+        if (exitGate != null)
+        {
+            telepGate = exitGate.GetComponent<TeleportGate>();
+        }
 
         olaTr = GameObject.FindGameObjectWithTag("WAHLE").transform;
-        camTr = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        //camTr = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
 
 	void OnTriggerEnter(Collider coll)

@@ -11,170 +11,215 @@ public class SideSmashObj : MonoBehaviour {
 
     public ObjInfo[] objInfo;
     private Vector3[] finishPos;
+    Vector3[] botTarget, topTarget;
 
-    public float speed;
-    public float length;
+    private float speed = 0f, speed2 = 0f;
+    public float length = 5f;
     public float waitTime = 1.5f; // 충돌 후 대기 시간
-    private bool isFirstUP = false; // 오른쪽에 위치한 오브젝트인지 확인
-    private bool isSecondUP = false;
 
-    private bool isSmash = false; // 충돌 했는 지
-    private bool isMove = false; // 대기 시간 지난 후 이동 체크
-    private Vector3 upOrigin, downOrigin;
-    private Vector3 upTarget, downTarget;
+    private bool isReverse = false;
+    private bool isReverse2 = false;
+
+    private bool isFirstUP = true; // 오른쪽에 위치한 오브젝트인지 확인
+    private bool isSecondUP = false;
 
     Vector3 center;
 
     bool isSecond = false;
 
+    delegate void MoveDelegate();
+    MoveDelegate moveDelegate; 
+
     void Start()
     {
-        for(int i=0; i<objInfo.Length; i++)
-        {
-            objInfo[i].topOriginPos = objInfo[i].topObj.position;
-            if(objInfo[i].botObj != null)
-                objInfo[i].botOriginPos = objInfo[i].botObj.position;
-        }
-
         finishPos = new Vector3[objInfo.Length];
-        if (objInfo[0].botObj != null)
-        {
-            for (int i = 0; i < finishPos.Length; i++)
-            {
-                finishPos[i] = (objInfo[i].topOriginPos - objInfo[i].botOriginPos) * 0.5f;
-            }
+        botTarget = new Vector3[objInfo.Length];
+        topTarget = new Vector3[objInfo.Length];
+
+        if (objInfo[1].botObj != null) {
+            BothSideInit();
         }
-        else
-        {
-            for (int i = 0; i < finishPos.Length; i++)
-            {
-                finishPos[i] = (objInfo[i].topOriginPos);
-                finishPos[i].y = (objInfo[i].topOriginPos.y - 5f);
-            }
+        else {
+            OnceSideInit();
         }
     }
+
+    void BothSideInit()
+    {
+        for(int i = 0; i < objInfo.Length; i++)
+        {
+            // 시작 위치(초기 위치) 저장
+            objInfo[i].topOriginPos = objInfo[i].topObj.position;     
+            objInfo[i].botOriginPos = objInfo[i].botObj.position;
+   
+            // 두 오브젝트 사이의 목표 지점을 구함
+            finishPos[i] = objInfo[i].topObj.position - objInfo[i].botObj.position;
+            finishPos[i].y *= 0.32f;
+        }
+        moveDelegate = FirstMove;
+        moveDelegate += SeconddMove;
+    }
+
+    void OnceSideInit()
+    {
+        // 시작 위치(초기 위치) 저장
+        for (int i = 0; i < objInfo.Length; i++)
+        {
+            // 시작 위치(초기 위치) 저장
+            objInfo[i].topOriginPos = objInfo[i].topObj.position;
+
+            // 두 오브젝트 사이의 목표 지점을 구함
+            finishPos[i] = objInfo[i].topOriginPos;
+            finishPos[i].y += length;
+        }
+        moveDelegate = OneSideMove;
+    }
+
 
     void Update()
     {
-        if (objInfo[0].botObj != null)
+        moveDelegate();
+    }
+
+    void FirstMove()
+    {
+        for (int i = 0; i < objInfo.Length; i += 2)
         {
-            SideMove();
-        }
-        else
-        {
-            SoloMove();
+            // 목표지점까지 내려감
+            if (!isReverse)
+            {
+                speed += Time.deltaTime * 0.4f;
+
+                // 목표 좌표를 가져옴
+                topTarget[i] = new Vector3(objInfo[i].topOriginPos.x, objInfo[i].topOriginPos.y - finishPos[i].y, objInfo[i].topOriginPos.z);
+                botTarget[i] = new Vector3(objInfo[i].botOriginPos.x, objInfo[i].botOriginPos.y + finishPos[i].y, objInfo[i].botOriginPos.z);
+
+                if (objInfo[i].topObj.position.Equals(topTarget[i]))
+                {
+                    isReverse = true;
+                    speed = 0f;
+                    StartCoroutine(WaitForTime());
+                }
+            }
+            // 원위치로 올라감
+            else
+            {
+                speed = Time.deltaTime;
+
+                // 원 위치 좌표를 가져옴
+                topTarget[i] = objInfo[i].topOriginPos;
+                botTarget[i] = objInfo[i].botOriginPos;
+
+                if (objInfo[i].topObj.position.y >= objInfo[i].topOriginPos.y - 0.2f)
+                {
+                    isReverse = false;
+                }
+            }
+
+            // 이동
+            objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, topTarget[i], speed);
+            objInfo[i].botObj.position = Vector3.Lerp(objInfo[i].botObj.position, botTarget[i], speed);
         }
     }
 
-    void SideMove()
+    void SeconddMove()
     {
-        if (objInfo[0].topObj.position.y >= finishPos[0].y - 0.2f)
+        for (int i = 1; i < objInfo.Length; i += 2)
         {
-            isFirstUP = true;
-            isSecond = true;
-        }
-        else if (objInfo[0].topObj.position.y <= objInfo[0].topOriginPos.y + 0.2f)
-        {
-            isFirstUP = false;
-        }
-
-        if (objInfo[1].topObj.position.y >= finishPos[1].y - 0.2f)
-        {
-            isSecondUP = true;
-        }
-        else if (objInfo[1].topObj.position.y <= objInfo[1].topOriginPos.y + 0.2f)
-        {
-            isSecondUP = false;
-        }
-
-        for (int i = 0; i < objInfo.Length; i += 2)
-        {
-            if (i <= objInfo.Length)
+            // 목표지점까지 내려감
+            if (isSecondUP)
             {
-                if (isFirstUP)
+                speed2 += Time.deltaTime * 0.4f;
+
+                topTarget[i] = new Vector3(objInfo[i].topOriginPos.x, objInfo[i].topOriginPos.y - finishPos[i].y, objInfo[i].topOriginPos.z);
+                botTarget[i] = new Vector3(objInfo[i].botOriginPos.x, objInfo[i].botOriginPos.y + finishPos[i].y, objInfo[i].botOriginPos.z);
+
+                if (objInfo[i].topObj.position.Equals(topTarget[i]))
                 {
-                    objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, new Vector3(objInfo[i].topObj.position.x, objInfo[i].topOriginPos.y, objInfo[i].topObj.position.z), Time.deltaTime);
-                    objInfo[i].botObj.position = Vector3.Lerp(objInfo[i].botObj.position, new Vector3(objInfo[i].botObj.position.x, objInfo[i].botOriginPos.y, objInfo[i].botObj.position.z), Time.deltaTime);
-                }
-                else if (!isFirstUP)
-                {
-                    objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, new Vector3(objInfo[i].topObj.position.x, finishPos[i].y, objInfo[i].topObj.position.z), Time.deltaTime);
-                    objInfo[i].botObj.position = Vector3.Lerp(objInfo[i].botObj.position, new Vector3(objInfo[i].botObj.position.x, finishPos[i].y, objInfo[i].botObj.position.z), Time.deltaTime);
+                    speed2 = 0f;
+                    isSecondUP = false;
                 }
             }
-        }
-        if (isSecond)
-        {
-            for (int j = 1; j < objInfo.Length; j += 2)
+            // 원위치로 올라감
+            else
             {
-                if (j <= objInfo.Length)
-                {
-                    if (isSecondUP)
-                    {
-                        objInfo[j].topObj.position = Vector3.Lerp(objInfo[j].topObj.position, new Vector3(objInfo[j].topObj.position.x, objInfo[j].topOriginPos.y, objInfo[j].topObj.position.z), Time.deltaTime);
-                        objInfo[j].botObj.position = Vector3.Lerp(objInfo[j].botObj.position, new Vector3(objInfo[j].botObj.position.x, objInfo[j].botOriginPos.y, objInfo[j].botObj.position.z), Time.deltaTime);
-                    }
-                    else if (!isSecondUP)
-                    {
-                        objInfo[j].topObj.position = Vector3.Lerp(objInfo[j].topObj.position, new Vector3(objInfo[j].topObj.position.x, finishPos[j].y, objInfo[j].topObj.position.z), Time.deltaTime);
-                        objInfo[j].botObj.position = Vector3.Lerp(objInfo[j].botObj.position, new Vector3(objInfo[j].botObj.position.x, finishPos[j].y, objInfo[j].botObj.position.z), Time.deltaTime);
-                    }
-                }
+                // 원 위치 좌표를 가져옴
+                topTarget[i] = objInfo[i].topOriginPos;
+                botTarget[i] = objInfo[i].botOriginPos;
             }
+            // 이동
+            objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, topTarget[i], Time.deltaTime);
+            objInfo[i].botObj.position = Vector3.Lerp(objInfo[i].botObj.position, botTarget[i], Time.deltaTime);
         }
     }
 
-    void SoloMove()
+    void OneSideMove()
     {
-        if (objInfo[0].topObj.position.y <= finishPos[0].y + 0.2f)
-        {
-            isFirstUP = true;
-            isSecond = true;
-        }
-        else if (objInfo[0].topObj.position.y >= objInfo[0].topOriginPos.y - 0.2f)
-        {
-            isFirstUP = false;
-        }
-
-        if (objInfo[1].topObj.position.y <= finishPos[1].y + 0.2f)
-        {
-            isSecondUP = true;
-        }
-        else if (objInfo[1].topObj.position.y >= objInfo[1].topOriginPos.y - 0.2f)
-        {
-            isSecondUP = false;
-        }
-
         for (int i = 0; i < objInfo.Length; i += 2)
         {
-            if (i <= objInfo.Length)
+            // 목표지점까지 내려감
+            if (!isReverse)
             {
-                if (isFirstUP)
+                speed += Time.deltaTime * 0.4f;
+
+                // 목표 좌표를 가져옴
+                topTarget[i] = new Vector3(objInfo[i].topOriginPos.x, objInfo[i].topOriginPos.y - finishPos[i].y, objInfo[i].topOriginPos.z);
+
+                if (objInfo[i].topObj.position.Equals(topTarget[i]))
                 {
-                    objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, new Vector3(objInfo[i].topObj.position.x, objInfo[i].topOriginPos.y, objInfo[i].topObj.position.z), Time.deltaTime);
-                }
-                else if (!isFirstUP)
-                {
-                    objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, new Vector3(objInfo[i].topObj.position.x, finishPos[i].y, objInfo[i].topObj.position.z), Time.deltaTime);
+                    isReverse = true;
+                    speed = 0f;
+                    StartCoroutine(WaitForTime());
                 }
             }
+            // 원위치로 올라감
+            else
+            {
+                speed = Time.deltaTime;
+
+                // 원 위치 좌표를 가져옴
+                topTarget[i] = objInfo[i].topOriginPos;
+
+                if (objInfo[i].topObj.position.y >= objInfo[i].topOriginPos.y - 0.2f)
+                {
+                    isReverse = false;
+                }
+            }
+
+            objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, topTarget[i], speed);
         }
-        if (isSecond)
+
+        for (int i = 1; i < objInfo.Length; i += 2)
         {
-            for (int j = 1; j < objInfo.Length; j += 2)
+            // 목표지점까지 내려감
+            if (isSecondUP)
             {
-                if (j <= objInfo.Length)
+                speed2 += Time.deltaTime * 0.4f;
+
+                topTarget[i] = new Vector3(objInfo[i].topOriginPos.x, objInfo[i].topOriginPos.y - finishPos[i].y, objInfo[i].topOriginPos.z);
+
+                if (objInfo[i].topObj.position.Equals(topTarget[i]))
                 {
-                    if (isSecondUP)
-                    {
-                        objInfo[j].topObj.position = Vector3.Lerp(objInfo[j].topObj.position, new Vector3(objInfo[j].topObj.position.x, objInfo[j].topOriginPos.y, objInfo[j].topObj.position.z), Time.deltaTime);
-                    }
-                    else if (!isSecondUP)
-                    {
-                        objInfo[j].topObj.position = Vector3.Lerp(objInfo[j].topObj.position, new Vector3(objInfo[j].topObj.position.x, finishPos[j].y, objInfo[j].topObj.position.z), Time.deltaTime);
-                    }
+                    speed2 = 0f;
+                    isSecondUP = false;
                 }
             }
+            // 원위치로 올라감
+            else
+            {
+                speed2 = Time.deltaTime;
+
+                // 원 위치 좌표를 가져옴
+                topTarget[i] = objInfo[i].topOriginPos;
+            }
+            // 이동
+            objInfo[i].topObj.position = Vector3.Lerp(objInfo[i].topObj.position, topTarget[i], speed2);
         }
+    }
+
+    IEnumerator WaitForTime()
+    {
+        yield return new WaitForSeconds(0.9f);
+        isSecondUP = true;
     }
 }
