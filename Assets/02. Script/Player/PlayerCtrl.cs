@@ -56,6 +56,7 @@ public class PlayerCtrl : MonoBehaviour
     private Animator anim;
     private SwitchObject switchState;
     private GameObject currInteraction;
+    public Cloth cloth;
 
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
@@ -107,7 +108,6 @@ public class PlayerCtrl : MonoBehaviour
 
         //펫 타기
         //else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
-	
     }
 
     void Movement()
@@ -123,15 +123,19 @@ public class PlayerCtrl : MonoBehaviour
         // 지상에 있을 시
         if (controller.isGrounded)
         {
-            gravity = 20f;
+            gravity = 100f;
             //이동
             moveDir = Vector3.right * inputAxis;
+
+            cloth.worldAccelerationScale = 2f;
+
             anim.SetBool("Jump", false);
             anim.SetBool("Dash", false);
             // 점프
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                moveDir = Jump(JumpType.BASIC);
+                anim.SetBool("Jump", true);
+                Jump(JumpType.BASIC);
             }
 
             // 걷기 애니메이션이 아직 없어 임시의 이동 애니메이션 재생을 위한 것
@@ -148,7 +152,11 @@ public class PlayerCtrl : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                moveDir = Jump(JumpType.DASH);
+                anim.SetBool("Jump", false);
+                anim.SetBool("Dash", true);
+                Jump(JumpType.DASH);
+                cloth.damping = 0.4f;
+                
             }
 			gravity = gr;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
@@ -180,33 +188,28 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     // 점프
-    Vector3 Jump(JumpType curJumpState)
+    void Jump(JumpType curJumpState)
     {
-        
-        Vector3 jumpDir = Vector3.zero;
+        cloth.worldAccelerationScale = 1f;
         switch (curJumpState)
         {
             case JumpType.BASIC:
-                anim.SetBool("Jump", true);
+                
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-                jumpDir.y = jumpHight;
+                moveDir.y = jumpHight;
                 gravity = 5f;
-                return jumpDir;
-
+                break;
             case JumpType.DASH:
                 if (isJumping)
                 {
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
-                    anim.SetBool("Jump", false);
-                    anim.SetBool("Dash", true);
                     isJumping = false;
-                    jumpDir.y = jumpHight;
-                    return jumpDir;
+                    moveDir.y = jumpHight;
+                    cloth.damping = 1f;
                 }
                 break;
         }
-        return jumpDir;
     }
 
     //레이캐스팅 발사
@@ -378,9 +381,27 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    void PlayerDie()
+    public void PlayerDie()
     {
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
     }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+
+        Rigidbody body = hit.collider.attachedRigidbody;
+        if (body == null || body.isKinematic)
+            return;
+        if (hit.moveDirection.y < -0.3F)
+            return;
+
+        //오브젝트 밀기
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            body.velocity = pushDir * 2f;
+        }
+    }
+
 }

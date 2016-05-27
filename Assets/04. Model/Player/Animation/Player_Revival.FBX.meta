@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 28199d50fba5826418882226553a3bb3
-timeCreated: 1464338274
+guid: 47f895d67f6be1c4f97fdf9d6a02b2ba
+timeCreated: 1464338275
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -69,9 +69,9 @@ ModelImporter:
     100122: Bone053
     100124: Bone054
     100126: Bone055
-    100128: //RootNode
-    100130: L Forearm Twist
-    100132: L UpperArm Twist
+    100128: L Forearm Twist
+    100130: L UpperArm Twist
+    100132: //RootNode
     100134: R Forearm Twist
     100136: R UpperArm Twist
     400000: Bip001
@@ -138,9 +138,9 @@ ModelImporter:
     400122: Bone053
     400124: Bone054
     400126: Bone055
-    400128: //RootNode
-    400130: L Forearm Twist
-    400132: L UpperArm Twist
+    400128: L Forearm Twist
+    400130: L UpperArm Twist
+    400132: //RootNode
     400134: R Forearm Twist
     400136: R UpperArm Twist
     7400000: Take 001
