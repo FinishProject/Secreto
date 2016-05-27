@@ -5,8 +5,7 @@ public class GrabObject : MonoBehaviour {
 
     private Transform playerTr; // 플레이어 위치
     private Rigidbody rb;
-
-    float focusDir = 1f;
+    private float focusDir = 1f;
 
     void Start()
     {
@@ -34,7 +33,7 @@ public class GrabObject : MonoBehaviour {
                 // 오브젝트 이동
                 //Vector3 relativePos = playerTr.position - transform.position;
                 transform.position = Vector3.Lerp(transform.position, 
-                    new Vector3(playerTr.position.x + 1f * focusDir, playerTr.position.y + 0.8f, transform.position.z), 100f);
+                    new Vector3(playerTr.position.x + 1f * focusDir, playerTr.position.y + 0.8f, transform.position.z), 200f);
             }
             // 플레이어의 자식 객체에서 나옴
             else if (Input.GetKeyUp(KeyCode.E)) {
