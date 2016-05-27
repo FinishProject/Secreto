@@ -9,38 +9,40 @@ public class SideSmashObj : MonoBehaviour {
         public Vector3 topOriginPos, botOriginPos;
     };
 
-    public ObjInfo[] objInfo;
-    private Vector3[] finishPos;
-    Vector3[] botTarget, topTarget;
-
     private float speed = 0f, speed2 = 0f;
     public float length = 5f;
     public float waitTime = 1.5f; // 충돌 후 대기 시간
 
     private bool isReverse = false;
-    private bool isReverse2 = false;
-
-    private bool isFirstUP = true; // 오른쪽에 위치한 오브젝트인지 확인
     private bool isSecondUP = false;
 
-    Vector3 center;
-
-    bool isSecond = false;
+    public ObjInfo[] objInfo;
+    private Vector3[] finishPos;
+    private Vector3[] botTarget, topTarget;
+    private Collider[] childColl;
 
     delegate void MoveDelegate();
     MoveDelegate moveDelegate; 
 
     void Start()
     {
-        finishPos = new Vector3[objInfo.Length];
-        botTarget = new Vector3[objInfo.Length];
-        topTarget = new Vector3[objInfo.Length];
+        if (!transform.parent)
+        {
+            childColl = GetComponentsInChildren<Collider>();
 
-        if (objInfo[1].botObj != null) {
-            BothSideInit();
-        }
-        else {
-            OnceSideInit();
+            finishPos = new Vector3[objInfo.Length];
+            botTarget = new Vector3[objInfo.Length];
+            topTarget = new Vector3[objInfo.Length];
+
+            if (objInfo[1].botObj != null)
+            {
+                BothSideInit();
+            }
+            else {
+                OnceSideInit();
+            }
+
+            StartCoroutine(ActiveUpdate());
         }
     }
 
@@ -75,10 +77,13 @@ public class SideSmashObj : MonoBehaviour {
         moveDelegate = OneSideMove;
     }
 
-
-    void Update()
+    IEnumerator ActiveUpdate()
     {
-        moveDelegate();
+        while (true)
+        {
+            moveDelegate();
+            yield return null;
+        }
     }
 
     void FirstMove()
@@ -222,5 +227,13 @@ public class SideSmashObj : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.9f);
         isSecondUP = true;
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Player"))
+        {
+            PlayerCtrl.instance.PlayerDie();
+        }
     }
 }
