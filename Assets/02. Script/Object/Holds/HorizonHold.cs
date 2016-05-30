@@ -25,21 +25,6 @@ public class HorizonHold : MonoBehaviour
 
     void FixedUpdate()
     {
-        //최대 위치 또는 초기 위치 도착시 방향 전환
-
-
-        //if (transform.position.x >= maxLengthPos.x - 0.2f)
-        //{
-        //    targetPos = originPos;
-        //}
-        //else if (transform.position.x <= targetPos.x + 0.2f) {
-        //    targetPos = maxLengthPos;
-        //}
-
-        //transform.position = Vector3.Lerp(transform.position, 
-        //    new Vector3(targetPos.x * focusDir, targetPos.y, targetPos.z), Time.deltaTime);
-
-
         // 최대 위치 또는 초기 위치 도착시 방향 전환
         if (transform.position.x >= maxLengthPos.x && speed >= 1) { speed *= -1; }
         else if (transform.position.x <= originPos.x && speed <= -1) { speed *= -1; }

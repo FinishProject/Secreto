@@ -7,22 +7,21 @@ public class LanaCtrl : MonoBehaviour {
 
     private Animator anim;
     private Transform playerTr;
-    public Transform target;
+    public Transform target; // 포물선을 그리며 이동시 도착 지점
 
-    // Use this for initialization
     void Start () {
         anim = GetComponent<Animator>();
         playerTr = GameObject.FindGameObjectWithTag("Player").transform;
 
         StartCoroutine(CheckDistance());
 	}
-
+    // 플레이어와의 거리 체크
     IEnumerator CheckDistance()
     {
         while (true)
         {
             diatance = (playerTr.position - transform.position).sqrMagnitude;
-
+            // 움직임 시작
             if (diatance <= 50f)
             {
                 StartCoroutine(MoveUpdate());
@@ -32,20 +31,19 @@ public class LanaCtrl : MonoBehaviour {
             yield return new WaitForSeconds(0.2f);
         }
     }
-
+    // 움직임을 위한 코루틴
     IEnumerator MoveUpdate()
     {
         while (true)
         {
             if (diatance <= 50f)
                 AppearNpc();
-            else
-                anim.Stop();
 
             yield return null;
         }
     }
 
+    // 포물선을 그리며 플레이어 앞으로 등장 함수
     void AppearNpc()
     {
         anim.SetBool("Appear", true);
@@ -57,6 +55,8 @@ public class LanaCtrl : MonoBehaviour {
         transform.position = Vector3.Slerp(fromRelCenter, toRelCenter, 3f * Time.deltaTime);
         transform.position += center;
 
-        transform.LookAt(playerTr);
+        Vector3 lookTarget = new Vector3(0f, playerTr.position.y, playerTr.position.z);
+
+        transform.LookAt(lookTarget);
     }
 }
