@@ -9,6 +9,7 @@ public class WahleCtrl : MonoBehaviour {
     public float maxSpeed; // 최대 이동속도
     public float accel; // 가속도
 
+    private float lookSpeed = 1f; // 봐라보도록 회전하는 속도
     private float distance = 0f; // 플레이어와 고래의 거리 차이
     private bool isFocusRight = true; // 오른쪽을 봐라보는지 확인
     private bool isWait = false; // 코루틴 실행 중인지 확인
@@ -16,14 +17,17 @@ public class WahleCtrl : MonoBehaviour {
     private float delTime = 0f; // 누적 되는 deltaTime 값 저장
     private float sinSpeed = 0f; // sin함수로 생성되는 값 저장
     private int stateValue = 0; // 상태 값
-    bool isAttack = false;
+    private bool isAttack = false; // 현재 상태가 공격인지 확인
+
     public static IEnumerator curState; // 현재 실행 중인 코루틴 함수를 담음
 
     public Transform playerTr; // 플레이어 위치
+
     private  GameObject targetObj; // 적 위치값
-    private Vector3 relativePos;
+    private Vector3 relativePos; // 상대적 위치값
     private Quaternion lookRot;
     private Animator anim;
+    private Vector3 rightRayPos, leftRayPos; // 레이캐스트 발사 위치
 
     public static WahleCtrl instance;
 
@@ -42,6 +46,8 @@ public class WahleCtrl : MonoBehaviour {
     {
         while (true)
         {
+            // 캐릭터 회전시 겹쳐짐을 방지하기 위해 좌우 방향에 따른 양수 또는 음수를 줌
+            relativePos = ShotRay();
             if (!curState.Equals(null) && curState.MoveNext())
             {
                 yield return curState.Current;
@@ -54,10 +60,9 @@ public class WahleCtrl : MonoBehaviour {
     // 대기
     IEnumerator Idle()
     {
-        initSpeed = 0f;
-
         float[] value = { 100, 0 };
         stateValue = GetRandomValue(value);
+
         anim.SetBool("Move", true);
 
         while (true)
@@ -69,19 +74,18 @@ public class WahleCtrl : MonoBehaviour {
                 break;
             }
 
-            if (!isWait)
-                StartCoroutine(WaitRandom(3f, value));
+            //if (!isWait)
+            //    StartCoroutine(WaitRandom(3f, value));
 
-            relativePos = playerTr.position - transform.position;
             distance = relativePos.sqrMagnitude;
             lookRot = Quaternion.LookRotation(relativePos);
-
+            
             switch (stateValue)
             {
                 case 0: // 플레이어 주위를 선회
-                    sinSpeed = Mathf.Sin(delTime += Time.deltaTime);
+                    sinSpeed = Mathf.Cos(delTime += Time.deltaTime);
 
-                    transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, Time.deltaTime);
+                    transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, lookSpeed * Time.deltaTime);
                     transform.Translate(0, (sinSpeed * 0.5f) * Time.deltaTime, 3f * Time.deltaTime);
                     break;
                 case 1: // 360도 회전   
@@ -106,6 +110,7 @@ public class WahleCtrl : MonoBehaviour {
             if (distance <= 6f && PlayerCtrl.inputAxis.Equals(0f))
             {
                 curState = Idle();
+                initSpeed = 0f;
                 break;
             }
 
@@ -113,28 +118,24 @@ public class WahleCtrl : MonoBehaviour {
             distance = relativePos.sqrMagnitude; // 거리 차
             lookRot = Quaternion.LookRotation(relativePos);
 
-            // 캐릭터 회전시 겹쳐짐을 방지하기 위해 좌우 방향에 따른 양수 또는 음수를 줌
-            focusDir = Mathf.Sign(PlayerCtrl.inputAxis);
-            // -1 ~ 1까지 반복 되는 수
-            sinSpeed = Mathf.Sin(delTime += Time.deltaTime);
-
             // 이동속도 증가
             initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel);
-            
+            focusDir = Mathf.Sign(PlayerCtrl.inputAxis);
+
             // 캐릭터를 향해 회전
             //if (initSpeed < maxSpeed)
-                transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
             // 선형 보간을 사용한 캐릭터 추격
-            transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward * focusDir),
-                initSpeed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, playerTr.position - 
+                (playerTr.forward * focusDir), initSpeed * Time.deltaTime);
+
+            // 위 아래로 반복 이동을 위한 속도 값
+            sinSpeed = Mathf.Sin(delTime += Time.deltaTime);
 
             if (initSpeed.Equals(maxSpeed))
             {
                 if (speed <= 5f)
-                {
                     speed += (Time.deltaTime * 2f);
-                }
-
                 transform.Translate(new Vector3(0f, 0f, (sinSpeed * speed * 2f) * Time.deltaTime));
             }
 
@@ -147,47 +148,56 @@ public class WahleCtrl : MonoBehaviour {
             yield return null;
         }
     }
-
     // 공격
     IEnumerator Attack()
     {
         //anim.SetBool("Move", false);
-
-        Vector3 moveVec;
         bool isTargetPos = false;
         float targetDis = 0f;
-        moveVec = targetObj.transform.position - ((targetObj.transform.right * 3f * focusDir)
-                - (targetObj.transform.up));
+        //Vector3 moveVec = targetObj.transform.position - 
+        //    ((targetObj.transform.forward * 3f * -focusDir) - (targetObj.transform.up));
+
+        Vector3 movePointVec = playerTr.position + ((playerTr.forward * 2f * focusDir) + (playerTr.up * -0.01f));
+        Vector3 enemyRelativePos;
 
         while (true)
         {
-            if (!targetObj.activeSelf || distance >= 25f || targetDis >= 30f)
+            if (!targetObj.activeSelf || distance >= 15f || targetDis >= 15f)
             {
                 curState = Move();
                 isAttack = false;
             }
 
-            relativePos = (targetObj.transform.position - transform.position); 
-            distance = (playerTr.position - transform.position).sqrMagnitude; // 거리 차
-            targetDis = relativePos.sqrMagnitude;
+            distance = relativePos.sqrMagnitude; // 플레이어와 거리차
 
-            lookRot = Quaternion.LookRotation(relativePos);
-            focusDir = Mathf.Sign(relativePos.x);
+            enemyRelativePos = targetObj.transform.position - transform.position;
+            lookRot = Quaternion.LookRotation(enemyRelativePos);
 
-            if (transform.position.Equals(moveVec))
+            targetDis = relativePos.sqrMagnitude; // 몬스터와 거리차
+            //focusDir = Mathf.Sign(relativePos.x); // 현재 몬스터의 방향(-1 or 1)
+
+            // 목표 위치에 도달 시 더 이상 이동하지 않음
+            if (transform.position.Equals(movePointVec))
             {
                 isTargetPos = true;
             }
-
+            // 각도 제한
             if (transform.localRotation.x <= 0.24f)
                 lookRot.x = 0f;
 
+            // 타겟을 봐라보도록 회전
             transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+            // 지정 된 위치로 이동
+            Vector3 center = (movePointVec + transform.position) * 0.55f;
+            center -= new Vector3(0, 1, 1);
+            transform.position = Vector3.Slerp(transform.position - center, movePointVec - center, 2f * Time.deltaTime);
+            transform.position += center;
 
-            if (relativePos.sqrMagnitude >= 10.3f || !isTargetPos)
-            {
-                transform.position = Vector3.Lerp(transform.position, moveVec, 3f * Time.deltaTime);
-            }
+            // 타겟 앞으로 이동
+            //if (relativePos.sqrMagnitude >= 5f || !isTargetPos)
+            //{
+            //    transform.position = Vector3.Lerp(transform.position, moveVec, 2f * Time.deltaTime);
+            //}
             yield return null;
         }
     }
@@ -204,7 +214,7 @@ public class WahleCtrl : MonoBehaviour {
             transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
             // 선형 보간을 사용한 캐릭터 추격
             transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward * focusDir),
-                5f * Time.deltaTime);
+                10f * Time.deltaTime);
             yield return null;
         }
     }
@@ -241,7 +251,6 @@ public class WahleCtrl : MonoBehaviour {
         isWait = false;
     }
 
-
     // 랜덤 값 생성
     int GetRandomValue(float[] values)
     {
@@ -275,5 +284,45 @@ public class WahleCtrl : MonoBehaviour {
             // 기본 속도가 최고 속도를 넘을 시 음수가 되어 maxSpeed만 반환
             return (Mathf.Sign(maxSpeed - initSpeed).Equals(1)) ? initSpeed : maxSpeed;
         }
+    }
+    // 이동 속도 감소
+    float DecreaseSpeed(float initSpeed, float minSpeed, float accel)
+    {
+        if (initSpeed.Equals(minSpeed))
+            return initSpeed;
+        else
+        {
+            initSpeed -= accel * Time.deltaTime;
+            return (Mathf.Sign(initSpeed - minSpeed).Equals(1)) ? initSpeed : minSpeed;
+        }
+    }
+    // 레이캐스트 발사
+    Vector3 ShotRay()
+    {
+        // 양측 레이 발사 위치
+        rightRayPos = transform.position + (transform.right * 0.3f);
+        leftRayPos = transform.position - (transform.right * 0.3f);
+        relativePos = (playerTr.position - transform.position);
+
+        RaycastHit hit;
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        // 우측 레이캐스트
+        if (Physics.Raycast(rightRayPos, forward, out hit, 3f) || Physics.Raycast(leftRayPos, forward, out hit, 3f))
+        {
+            if (hit.collider.CompareTag("Ground") || hit.collider.CompareTag("WALL"))
+            {
+                // 레이캐스트 충돌 시 회피
+                if (!PlayerCtrl.isFocusRight)
+                {
+                    lookSpeed = 1.5f;
+                    return new Vector3(relativePos.x - hit.normal.x, relativePos.y + hit.normal.y * 20f, relativePos.z - hit.normal.z);
+                }
+                else
+                    return relativePos += hit.normal * 20f;
+            }
+            else
+                lookSpeed = 1f;
+        }
+        return relativePos;
     }
 }

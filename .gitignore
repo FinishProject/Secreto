@@ -35,3 +35,4 @@ Thumbs.db
 ProjectSettings/ProjectSettings.asset
 Assets/Resources/Player_Data.xml
 Assets/Resources/Player_Data.xml
+*.unity

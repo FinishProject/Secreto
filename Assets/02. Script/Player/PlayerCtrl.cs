@@ -134,7 +134,6 @@ public class PlayerCtrl : MonoBehaviour
             // 점프
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                anim.SetBool("Jump", true);
                 Jump(JumpType.BASIC);
             }
 
@@ -152,8 +151,6 @@ public class PlayerCtrl : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                anim.SetBool("Jump", false);
-                anim.SetBool("Dash", true);
                 Jump(JumpType.DASH);
                 cloth.damping = 0.4f;
                 
@@ -194,7 +191,7 @@ public class PlayerCtrl : MonoBehaviour
         switch (curJumpState)
         {
             case JumpType.BASIC:
-                
+                anim.SetBool("Jump", true);
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 moveDir.y = jumpHight;
@@ -203,6 +200,8 @@ public class PlayerCtrl : MonoBehaviour
             case JumpType.DASH:
                 if (isJumping)
                 {
+                    anim.SetBool("Jump", false);
+                    anim.SetBool("Dash", true);
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
                     isJumping = false;
                     moveDir.y = jumpHight;
