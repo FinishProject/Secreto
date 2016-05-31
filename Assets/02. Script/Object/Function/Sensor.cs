@@ -10,25 +10,37 @@ using System.Collections;
     
     1. 센서를 달고 싶은 오브젝트에 빈 자식오브젝트를 생성
     2. 빈 자식오브젝트에 이 스크립트를 추가
-    3. 부모 스크립트에 Sensorable 인터페이스를 이용해 센서입력을 받자!
+    3. 부모 스크립트에 Sensorable_Player 인터페이스를 이용해 센서입력을 받자!
 
-    ※ 부모 오브젝트에서 ActiveSensor를 실행시켜,
+    ※ 부모 오브젝트에서 ActiveSensor_Player를 실행시켜,
     반환한 값이 true이면 
 *************************************************************/
 
 // 센서를 작동, 작동되면 true, 작동이 안되면 false 반환
-public interface Sensorable
+public interface Sensorable_Player
 {
-    bool ActiveSensor(int index);
+    bool ActiveSensor_Player(int index);
+}
+
+public interface Sensorable_Something
+{
+    bool ActiveSensor_Something(int index);
 }
 
 public class Sensor : MonoBehaviour {
     public int index = 0; // 여러개의 센서가 들어가는 부모 오브젝트를 위한 index
+    public string colliderName = "NULL";
     void OnTriggerEnter(Collider col)
     {
         if (col.tag.Equals("Player"))
         {
-            if (transform.parent.GetComponent<Sensorable>().ActiveSensor(index))
+            if (transform.parent.GetComponent<Sensorable_Player>().ActiveSensor_Player(index))
+                gameObject.SetActive(false);
+        }
+
+        if (col.tag.Equals(colliderName))
+        {
+            if (transform.parent.GetComponent<Sensorable_Something>().ActiveSensor_Something(index))
                 gameObject.SetActive(false);
         }
     }

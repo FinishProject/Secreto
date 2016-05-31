@@ -38,6 +38,11 @@ public class SkillCtrl : MonoBehaviour {
         get { return _countDownForAttribute / attributeDuration; }
     }
 
+    public float ProportionEnhance
+    {
+        get { return curEnhance / maxEnhance; }
+    }
+
     public static SkillCtrl instance;
 
     void Awake()

@@ -15,12 +15,7 @@ using UnityEngine.UI;
 ******************************************************************/
 
 public class InGameUI : MonoBehaviour {
-    [System.Serializable]
-    public struct HpBarImage
-    {
-        public Image fullHpBar;
-        public Image curHpBar;
-    }
+
     [System.Serializable]
     public struct AttributeImage
     {
@@ -28,17 +23,16 @@ public class InGameUI : MonoBehaviour {
         public Image redAttribute;
         public Image blueAttribute;
     }
-    public HpBarImage hpBarImage;
+
     public AttributeImage attributeImage;
 
+    /*
     public GameObject hpbar;
     public GameObject attribute;
     public GameObject enhanceGauge;
-    private Vector3 hpbarPos;
-    private Vector3 attributePos;
-    private Vector3 enhanceGaugePos;
-
-    public Image[] enhanceObj;
+    */
+    public Image hpBar;
+    public Image enhanceGauge;
 
     public static InGameUI instance;
 
@@ -46,33 +40,34 @@ public class InGameUI : MonoBehaviour {
     {
         instance = this;
 
-//        attributeImage.redAttribute.gameObject.SetActive(false);
-//       attributeImage.blueAttribute.gameObject.SetActive(false);
+
     }
 
     void Start()
     {
         InitUIValue();
-        enhanceObj = enhanceGauge.gameObject.GetComponentsInChildren<Image>();
-        Debug.Log(enhanceObj.Length);
-        for(int i=0; i < enhanceObj.Length; i++)
-        {
-            enhanceObj[i].gameObject.SetActive(false);
-        }
     }
 
     // UI들의 수치값을 최신화
     public void InitUIValue()
     {
         ChangeHpBar();
-        ChangeAttribute();
+//        ChangeAttribute();
     }
 
     // HP바 수치를 바꿔줌 (외부 호출)
     public void ChangeHpBar()
     {
-        hpBarImage.curHpBar.fillAmount = PlayerCtrl.instance.ProportionHP;
+        hpBar.fillAmount = PlayerCtrl.instance.ProportionHP;
     }
+
+
+    // 인핸스 수치 변경 (외부 호출)
+    public void ChangeEnhance()
+    {
+        enhanceGauge.fillAmount = SkillCtrl.instance.ProportionEnhance;
+    }
+
 
     // 속성을 바꾼다 (외부 호출)
     public void ChangeAttribute()
@@ -119,9 +114,5 @@ public class InGameUI : MonoBehaviour {
         }
     }
 
-    // 인핸스 수치 변경 (외부 호출)
-    public void ChangeEnhance()
-    {        
-        enhanceObj[SkillCtrl.instance.curEnhance].gameObject.SetActive(true);
-    }
+    
 }

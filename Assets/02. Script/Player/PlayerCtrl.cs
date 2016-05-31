@@ -21,7 +21,7 @@ public class PlayerCtrl : MonoBehaviour
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
     public float speed = 10f;          // 이동 속도
     public float moveResistant = 0f;   // 이동 저항력
-    public float amorTime = 10f;
+    private float amorTime = 0.5f;
 
     [System.NonSerialized]
     public bool isMove = true;       // 현재 이동 여부
@@ -36,6 +36,7 @@ public class PlayerCtrl : MonoBehaviour
     private float gravity = 5f; // 중력값
 	public float gr = 5;
     private float fullHp = 100; // 체력
+    private float curHp = 100;
     public static float focusRight = 1f;
 
     private float currRadian;
@@ -46,7 +47,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public float ProportionHP
     {
-        get { return pData.hp / fullHp; }
+        get { return curHp / fullHp; }
     }
    
     public Transform rayTr; // 레이캐스트 시작 위치
@@ -78,6 +79,7 @@ public class PlayerCtrl : MonoBehaviour
     void Start()
     {
         pData = PlayerData.Load();
+        curHp = fullHp;
         transform.position = pData.pPosition;
     }
 
@@ -95,7 +97,6 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-        
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority && isMove) Movement();
         else RopeWorker();
@@ -235,15 +236,15 @@ public class PlayerCtrl : MonoBehaviour
 
     public void getRecovery(float recovery)
     {
-        pData.hp += recovery;
+        curHp += recovery;
         InGameUI.instance.ChangeHpBar();
-        if (pData.hp >= 100)
+        if (curHp >= 100)
         {
-            pData.hp = 100;
-            Debug.Log(pData.hp);
+            curHp = 100;
+            Debug.Log(curHp);
             return;
         }
-        Debug.Log(pData.hp);
+        Debug.Log(curHp);
     }
 
     public void getDamage(float damage)
@@ -251,10 +252,11 @@ public class PlayerCtrl : MonoBehaviour
         if(!hasSuperArmor)
         {
             StartCoroutine(SuperArmor());
-            pData.hp -= damage;
+            curHp -= damage;
             InGameUI.instance.ChangeHpBar();
             anim.SetTrigger("Hit");
-            if (pData.hp <= 0)
+            Debug.Log(curHp);
+            if (curHp <= 0)
             {
                 PlayerDie();
                 return;

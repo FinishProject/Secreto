@@ -13,11 +13,11 @@ using System.Collections;
     ※ 사용 방법 2번을 꼭 확인하자
 *************************************************************/
 
-public class ChackAreaForSkyboxObject : MonoBehaviour, Sensorable
+public class ChackAreaForSkyboxObject : MonoBehaviour, Sensorable_Player
 {
     public int skyboxNumber = 0;
     private int saveIndex = 0;
-    public bool ActiveSensor(int index)
+    public bool ActiveSensor_Player(int index)
     {
         switch(saveIndex)
         {
