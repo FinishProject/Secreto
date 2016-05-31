@@ -77,8 +77,8 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
-        //pData = PlayerData.Load();
-        //transform.position = pData.pPosition;
+        pData = PlayerData.Load();
+        transform.position = pData.pPosition;
     }
 
     void OnEnable()
