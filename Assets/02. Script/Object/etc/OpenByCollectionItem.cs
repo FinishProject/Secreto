@@ -11,12 +11,12 @@ using System.Collections;
 
 *************************************************************/
 
-public class OpenByCollectionItem : MonoBehaviour , Sensorable
+public class OpenByCollectionItem : MonoBehaviour , Sensorable_Player
 {
     public int needItemId;  // 필요한 아이템 ID
 
     // 센서를 작동, 작동되면 true, 작동이 안되면 false 반환
-    public bool ActiveSensor(int index)
+    public bool ActiveSensor_Player(int index)
     {
         if(Inventory.instance.Find(needItemId) != null)
         {

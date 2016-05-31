@@ -13,6 +13,8 @@ TagManager:
   - WALL
   - BULLET
   - ITEM
+  - Wahle
+  - ZoomArea
   layers:
   - Default
   - TransparentFX
