@@ -203,7 +203,7 @@ public class Slug : FSMBase
     void ShotBullet()
     {
         ObjectMgr.instance.GetParabolaBullet().UseItem().
-                GetComponent<BulletObject_Parabola>().Moving(shootTr.position, attackErrorRange);
+                GetComponent<BulletObject_Parabola>().Moving(shootTr, attackErrorRange);
         
     }
 

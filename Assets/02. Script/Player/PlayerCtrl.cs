@@ -97,6 +97,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+        
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority && isMove) Movement();
         else RopeWorker();
@@ -112,6 +113,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Movement()
     {
+        anim.SetFloat("Velocity", controller.velocity.y);
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
                                                  // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
@@ -153,8 +155,9 @@ public class PlayerCtrl : MonoBehaviour
             {
                 Jump(JumpType.DASH);
                 cloth.damping = 0.4f;
-                
             }
+
+            
 			gravity = gr;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
@@ -214,7 +217,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward * focusRight, out hit, 5f))
+        if (Physics.Raycast(rayTr.position, forward * focusRight, out hit, 8f))
         {
             //앞에 오를 수 있는 오브젝트 있을 시
             if (hit.collider.CompareTag("WALL"))
@@ -254,8 +257,7 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetTrigger("Hit");
             if (pData.hp <= 0)
             {
-                //PlayerDie();
-                Debug.Log("Player Die");
+                PlayerDie();
                 return;
             }
         }

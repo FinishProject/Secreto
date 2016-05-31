@@ -23,8 +23,8 @@ enum ScriptState
 
 public class ScriptMgr : MonoBehaviour {
 
-    public Text txtUi; // 대사 텍스트 출력 UI
-    public GameObject bgUi; // 대사 출력 배경 UI
+    public Text[] txtUi; // 대사 텍스트 출력 UI
+    public GameObject[] bgUi; // 대사 출력 배경 UI
     public GameObject answerUi; // 선택지 UI
     
     public bool isQuest = false; // 퀘스트 완료 여부
@@ -43,7 +43,10 @@ public class ScriptMgr : MonoBehaviour {
     void Awake()
     {
         instance = this;
-        bgUi.SetActive(false);
+        for(int i=0; i<bgUi.Length; i++)
+        {
+            bgUi[i].SetActive(false);
+        }
         answerUi.SetActive(false);
         scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
         spokeNpc = PlayerData.LoadNpcName(); // 이미 대화한 NPC 이름 불러오기
@@ -93,7 +96,7 @@ public class ScriptMgr : MonoBehaviour {
     // NPC와 대화
     IEnumerator SpeakingNPC()
     {
-        bgUi.SetActive(true);
+        bgUi[1].SetActive(true);
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Return) && !isAnswer)
@@ -101,23 +104,23 @@ public class ScriptMgr : MonoBehaviour {
                 if (!isQuest)
                 {
                     curIndex++;
-                    // 종료
+                    // 대화 종료
                     if (curIndex >= scriptInfo.Count - 1)
                     {
-                        bgUi.SetActive(false);
+                        bgUi[1].SetActive(false);
                         PlayerCtrl.instance.isMove = true;
                         curIndex = -1;
                         break;
                     }
-                    // 거절
+                    // 대화 거절
                     if (scriptInfo[curIndex].scriptType == (int)ScriptState.refuse)
                     {
                         curIndex = scriptInfo.Count - 1;
                     }
-                    // 기본
+                    // 대화 기본
                     else if (scriptInfo[curIndex].scriptType <= (int)ScriptState.answer)
                     {
-                        txtUi.text = scriptInfo[curIndex].context;
+                        txtUi[1].text = scriptInfo[curIndex].context;
                         // 선택지가 있음
                         if (scriptInfo[curIndex].scriptType == (int)ScriptState.answer)
                         {
@@ -125,12 +128,12 @@ public class ScriptMgr : MonoBehaviour {
                         }
                     }
                 }
-
+                // 퀘스트 완료 시
                 else if (isQuest)
                 {
                     isAnimQuest = true;
                     curIndex = scriptInfo.Count - 1;
-                    txtUi.text = scriptInfo[curIndex].context;
+                    txtUi[1].text = scriptInfo[curIndex].context;
                     isQuest = false;
                 }
             }
@@ -166,7 +169,7 @@ public class ScriptMgr : MonoBehaviour {
         }
         answerUi.SetActive(false);
         QuestMgr.isQuest = true;
-        txtUi.text = scriptInfo[curIndex].context;
+        txtUi[1].text = scriptInfo[curIndex].context;
     }
 
     //이미 대화한 NPC인지 확인

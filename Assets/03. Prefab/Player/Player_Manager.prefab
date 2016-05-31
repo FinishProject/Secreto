@@ -794,6 +794,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &144334
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 439070}
+  m_Layer: 0
+  m_Name: Shot_Point
+  m_TagString: Untagged
+  m_Icon: {fileID: -3545028842045912814, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &144932
 GameObject:
   m_ObjectHideFlags: 1
@@ -1138,6 +1153,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 428914}
   - 114: {fileID: 11455496}
+  - 114: {fileID: 11433826}
+  - 114: {fileID: 11452686}
   m_Layer: 0
   m_Name: Ola
   m_TagString: WAHLE
@@ -2098,6 +2115,7 @@ Transform:
   m_LocalPosition: {x: -1.22, y: -0.07, z: 0.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 439070}
   - {fileID: 491452}
   m_Father: {fileID: 481266}
   m_RootOrder: 1
@@ -2273,6 +2291,18 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 466416}
+  m_RootOrder: 0
+--- !u!4 &439070
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 144334}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.346}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 428914}
   m_RootOrder: 0
 --- !u!4 &439576
 Transform:
@@ -2981,7 +3011,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 142274}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30.91, y: 1.25, z: -0.9}
+  m_LocalPosition: {x: 73.8, y: 7.8, z: -0.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 485782}
@@ -3114,7 +3144,7 @@ Transform:
   - {fileID: 405346}
   - {fileID: 440346}
   m_Father: {fileID: 428914}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!4 &491564
 Transform:
   m_ObjectHideFlags: 1
@@ -3474,6 +3504,23 @@ MonoBehaviour:
   shaderReduce: {fileID: 4800000, guid: 57b33a14b6d5347c5a85c36f6cb3b280, type: 3}
   shaderAdapt: {fileID: 4800000, guid: 257bc83cbeb544540bd0e558aa9b1383, type: 3}
   shaderApply: {fileID: 4800000, guid: f4901f25d4e1542589348bbb89563d8e, type: 3}
+--- !u!114 &11433826
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3b4d89326e301347aff4a00f480a394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotPoint: {fileID: 439070}
+  normalBullet: {fileID: 139922, guid: 6ad5ef27d17d9cf4d80f5ca5256f5290, type: 2}
+  bulletNum: 3
+  curEnhance: 0
+  maxEnhance: 10
+  attributeDuration: 5
 --- !u!114 &11434328
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3689,6 +3736,20 @@ MonoBehaviour:
   heightDensity: 2
   startDistance: 0
   fogShader: {fileID: 4800000, guid: 70d8568987ac0499f952b54c7c13e265, type: 3}
+--- !u!114 &11452686
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163726}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31c723ac38e71e14abc1f235e47c878e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointTr: {fileID: 0}
+  anim: {fileID: 9528466}
+  state: 1
 --- !u!114 &11455496
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3702,6 +3763,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 10
   accel: 5
+  stateValue: 0
   playerTr: {fileID: 481302}
 --- !u!114 &11458140
 MonoBehaviour:
@@ -4021,11 +4083,11 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 118704}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
-  m_Center: {x: 0, y: 0, z: 0.63}
+  m_Radius: 0.19
+  m_Center: {x: 0, y: 0, z: 0.59}
 --- !u!135 &13525030
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -4033,7 +4095,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162472}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.22
@@ -4045,7 +4107,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165778}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.22
@@ -4057,11 +4119,11 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 129106}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.3
-  m_Center: {x: 0.8, y: 0, z: 0.83}
+  m_Center: {x: 0.8, y: 0, z: 0.74}
 --- !u!136 &13615032
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -4069,7 +4131,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 129106}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.13
   m_Height: 1.37
@@ -4082,7 +4144,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165778}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.2
   m_Height: 1.24
@@ -4095,7 +4157,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162472}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.2
   m_Height: 1.24
@@ -4181,8 +4243,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: -0.000000059604645, y: 0.2859497, z: 0.7690996}
-    m_Extent: {x: 0.59446204, y: 0.23917396, z: 0.40319943}
+    m_Center: {x: -0.00000011920929, y: 0.2859497, z: 0.7691002}
+    m_Extent: {x: 0.59446204, y: 0.23917396, z: 0.4031992}
   m_DirtyAABB: 0
 --- !u!137 &13768436
 SkinnedMeshRenderer:
@@ -4288,13 +4350,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.46
-  m_Radius: 0.2
+  m_Height: 1.72
+  m_Radius: 0.25
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 0.84, z: -0.01}
+  m_Center: {x: 0, y: 0.91, z: -0.01}
 --- !u!183 &18326362
 Cloth:
   m_ObjectHideFlags: 1

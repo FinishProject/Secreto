@@ -46,8 +46,8 @@ public class InGameUI : MonoBehaviour {
     {
         instance = this;
 
-        attributeImage.redAttribute.gameObject.SetActive(false);
-        attributeImage.blueAttribute.gameObject.SetActive(false);
+//        attributeImage.redAttribute.gameObject.SetActive(false);
+//       attributeImage.blueAttribute.gameObject.SetActive(false);
     }
 
     void Start()

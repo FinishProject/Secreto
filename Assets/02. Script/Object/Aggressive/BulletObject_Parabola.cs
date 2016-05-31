@@ -4,14 +4,18 @@ using System.Collections;
 public class BulletObject_Parabola : MonoBehaviour {
 
 
-    public void Moving(Vector3 startPos, float range)
+    public void Moving(Transform startPos, float range)
     {
         StartCoroutine(ParabolaMoving(startPos, range));
     }
 
-    IEnumerator ParabolaMoving(Vector3 startPos, float range)
+    IEnumerator ParabolaMoving(Transform startPos, float range)
     {
-        transform.position = startPos;
+        Vector3 relativePos;
+        Quaternion lookRot;
+
+        transform.position = startPos.position;
+        transform.rotation = new Quaternion(0f, 0f, startPos.rotation.z, 0f);
         float angle = 70f;
 
         var targetPos = PlayerCtrl.instance.transform.position;
@@ -29,6 +33,12 @@ public class BulletObject_Parabola : MonoBehaviour {
 
         while (true)
         {
+            relativePos = targetPos - transform.position;
+            lookRot = Quaternion.LookRotation(relativePos);
+
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, 
+                new Quaternion(0f, 0f, lookRot.z, lookRot.w), 4f * Time.deltaTime);
+
             ballistic += Physics.gravity * Time.deltaTime;
             transform.position += ballistic * Time.deltaTime;
             yield return null;
@@ -38,11 +48,16 @@ public class BulletObject_Parabola : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.tag.Equals("Player"))
-            PlayerCtrl.instance.getDamage(10);
-        else if (col.tag.Equals("BULLET") || col.tag.Equals("MONSTER"))
-            return;
+        if (!col.CompareTag("MONSTER"))
+        {
+            if (col.tag.Equals("Player"))
+            {
+                PlayerCtrl.instance.getDamage(10);
+            }
+            else if (col.tag.Equals("BULLET") || col.tag.Equals("MONSTER"))
+                return;
 
-        gameObject.SetActive(false);
+            gameObject.SetActive(false);
+        }
     }
 }

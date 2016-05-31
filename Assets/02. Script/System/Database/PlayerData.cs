@@ -17,7 +17,7 @@ public abstract class PlayerData {
         //xml 생성
         XmlDocument doc = new XmlDocument();
         //요소 생성
-        XmlElement posElement = doc.CreateElement("PlayerPosition");
+        XmlElement posElement = doc.CreateElement("PlayerData");
         doc.AppendChild(posElement);
         //캐릭터 위치값 저장
         XmlElement posDataElement = doc.CreateElement("Position");
@@ -26,9 +26,11 @@ public abstract class PlayerData {
         posDataElement.SetAttribute("z", data.pPosition.z.ToString());
         posElement.AppendChild(posDataElement);
         //캐릭터 정보 저장
-        //XmlElement infoDataElement = doc.CreateElement("Info");
-        //infoDataElement.SetAttribute("hp", data.hp.ToString());
-        //posElement.AppendChild(infoDataElement);
+        XmlElement infoDataElement = doc.CreateElement("Info");
+        infoDataElement.SetAttribute("hp", data.hp.ToString());
+        infoDataElement.SetAttribute("enhance", data.enhance.ToString());
+        posElement.AppendChild(infoDataElement);
+
         //데이터 저장
         doc.Save(Application.dataPath + "/Resources/Player_Data.xml");
     }
@@ -38,18 +40,23 @@ public abstract class PlayerData {
         XmlDocument xmlDoc = new XmlDocument();
         //해당 경로의 XMl문서 불러오기
         xmlDoc.Load(Application.dataPath + "/Resources/Player_Data.xml");
-        XmlElement posElement = xmlDoc["PlayerPosition"];
+        XmlElement posElement = xmlDoc["PlayerData"];
 
-        float posX, posY, posZ, pHp;
+        float posX = 0f, posY = 0f, posZ = 0f, pHp = 0f, pEnhance= 0f;
         Data loadData = new Data();
         foreach (XmlElement PosElement in posElement.ChildNodes)
         {
             posX = System.Convert.ToSingle(PosElement.GetAttribute("x"));
             posY = System.Convert.ToSingle(PosElement.GetAttribute("y"));
             posZ = System.Convert.ToSingle(PosElement.GetAttribute("z"));
-            
+            pHp = System.Convert.ToSingle(posElement.GetAttribute("hp"));
+            pEnhance = System.Convert.ToSingle(posElement.GetAttribute("enhance"));
+
             Vector3 initVec = new Vector3(posX, posY, posZ);
             loadData.pPosition = initVec;
+            loadData.hp = pHp;
+            loadData.enhance = pEnhance;
+            Debug.Log(pHp);
         }
         return loadData;
     }
