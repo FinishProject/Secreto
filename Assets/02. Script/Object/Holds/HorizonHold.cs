@@ -38,7 +38,7 @@ public class HorizonHold : MonoBehaviour
         if (col.CompareTag("Player"))
         {
             WahleCtrl.curState = WahleCtrl.instance.StepHold();
-            playerTr.Translate(Vector3.forward * speed * Time.deltaTime);
+            playerTr.Translate(Vector3.forward * (speed * PlayerCtrl.focusRight) * Time.deltaTime);
         }
     }
 

@@ -36,7 +36,7 @@ public class PlayerCtrl : MonoBehaviour
     private float gravity = 5f; // 중력값
 	public float gr = 5;
     private float fullHp = 100; // 체력
-    private float focusRight = 1f;
+    public static float focusRight = 1f;
 
     private float currRadian;
     private float vx;
@@ -50,12 +50,12 @@ public class PlayerCtrl : MonoBehaviour
     }
    
     public Transform rayTr; // 레이캐스트 시작 위치
-
     public static Vector3 moveDir = Vector3.zero; // 이동 벡터
     public static CharacterController controller; // 캐릭터컨트롤러
-    private Animator anim;
     private SwitchObject switchState;
     private GameObject currInteraction;
+
+    private Animator anim;
     public Cloth cloth;
 
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
@@ -178,10 +178,8 @@ public class PlayerCtrl : MonoBehaviour
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
-        Vector3 scale = transform.localScale;
-        scale.z *= -1f;
+        transform.Rotate(new Vector3(0, 1, 0), 180);
         focusRight *= -1f;
-        transform.localScale = scale;
     }
 
     // 점프

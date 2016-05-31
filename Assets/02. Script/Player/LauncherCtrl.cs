@@ -33,8 +33,8 @@ public class LauncherCtrl : MonoBehaviour {
             // 직선 공격
             Vector3 relativePos = this.target.transform.position - this.transform.position;
             transform.position = Vector3.Lerp(this.transform.position, target.transform.position, speed * Time.deltaTime);
-            Quaternion lookRot = Quaternion.LookRotation(relativePos);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 20f);
+            //Quaternion lookRot = Quaternion.LookRotation(relativePos);
+            //transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 20f);
 
             // 포물선 공격
             //Vector3 center = (target.transform.position + this.transform.position) * 0.5f;
@@ -47,7 +47,8 @@ public class LauncherCtrl : MonoBehaviour {
             // 타겟 사라졋을 시 탄환체도 사라지도록
             if (!target.activeSelf) {
                 target = null;
-                SkillCtrl.instance.StartReset(index);
+                this.gameObject.SetActive(false);
+                //SkillCtrl.instance.StartReset(index);
             }
         }
     }
@@ -57,7 +58,7 @@ public class LauncherCtrl : MonoBehaviour {
         if (coll.CompareTag("MONSTER"))
         {
             var monster = coll.GetComponent<FSMBase>();
-            monster.GetDamage(15);
+            //monster.GetDamage(15);
             //switch (monster.curAttibute)
             //{
             //    // 속성 상관 없이 데미지
@@ -85,7 +86,8 @@ public class LauncherCtrl : MonoBehaviour {
             //}
 
             target = null;
-            SkillCtrl.instance.StartReset(index);
+            this.gameObject.SetActive(false);
+            //SkillCtrl.instance.StartReset(index);
         }
         
     }
@@ -109,10 +111,9 @@ public class LauncherCtrl : MonoBehaviour {
     //}
 
     // 날아갈 타겟 위치와 현재 발사체의 배열 인덱스를 받아옴
-    public void GetTarget(GameObject _target, int _index)
+    public void GetTarget(GameObject _target)
     {
         this.target = _target;
-        this.index = _index;
         StartCoroutine(Duration());
     }
 
@@ -120,6 +121,7 @@ public class LauncherCtrl : MonoBehaviour {
     IEnumerator Duration()
     {
         yield return new WaitForSeconds(durationTime);
-        SkillCtrl.instance.StartReset(index);
+        this.gameObject.SetActive(false);
+        //SkillCtrl.instance.StartReset(index);
     }
 }

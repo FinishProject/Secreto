@@ -5,10 +5,10 @@ public class LanaCtrl : MonoBehaviour {
 
     private float diatance = 0f;
 
+    public Transform target; // 포물선을 그리며 이동시 도착 지점
     private Animator anim;
     private Transform playerTr;
-    public Transform target; // 포물선을 그리며 이동시 도착 지점
-
+   
     void Start () {
         anim = GetComponent<Animator>();
         playerTr = GameObject.FindGameObjectWithTag("Player").transform;
@@ -22,7 +22,7 @@ public class LanaCtrl : MonoBehaviour {
         {
             diatance = (playerTr.position - transform.position).sqrMagnitude;
             // 움직임 시작
-            if (diatance <= 50f)
+            if (diatance <= 55f)
             {
                 StartCoroutine(MoveUpdate());
                 break;
@@ -36,7 +36,7 @@ public class LanaCtrl : MonoBehaviour {
     {
         while (true)
         {
-            if (diatance <= 50f)
+            if (diatance <= 55f)
                 AppearNpc();
 
             yield return null;
