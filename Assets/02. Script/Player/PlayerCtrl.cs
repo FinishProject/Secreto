@@ -396,9 +396,12 @@ public class PlayerCtrl : MonoBehaviour
         //오브젝트 밀기
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            anim.SetBool("Push", true);
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             body.velocity = pushDir * 2f;
         }
+        else
+            anim.SetBool("Push", false);
     }
 
 }
