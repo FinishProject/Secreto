@@ -77,10 +77,8 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
-        Save();
-
-        pData = PlayerData.Load();
-        transform.position = pData.pPosition;
+        //pData = PlayerData.Load();
+        //transform.position = pData.pPosition;
     }
 
     void OnEnable()
@@ -388,7 +386,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-
+        
         Rigidbody body = hit.collider.attachedRigidbody;
         if (body == null || body.isKinematic)
             return;

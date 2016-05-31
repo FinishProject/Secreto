@@ -26,10 +26,10 @@ public abstract class PlayerData {
         posDataElement.SetAttribute("z", data.pPosition.z.ToString());
         posElement.AppendChild(posDataElement);
         //캐릭터 정보 저장
-        XmlElement infoDataElement = doc.CreateElement("Info");
-        infoDataElement.SetAttribute("hp", data.hp.ToString());
-        infoDataElement.SetAttribute("enhance", data.enhance.ToString());
-        posElement.AppendChild(infoDataElement);
+        //XmlElement infoDataElement = doc.CreateElement("Info");
+        //infoDataElement.SetAttribute("hp", data.hp.ToString());
+        //infoDataElement.SetAttribute("enhance", data.enhance.ToString());
+        //posElement.AppendChild(infoDataElement);
 
         //데이터 저장
         doc.Save(Application.dataPath + "/Resources/Player_Data.xml");
@@ -42,21 +42,20 @@ public abstract class PlayerData {
         xmlDoc.Load(Application.dataPath + "/Resources/Player_Data.xml");
         XmlElement posElement = xmlDoc["PlayerData"];
 
-        float posX = 0f, posY = 0f, posZ = 0f, pHp = 0f, pEnhance= 0f;
+        float posX = 0f, posY = 0f, posZ = 0f;
         Data loadData = new Data();
         foreach (XmlElement PosElement in posElement.ChildNodes)
         {
             posX = System.Convert.ToSingle(PosElement.GetAttribute("x"));
             posY = System.Convert.ToSingle(PosElement.GetAttribute("y"));
             posZ = System.Convert.ToSingle(PosElement.GetAttribute("z"));
-            pHp = System.Convert.ToSingle(posElement.GetAttribute("hp"));
-            pEnhance = System.Convert.ToSingle(posElement.GetAttribute("enhance"));
+            //pHp = System.Convert.ToSingle(posElement.GetAttribute("hp"));
+            //pEnhance = System.Convert.ToSingle(posElement.GetAttribute("enhance"));
 
             Vector3 initVec = new Vector3(posX, posY, posZ);
             loadData.pPosition = initVec;
-            loadData.hp = pHp;
-            loadData.enhance = pEnhance;
-            Debug.Log(pHp);
+            //loadData.hp = pHp;
+            //loadData.enhance = pEnhance;
         }
         return loadData;
     }
@@ -75,7 +74,7 @@ public abstract class PlayerData {
         {
             string m_Name, m_Context, m_TargetName;
             int m_scriptType, m_QuestType, m_CompletNum;
-            int mYes, mNo;
+            int mYes, mNo, mSpeaker;
 
             m_Name = nodes[i].SelectSingleNode("name").InnerText;
             m_Context = nodes[i].SelectSingleNode("context").InnerText;
@@ -87,6 +86,7 @@ public abstract class PlayerData {
 
             mYes = System.Convert.ToInt32(nodes[i].SelectSingleNode("yes").InnerText);
             mNo = System.Convert.ToInt32(nodes[i].SelectSingleNode("no").InnerText);
+            mSpeaker = System.Convert.ToInt32(nodes[i].SelectSingleNode("speaker").InnerText);
 
             scriptData.Add(new Script
             {
@@ -98,6 +98,7 @@ public abstract class PlayerData {
                 completNum = m_CompletNum,
                 yes = mYes,
                 no = mNo,
+                speaker = mSpeaker,
             });
         }
         return scriptData;

@@ -41,11 +41,27 @@ public class QuestMgr : MonoBehaviour {
         {
             case QuestType.HUNT:
                 Debug.Log("Hunt");
+                StartCoroutine(HuntQuest());
                 break;
             case QuestType.COLLECT:
                 Debug.Log("Collect");
                 StartCoroutine(CollectQuest());
                 break;
+        }
+    }
+
+    IEnumerator HuntQuest()
+    {
+        while (true)
+        {
+            if(questInfo.completNum <= curCompletNum)
+            {
+                Debug.Log("Complete");
+                isQuest = false;
+                ScriptMgr.instance.isQuest = true;
+                break;
+            }
+            yield return new WaitForSeconds(0.5f);
         }
     }
     
