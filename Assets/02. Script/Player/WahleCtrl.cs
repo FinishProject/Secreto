@@ -160,13 +160,12 @@ public class WahleCtrl : MonoBehaviour {
 
         while (true)
         {
-            //if (!targetObj.activeSelf || distance >= 15f || targetDis >= 15f)
-            //{
-            //    curState = Move();
-            //    Debug.Log("Change");
-            //    isAttack = false;
-            //}
-            
+            if (!targetObj.activeSelf || distance >= 20f)
+            {
+                curState = Move();
+                isAttack = false;
+            }
+
             enemyRelativePos = targetObj.transform.position - transform.position;
             lookRot = Quaternion.LookRotation(enemyRelativePos);
 

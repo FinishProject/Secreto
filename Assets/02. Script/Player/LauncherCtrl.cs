@@ -58,7 +58,7 @@ public class LauncherCtrl : MonoBehaviour {
         if (coll.CompareTag("MONSTER"))
         {
             var monster = coll.GetComponent<FSMBase>();
-            //monster.GetDamage(15);
+            monster.GetDamage(15);
             //switch (monster.curAttibute)
             //{
             //    // 속성 상관 없이 데미지

@@ -1,0 +1,379 @@
+fileFormatVersion: 2
+guid: 3a5b05aa0f32e964ea4b92289fd35c25
+timeCreated: 1464729966
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: body01
+    100002: body02
+    100004: Bone002
+    100006: Bone004
+    100008: Bone019
+    100010: Bone024
+    100012: Bone029
+    100014: Bone030
+    100016: Bone031
+    100018: Bone036
+    100020: Bone042
+    100022: Bone050
+    100024: Bone051
+    100026: Bone052
+    100028: Bone053
+    100030: Bone054
+    100032: Bone055
+    100034: Cylinder001
+    100036: Cylinder002
+    100038: IK Chain001
+    100040: IK Chain002
+    100042: IK Chain003
+    100044: IK Chain004
+    100046: IK Chain005
+    100048: IK Chain006
+    100050: IK Chain007
+    100052: IK Chain008
+    100054: IK Chain011
+    100056: IK Chain012
+    100058: IK Chain013
+    100060: IK Chain014
+    100062: IK Chain015
+    100064: IK Chain016
+    100066: IK Chain017
+    100068: IK Chain018
+    100070: leg_L_1_01
+    100072: leg_L_1_02
+    100074: leg_L_1_03
+    100076: leg_L_1_04
+    100078: leg_L_2_01
+    100080: leg_L_2_02
+    100082: leg_L_2_03
+    100084: leg_L_2_04
+    100086: leg_L_3_01
+    100088: leg_L_3_02
+    100090: leg_L_3_03
+    100092: leg_L_3_04
+    100094: leg_L_4_01
+    100096: leg_L_4_02
+    100098: leg_L_4_03
+    100100: leg_L_4_04
+    100102: leg_R_1_01
+    100104: leg_R_1_02
+    100106: leg_R_1_03
+    100108: leg_R_1_04
+    100110: leg_R_2_01
+    100112: leg_R_2_02
+    100114: leg_R_2_03
+    100116: leg_R_2_04
+    100118: leg_R_3_01
+    100120: leg_R_3_02
+    100122: leg_R_3_03
+    100124: leg_R_3_04
+    100126: leg_R_4_01
+    100128: leg_R_4_02
+    100130: leg_R_4_03
+    100132: leg_R_4_04
+    100134: //RootNode
+    100136: spider_01
+    400000: body01
+    400002: body02
+    400004: Bone002
+    400006: Bone004
+    400008: Bone019
+    400010: Bone024
+    400012: Bone029
+    400014: Bone030
+    400016: Bone031
+    400018: Bone036
+    400020: Bone042
+    400022: Bone050
+    400024: Bone051
+    400026: Bone052
+    400028: Bone053
+    400030: Bone054
+    400032: Bone055
+    400034: Cylinder001
+    400036: Cylinder002
+    400038: IK Chain001
+    400040: IK Chain002
+    400042: IK Chain003
+    400044: IK Chain004
+    400046: IK Chain005
+    400048: IK Chain006
+    400050: IK Chain007
+    400052: IK Chain008
+    400054: IK Chain011
+    400056: IK Chain012
+    400058: IK Chain013
+    400060: IK Chain014
+    400062: IK Chain015
+    400064: IK Chain016
+    400066: IK Chain017
+    400068: IK Chain018
+    400070: leg_L_1_01
+    400072: leg_L_1_02
+    400074: leg_L_1_03
+    400076: leg_L_1_04
+    400078: leg_L_2_01
+    400080: leg_L_2_02
+    400082: leg_L_2_03
+    400084: leg_L_2_04
+    400086: leg_L_3_01
+    400088: leg_L_3_02
+    400090: leg_L_3_03
+    400092: leg_L_3_04
+    400094: leg_L_4_01
+    400096: leg_L_4_02
+    400098: leg_L_4_03
+    400100: leg_L_4_04
+    400102: leg_R_1_01
+    400104: leg_R_1_02
+    400106: leg_R_1_03
+    400108: leg_R_1_04
+    400110: leg_R_2_01
+    400112: leg_R_2_02
+    400114: leg_R_2_03
+    400116: leg_R_2_04
+    400118: leg_R_3_01
+    400120: leg_R_3_02
+    400122: leg_R_3_03
+    400124: leg_R_3_04
+    400126: leg_R_4_01
+    400128: leg_R_4_02
+    400130: leg_R_4_03
+    400132: leg_R_4_04
+    400134: //RootNode
+    400136: spider_01
+    4300000: spider_01
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: spider_01
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Take 001
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 34
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: body01
+        weight: 1
+      - path: body01/body02
+        weight: 1
+      - path: body01/body02/Bone002
+        weight: 1
+      - path: body01/Bone050
+        weight: 1
+      - path: body01/Bone050/Bone051
+        weight: 1
+      - path: body01/Bone054
+        weight: 1
+      - path: body01/Bone054/Bone055
+        weight: 1
+      - path: body01/leg_L_1_01
+        weight: 1
+      - path: body01/leg_L_1_01/leg_L_1_02
+        weight: 1
+      - path: body01/leg_L_1_01/leg_L_1_02/leg_L_1_03
+        weight: 1
+      - path: body01/leg_L_1_01/leg_L_1_02/leg_L_1_03/leg_L_1_04
+        weight: 1
+      - path: body01/leg_L_1_01/leg_L_1_02/leg_L_1_03/leg_L_1_04/Bone004
+        weight: 1
+      - path: body01/leg_L_2_01
+        weight: 1
+      - path: body01/leg_L_2_01/leg_L_2_02
+        weight: 1
+      - path: body01/leg_L_2_01/leg_L_2_02/leg_L_2_03
+        weight: 1
+      - path: body01/leg_L_2_01/leg_L_2_02/leg_L_2_03/leg_L_2_04
+        weight: 1
+      - path: body01/leg_L_2_01/leg_L_2_02/leg_L_2_03/leg_L_2_04/Bone019
+        weight: 1
+      - path: body01/leg_L_3_01
+        weight: 1
+      - path: body01/leg_L_3_01/leg_L_3_02
+        weight: 1
+      - path: body01/leg_L_3_01/leg_L_3_02/leg_L_3_03
+        weight: 1
+      - path: body01/leg_L_3_01/leg_L_3_02/leg_L_3_03/leg_L_3_04
+        weight: 1
+      - path: body01/leg_L_3_01/leg_L_3_02/leg_L_3_03/leg_L_3_04/Bone024
+        weight: 1
+      - path: body01/leg_L_4_01
+        weight: 1
+      - path: body01/leg_L_4_01/leg_L_4_02
+        weight: 1
+      - path: body01/leg_L_4_01/leg_L_4_02/leg_L_4_03
+        weight: 1
+      - path: body01/leg_L_4_01/leg_L_4_02/leg_L_4_03/leg_L_4_04
+        weight: 1
+      - path: body01/leg_L_4_01/leg_L_4_02/leg_L_4_03/leg_L_4_04/Bone029
+        weight: 1
+      - path: body01/leg_R_1_01
+        weight: 1
+      - path: body01/leg_R_1_01/leg_R_1_02
+        weight: 1
+      - path: body01/leg_R_1_01/leg_R_1_02/leg_R_1_03
+        weight: 1
+      - path: body01/leg_R_1_01/leg_R_1_02/leg_R_1_03/leg_R_1_04
+        weight: 1
+      - path: body01/leg_R_1_01/leg_R_1_02/leg_R_1_03/leg_R_1_04/Bone042
+        weight: 1
+      - path: body01/leg_R_2_01
+        weight: 1
+      - path: body01/leg_R_2_01/leg_R_2_02
+        weight: 1
+      - path: body01/leg_R_2_01/leg_R_2_02/leg_R_2_03
+        weight: 1
+      - path: body01/leg_R_2_01/leg_R_2_02/leg_R_2_03/leg_R_2_04
+        weight: 1
+      - path: body01/leg_R_2_01/leg_R_2_02/leg_R_2_03/leg_R_2_04/Bone030
+        weight: 1
+      - path: body01/leg_R_3_01
+        weight: 1
+      - path: body01/leg_R_3_01/leg_R_3_02
+        weight: 1
+      - path: body01/leg_R_3_01/leg_R_3_02/leg_R_3_03
+        weight: 1
+      - path: body01/leg_R_3_01/leg_R_3_02/leg_R_3_03/leg_R_3_04
+        weight: 1
+      - path: body01/leg_R_3_01/leg_R_3_02/leg_R_3_03/leg_R_3_04/Bone031
+        weight: 1
+      - path: body01/leg_R_4_01
+        weight: 1
+      - path: body01/leg_R_4_01/leg_R_4_02
+        weight: 1
+      - path: body01/leg_R_4_01/leg_R_4_02/leg_R_4_03
+        weight: 1
+      - path: body01/leg_R_4_01/leg_R_4_02/leg_R_4_03/leg_R_4_04
+        weight: 1
+      - path: body01/leg_R_4_01/leg_R_4_02/leg_R_4_03/leg_R_4_04/Bone036
+        weight: 1
+      - path: Bone052
+        weight: 1
+      - path: Bone052/Bone053
+        weight: 1
+      - path: Cylinder001
+        weight: 1
+      - path: Cylinder002
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: IK Chain005
+        weight: 1
+      - path: IK Chain006
+        weight: 1
+      - path: IK Chain007
+        weight: 1
+      - path: IK Chain008
+        weight: 1
+      - path: IK Chain011
+        weight: 1
+      - path: IK Chain012
+        weight: 1
+      - path: IK Chain013
+        weight: 1
+      - path: IK Chain014
+        weight: 1
+      - path: IK Chain015
+        weight: 1
+      - path: IK Chain016
+        weight: 1
+      - path: IK Chain017
+        weight: 1
+      - path: IK Chain018
+        weight: 1
+      - path: spider_01
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

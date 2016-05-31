@@ -14,7 +14,7 @@ GameObject:
   - 135: {fileID: 13562412}
   m_Layer: 0
   m_Name: ice_missale
-  m_TagString: Untagged
+  m_TagString: BULLET
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

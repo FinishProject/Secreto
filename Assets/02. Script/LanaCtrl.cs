@@ -57,6 +57,7 @@ public class LanaCtrl : MonoBehaviour {
 
         Vector3 lookTarget = new Vector3(0f, playerTr.position.y, playerTr.position.z);
 
-        transform.LookAt(lookTarget);
+        if(diatance <= 20f)
+            transform.LookAt(lookTarget);
     }
 }

@@ -246,7 +246,6 @@ public class Slug : FSMBase
         Debug.Log("사망");
         anim.SetBool("Death", true);
         GetComponent<ItemDrop>().DropItem();    // 아이템 드랍 ( 아이템 드랍 설정은 인스펙터 창에서 )
-
         yield return new WaitForSeconds(3f);
 
         gameObject.SetActive(false);

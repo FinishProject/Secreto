@@ -120,7 +120,6 @@ public class SkillCtrl : MonoBehaviour {
         LauncherCtrl launcher = bullet[count].GetComponent<LauncherCtrl>();
         launcher.GetTarget(targetTrList[targetIndex].gameObject);
         count++; // 다음 탄환을 생성하기 위해 카운트 증가
-        Debug.Log("11");
     }
 
     public void ChangeAttribute(AttributeState attribute)

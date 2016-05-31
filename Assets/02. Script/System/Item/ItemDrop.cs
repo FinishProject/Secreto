@@ -59,12 +59,12 @@ public class ItemDrop : MonoBehaviour {
 
         for (int i = 0; dropItemList.Mental && i < dropItemList.MentalNumber; i++)
         {
- //           tempItem = ItemMgr.instance.GetItem(ItemFunction.Mental).UseItem();
+            tempItem = ItemMgr.instance.GetItem(ItemFunction.Mental).UseItem();
             Vector3 randPos = new Vector3(
                 Random.Range(thisTr.position.x - dropRange, thisTr.position.x + dropRange),
                 Random.Range(thisTr.position.y + dropRange, thisTr.position.y + (dropRange * 2)),
                 -2);
-//            tempItem.GetComponent<MentalItem>().Dropped(thisTr.position, randPos, true);
+            tempItem.GetComponent<MentalItem>().Dropped(thisTr.position, randPos, true);
         }
 
     }
