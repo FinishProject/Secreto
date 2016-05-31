@@ -29,7 +29,7 @@ public class HorizonHold : MonoBehaviour
         if (transform.position.x >= maxLengthPos.x && speed >= 1) { speed *= -1; }
         else if (transform.position.x <= originPos.x && speed <= -1) { speed *= -1; }
 
-        transform.Translate(Vector3.right * speed * Time.deltaTime);
+        transform.Translate(Vector3.left * speed * Time.deltaTime);
     }
 
     void OnTriggerStay(Collider col)

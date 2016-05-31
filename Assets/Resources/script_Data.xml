@@ -2,62 +2,145 @@
 <UniSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<info>
 		<name>라나</name>
-		<context>[라나]거기 잠깐!</context>
+		<context>잠깐 거기 너!</context>
 		<type>0</type>
+		<yes>-1</yes>
+		<no>-1</no>
 		<questType>-1</questType>
 		<targetName>-1</targetName>
 		<completINum>-1</completINum>
-		<yes>-1</yes>
-		<no>-1</no>
+		<speaker>1</speaker>
 	</info>
 	<info>
 		<name>라나</name>
-		<context>[라나]너말이야 너! 나를 좀 도와주지 않겠어?</context>
+		<context>너말이야 너 나 좀 도와주면 안될까?</context>
 		<type>1</type>
-		<questType>-1</questType>
-		<targetName>-1</targetName>
-		<completINum>-1</completINum>
 		<yes>2</yes>
-		<no>4</no>
-	</info>
-	<info>
-		<name>라나</name>
-		<context>[라나] 고마워! 혹시 오면서 파란 꽃을 보지 않았니? 내게 파란 꽃 한송이를 꺾어다 줄 수 있어?</context>
-		<type>0</type>
-		<questType>1</questType>
-		<targetName>BLUE_FLOWER</targetName>
+		<no>10</no>
+		<questType>0</questType>
+		<targetName>Slug</targetName>
 		<completINum>2</completINum>
-		<yes>-1</yes>
-		<no>-1</no>
+		<speaker>1</speaker>
 	</info>
 	<info>
 		<name>라나</name>
-		<context>[라나] 부탁할게! 파란 꽃 한송이면 돼! 정말 고마워!</context>
+		<context>무슨 일이야?</context>
 		<type>0</type>
+		<yes>-1</yes>
+		<no>-1</no>
 		<questType>-1</questType>
 		<targetName>-1</targetName>
 		<completINum>-1</completINum>
-		<yes>-1</yes>
-		<no>-1</no>
+		<speaker>0</speaker>
 	</info>
 	<info>
 		<name>라나</name>
-		<context>[라나]쳇, 매정하기는!</context>
+		<context>저 길을 지나가야하는데… </context>
+		<type>0</type>
+		<yes>-1</yes>
+		<no>-1</no>
+		<questType>-1</questType>
+		<targetName>-1</targetName>
+		<completINum>-1</completINum>
+		<speaker>1</speaker>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>몬스터가 있어서 못 가겠어</context>
+		<type>0</type>
+		<yes>-1</yes>
+		<no>-1</no>
+		<questType>-1</questType>
+		<targetName>-1</targetName>
+		<completINum>-1</completINum>
+		<speaker>1</speaker>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>점프해서 가면 되지 않아? 개구리인데?</context>
+		<type>0</type>
+		<yes>-1</yes>
+		<no>-1</no>
+		<questType>-1</questType>
+		<targetName>-1</targetName>
+		<completINum>-1</completINum>
+		<speaker>0</speaker>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>모든 개구리가 다 점프를 잘 하는 건 아니라구!</context>
+		<type>0</type>
+		<yes>-1</yes>
+		<no>-1</no>
+		<questType>-1</questType>
+		<targetName>-1</targetName>
+		<completINum>-1</completINum>
+		<speaker>1</speaker>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>난 다리가 짧…짧…</context>
+		<type>0</type>
+		<yes>-1</yes>
+		<no>-1</no>
+		<questType>-1</questType>
+		<targetName>-1</targetName>
+		<completINum>-1</completINum>
+		<speaker>1</speaker>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>크흠 어쨌든 도와줄 거지?</context>
+		<type>1</type>
+		<yes>9</yes>
+		<no>11</no>
+		<questType>0</questType>
+		<targetName>Slug</targetName>
+		<completINum>2</completINum>
+		<speaker>1</speaker>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>우와! 고마워 누나!</context>
+		<type>0</type>
+		<yes>-1</yes>
+		<no>-1</no>
+		<questType>-1</questType>
+		<targetName>-1</targetName>
+		<completINum>-1</completINum>
+		<speaker>1</speaker>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>쳇, 매정하기는!</context>
 		<type>2</type>
+		<yes>-1</yes>
+		<no>-1</no>
 		<questType>-1</questType>
 		<targetName>-1</targetName>
 		<completINum>-1</completINum>
-		<yes>-1</yes>
-		<no>-1</no>
+		<speaker>1</speaker>
 	</info>
 	<info>
 		<name>라나</name>
-		<context>[라나] 와! 정말 구해줬구나! 고마워! 이 꽃이 정말 필요했어! 난 개구리지만 다리가 짧아서 돌아다니기 힘들거든…정말 고마워! 이건 내 선물이야!</context>
+		<context>왜 이렇게 늦었어! 어쨌든...고마워 예쁜 누나!</context>
 		<type>3</type>
+		<yes>-1</yes>
+		<no>-1</no>
 		<questType>-1</questType>
 		<targetName>-1</targetName>
 		<completINum>-1</completINum>
+		<speaker>1</speaker>
+	</info>
+	<info>
+		<name>라나</name>
+		<context>아 참 이건 내 선물이야!</context>
+		<type>3</type>
 		<yes>-1</yes>
 		<no>-1</no>
+		<questType>-1</questType>
+		<targetName>-1</targetName>
+		<completINum>-1</completINum>
+		<speaker>1</speaker>
 	</info>
 </UniSet>

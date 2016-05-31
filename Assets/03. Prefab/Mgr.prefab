@@ -64,10 +64,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6b2089bc6abef4ca84710de246a9bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet_FourWay_Prefab: {fileID: 174872, guid: 552c826297ac47444816d3d6ecd5ce91,
+  bullet_FourWay_Prefab: {fileID: 139922, guid: 6ad5ef27d17d9cf4d80f5ca5256f5290,
     type: 2}
   fourWayNum: 7
-  bullet_Parabola_Prefab: {fileID: 198456, guid: 188b72a71cf09b24dbe19633a310c309,
+  bullet_Parabola_Prefab: {fileID: 139922, guid: 6ad5ef27d17d9cf4d80f5ca5256f5290,
     type: 2}
   parabolaNum: 9
 --- !u!114 &11475728

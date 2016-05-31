@@ -14,6 +14,7 @@ public class Script
     public string targetName;
     public int completNum;
     public int yes, no;
+    public int speaker;
 }
 
 enum ScriptState
@@ -69,7 +70,8 @@ public class ScriptMgr : MonoBehaviour {
                         context = scriptData[i].context,
                         scriptType = scriptData[i].scriptType,
                         yes = scriptData[i].yes,
-                        no = scriptData[i].no
+                        no = scriptData[i].no,
+                        speaker = scriptData[i].speaker,
                     });
                     // 퀘스트 정보를 저장
                     questInfo.Add(new QuestInfo
@@ -96,7 +98,6 @@ public class ScriptMgr : MonoBehaviour {
     // NPC와 대화
     IEnumerator SpeakingNPC()
     {
-        bgUi[1].SetActive(true);
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Return) && !isAnswer)
@@ -104,41 +105,103 @@ public class ScriptMgr : MonoBehaviour {
                 if (!isQuest)
                 {
                     curIndex++;
-                    // 대화 종료
-                    if (curIndex >= scriptInfo.Count - 1)
+                    if (scriptInfo[curIndex].scriptType >= 2)
                     {
-                        bgUi[1].SetActive(false);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            bgUi[i].SetActive(false);
+                        }
+                        Debug.Log("End");
                         PlayerCtrl.instance.isMove = true;
                         curIndex = -1;
                         break;
                     }
-                    // 대화 거절
-                    if (scriptInfo[curIndex].scriptType == (int)ScriptState.refuse)
+
+                    else if (scriptInfo[curIndex].scriptType <= 1)
                     {
-                        curIndex = scriptInfo.Count - 1;
-                    }
-                    // 대화 기본
-                    else if (scriptInfo[curIndex].scriptType <= (int)ScriptState.answer)
-                    {
-                        txtUi[1].text = scriptInfo[curIndex].context;
-                        // 선택지가 있음
-                        if (scriptInfo[curIndex].scriptType == (int)ScriptState.answer)
+                        OnOffUI();
+                        if (scriptInfo[curIndex].scriptType == 1)
                         {
                             StartCoroutine(Answer());
                         }
                     }
                 }
-                // 퀘스트 완료 시
-                else if (isQuest)
-                {
-                    isAnimQuest = true;
-                    curIndex = scriptInfo.Count - 1;
-                    txtUi[1].text = scriptInfo[curIndex].context;
-                    isQuest = false;
-                }
+                //else if(isQuest)
+                //{
+                //    curIndex = scriptInfo.Count - 2;
+                //    OnOffUI();
+                //    curIndex++;
+                //}
+                //else if(curIndex > scriptInfo.Count)
+                //{
+                //    for (int i = 0; i < 2; i++)
+                //    {
+                //        bgUi[i].SetActive(false);
+                //        PlayerCtrl.instance.isMove = true;
+                //    }
+                //    curIndex = -1;
+                //    break;
+                //}
             }
+                
+           
+
+            //if (Input.GetKeyDown(KeyCode.Return) && !isAnswer)
+            //{
+            //    if (!isQuest)
+            //    {
+            //        curIndex++;
+            //        // 대화 종료
+            //        if (curIndex >= scriptInfo.Count - 1)
+            //        {
+            //            bgUi[scriptInfo[curIndex].speaker].SetActive(false);
+            //            PlayerCtrl.instance.isMove = true;
+            //            curIndex = -1;
+            //            break;
+            //        }
+            //        // 대화 거절
+            //        if (scriptInfo[curIndex].scriptType == (int)ScriptState.refuse)
+            //        {
+            //            curIndex = scriptInfo.Count - 1;
+            //        }
+            //        // 대화 기본
+            //        else if (scriptInfo[curIndex].scriptType <= (int)ScriptState.answer)
+            //        {
+            //            txtUi[1].text = scriptInfo[curIndex].context;
+            //            // 선택지가 있음
+            //            if (scriptInfo[curIndex].scriptType == (int)ScriptState.answer)
+            //            {
+            //                StartCoroutine(Answer());
+            //            }
+            //        }
+            //    }
+            //    // 퀘스트 완료 시
+            //    else if (isQuest)
+            //    {
+            //        isAnimQuest = true;
+            //        curIndex = scriptInfo.Count - 1;
+            //        txtUi[1].text = scriptInfo[curIndex].context;
+            //        isQuest = false;
+            //    }
+            //}
             
             yield return null;
+        }
+    }
+
+    void OnOffUI()
+    {
+        if (scriptInfo[curIndex].speaker == 0)
+        {
+            bgUi[1].SetActive(false);
+            bgUi[0].SetActive(true);
+            txtUi[0].text = scriptInfo[curIndex].context;
+        }
+        else if(scriptInfo[curIndex].speaker == 1)
+        {
+            bgUi[0].SetActive(false);
+            bgUi[1].SetActive(true);
+            txtUi[1].text = scriptInfo[curIndex].context;
         }
     }
     // 선택지 출력 
@@ -154,7 +217,7 @@ public class ScriptMgr : MonoBehaviour {
                 curIndex = (int)scriptInfo[curIndex].yes;
                 if(scriptInfo[curIndex].quesetType >= 0)
                 {
-                    QuestMgr.instance.GetQuestInfo(questInfo[curIndex]); // 퀘스트 정보를 건내줌
+                    QuestMgr.instance.GetQuestInfo(questInfo[curIndex-1]); // 퀘스트 정보를 건내줌
                     spokeNpc.Add(scriptInfo[curIndex].name); // 대화를 한 NPC 이름을 저장함
                 }
                 isAnswer = false;
@@ -169,7 +232,7 @@ public class ScriptMgr : MonoBehaviour {
         }
         answerUi.SetActive(false);
         QuestMgr.isQuest = true;
-        txtUi[1].text = scriptInfo[curIndex].context;
+        OnOffUI();
     }
 
     //이미 대화한 NPC인지 확인
