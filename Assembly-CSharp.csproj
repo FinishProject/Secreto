@@ -46,6 +46,9 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\02. Script\Billboard.cs" />
+     <Compile Include="Assets\02. Script\Camera\CameraCtrl_2.cs" />
+     <Compile Include="Assets\02. Script\Camera\ZoomArea.cs" />
+     <Compile Include="Assets\02. Script\FollowPoint.cs" />
      <Compile Include="Assets\02. Script\Items\CollectionItem.cs" />
      <Compile Include="Assets\02. Script\Items\Flower.cs" />
      <Compile Include="Assets\02. Script\Items\HpRecoveryItem.cs" />
@@ -98,7 +101,6 @@
      <Compile Include="Assets\02. Script\Object\StepDownObj.cs" />
      <Compile Include="Assets\02. Script\Object\etc\OpenByCollectionItem.cs" />
      <Compile Include="Assets\02. Script\Player\CameraCtrl.cs" />
-     <Compile Include="Assets\02. Script\Player\CameraCtrl_2.cs" />
      <Compile Include="Assets\02. Script\Player\LauncherCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\PlayerCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\PlayerEffect.cs" />
@@ -127,7 +129,6 @@
      <Compile Include="Assets\02. Script\UI\Inventory.cs" />
      <Compile Include="Assets\02. Script\UI\ScriptMgr.cs" />
      <Compile Include="Assets\Test.cs" />
-     <None Include="Assets\Resources\Player_Data.xml" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
@@ -167,6 +168,7 @@
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\frag_ao.cginc" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetParticleAdditive.shader" />
+     <None Include="Assets\Resources\Player_Data.xml" />
      <None Include="Assets\Editor\ShaderForge\NewUnlitShader.shader" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetUnlit.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
@@ -175,6 +177,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SSAOShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ConvertDepth.shader" />
+     <None Include="Assets\Resources\script_Data.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionCurvesSimple.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderYUV.shader" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetPBR.shader" />
@@ -228,7 +231,6 @@
      <None Include="Assets\01. Secen\KSY\Standard2side.shader" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
-     <None Include="Assets\Resources\script_Data.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
      <None Include="Assets\05. Material\Shader\Char.shader" />
