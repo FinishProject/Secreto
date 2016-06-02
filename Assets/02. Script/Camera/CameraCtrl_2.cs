@@ -142,7 +142,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable_Player, Sensorable_Somethi
 	void LateUpdate() {
         
         MoveInsideLine();
-        Zoomed();
+//        Zoomed();
     }
 
     void MoveInsideLine()
@@ -163,7 +163,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable_Player, Sensorable_Somethi
                 tempPos.x = playerTr.position.x - (inLine_R_Tr.position.x - tempPos.x);
             }
         }
-
+        tempPos.y = playerTr.position.y + heightGap;
         transform.position = Vector3.MoveTowards(transform.position, tempPos, speed * Time.deltaTime);
     }
 

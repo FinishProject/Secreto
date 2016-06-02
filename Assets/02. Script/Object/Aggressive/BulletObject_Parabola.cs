@@ -53,11 +53,12 @@ public class BulletObject_Parabola : MonoBehaviour {
             if (col.tag.Equals("Player"))
             {
                 PlayerCtrl.instance.getDamage(10);
+                gameObject.SetActive(false);
             }
-            else if (col.tag.Equals("BULLET") || col.tag.Equals("MONSTER"))
-                return;
+            //else if (col.tag.Equals("BULLET") || col.tag.Equals("MONSTER"))
+            //    return;
 
-            gameObject.SetActive(false);
+            
         }
     }
 }

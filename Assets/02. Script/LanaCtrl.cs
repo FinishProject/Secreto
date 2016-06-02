@@ -8,6 +8,8 @@ public class LanaCtrl : MonoBehaviour {
     public Transform target; // 포물선을 그리며 이동시 도착 지점
     private Animator anim;
     private Transform playerTr;
+
+    public static bool speak = false;
    
     void Start () {
         anim = GetComponent<Animator>();

@@ -64,6 +64,8 @@ public class PlayerCtrl : MonoBehaviour
 
     public static PlayerCtrl instance;
 
+    Vector3 positionZ = Vector3.zero;
+
     void Awake()
     {
         instance = this;
@@ -76,12 +78,13 @@ public class PlayerCtrl : MonoBehaviour
         switchState.IsCanUseSwitch = false;
     }
 
-    void Start()
-    {
-        pData = PlayerData.Load();
-        curHp = fullHp;
-        transform.position = pData.pPosition;
-    }
+    //void Start()
+    //{
+    //    pData = PlayerData.Load();
+    //    curHp = fullHp;
+    //    transform.position = pData.pPosition;
+    //    positionZ = pData.pPosition;
+    //}
 
     void OnEnable()
     {
@@ -97,6 +100,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+        //transform.position = new Vector3(transform.position.x, transform.position.y, positionZ.z);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority && isMove) Movement();
         else RopeWorker();
@@ -106,13 +110,15 @@ public class PlayerCtrl : MonoBehaviour
         // 상호작용 (버튼 조작)
         else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
 
-        //펫 타기
-        //else if (Input.GetKeyDown(KeyCode.E)) { PlayerFunc.instance.RidePet(); }
+        if(controller.velocity.y < -30f)
+        {
+            PlayerDie();
+        }
+
     }
 
     void Movement()
     {
-        
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
         anim.SetFloat("Velocity", controller.velocity.y);
         // 좌우 동시 입력을 막기위함
@@ -122,6 +128,8 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetBool("Run", false);
         }
 
+        // 걷기 애니메이션이 아직 없어 임시의 이동 애니메이션 재생을 위한 것
+
         // 지상에 있을 시
         if (controller.isGrounded)
         {
@@ -129,17 +137,18 @@ public class PlayerCtrl : MonoBehaviour
             //이동
             moveDir = Vector3.right * inputAxis;
 
-            cloth.worldAccelerationScale = 2f;
+            //cloth.worldAccelerationScale = 2f;
 
             anim.SetBool("Jump", false);
             anim.SetBool("Dash", false);
+            anim.SetBool("Push", false);
             // 점프
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Jump(JumpType.BASIC);
+                anim.SetBool("Run", false);
             }
 
-            // 걷기 애니메이션이 아직 없어 임시의 이동 애니메이션 재생을 위한 것
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
             {
                 anim.SetBool("Run", true);
@@ -151,13 +160,12 @@ public class PlayerCtrl : MonoBehaviour
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
+            //anim.SetBool("Run", false);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Jump(JumpType.DASH);
-                cloth.damping = 0.4f;
+                //cloth.damping = 0.4f;
             }
-
-            
 			gravity = gr;
             moveDir.x = inputAxis * 50f * Time.deltaTime;
             controller.Move(moveDir * Time.deltaTime);
@@ -167,17 +175,19 @@ public class PlayerCtrl : MonoBehaviour
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
-        if (!isClimb) { moveDir.y -= gravity * Time.deltaTime; }
-        // 벽에 메달릴 시
-        else if (isClimb)
-        {
-            inputAxis = Input.GetAxis("Vertical");
-            moveDir = Vector3.up * inputAxis;
-        }
+        //if (!isClimb) { moveDir.y -= gravity * Time.deltaTime; }
+        //// 벽에 메달릴 시
+        //else if (isClimb)
+        //{
+        //    inputAxis = Input.GetAxis("Vertical");
+        //    moveDir = Vector3.up * inputAxis;
+        //}
+
+        moveDir.y -= gravity * Time.deltaTime;
         controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
     }
 
-    //캐릭터가 봐라보는 방향 회전
+    //캐릭터 방향 회전
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
@@ -188,7 +198,7 @@ public class PlayerCtrl : MonoBehaviour
     // 점프
     void Jump(JumpType curJumpState)
     {
-        cloth.worldAccelerationScale = 1f;
+        //cloth.worldAccelerationScale = 1f;
         switch (curJumpState)
         {
             case JumpType.BASIC:
@@ -201,12 +211,11 @@ public class PlayerCtrl : MonoBehaviour
             case JumpType.DASH:
                 if (isJumping)
                 {
-                    anim.SetBool("Jump", false);
                     anim.SetBool("Dash", true);
                     //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
-                    isJumping = false;
                     moveDir.y = jumpHight;
-                    cloth.damping = 1f;
+                    //cloth.damping = 1f;
+                    isJumping = false;
                 }
                 break;
         }
@@ -217,7 +226,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward * focusRight, out hit, 8f))
+        if (Physics.Raycast(rayTr.position, forward * focusRight, out hit, 5f))
         {
             //앞에 오를 수 있는 오브젝트 있을 시
             if (hit.collider.CompareTag("WALL"))
@@ -241,10 +250,8 @@ public class PlayerCtrl : MonoBehaviour
         if (curHp >= 100)
         {
             curHp = 100;
-            Debug.Log(curHp);
             return;
         }
-        Debug.Log(curHp);
     }
 
     public void getDamage(float damage)
@@ -255,7 +262,6 @@ public class PlayerCtrl : MonoBehaviour
             curHp -= damage;
             InGameUI.instance.ChangeHpBar();
             anim.SetTrigger("Hit");
-            Debug.Log(curHp);
             if (curHp <= 0)
             {
                 PlayerDie();
@@ -389,7 +395,6 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        
         Rigidbody body = hit.collider.attachedRigidbody;
         if (body == null || body.isKinematic)
             return;
@@ -403,8 +408,12 @@ public class PlayerCtrl : MonoBehaviour
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             body.velocity = pushDir * 2f;
         }
-        else
-            anim.SetBool("Push", false);
+    }
+
+    // 2단 점프 끝났을 때 실행
+    void SetEndAnim()
+    {
+        anim.SetBool("Dash", false);
     }
 
 }
