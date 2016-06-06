@@ -26,21 +26,15 @@ public class InGameUI : MonoBehaviour {
 
     public AttributeImage attributeImage;
 
-    /*
-    public GameObject hpbar;
-    public GameObject attribute;
-    public GameObject enhanceGauge;
-    */
     public Image hpBar;
     public Image enhanceGauge;
-
+    public GameObject pauseUI;
     public static InGameUI instance;
 
     void Awake()
     {
         instance = this;
-
-
+        pauseUI.SetActive(false);
     }
 
     void Start()
@@ -48,10 +42,24 @@ public class InGameUI : MonoBehaviour {
         InitUIValue();
     }
 
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape) && !pauseUI.activeSelf)
+        {
+            pauseUI.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && pauseUI.activeSelf)
+        {
+            pauseUI.SetActive(false);
+        }
+        
+    }
+
     // UI들의 수치값을 최신화
     public void InitUIValue()
     {
         ChangeHpBar();
+        ChangeEnhance();
 //        ChangeAttribute();
     }
 

@@ -114,7 +114,6 @@ public class PlayerCtrl : MonoBehaviour
         {
             PlayerDie();
         }
-
     }
 
     void Movement()
