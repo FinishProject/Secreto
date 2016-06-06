@@ -58,13 +58,13 @@ public class Elevator : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            WahleCtrl.curState = WahleCtrl.instance.StepHold();
+            //WahleCtrl.curState = WahleCtrl.instance.StepHold();
         }
     }
 
     void OnTriggerExit(Collider col)
     {
-        WahleCtrl.curState = WahleCtrl.instance.Move();
+        //WahleCtrl.curState = WahleCtrl.instance.Move();
         isStep = false;
     }
 
