@@ -21,7 +21,7 @@ public class NPCQuestMgr : MonoBehaviour {
     {
         questInfo.targetName = this.targetName;
         questInfo.completNum = this.completNum;
-        questInfo.questType = (int)this.questType;
+        //questInfo.questType = this.questType;
 
         QuestMgr.instance.GetQuestInfo(questInfo);
     }

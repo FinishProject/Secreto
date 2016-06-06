@@ -56,11 +56,12 @@ public class PlayerCtrl : MonoBehaviour
     private SwitchObject switchState;
     private GameObject currInteraction;
 
-    private Animator anim;
+    public Animator anim;
     public Cloth cloth;
 
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
+    private PlayerFunc pFunc;
 
     public static PlayerCtrl instance;
 
@@ -72,6 +73,7 @@ public class PlayerCtrl : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         pEffect = GetComponent<PlayerEffect>();
+        pFunc = GetComponent<PlayerFunc>();
 
         // 상호작용을 하기 위한 스위치
         switchState = gameObject.AddComponent<SwitchObject>();
@@ -102,7 +104,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         //transform.position = new Vector3(transform.position.x, transform.position.y, positionZ.z);
         // 플레이어에게 조작권한이 있다면 움직임
-        if (isCtrlAuthority && isMove) Movement();
+        if (isCtrlAuthority) Movement();
         else RopeWorker();
 
         //NPC와 대화
@@ -128,52 +130,54 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetBool("Run", false);
         }
 
-        // 걷기 애니메이션이 아직 없어 임시의 이동 애니메이션 재생을 위한 것
-
-        // 지상에 있을 시
-        if (controller.isGrounded)
+        if (isMove)
         {
-            gravity = 100f;
-            //이동
-            moveDir = Vector3.right * inputAxis;
-
-            //cloth.worldAccelerationScale = 2f;
-
-            anim.SetBool("Jump", false);
-            anim.SetBool("Dash", false);
-            anim.SetBool("Push", false);
-            // 점프
-            if (Input.GetKeyDown(KeyCode.Space))
+            // 지상에 있을 시
+            if (controller.isGrounded)
             {
-                Jump(JumpType.BASIC);
-                anim.SetBool("Run", false);
+                gravity = 100f;
+
+                anim.SetBool("Jump", false);
+                anim.SetBool("Dash", false);
+                anim.SetBool("Push", false);
+                anim.SetBool("Idle", false);
+
+                //이동
+                moveDir = Vector3.right * inputAxis;
+                //cloth.worldAccelerationScale = 2f;
+                // 점프
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Jump(JumpType.BASIC);
+                    anim.SetBool("Run", false);
+                }
+
+                if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
+                {
+                    anim.SetBool("Run", true);
+                }
+                else {
+                    anim.SetBool("Run", false);
+                }
+            }
+            // 공중에 있을 시
+            else if (!controller.isGrounded)
+            {
+                //anim.SetBool("Run", false);
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Jump(JumpType.DASH);
+                    //cloth.damping = 0.4f;
+                }
+                gravity = gr;
+                moveDir.x = inputAxis;
+                //controller.Move(moveDir * Time.deltaTime);
             }
 
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                anim.SetBool("Run", true);
-            }
-            else {
-                anim.SetBool("Run", false);
-            }
+            //캐릭터 방향 회전
+            if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
+            else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
         }
-        // 공중에 있을 시
-        else if (!controller.isGrounded)
-        {
-            //anim.SetBool("Run", false);
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Jump(JumpType.DASH);
-                //cloth.damping = 0.4f;
-            }
-			gravity = gr;
-            moveDir.x = inputAxis * 50f * Time.deltaTime;
-            controller.Move(moveDir * Time.deltaTime);
-        }
-
-        //캐릭터 방향 회전
-        if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
-        else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
 
         //if (!isClimb) { moveDir.y -= gravity * Time.deltaTime; }
         //// 벽에 메달릴 시
@@ -184,7 +188,7 @@ public class PlayerCtrl : MonoBehaviour
         //}
 
         moveDir.y -= gravity * Time.deltaTime;
-        controller.Move(moveDir * (speed - moveResistant) * Time.deltaTime);
+        controller.Move(moveDir * (speed) * Time.deltaTime);
     }
 
     //캐릭터 방향 회전
@@ -193,6 +197,10 @@ public class PlayerCtrl : MonoBehaviour
         isFocusRight = !isFocusRight;
         transform.Rotate(new Vector3(0, 1, 0), 180);
         focusRight *= -1f;
+        if (!controller.isGrounded)
+        {
+            moveDir.x *= -1f;
+        }
     }
 
     // 점프
@@ -203,6 +211,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             case JumpType.BASIC:
                 anim.SetBool("Jump", true);
+                //anim.CrossFade("Basic_Jump", 0f);
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 moveDir.y = jumpHight;
@@ -212,7 +221,7 @@ public class PlayerCtrl : MonoBehaviour
                 if (isJumping)
                 {
                     anim.SetBool("Dash", true);
-                    //gameObject.GetComponent<PlayerEffect>().StartEffect(PlayerEffectList.DASH_JUMP);
+                    //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
                     moveDir.y = jumpHight;
                     //cloth.damping = 1f;
                     isJumping = false;
@@ -226,19 +235,15 @@ public class PlayerCtrl : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(rayTr.position, forward * focusRight, out hit, 5f))
+        Vector3 shotPoint = new Vector3(rayTr.position.x, rayTr.position.y, rayTr.position.z); 
+        if (Physics.Raycast(shotPoint, forward, out hit, 10f))
         {
-            //앞에 오를 수 있는 오브젝트 있을 시
-            if (hit.collider.CompareTag("WALL"))
-            {
-                Debug.Log("Climb");
-            }
+            Debug.DrawRay(shotPoint, forward, Color.red, 2f);
             //NPC 체크 및 이름 확인
-            else if (hit.collider.CompareTag("NPC"))
+            if (hit.collider.CompareTag("NPC"))
             {
-                string name = hit.collider.gameObject.name;
-                PlayerFunc.instance.ShowScript(name);
-                anim.SetBool("Run", isMove);
+                pFunc.ShowScript(hit.collider.name);
+                anim.SetBool("Run", false);
             }
         }
     }
@@ -416,4 +421,10 @@ public class PlayerCtrl : MonoBehaviour
         anim.SetBool("Dash", false);
     }
 
+    public void SetStopMove()
+    {
+        isMove = false;
+        moveDir.x = 0f;
+        anim.SetBool("Idle", true);
+    }
 }

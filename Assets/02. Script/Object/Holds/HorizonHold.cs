@@ -37,13 +37,13 @@ public class HorizonHold : MonoBehaviour
         // 플레이어가 발판 위에 있을 시 발판과 같이 이동
         if (col.CompareTag("Player"))
         {
-            WahleCtrl.curState = WahleCtrl.instance.StepHold();
+            //WahleCtrl.curState = WahleCtrl.instance.StepHold();
             playerTr.Translate(Vector3.forward * (speed * PlayerCtrl.focusRight) * Time.deltaTime);
         }
     }
 
     void OnTriggerExit(Collider coll)
     {
-        WahleCtrl.curState = WahleCtrl.instance.Move();
+        //WahleCtrl.curState = WahleCtrl.instance.Move();
     }
 }

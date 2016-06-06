@@ -3,7 +3,7 @@ using System.Collections;
 
 public class QuestInfo
 {
-    public int questType = 0;
+    public string questType;
     public string targetName = null;
     public int completNum = 0;
     //public GameObject rewardItem;
@@ -29,7 +29,6 @@ public class QuestMgr : MonoBehaviour {
     public void GetQuestInfo(QuestInfo info)
     {
         questInfo = info;
-        questType = (QuestType)questInfo.questType;
         isQuest = true;
         QuestTypes();
     }
@@ -37,13 +36,13 @@ public class QuestMgr : MonoBehaviour {
     // 퀘스트 종류
     void QuestTypes()
     {
-        switch (questType)
+        switch (questInfo.questType)
         {
-            case QuestType.HUNT:
+            case "HUNT":
                 Debug.Log("Hunt");
                 StartCoroutine(HuntQuest());
                 break;
-            case QuestType.COLLECT:
+            case "COLLECT":
                 Debug.Log("Collect");
                 StartCoroutine(CollectQuest());
                 break;
