@@ -2,6 +2,10 @@
 using System.Collections;
 
 public class ZoomArea : MonoBehaviour {
-    public float zoomDeep = 10f;
-    public float zoomHeight = 5f;
+    public ZoomState zoomState;
+    void Start()
+    {
+        zoomState.areaSize = transform.localScale.x;
+        zoomState.areaX = transform.position.x - (zoomState.areaSize * 0.5f);
+    }
 }
