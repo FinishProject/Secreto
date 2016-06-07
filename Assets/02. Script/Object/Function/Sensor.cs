@@ -27,7 +27,13 @@ public interface Sensorable_Something
     bool ActiveSensor_Something(int index);
 }
 
-public class Sensor : MonoBehaviour {
+public interface Sensorable_Return
+{
+    void ActiveSensor_Retuen(GameObject gameObject);
+}
+
+public class Sensor : MonoBehaviour
+{
     public int index = 0; // 여러개의 센서가 들어가는 부모 오브젝트를 위한 index
     public string colliderName = "NULL";
     void OnTriggerEnter(Collider col)
@@ -42,6 +48,16 @@ public class Sensor : MonoBehaviour {
         {
             if (transform.parent.GetComponent<Sensorable_Something>().ActiveSensor_Something(index))
                 gameObject.SetActive(false);
+
+            transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(col.gameObject);
+        }
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if (col.tag.Equals(colliderName))
+        {
+            transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(null);
         }
     }
 }

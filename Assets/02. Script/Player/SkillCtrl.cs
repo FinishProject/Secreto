@@ -26,8 +26,8 @@ public class SkillCtrl : MonoBehaviour {
     
     private int count = 0;
     public int bulletNum = 3;
-    public int curEnhance = 0;
-    public int maxEnhance = 10;
+    public float curEnhance = 0;
+    public float maxEnhance = 10;
 
     [System.NonSerialized]
     public AttributeState curAttribute;         // 속성   
