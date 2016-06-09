@@ -1,35 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/*************************   정보   **************************
-
-    몬스터 - 달팽이
-    포물선 탄환 발사 공격을 하는 몬스터
-
-    사용방법 :
-    
-    몬스터 오브젝트에 스크립트 추가
-    ItemDrop 스크립트가 몬스터 오브젝트에 추가 되어 있는지 확인
-
-*************************************************************/
-
-public class Slug : FSMBase
+public class Spider : FSMBase
 {
-    private NavMeshAgent nvAgent;           // 네비메쉬
-    private Vector3 earlyPos;               // 초기 위치
-    private Transform playerTr;             // 플레이어 위치
 
-    public Transform shootTr;
-    private bool isPlayerLiftSide;          // 플레이어가 좌측에 있는지
-    private bool isLookLiftSide;            // 좌측 방향을 바라 보는지
-    public float discoverDist = 12f;        // 인식 범위
-    public float traceDist = 10f;           // 추적 범위
-    public float attackDist = 7f;           // 공격 범위
+    private NavMeshAgent nvAgent;
+    private Vector3 earlyPos;
+    private Transform playerTr;
+    public float discoverDist = 12f;
+    public float traceDist = 9f;
+    public float attackDist = 2f;
+    public float damage = 16;
+    private System.Enum oldStates;
 
-    private float distance;                 // 플레이어와 몬스터 사이 거리
-    public float damage = 16;               // 공격력
-    public float attackErrorRange = 1.5f;   // 공격 오차 범위 ( 0일경우 타겟에 무조건 맞음)
-    private System.Enum oldStates;          // 기존 스테이트 저장용
 
     // 몬스터 상태
     public enum EnemyStates
@@ -41,12 +24,13 @@ public class Slug : FSMBase
         ComBback = 5,   // 복귀
         Attacking = 6,  // 공격
         Idle = 7,       // 대기
+
     }
 
     void Start()
     {
         earlyPos = transform.position;
-        nvAgent = GetComponent<NavMeshAgent>();
+        nvAgent = GetComponent<NavMeshAgent>(); //anim.SetBool()
         playerTr = PlayerCtrl.instance.transform;
     }
 
@@ -55,12 +39,13 @@ public class Slug : FSMBase
     #region 대기
     IEnumerator Idle_EnterState()
     {
+        Debug.Log("Idle 상태 돌입");
         yield return null;
     }
 
     void Idle_Update()
     {
-        // 인식범위 체크
+        float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance <= discoverDist)
         {
             anim.SetBool("Prepare", true);
@@ -76,12 +61,13 @@ public class Slug : FSMBase
     #region 발견
     IEnumerator Discover_EnterState()
     {
+        Debug.Log("Discover 상태 돌입");
         yield return null;
     }
 
     void Discover_Update()
     {
-        // 추적 범위 체크
+        float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance <= traceDist)
         {
             anim.SetBool("Run", true);
@@ -89,7 +75,6 @@ public class Slug : FSMBase
             curState = EnemyStates.Chase;
             return;
         }
-        // 인식 범위 체크
         else if (distance > discoverDist)
         {
             anim.SetBool("Prepare", false);
@@ -104,6 +89,7 @@ public class Slug : FSMBase
     #region 추적
     IEnumerator Chase_EnterState()
     {
+        Debug.Log("Chase 상태 돌입");
         nvAgent.Resume();
         yield return null;
     }
@@ -112,8 +98,9 @@ public class Slug : FSMBase
     {
         nvAgent.destination = playerTr.position;
 
-        // 인식 범위 및 공격가능 각도 체크
-        if (distance <= attackDist && isAttackAngle())
+        float distance = Vector3.Distance(playerTr.position, transform.position);
+
+        if (distance <= attackDist)
         {
             anim.SetBool("Attack", true);
             anim.SetBool("Run", false);
@@ -121,22 +108,12 @@ public class Slug : FSMBase
             return;
         }
 
-        // 추적 범위 체크
         if (distance > traceDist)
         {
             curState = EnemyStates.ComBback;
             return;
         }
 
-    }
-
-    // 공격 가능한 회전 각인지 체크하는 함수 ( 회전을 마치고 공격을 하기위해 )
-    bool isAttackAngle()
-    {
-        if (Mathf.Abs(transform.localEulerAngles.y - 270f) < 5 &&  isPlayerLiftSide  ||
-            Mathf.Abs(transform.localEulerAngles.y - 90f)  < 5 && !isPlayerLiftSide )
-            return true;
-        return false;
     }
     #endregion
 
@@ -145,6 +122,7 @@ public class Slug : FSMBase
     #region 복귀
     IEnumerator ComBback_EnterState()
     {
+        Debug.Log("ComBback 상태 돌입");
         yield return null;
     }
 
@@ -152,20 +130,19 @@ public class Slug : FSMBase
     {
         nvAgent.destination = earlyPos;
 
-        // 추적 범위 안에 들어오면 추석 상태로 변경
+        float distance = Vector3.Distance(playerTr.position, transform.position);
+
         if (distance <= traceDist)
         {
             curState = EnemyStates.Chase;
             return;
         }
 
-        // 복귀지점 도착시 대기 상태로 변경
         if (Vector3.Distance(earlyPos, transform.position) < 0.5f)
         {
             anim.SetBool("Prepare", true);
             anim.SetBool("Run", false);
             curState = EnemyStates.Idle;
-            nvAgent.Stop();
             return;
         }
 
@@ -178,28 +155,33 @@ public class Slug : FSMBase
 
     IEnumerator Attacking_EnterState()
     {
+        Debug.Log("Attacking 상태 돌입");
         nvAgent.Stop();
         yield return null;
     }
-    
+
     void Attacking_Update()
     {
-        // 거리와 공격가능한 각도가 아니면 추적 상태로
-        if (distance > attackDist || !isAttackAngle())
+        float distance = Vector3.Distance(playerTr.position, transform.position);
+        if (distance > attackDist)
         {
             anim.SetBool("Run", true);
             anim.SetBool("Attack", false);
-            curState = EnemyStates.Chase;
             return;
         }
     }
 
-    // 발사를 위한 함수 ( 애니메이션 끝난 후 이벤트로 호출할 함수)
-    void ShotBullet()
+    IEnumerator Attacking_ExitState()
     {
-        ObjectMgr.instance.GetParabolaBullet().UseItem().
-                GetComponent<BulletObject_Parabola>().Moving(shootTr, attackErrorRange);
-        
+        nvAgent.Resume();
+        nvAgent.destination = playerTr.position;
+        yield return null;
+    }
+
+    void Attacking_OnTriggerEnter(Collider col)
+    {
+        if (col.tag.Equals("Player"))
+            GiveDamage();
     }
 
     #endregion
@@ -210,12 +192,11 @@ public class Slug : FSMBase
 
     IEnumerator Attacked_EnterState()
     {
+        Debug.Log("Attacked 상태 돌입");
 
         nvAgent.Stop();
         anim.SetTrigger("Attacked");
-        yield return new WaitForSeconds(0.5f);
 
-        // 남은 체력 체크
         if (curHp <= 0)
         {
             anim.SetBool("Run", false);
@@ -226,8 +207,7 @@ public class Slug : FSMBase
         {
             curState = oldStates;
         }
-
-        yield return null;
+        yield return new WaitForSeconds(0.2f);
     }
 
     #endregion
@@ -237,11 +217,15 @@ public class Slug : FSMBase
     #region 사망
     IEnumerator Dying_EnterState()
     {
+        Debug.Log("쮸금");
+        nvAgent.Stop();
         anim.SetBool("Death", true);
-        GetComponent<ItemDrop>().DropItem();    // 아이템 드랍 ( 아이템 드랍 설정은 인스펙터 창에서 )
-        yield return new WaitForSeconds(3f);
+        GetComponent<ItemDrop>().DropItem();
+
+        yield return new WaitForSeconds(2f);
 
         gameObject.SetActive(false);
+        MonsterRespawnMgr.instance.Respawn(gameObject);
         yield return null;
     }
 
@@ -267,20 +251,23 @@ public class Slug : FSMBase
     public override void GetDamage(float damage)
     {
         base.GetDamage(damage);
-        
+
         Debug.Log("피격");
-        if(!curState.Equals(EnemyStates.Dying) && !curState.Equals(EnemyStates.Attacked))
+        if (!curState.Equals(EnemyStates.Dying) && !curState.Equals(EnemyStates.Attacked))
         {
             oldStates = curState;
             curState = EnemyStates.Attacked;
         }
-    }
 
-    // 업데이트 함수 ( 모든 상태일때 적용 할 Update )
-    public override void ChildUpdate()
-    {
-        distance = Vector3.Distance(playerTr.position, transform.position);
-        isPlayerLiftSide = playerTr.position.x < transform.position.x ? true : false;
+        /*
+        if (hp <= 0)
+        {
+            anim.SetBool("Prepare", false);
+            anim.SetBool("Run", false);
+            anim.SetBool("Attack", false);
+            curState = EnemyStates.Dying;
+        }
+        */
     }
 
     // 데미지 줄때
@@ -288,6 +275,5 @@ public class Slug : FSMBase
     {
         PlayerCtrl.instance.getDamage(10);
     }
-
     #endregion
 }
