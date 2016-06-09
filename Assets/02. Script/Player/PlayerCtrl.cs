@@ -102,6 +102,13 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+        if(transform.position.z != 0)
+        {
+            Vector3 temp = transform.position;
+            temp.z = -1.42f;
+            transform.position = temp;
+        }
+            
         //transform.position = new Vector3(transform.position.x, transform.position.y, positionZ.z);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
@@ -212,7 +219,7 @@ public class PlayerCtrl : MonoBehaviour
                 anim.SetBool("Jump", true);
                 //anim.CrossFade("Basic_Jump", 0f);
                 isJumping = true;
-                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
+//                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 moveDir.y = jumpHight;
                 gravity = 5f;
                 break;

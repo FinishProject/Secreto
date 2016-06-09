@@ -73,6 +73,7 @@ public class InGameUI : MonoBehaviour {
     // 인핸스 수치 변경 (외부 호출)
     public void ChangeEnhance()
     {
+        Debug.Log(SkillCtrl.instance.ProportionEnhance);
         enhanceGauge.fillAmount = SkillCtrl.instance.ProportionEnhance;
     }
 

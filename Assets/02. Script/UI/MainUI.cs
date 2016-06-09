@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class MianUI : MonoBehaviour {
+public class MainUI : MonoBehaviour {
 
     public Image pressAnyKey;
     public GameObject menu;
