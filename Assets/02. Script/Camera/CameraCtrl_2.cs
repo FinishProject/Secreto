@@ -40,7 +40,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable_Player, Sensorable_Somethi
 
 
 
-    void Awake()
+    void Start()
     {
         playerTr = PlayerCtrl.instance.transform;
         inLine_L = GameObject.Find("inLine_L");

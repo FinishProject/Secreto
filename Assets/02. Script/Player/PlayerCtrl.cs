@@ -121,7 +121,7 @@ public class PlayerCtrl : MonoBehaviour
     void Movement()
     {
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
-        anim.SetFloat("Velocity", controller.velocity.y);
+        //anim.SetFloat("Velocity", controller.velocity.y);
         // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
         {

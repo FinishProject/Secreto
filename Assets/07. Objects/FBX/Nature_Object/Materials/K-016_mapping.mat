@@ -7,10 +7,10 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: K-016_mapping
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 2545803b12e97724bbb0fe9ee2971e88, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2001
   stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
@@ -81,6 +81,10 @@ Material:
     m_Floats:
       data:
         first:
+          name: _Scale
+        second: 1
+      data:
+        first:
           name: _SrcBlend
         second: 1
       data:
@@ -130,6 +134,26 @@ Material:
       data:
         first:
           name: _Emitt
+        second: 1
+      data:
+        first:
+          name: _MinY
+        second: 0
+      data:
+        first:
+          name: _xScale
+        second: 0.5
+      data:
+        first:
+          name: _yScale
+        second: 0.5
+      data:
+        first:
+          name: _Speed
+        second: 1
+      data:
+        first:
+          name: _WorldScale
         second: 1
     m_Colors:
       data:

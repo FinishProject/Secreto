@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: 2stage_Tree2
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 2545803b12e97724bbb0fe9ee2971e88, type: 3}
   m_ShaderKeywords: _ALPHATEST_ON
   m_LightmapFlags: 5
   m_CustomRenderQueue: 2000
@@ -81,12 +81,30 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
+          name: _Detail
+        second:
+          m_Texture: {fileID: 2800000, guid: 79d1ffd1bb90fe541af22d29030fe6f6, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _SpecGlossMap
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _CutTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 41f22a884682ae840b68fb9381b33054, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
     m_Floats:
+      data:
+        first:
+          name: _Scale
+        second: 1.73
       data:
         first:
           name: _SrcBlend
@@ -98,7 +116,7 @@ Material:
       data:
         first:
           name: _Cutoff
-        second: 0.5
+        second: 0.632
       data:
         first:
           name: _Parallax
@@ -139,6 +157,30 @@ Material:
         first:
           name: _EmissionScaleUI
         second: 0
+      data:
+        first:
+          name: _MinY
+        second: -3.48
+      data:
+        first:
+          name: _xScale
+        second: 1
+      data:
+        first:
+          name: _yScale
+        second: 1
+      data:
+        first:
+          name: _Speed
+        second: 1.83
+      data:
+        first:
+          name: _WorldScale
+        second: -0.15
+      data:
+        first:
+          name: _Amount
+        second: 0.5
     m_Colors:
       data:
         first:
@@ -156,3 +198,11 @@ Material:
         first:
           name: _EmissionColorUI
         second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _MainColor
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _node_7934
+        second: {r: 0.5, g: 0.5, b: 0.5, a: 1}
