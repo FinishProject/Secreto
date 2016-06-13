@@ -28,6 +28,7 @@ public class QuestMgr : MonoBehaviour {
     // 퀘스트 정보를 받아옴
     public void GetQuestInfo(QuestInfo info)
     {
+        Debug.Log("Get Quest");
         questInfo = info;
         isQuest = true;
         QuestTypes();
