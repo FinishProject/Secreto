@@ -12,7 +12,7 @@ public class Spider : FSMBase
     public float attackDist = 2f;
     public float damage = 16;
     private System.Enum oldStates;
-
+    private bool isPlayerLiftSide;          // 플레이어가 좌측에 있는지
 
     // 몬스터 상태
     public enum EnemyStates
@@ -90,17 +90,26 @@ public class Spider : FSMBase
     IEnumerator Chase_EnterState()
     {
         Debug.Log("Chase 상태 돌입");
+        anim.speed = 2.8f;
         nvAgent.Resume();
         yield return null;
     }
 
     void Chase_Update()
     {
-        nvAgent.destination = playerTr.position;
-
         float distance = Vector3.Distance(playerTr.position, transform.position);
 
-        if (distance <= attackDist)
+        if(!canActiveAngle())
+        {
+            nvAgent.destination = transform.position;
+            transform.Rotate(new Vector3(0, 1, 0), 100f * Time.deltaTime);
+        }
+        else
+        {
+            nvAgent.destination = playerTr.position;
+        }
+
+        if (distance <= attackDist && canActiveAngle())
         {
             anim.SetBool("Attack", true);
             anim.SetBool("Run", false);
@@ -115,6 +124,22 @@ public class Spider : FSMBase
         }
 
     }
+
+    bool canActiveAngle()
+    {
+        if (Mathf.Abs(transform.localEulerAngles.y - 270f) < 5 && isPlayerLiftSide ||
+            Mathf.Abs(transform.localEulerAngles.y - 90f) < 5 && !isPlayerLiftSide)
+            return true;
+        return false;
+    }
+
+    IEnumerator Chase_ExitState()
+    {
+        anim.speed = 1;
+        nvAgent.Resume();
+        nvAgent.destination = playerTr.position;
+        yield return null;
+    }
     #endregion
 
     //*******************************************************************************
@@ -123,6 +148,8 @@ public class Spider : FSMBase
     IEnumerator ComBback_EnterState()
     {
         Debug.Log("ComBback 상태 돌입");
+        nvAgent.speed = 2.8f;
+        anim.speed = 1.5f;
         yield return null;
     }
 
@@ -147,6 +174,13 @@ public class Spider : FSMBase
         }
 
     }
+
+    IEnumerator ComBback_ExitState()
+    {
+        nvAgent.speed = 3.8f;
+        anim.speed = 1f;
+        yield return null;
+    }
     #endregion
 
     //*******************************************************************************
@@ -163,10 +197,11 @@ public class Spider : FSMBase
     void Attacking_Update()
     {
         float distance = Vector3.Distance(playerTr.position, transform.position);
-        if (distance > attackDist)
+        if (distance > attackDist || !canActiveAngle())
         {
             anim.SetBool("Run", true);
             anim.SetBool("Attack", false);
+            curState = EnemyStates.Chase;
             return;
         }
     }
@@ -269,6 +304,13 @@ public class Spider : FSMBase
         }
         */
     }
+
+    // 업데이트 함수 ( 모든 상태일때 적용 할 Update )
+    public override void ChildUpdate()
+    {
+        isPlayerLiftSide = playerTr.position.x < transform.position.x ? true : false;
+    }
+
 
     // 데미지 줄때
     public void GiveDamage()

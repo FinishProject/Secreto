@@ -164,7 +164,8 @@ public class Kkokkali : FSMBase {
         float distance = Vector3.Distance(playerTr.position, transform.position);
         if (distance > attackDist) {
             anim.SetBool("Run", true);
-            anim.SetBool("Attack", false);  
+            anim.SetBool("Attack", false);
+            curState = EnemyStates.Chase;
             return;
         }
     }
