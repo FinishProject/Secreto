@@ -23,7 +23,7 @@ public class WahleCtrl : MonoBehaviour {
     {
         anim = gameObject.GetComponentInChildren<Animator>();
         camTr = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        //playerTr = GameObject.FindGameObjectWithTag("Player").transform;
+        playerTr = GameObject.FindGameObjectWithTag("Player").transform;
         targetPoint = new GameObject().transform;
 
         curState = Idle();

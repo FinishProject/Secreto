@@ -9,8 +9,8 @@ public class CameraCtrl_3 : MonoBehaviour {
 	void Start () {
         ori = transform.position;
         playerTr = PlayerCtrl.instance.transform;
-        y = transform.position.y - PlayerCtrl.instance.transform.position.y;
-        z = transform.position.z - PlayerCtrl.instance.transform.position.z;
+        y = transform.position.y - playerTr.position.y;
+        z = transform.position.z - playerTr.position.z;
     }
 	
 	// Update is called once per frame
