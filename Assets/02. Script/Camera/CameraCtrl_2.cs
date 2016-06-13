@@ -39,6 +39,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable_Player, Sensorable_Somethi
     float zoomStartRangePercent;        // 줌인, 아웃 시작 비율
 
 
+
     void Start()
     {
         playerTr = PlayerCtrl.instance.transform;

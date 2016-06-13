@@ -7,11 +7,13 @@ public class WahleCtrl : MonoBehaviour {
     private float rndPointX = 0f, rndPointY = 0f;
     private float distance = 0f;
     private float initSpeed = 0f;
+    private bool isAttack = false;
 
     private Transform targetPoint;
     private Vector3 relativePos; // 상대적 위치값
     private Quaternion lookRot;
     private Vector3 rightRayPos, leftRayPos; // 레이캐스트 발사 위치
+    private GameObject targetObj;
 
     public Transform playerTr;
     private Transform camTr;
@@ -28,6 +30,7 @@ public class WahleCtrl : MonoBehaviour {
 
         curState = Idle();
         StartCoroutine(CoroutineUpdate());
+        StartCoroutine(SearchEnemy());
     }
 
     IEnumerator CoroutineUpdate()
@@ -107,6 +110,67 @@ public class WahleCtrl : MonoBehaviour {
 
 
             yield return null;
+        }
+    }
+
+    IEnumerator Attack()
+    {
+        isAttack = true;
+        float speed = 3f;
+
+        Vector3 fromPointVec = playerTr.position + ((playerTr.forward * 2f ) + (playerTr.up * 0.5f));
+        Vector3 enemyRelativePos;
+        while (true)
+        {
+            if (CheckOutCamera() || !targetObj.activeSelf)
+            {
+                isAttack = false;
+                curState = Move();
+            }
+
+            enemyRelativePos = targetObj.transform.position - transform.position;
+            lookRot = Quaternion.LookRotation(enemyRelativePos);
+
+            distance = relativePos.sqrMagnitude; // 플레이어와 거리차
+            //float targetDis = enemyRelativePos.sqrMagnitude; // 몬스터와 거리차
+
+            speed += Time.deltaTime * 5f;
+            // 각도 제한
+            if (transform.localRotation.x <= 0.24f)
+                lookRot.x = 0f;
+
+            // 타겟을 봐라보도록 회전
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+            // 지정 된 위치로 이동
+            Vector3 center = (fromPointVec + transform.position) * 0.55f;
+            center -= new Vector3(0, 1, 1);
+            transform.position = Vector3.Slerp(transform.position - center, fromPointVec - center, speed * Time.deltaTime);
+            transform.position += center;
+
+            yield return null;
+        }
+    }
+
+   // 주변 몬스터 탐색
+   IEnumerator SearchEnemy()
+    {
+        while (true)
+        {
+            Collider[] hitCollider = Physics.OverlapSphere(playerTr.position, 5f);
+            if (!isAttack)
+            {
+                for (int i = 0; i < hitCollider.Length; i++)
+                {
+                    if (hitCollider[i].CompareTag("MONSTER"))
+                    {
+                        targetObj = hitCollider[i].gameObject;
+                        curState = Attack();
+                        break;
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
