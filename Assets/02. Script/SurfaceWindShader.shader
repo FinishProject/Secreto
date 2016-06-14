@@ -19,7 +19,77 @@
 		SubShader{
 			Tags{ "RenderType" = "Opaque" "Queue" = "Geometry+1" "ForceNoShadowCasting" = "True" }
 			LOD 200
+			CGPROGRAM
+			//#pragma surface surf Standard fullforwardshadows
+			#pragma surface surf Lambert vertex:vert
+			//#pragma vertex vert
+			#pragma target 3.0
 
+			struct Input {
+				float2 uv_MainTex;
+			};
+
+			sampler2D _MainTex;
+			fixed4 _Color;
+			half _Glossiness;
+			half _Metallic;
+			float _Cutoff;
+			float _MinY;
+			float _xScale;
+			float _yScale;
+			float _Scale;
+			float _WorldScale;
+			float _Speed;
+			float _Amount;
+
+			void vert(inout appdata_full v) {
+				float num = v.vertex.z;
+
+				if ((num - _MinY) > 0.0) {
+					float3 worldPos = mul(_Object2World, v.vertex).xyz;
+					float x = sin(worldPos.x / _WorldScale + (_Time.y*_Speed)) * (num - _MinY) * _Scale * 0.01;
+					float y = cos(worldPos.y / _WorldScale + (_Time.y*_Speed)) * (num - _MinY) * _Scale * 0.01;
+
+					v.vertex.x += x * _xScale;
+					v.vertex.y += y * _yScale;
+				}
+			}
+
+			void surf(Input IN, inout SurfaceOutput o) {
+				fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+				o.Albedo = c.rgb;
+				o.Gloss = _Glossiness;
+
+				if(c.a < _Cutoff){
+					discard;
+				}
+				//o.Alpha = c.a;
+			}
+		ENDCG
+	}
+	SubShader{
+		Tags{ "RenderType" = "Opaque" "Queue" = "Geometry+2" "ForceNoShadowCasting" = "True" }
+		LOD 200
+		CGPROGRAM
+		#pragma surface surf Standard fullforwardshadows
+
+		struct Input {
+			float2 uv_MainTex;
+		};
+
+		sampler2D _MainTex;
+		fixed4 _Color;
+		half _Glossiness;
+		half _Metallic;
+
+		void surf(Input IN, inout SurfaceOutputStandard o) {
+			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+			o.Metallic = _Metallic;
+			o.Smoothness = _Glossiness;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	}
 			//Cull Off
 
 		//Pass{
@@ -91,77 +161,7 @@
 		//	
 		//	ENDCG
 		//}
-		CGPROGRAM
-			//#pragma surface surf Standard fullforwardshadows
-			#pragma surface surf Lambert vertex:vert
-			//#pragma vertex vert
-			#pragma target 3.0
-
-			struct Input {
-				float2 uv_MainTex;
-			};
-
-			sampler2D _MainTex;
-			fixed4 _Color;
-			half _Glossiness;
-			half _Metallic;
-			float _Cutoff;
-			float _MinY;
-			float _xScale;
-			float _yScale;
-			float _Scale;
-			float _WorldScale;
-			float _Speed;
-			float _Amount;
-
-			void vert(inout appdata_full v) {
-				float num = v.vertex.z;
-
-				if ((num - _MinY) > 0.0) {
-					float3 worldPos = mul(_Object2World, v.vertex).xyz;
-					float x = sin(worldPos.x / _WorldScale + (_Time.y*_Speed)) * (num - _MinY) * _Scale * 0.01;
-					float y = cos(worldPos.y / _WorldScale + (_Time.y*_Speed)) * (num - _MinY) * _Scale * 0.01;
-
-					v.vertex.x += x * _xScale;
-					v.vertex.y += y * _yScale;
-				}
-			}
-
-			void surf(Input IN, inout SurfaceOutput o) {
-				fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-				o.Albedo = c.rgb;
-				o.Gloss = _Glossiness;
-
-				if(c.a < _Cutoff){
-					discard;
-				}
-				//o.Alpha = c.a;
-			}
-		ENDCG
-	}
-	SubShader{
-		Tags{ "RenderType" = "Opaque" "Queue" = "Geometry+2" "ForceNoShadowCasting" = "True" }
-		LOD 200
-		CGPROGRAM
-		#pragma surface surf Standard fullforwardshadows
-
-		struct Input {
-			float2 uv_MainTex;
-		};
-
-		sampler2D _MainTex;
-		fixed4 _Color;
-		half _Glossiness;
-		half _Metallic;
-
-		void surf(Input IN, inout SurfaceOutputStandard o) {
-			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-			o.Metallic = _Metallic;
-			o.Smoothness = _Glossiness;
-			o.Alpha = c.a;
-		}
-		ENDCG
-	}
+		
 	Fallback "Transparent/VertexLit"
 	//FallBack "Diffuse"
 }

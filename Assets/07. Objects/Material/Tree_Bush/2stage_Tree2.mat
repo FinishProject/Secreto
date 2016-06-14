@@ -155,12 +155,8 @@ Material:
         second: 1
       data:
         first:
-          name: _EmissionScaleUI
-        second: 0
-      data:
-        first:
           name: _MinY
-        second: -3.48
+        second: -1.12
       data:
         first:
           name: _xScale
@@ -177,6 +173,10 @@ Material:
         first:
           name: _WorldScale
         second: -0.15
+      data:
+        first:
+          name: _EmissionScaleUI
+        second: 0
       data:
         first:
           name: _Amount

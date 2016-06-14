@@ -20,9 +20,11 @@ public class PlayerCtrl : MonoBehaviour
     public float jumpHight = 3.0f;     // 기본 점프 높이
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
     public float speed = 10f;          // 이동 속도
-    public float moveResistant = 0f;   // 이동 저항력
     private float amorTime = 0.5f;
+    public float pushPower = 2f;
 
+    [System.NonSerialized]
+    public float moveResistant = 0f;   // 이동 저항력
     [System.NonSerialized]
     public bool isMove = true;       // 현재 이동 여부
     [System.NonSerialized]
@@ -38,6 +40,7 @@ public class PlayerCtrl : MonoBehaviour
     private float fullHp = 100; // 체력
     private float curHp = 100;
     public static float focusRight = 1f;
+    private float positionZ = 0f;
 
     private float currRadian;
     private float vx;
@@ -56,7 +59,7 @@ public class PlayerCtrl : MonoBehaviour
     private SwitchObject switchState;
     private GameObject currInteraction;
 
-    public Animator anim;
+    private Animator anim;
     public Cloth cloth;
 
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
@@ -65,7 +68,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public static PlayerCtrl instance;
 
-    Vector3 positionZ = Vector3.zero;
+    
 
     void Awake()
     {
@@ -85,7 +88,7 @@ public class PlayerCtrl : MonoBehaviour
     //    pData = PlayerData.Load();
     //    curHp = fullHp;
     //    transform.position = pData.pPosition;
-    //    positionZ = pData.pPosition;
+    //    positionZ = pData.pPosition.z;
     //}
 
     void OnEnable()
@@ -102,22 +105,21 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-        if(transform.position.z != 0)
-        {
-            Vector3 temp = transform.position;
-            temp.z = -1.42f;
-            transform.position = temp;
-        }
-            
-        //transform.position = new Vector3(transform.position.x, transform.position.y, positionZ.z);
+        //if(transform.position.z != 0)
+        //{
+        //    Vector3 temp = transform.position;
+        //    temp.z = -1.42f;
+        //    transform.position = temp;
+        //}
+        //transform.position = new Vector3(transform.position.x, transform.position.y, positionZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
         else RopeWorker();
 
         //NPC와 대화
-        if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
+        //if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         // 상호작용 (버튼 조작)
-        else if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
+        if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
 
         if(controller.velocity.y < -30f)
         {
@@ -128,7 +130,7 @@ public class PlayerCtrl : MonoBehaviour
     void Movement()
     {
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
-        //anim.SetFloat("Velocity", controller.velocity.y);
+        anim.SetFloat("Velocity", controller.velocity.y);
         // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
         {
@@ -219,7 +221,7 @@ public class PlayerCtrl : MonoBehaviour
                 anim.SetBool("Jump", true);
                 //anim.CrossFade("Basic_Jump", 0f);
                 isJumping = true;
-//                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
+                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 moveDir.y = jumpHight;
                 gravity = 5f;
                 break;
@@ -236,23 +238,23 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    //레이캐스팅 발사
-    void ShotRay()
-    {
-        RaycastHit hit;
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 shotPoint = new Vector3(rayTr.position.x, rayTr.position.y, rayTr.position.z); 
-        if (Physics.Raycast(shotPoint, forward, out hit, 10f))
-        {
-            Debug.DrawRay(shotPoint, forward, Color.red, 2f);
-            //NPC 체크 및 이름 확인
-            if (hit.collider.CompareTag("NPC"))
-            {
-                pFunc.ShowScript(hit.collider.name);
-                anim.SetBool("Run", false);
-            }
-        }
-    }
+    ////레이캐스팅 발사
+    //void ShotRay()
+    //{
+    //    RaycastHit hit;
+    //    Vector3 forward = transform.TransformDirection(Vector3.forward);
+    //    Vector3 shotPoint = new Vector3(rayTr.position.x, rayTr.position.y, rayTr.position.z); 
+    //    if (Physics.Raycast(shotPoint, forward, out hit, 10f))
+    //    {
+    //        Debug.DrawRay(shotPoint, forward, Color.red, 2f);
+    //        //NPC 체크 및 이름 확인
+    //        if (hit.collider.CompareTag("NPC"))
+    //        {
+    //            pFunc.ShowScript(hit.collider.name);
+    //            anim.SetBool("Run", false);
+    //        }
+    //    }
+    //}
 
     public void getRecovery(float recovery)
     {
@@ -417,7 +419,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             anim.SetBool("Push", true);
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-            body.velocity = pushDir * 2f;
+            body.velocity = pushDir * pushPower;
         }
     }
 
