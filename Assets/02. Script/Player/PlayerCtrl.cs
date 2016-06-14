@@ -105,13 +105,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-        //if(transform.position.z != 0)
-        //{
-        //    Vector3 temp = transform.position;
-        //    temp.z = -1.42f;
-        //    transform.position = temp;
-        //}
-        //transform.position = new Vector3(transform.position.x, transform.position.y, positionZ);
+        transform.position = new Vector3(transform.position.x, transform.position.y, positionZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
         else RopeWorker();
@@ -404,6 +398,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         pData = PlayerData.Load();
         transform.position = pData.pPosition;
+        WahleCtrl.instance.transform.position = transform.position;
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
