@@ -45,6 +45,13 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
+          name: _MetallicGlossMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _OcclusionMap
         second:
           m_Texture: {fileID: 0}
@@ -67,13 +74,6 @@ Material:
       data:
         first:
           name: _DetailAlbedoMap
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _MetallicGlossMap
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
@@ -114,16 +114,20 @@ Material:
         second: 0.5
       data:
         first:
+          name: _Glossiness
+        second: 0.5
+      data:
+        first:
+          name: _Metallic
+        second: 0
+      data:
+        first:
           name: _Parallax
         second: 0.02
       data:
         first:
           name: _ZWrite
         second: 1
-      data:
-        first:
-          name: _Glossiness
-        second: 0.5
       data:
         first:
           name: _BumpScale
@@ -146,7 +150,15 @@ Material:
         second: 0
       data:
         first:
-          name: _Metallic
+          name: _Rimpower
+        second: 6.6
+      data:
+        first:
+          name: _RimInverse
+        second: 0
+      data:
+        first:
+          name: _Blink
         second: 0
       data:
         first:
@@ -160,18 +172,6 @@ Material:
         first:
           name: _Hide
         second: -1
-      data:
-        first:
-          name: _Rimpower
-        second: 6.6
-      data:
-        first:
-          name: _RimInverse
-        second: 0
-      data:
-        first:
-          name: _Blink
-        second: 0
     m_Colors:
       data:
         first:

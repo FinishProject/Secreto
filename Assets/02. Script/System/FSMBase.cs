@@ -27,7 +27,7 @@ using System;
 public class FSMBase : MonoBehaviour {
 
     // 현재 상태 저장
-    private Enum _curState;
+    public Enum _curState;
     public Enum curState
     {
         get
@@ -50,6 +50,7 @@ public class FSMBase : MonoBehaviour {
 
     public Animator anim;
 
+	public bool isDeath = false;
     public float curHp = 40;
     protected float oldHp;
     public AttributeState curAttibute;
@@ -149,5 +150,4 @@ public class FSMBase : MonoBehaviour {
     }
 
     virtual public void ChildUpdate(){}
-
 }

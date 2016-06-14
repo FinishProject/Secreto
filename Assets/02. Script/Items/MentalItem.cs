@@ -1,20 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MentalItem : MonoBehaviour {
+public class MentalItem : WasteItem
+{
 
-    public float removeTime = 5.0f;         // 아이템이 사라지는데 걸리는 시간
-    private ItemStruct itemData;            // 아이템의 정보
-    private Transform thisTr;               // 위치 확인
-    private bool isGetPossible = false;     // 플레이어가 아이템을 습득 가능한지 판단
-    private bool isCollSomething = false; 
-    private float gr = 5f;
-
-    void initData(bool isBulkMental)
+    public override void initData(bool isBulkMental)
     {
+        playerTr = PlayerCtrl.instance.transform;
         itemData = new ItemStruct();
-
-        // 경험치 아이템의 종류를 구분, 정보를 불러온다.
+        // 인핸스 아이템의 정보를 불러온다.
         if (isBulkMental)
             ItemMgr.instance.GetItem().ParseByID(itemData, 2); // 엑셀 시트 ID값 참조
         else
@@ -37,6 +31,7 @@ public class MentalItem : MonoBehaviour {
         }
     }
 
+    /*
     // 드랍 해주는 함수       시작 위치        목표 위치       회복 아이템 종류
     public void Dropped(Vector3 StartPos, Vector3 tagetPos, bool isBulkMental)
     {
@@ -95,5 +90,5 @@ public class MentalItem : MonoBehaviour {
         yield return new WaitForSeconds(removeTime);
         gameObject.SetActive(false);
     }
-
+    */
 }

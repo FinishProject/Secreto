@@ -46,12 +46,16 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\02. Script\Billboard.cs" />
+     <Compile Include="Assets\02. Script\Camera\CameraArea.cs" />
      <Compile Include="Assets\02. Script\Camera\CameraCtrl_2.cs" />
+     <Compile Include="Assets\02. Script\Camera\CameraCtrl_3.cs" />
+     <Compile Include="Assets\02. Script\Camera\CameraCtrl_4.cs" />
      <Compile Include="Assets\02. Script\Camera\ZoomArea.cs" />
      <Compile Include="Assets\02. Script\Items\CollectionItem.cs" />
      <Compile Include="Assets\02. Script\Items\Flower.cs" />
      <Compile Include="Assets\02. Script\Items\HpRecoveryItem.cs" />
      <Compile Include="Assets\02. Script\Items\MentalItem.cs" />
+     <Compile Include="Assets\02. Script\Items\WasteItem.cs" />
      <Compile Include="Assets\02. Script\Monster\BossJealousy.cs" />
      <Compile Include="Assets\02. Script\Monster\Kkokkali.cs" />
      <Compile Include="Assets\02. Script\Monster\MonsterMgr.cs" />
@@ -60,6 +64,7 @@
      <Compile Include="Assets\02. Script\Monster\SkillTableParser.cs" />
      <Compile Include="Assets\02. Script\Monster\Slug.cs" />
      <Compile Include="Assets\02. Script\Monster\SlugCtrl.cs" />
+     <Compile Include="Assets\02. Script\Monster\Spider.cs" />
      <Compile Include="Assets\02. Script\Monster\SplitMon.cs" />
      <Compile Include="Assets\02. Script\Monster\TraceMon.cs" />
      <Compile Include="Assets\02. Script\Monster\TraceMonMgr.cs" />
@@ -98,6 +103,7 @@
      <Compile Include="Assets\02. Script\Object\Holds\TeleportGate.cs" />
      <Compile Include="Assets\02. Script\Object\Holds\TimeDown.cs" />
      <Compile Include="Assets\02. Script\Object\Holds\VerticalHold.cs" />
+     <Compile Include="Assets\02. Script\Object\RotationBox.cs" />
      <Compile Include="Assets\02. Script\Object\StepDownObj.cs" />
      <Compile Include="Assets\02. Script\Object\etc\OpenByCollectionItem.cs" />
      <Compile Include="Assets\02. Script\Player\CameraCtrl.cs" />
@@ -108,8 +114,13 @@
      <Compile Include="Assets\02. Script\Player\PlayerWeather.cs" />
      <Compile Include="Assets\02. Script\Player\SkillCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\StrikeLauncherCtrl.cs" />
+     <Compile Include="Assets\02. Script\Player\WahleBase.cs" />
      <Compile Include="Assets\02. Script\Player\WahleCtrl.cs" />
+     <Compile Include="Assets\02. Script\Player\WahleIdle.cs" />
+     <Compile Include="Assets\02. Script\Player\WahleMove.cs" />
      <Compile Include="Assets\02. Script\Player\tempMoveCtrl.cs" />
+     <Compile Include="Assets\02. Script\PushObject.cs" />
+     <Compile Include="Assets\02. Script\SoundMgr.cs" />
      <Compile Include="Assets\02. Script\System\BackGroundCtrl.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVParser.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVReader.cs" />
@@ -127,7 +138,7 @@
      <Compile Include="Assets\02. Script\UI\InputPlayerInfo.cs" />
      <Compile Include="Assets\02. Script\UI\Inventory.cs" />
      <Compile Include="Assets\02. Script\UI\LoadingScreen.cs" />
-     <Compile Include="Assets\02. Script\UI\MianUI.cs" />
+     <Compile Include="Assets\02. Script\UI\MainUI.cs" />
      <Compile Include="Assets\02. Script\UI\PauseUI.cs" />
      <Compile Include="Assets\02. Script\UI\ScriptMgr.cs" />
      <Compile Include="Assets\Test.cs" />
@@ -178,6 +189,7 @@
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />
      <None Include="Assets\02. Script\Shader\Standard2side.shader" />
+     <None Include="Assets\02. Script\GodRayShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SSAOShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ConvertDepth.shader" />
@@ -202,6 +214,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlur.shader" />
      <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\DLAA.shader" />
+     <None Include="Assets\02. Script\SurfaceWindShader.shader" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetBasic.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrainDX11.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BrightPassFilter2.shader" />
@@ -216,6 +229,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Adaptation.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrain.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
+     <None Include="Assets\06. FX\skytower\JP_RimNHalo.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VignettingShader.shader" />
      <None Include="Assets\02. Script\Nonuse\SkyboxBlended.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Tonemapper.shader" />
@@ -233,6 +247,7 @@
      <None Include="Assets\01. Secen\KSY\Standard2side.shader" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
+     <None Include="Assets\02. Script\BackGroundShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
      <None Include="Assets\05. Material\Shader\Char.shader" />

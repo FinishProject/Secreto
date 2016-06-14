@@ -25,7 +25,6 @@ public class ScriptMgr : MonoBehaviour {
 
     public Text[] txtUi; // 대사 텍스트 출력 UI
     public GameObject[] bgUi; // 대사 출력 배경 UI
-    public GameObject answerUi; // 선택지 UI
     
     public bool isQuest = false; // 퀘스트 완료 여부
     public static int curIndex = 0; // 현재 보여줄 대사 인덱스
@@ -46,7 +45,6 @@ public class ScriptMgr : MonoBehaviour {
         {
             bgUi[i].SetActive(false);
         }
-        answerUi.SetActive(false);
         scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
         spokeNpc = PlayerData.LoadNpcName(); // 이미 대화한 NPC 이름 불러오기
     }
@@ -79,6 +77,7 @@ public class ScriptMgr : MonoBehaviour {
                 }
             }
             spokeNpc.Add(name);
+            QuestMgr.instance.GetQuestInfo(questInfo[0]);
             StartCoroutine(SpeakingNPC());
         }
         // 퀘스트 수락 후 완료 시
@@ -98,8 +97,7 @@ public class ScriptMgr : MonoBehaviour {
                     });
                 }
             }
-
-            StartCoroutine(QuestClear());
+            StartCoroutine(SpeakingNPC());
         }
         else if (SpeakName(name) && !isQuest) 
         {
@@ -114,8 +112,15 @@ public class ScriptMgr : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                curIndex++;
-                if (curScript[curIndex].scriptType == 0 && !isQuest)
+                if(curIndex < curScript.Count)
+                    curIndex++;
+                Debug.Log(curIndex);
+                // 퀘스트 미완료 시
+                if (curScript[curIndex].scriptType == 1 && isQuest)
+                {
+                    ShowUI();
+                }
+                else if (curScript[curIndex].scriptType == 0 && !isQuest)
                 {
                     ShowUI();
                 }
@@ -123,21 +128,38 @@ public class ScriptMgr : MonoBehaviour {
                 {
                     curScript.Clear();
                     PlayerCtrl.instance.isMove = true;
-                    for(int i = 0; i < 2; i++)
+                    curIndex = 0;
+                    for (int i = 0; i < 2; i++)
                     {
                         bgUi[i].SetActive(false);
                     }
+                    break;
                 }
-            }
-            yield return null;
-        }
-    }
 
-    IEnumerator QuestClear()
-    {
-        while (true)
-        {
-            Debug.Log("Clear");
+
+                //}
+                //// 퀘스트 완료 시
+                //else if (isQuest)
+                //{
+                //    if (curScript[curIndex].scriptType == 1 && isQuest)
+                //    {
+                //        ShowUI();
+                //    }
+                //    else
+                //    {
+                //        Debug.Log("End");
+                //        curScript.Clear();
+                //        PlayerCtrl.instance.isMove = true;
+                //        curIndex = 0;
+                //        isQuest = false;
+                //        for (int i = 0; i < 2; i++)
+                //        {
+                //            bgUi[i].SetActive(false);
+                //        }
+                //        break;
+                //    }
+                //}
+            }
             yield return null;
         }
     }

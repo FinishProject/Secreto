@@ -29,27 +29,32 @@ public interface Sensorable_Something
 
 public interface Sensorable_Return
 {
-    void ActiveSensor_Retuen(GameObject gameObject);
+    void ActiveSensor_Retuen(int index, GameObject gameObject);
 }
 
 public class Sensor : MonoBehaviour
 {
     public int index = 0; // 여러개의 센서가 들어가는 부모 오브젝트를 위한 index
+    public bool isReturnObject = false;
     public string colliderName = "NULL";
     void OnTriggerEnter(Collider col)
     {
         if (col.tag.Equals("Player"))
         {
-            if (transform.parent.GetComponent<Sensorable_Player>().ActiveSensor_Player(index))
+            if (transform.parent.GetComponent<Sensorable_Player>() != null &&
+                transform.parent.GetComponent<Sensorable_Player>().ActiveSensor_Player(index))
                 gameObject.SetActive(false);
         }
 
         if (col.tag.Equals(colliderName))
         {
-            if (transform.parent.GetComponent<Sensorable_Something>().ActiveSensor_Something(index))
+            /*
+            if (!isReturnObject && transform.parent.GetComponent<Sensorable_Something>() != null &&
+                transform.parent.GetComponent<Sensorable_Something>().ActiveSensor_Something(index))
                 gameObject.SetActive(false);
-
-            transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(col.gameObject);
+                */
+            if (isReturnObject && transform.parent.GetComponent<Sensorable_Return>() != null)
+                transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(index, col.gameObject);
         }
     }
 
@@ -57,7 +62,12 @@ public class Sensor : MonoBehaviour
     {
         if (col.tag.Equals(colliderName))
         {
-            transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(null);
+            /*
+            if (!isReturnObject && transform.parent.GetComponent<Sensorable_Something>() != null)
+                transform.parent.GetComponent<Sensorable_Something>().ActiveSensor_Something(index + 100);
+                */
+            if (isReturnObject && transform.parent.GetComponent<Sensorable_Return>() != null)
+                transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(index, null);
         }
     }
 }
