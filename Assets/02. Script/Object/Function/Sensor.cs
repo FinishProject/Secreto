@@ -29,7 +29,7 @@ public interface Sensorable_Something
 
 public interface Sensorable_Return
 {
-    void ActiveSensor_Retuen(GameObject gameObject);
+    void ActiveSensor_Retuen(int index, GameObject gameObject);
 }
 
 public class Sensor : MonoBehaviour
@@ -48,12 +48,13 @@ public class Sensor : MonoBehaviour
 
         if (col.tag.Equals(colliderName))
         {
+            /*
             if (!isReturnObject && transform.parent.GetComponent<Sensorable_Something>() != null &&
                 transform.parent.GetComponent<Sensorable_Something>().ActiveSensor_Something(index))
                 gameObject.SetActive(false);
-
+                */
             if (isReturnObject && transform.parent.GetComponent<Sensorable_Return>() != null)
-                transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(col.gameObject);
+                transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(index, col.gameObject);
         }
     }
 
@@ -61,11 +62,12 @@ public class Sensor : MonoBehaviour
     {
         if (col.tag.Equals(colliderName))
         {
+            /*
             if (!isReturnObject && transform.parent.GetComponent<Sensorable_Something>() != null)
                 transform.parent.GetComponent<Sensorable_Something>().ActiveSensor_Something(index + 100);
-
+                */
             if (isReturnObject && transform.parent.GetComponent<Sensorable_Return>() != null)
-                transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(null);
+                transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(index, null);
         }
     }
 }

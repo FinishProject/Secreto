@@ -149,5 +149,8 @@ public class FSMBase : MonoBehaviour {
     }
 
     virtual public void ChildUpdate(){}
+    protected bool isDeath = false;
+    public bool Death() { return isDeath; }
+
 
 }

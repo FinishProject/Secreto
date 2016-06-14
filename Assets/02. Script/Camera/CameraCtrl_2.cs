@@ -123,7 +123,7 @@ public class CameraCtrl_2 : MonoBehaviour, Sensorable_Player, Sensorable_Somethi
     }
 
     // 라인 센서에 무언가가 충돌 했을 때, 충돌한 오브젝트를 받아옴 ( 라인 스크립트에 충돌할 것 지정 )
-    public void ActiveSensor_Retuen(GameObject gameObjet)
+    public void ActiveSensor_Retuen(int index, GameObject gameObjet)
     {
         if (gameObjet == null)
         {
