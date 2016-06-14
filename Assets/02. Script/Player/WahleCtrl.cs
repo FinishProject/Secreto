@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WahleCtrl : MonoBehaviour {
-
     public float maxSpeed = 10f; // 최대 속도
     public float accel = 5f; // 가속도
 
     protected float initSpeed = 0f; // 초기 속도
     protected float distance = 0f; // 거리 차
     private bool isSearch = false; // 탐색 여부
+
+    private Vector3 npcPos;
 
     protected Transform targetPoint; // 대기 상태시 추격할 포인트 위치
     protected Vector3 relativePos; // 상대적 위치값
@@ -18,16 +19,20 @@ public class WahleCtrl : MonoBehaviour {
     public Transform playerTr;
     private Transform camTr;
     protected Animator anim;
+    private FSMBase fsmBase;
 
     public IEnumerator curState;
 	FSMBase fsmBase;
 
+    public static WahleCtrl instance;
+
     void Start()
     {
+        instance = this;
         anim = gameObject.GetComponentInChildren<Animator>();
         camTr = GameObject.FindGameObjectWithTag("MainCamera").transform;
         fsmBase = GetComponent<FSMBase>();
-        
+
         targetPoint = new GameObject().transform;
         targetPoint.name = "TargetPoint";
 
@@ -36,11 +41,15 @@ public class WahleCtrl : MonoBehaviour {
         StartCoroutine(SearchEnemy());
     }
 
-
     public IEnumerator CoroutineUpdate()
     {
         while (true)
         {
+            if (ScriptMgr.isSpeak)
+            {
+                curState = Idle();
+            }
+
             if (!curState.Equals(null) && curState.MoveNext())
             {
                 yield return curState.Current;
@@ -65,18 +74,30 @@ public class WahleCtrl : MonoBehaviour {
                 if (CheckOutCamera())
                     curState = Move();
             }
-            // 타겟 위치를 임의의 위치로 배치
-            if (distance <= 4f)
+
+            if (ScriptMgr.isSpeak)
             {
-                targetPoint.position = SetRandomPos();
+                relativePos = npcPos - transform.position;
+                lookRot = Quaternion.LookRotation(relativePos);
+
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.right),
+                       3f * Time.deltaTime);
             }
+            else {
+                // 타겟 위치를 임의의 위치로 배치
+                if (distance <= 4f)
+                {
+                    targetPoint.position = SetRandomPos();
+                }
 
-            relativePos = targetPoint.position - transform.position;
-            distance = relativePos.sqrMagnitude;
-            lookRot = Quaternion.LookRotation(relativePos);
+                relativePos = targetPoint.position - transform.position;
+                distance = relativePos.sqrMagnitude;
+                lookRot = Quaternion.LookRotation(relativePos);
 
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 0.8f * Time.deltaTime);
-            transform.Translate(0f, 0f, 2f * Time.deltaTime);
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 0.8f * Time.deltaTime);
+                transform.Translate(0f, 0f, 2f * Time.deltaTime);
+            }
 
             yield return null;
         }
@@ -99,8 +120,6 @@ public class WahleCtrl : MonoBehaviour {
             // 플레이어가 멈췄을 시
             if (PlayerCtrl.inputAxis == 0f && distance <= 3f)
             {
-                //initSpeed = 3f;
-
                 initSpeed = DecreaseSpeed(initSpeed, 2f, 20f);
                 // 플레이어 주위를 선회
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 1.5f * Time.deltaTime);
@@ -115,7 +134,7 @@ public class WahleCtrl : MonoBehaviour {
                 }
             }
             // 플레이어가 이동중일 시
-            else {
+            else { 
                 transform.localRotation = Quaternion.Slerp(transform.localRotation,
                        new Quaternion(lookRot.x, lookRot.y, lookRot.z, lookRot.w), 4f * Time.deltaTime);
 
@@ -135,12 +154,11 @@ public class WahleCtrl : MonoBehaviour {
 
         // 플레이어 정면에 위치
         Vector3 fromPointVec = playerTr.position + ((playerTr.forward * 2f ) + (playerTr.up * 0.5f));
+
         while (true)
         {
-            Debug.Log(targetObj.GetComponent<FSMBase>()._curState);
-            
             // 화면 밖으로 나가거나 타겟이 사라졌을 시 이동으로 전환
-            if (CheckOutCamera())
+            if (CheckOutCamera() || targetObj.GetComponent<FSMBase>().isDeath)
             {
                 isSearch = false;
                 curState = Move();
@@ -165,29 +183,6 @@ public class WahleCtrl : MonoBehaviour {
             yield return null;
         }
     }
-    // NPC 주위 선회
-    IEnumerator TurningNpc(Transform npcPos)
-    {
-        isSearch = true;
-        Vector3 lookVec = npcPos.position;
-        lookVec.y += 1.5f;
-        initSpeed = maxSpeed;
-        while (true)
-        {
-            relativePos = lookVec - transform.position;
-            lookRot = Quaternion.LookRotation(relativePos);
-            
-            float npcDis = relativePos.sqrMagnitude;
-
-            if (npcDis <= 5f)
-                initSpeed = 2f;
-            
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, Time.deltaTime);
-            transform.Translate(0f, 0f, initSpeed * Time.deltaTime);
-
-            yield return null;
-        }
-    }
 
     // 주변 몬스터 탐색
     IEnumerator SearchEnemy()
@@ -207,14 +202,15 @@ public class WahleCtrl : MonoBehaviour {
                         monsterDis = (searchColl[i].transform.position - playerTr.position).sqrMagnitude;
                         if (monsterDis <= 28f)
                         {
-                            curState = Attack(searchColl[i].gameObject);
+                            if(!searchColl[i].GetComponent<FSMBase>().isDeath)
+                                curState = Attack(searchColl[i].gameObject);
                             break;
                         }
                     }
-                    // NPC 탐색
+                    //NPC 탐색
                     else if (searchColl[i].CompareTag("NPC"))
                     {
-                        curState = TurningNpc(searchColl[i].transform);
+                        npcPos = searchColl[i].transform.position;
                         break;
                     }
                 }
@@ -236,20 +232,19 @@ public class WahleCtrl : MonoBehaviour {
     }
     float DecreaseSpeed(float initSpeed, float minSpeed, float accel)
     {
-        //if (initSpeed.Equals(minSpeed))
-        //    return initSpeed;
-        //else {
+        if (initSpeed.Equals(minSpeed))
+            return initSpeed;
+        else {
             initSpeed -= accel * Time.deltaTime;
         // 기본 속도가 최고 속도를 넘을 시 음수가 되어 maxSpeed만 반환
-        
             return (Mathf.Sign(minSpeed - initSpeed).Equals(1)) ? minSpeed : initSpeed;
-        //}
+        }
     }
     // 대기 상태 시 랜덤으로 포인트 위치 이동
     protected virtual Vector3 SetRandomPos()
     {
-        float rndPointX = Random.Range(camTr.position.x - 4f, camTr.position.x + 4f);
-        float rndPointY = Random.Range(playerTr.position.y - 1f, camTr.position.y + 2f);
+        float rndPointX = UnityEngine.Random.Range(camTr.position.x - 4f, camTr.position.x + 4f);
+        float rndPointY = UnityEngine.Random.Range(playerTr.position.y - 1f, camTr.position.y + 2f);
 
         return new Vector3(rndPointX, rndPointY, playerTr.position.z);
     }
@@ -294,7 +289,7 @@ public class WahleCtrl : MonoBehaviour {
             total += values[i];
         }
         // 전체 합의 임이의 0~1의 변수를 곱함
-        float randomPoint = Random.value * total;
+        float randomPoint = UnityEngine.Random.value * total;
 
         for (int i = 0; i < values.Length; i++)
         {

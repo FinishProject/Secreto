@@ -267,6 +267,7 @@ public class Spider : FSMBase
 
     void OnEnable()
     {
+        isDeath = false;
         curState = EnemyStates.Idle;
     }
 

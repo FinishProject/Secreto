@@ -19,30 +19,40 @@ public class LanaCtrl : NpcMgr {
     protected override void CurUpdate()
     {
         distance = GetDistance(this.transform.position);
-
+        // 등장
         if(distance <= 80f && isAppear)
         {
             AppearNpc();
         }
-
-        if(distance <= 60f)
+        // 대화 시작
+        if (distance <= 30f && !isAppear)
         {
-            // 대화한 적이 없다면
-            if (!ScriptMgr.instance.SpeakName(this.name))
+            anim.SetBool("Speak", true);
+            Speak();
+        }
+        // 대화 종료
+        else
+            anim.SetBool("Speak", false);
+    }
+
+    void Speak()
+    {
+        // 대화한 적이 없다면
+        if (!ScriptMgr.instance.SpeakName(this.name))
+        {
+            SetScript(this.name);
+        }
+        // 대화한 적이 있고, 퀘스트 완료 시
+        else if (ScriptMgr.instance.SpeakName(this.name) && ScriptMgr.instance.isQuest)
+        {
+            if (!isSpeak)
             {
+                isSpeak = true;
                 SetScript(this.name);
             }
-            // 대화한 적이 있고, 퀘스트 완료 시
-            else if(ScriptMgr.instance.SpeakName(this.name) && ScriptMgr.instance.isQuest) {
-                if (!isSpeak)
-                {
-                    isSpeak = true;
-                    SetScript(this.name);
-                }
-            }
         }
-        
     }
+
     // 포물선을 그리며 플레이어 앞으로 등장 함수
     void AppearNpc()
     {
@@ -62,6 +72,7 @@ public class LanaCtrl : NpcMgr {
     {
         if (col.name.Equals(movePoint.name))
         {
+            anim.SetBool("Appear", false);
             isAppear = false;
         }
     }

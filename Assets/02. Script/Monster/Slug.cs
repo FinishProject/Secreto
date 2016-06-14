@@ -250,6 +250,7 @@ public class Slug : FSMBase
     void OnEnable()
     {
         curState = EnemyStates.Idle;
+        isDeath = false;
     }
 
     void OnDisable()

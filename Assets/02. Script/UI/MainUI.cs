@@ -5,9 +5,9 @@ using System.Collections;
 public class MainUI : MonoBehaviour {
 
     public Image pressAnyKey;
-    public GameObject menu;
     public GameObject exitPopup;
     public GameObject selectButton;
+    public GameObject menu;
     int curSelectIdx;
     Transform[] menuButtons;
 
@@ -15,7 +15,6 @@ public class MainUI : MonoBehaviour {
     void Start () {
         curSelectIdx = 1;
         menuButtons = menu.GetComponentsInChildren<Transform>();
-        Debug.Log(menuButtons.Length);
         selectButton.SetActive(false);
         menu.SetActive(false);
         ClossExitPopup();
@@ -31,7 +30,8 @@ public class MainUI : MonoBehaviour {
                 menu.SetActive(true);
                 selectButton.SetActive(true);
                 pressAnyKey.enabled = false;
-                StartCoroutine(SelectMenu());
+                yield return new WaitForSeconds(0.5f);
+                StartCoroutine(SelectMenu());  
                 break;
             }
 
