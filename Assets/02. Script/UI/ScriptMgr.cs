@@ -25,9 +25,9 @@ public class ScriptMgr : MonoBehaviour {
 
     public Text[] txtUi; // 대사 텍스트 출력 UI
     public GameObject[] bgUi; // 대사 출력 배경 UI
-    public GameObject answerUi; // 선택지 UI
     
     public bool isQuest = false; // 퀘스트 완료 여부
+    public static bool isSpeak = false;
     public static int curIndex = 0; // 현재 보여줄 대사 인덱스
 
     private List<Script> scriptData = new List<Script>(); //XML 데이터 저장
@@ -46,7 +46,6 @@ public class ScriptMgr : MonoBehaviour {
         {
             bgUi[i].SetActive(false);
         }
-        answerUi.SetActive(false);
         scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
         spokeNpc = PlayerData.LoadNpcName(); // 이미 대화한 NPC 이름 불러오기
     }
@@ -54,6 +53,7 @@ public class ScriptMgr : MonoBehaviour {
     // NPC 이름에 해당하는 대사들과 퀘스트 정보를 가져옴
     public void GetScript(string name)
     {
+        isSpeak = true;
         // 이전에 대화를 하지 않는 NPC일 경우 대화를 위해 정보들을 가져옴
         if (!SpeakName(name))
         {
@@ -116,7 +116,6 @@ public class ScriptMgr : MonoBehaviour {
             {
                 if(curIndex < curScript.Count)
                     curIndex++;
-                Debug.Log(curIndex);
                 // 퀘스트 미완료 시
                 if (curScript[curIndex].scriptType == 1 && isQuest)
                 {
@@ -131,6 +130,7 @@ public class ScriptMgr : MonoBehaviour {
                     curScript.Clear();
                     PlayerCtrl.instance.isMove = true;
                     curIndex = 0;
+                    isSpeak = false;
                     for (int i = 0; i < 2; i++)
                     {
                         bgUi[i].SetActive(false);

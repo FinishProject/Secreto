@@ -51,6 +51,7 @@ public class FSMBase : MonoBehaviour {
     public Animator anim;
 
     public float curHp = 40;
+    public bool isDeath = false;
     protected float oldHp;
     public AttributeState curAttibute;
 
@@ -149,8 +150,4 @@ public class FSMBase : MonoBehaviour {
     }
 
     virtual public void ChildUpdate(){}
-    protected bool isDeath = false;
-    public bool Death() { return isDeath; }
-
-
 }
