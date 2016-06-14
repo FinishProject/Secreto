@@ -8,6 +8,7 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
     bool isNearByWall_L = false;
     bool isNearByWall_R = false;
+    bool isCinematicView = false;
 
     public Vector3 NearWallDistance;
 
@@ -35,8 +36,9 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
         Debug.Log("왼쪽 : "+ isNearByWall_L);
         Debug.Log("오른 : " + isNearByWall_R);
 
+        if (Vector3.Distance(tr.position, playerTr.position) > 30f)
+            tr.position = playerTr.position;
         
-
         // 양쪽 두 벽과 충돌이 있을 때
         if (isNearByWall_L && isNearByWall_R)
         {
@@ -47,26 +49,25 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
         // 한쪽 벽과 충돌이 있을 때
         else if(isNearByWall_L || isNearByWall_R)
         {
-            //                       if (isNearByWall_L && Input.GetKey(KeyCode.RightArrow))
             /*
             Vector3 tmpPos = tr.position;
             tmpPos.x = player_L_EndPos + playerDistance.x;
             giz.transform.position = tmpPos;
             */
 
-            if (isNearByWall_L && playerTr.position.x >= player_L_EndPos + playerDistance.x)
+            if ( isNearByWall_L && playerTr.position.x >= player_L_EndPos + playerDistance.x )
             {
                 tr.position = Vector3.Lerp(tr.position, playerTr.position + NearWallDistance, camSpeed * Time.deltaTime);
             }
-            else if (isNearByWall_R && playerTr.position.x <= player_R_EndPos - playerDistance.x)
+            else if ( isNearByWall_R && playerTr.position.x <= player_R_EndPos - playerDistance.x )
             {
                 tr.position = Vector3.Lerp(tr.position, playerTr.position + NearWallDistance, camSpeed * Time.deltaTime);
             }
             else
             {
-                Vector3 tmpPos = tr.position;
-                tmpPos.x = player_L_EndPos + playerDistance.x;
-                giz.transform.position = tmpPos;
+                Vector3 tempPos = tr.position;
+                tempPos.y = playerTr.position.y + playerDistance.y;
+                tr.position = Vector3.Lerp(tr.position, tempPos, camSpeed * Time.deltaTime);
             }
 
         }
@@ -87,6 +88,7 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
         {
             tr.rotation = Quaternion.Lerp(tr.rotation, Quaternion.identity, camSpeed * Time.deltaTime);
         }
+
 
         
 

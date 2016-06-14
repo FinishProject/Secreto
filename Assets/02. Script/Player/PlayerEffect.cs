@@ -29,13 +29,14 @@ public class PlayerEffect : MonoBehaviour {
 
     public void StartEffect(PlayerEffectList effectState)
     {
-        StartCoroutine(ShowEffected(effectState));
+//        StartCoroutine(ShowEffected(effectState));
         //switch(effectState)
         //{
             //case PlayerEffectList.BASIC_JUMP : StartCoroutine(effected());   break;
             //case PlayerEffectList.DASH_JUMP  : StartCoroutine(effected_2()); break;
         //}
     }
+
 
     IEnumerator ShowEffected(PlayerEffectList effectState)
     {

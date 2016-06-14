@@ -6,7 +6,7 @@ using System.Collections;
 public class LoadingScreen : MonoBehaviour
 {
     public Text text;
-    // Use this for initialization
+
     void Start()
     {
         StartCoroutine(Load());
@@ -15,7 +15,7 @@ public class LoadingScreen : MonoBehaviour
     IEnumerator Load()
     {
 
-        AsyncOperation async = Application.LoadLevelAsync("0601");
+        AsyncOperation async = Application.LoadLevelAsync("BCS");
 
         while (!async.isDone)
         {

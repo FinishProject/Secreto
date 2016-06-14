@@ -19,21 +19,21 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 6ef65b9b3db5e914281a30403cd4cb31, type: 3}
+          m_Texture: {fileID: 2800000, guid: a280d6b3f48455c4ca3e7908034eebd6, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _MainTex2
         second:
-          m_Texture: {fileID: 2800000, guid: 6ef65b9b3db5e914281a30403cd4cb31, type: 3}
+          m_Texture: {fileID: 2800000, guid: a280d6b3f48455c4ca3e7908034eebd6, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _MainTex3
         second:
-          m_Texture: {fileID: 2800000, guid: a782467cd8ab7f0449134bb3d14d35f3, type: 3}
+          m_Texture: {fileID: 2800000, guid: 6b0086d6248e4624d81d8862fc49cb26, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -72,7 +72,7 @@ Material:
       data:
         first:
           name: _tex2V
-        second: 0.2
+        second: 1
       data:
         first:
           name: _rot2
@@ -80,7 +80,7 @@ Material:
       data:
         first:
           name: _tex3pow
-        second: 0.041
+        second: 0.036
       data:
         first:
           name: _tex3U
@@ -93,7 +93,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 0.6413793, g: 0.2352941, b: 1, a: 1}
+        second: {r: 0.6137931, g: 0.17647058, b: 1, a: 1}
       data:
         first:
           name: _TintColor
