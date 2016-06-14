@@ -217,6 +217,7 @@ public class Kkokkali : FSMBase {
     IEnumerator Dying_EnterState()
     {
         Debug.Log("쮸금");
+        isDeath = true;
         nvAgent.Stop();
         anim.SetBool("Death", true);
         GetComponent<ItemDrop>().DropItem();

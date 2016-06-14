@@ -237,6 +237,7 @@ public class Slug : FSMBase
     #region 사망
     IEnumerator Dying_EnterState()
     {
+        isDeath = true;
         anim.SetBool("Death", true);
         
         GetComponent<ItemDrop>().DropItem();    // 아이템 드랍 ( 아이템 드랍 설정은 인스펙터 창에서 )

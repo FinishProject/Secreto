@@ -252,6 +252,7 @@ public class Spider : FSMBase
     #region 사망
     IEnumerator Dying_EnterState()
     {
+        isDeath = true;
         Debug.Log("쮸금");
         nvAgent.Stop();
         anim.SetBool("Death", true);
