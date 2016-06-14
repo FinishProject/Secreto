@@ -91,7 +91,7 @@ Material:
       data:
         first:
           name: _Cutoff
-        second: 0.5
+        second: 0.1
       data:
         first:
           name: _Parallax
@@ -130,12 +130,12 @@ Material:
         second: 1
       data:
         first:
-          name: _EmissionScaleUI
-        second: 0
+          name: _Emitt
+        second: 0.6
       data:
         first:
-          name: _Emitt
-        second: 0.8
+          name: _EmissionScaleUI
+        second: 0
     m_Colors:
       data:
         first:
@@ -147,9 +147,9 @@ Material:
         second: {r: 0.50735295, g: 0.50735295, b: 0.50735295, a: 1}
       data:
         first:
-          name: _EmissionColorUI
-        second: {r: 1, g: 1, b: 1, a: 1}
-      data:
-        first:
           name: _UpperColor
         second: {r: 0, g: 0, b: 0, a: 0}
+      data:
+        first:
+          name: _EmissionColorUI
+        second: {r: 1, g: 1, b: 1, a: 1}

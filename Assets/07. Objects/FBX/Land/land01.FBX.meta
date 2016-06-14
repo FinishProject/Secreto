@@ -1,14 +1,18 @@
 fileFormatVersion: 2
-guid: b17f1b16d618c1f4f961918ea9296318
-timeCreated: 1463325654
+guid: f107a9a991c101b4485b59351e5d162a
+timeCreated: 1465550882
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
+    100000: 2-1-1_land_mass004
+    100002: 2-1-1_land_mass03
+    100004: //RootNode
+    400000: 2-1-1_land_mass004
+    400002: 2-1-1_land_mass03
+    400004: //RootNode
+    2300000: 2-1-1_land_mass004
+    3300000: 2-1-1_land_mass004
     4300000: 2-1-1_land_mass004
   materials:
     importMaterials: 1
@@ -39,7 +43,7 @@ ModelImporter:
     addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
