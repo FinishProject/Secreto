@@ -25,7 +25,6 @@ public class ScriptMgr : MonoBehaviour {
 
     public Text[] txtUi; // 대사 텍스트 출력 UI
     public GameObject[] bgUi; // 대사 출력 배경 UI
-    public GameObject answerUi; // 선택지 UI
     
     public bool isQuest = false; // 퀘스트 완료 여부
     public static int curIndex = 0; // 현재 보여줄 대사 인덱스
@@ -46,7 +45,6 @@ public class ScriptMgr : MonoBehaviour {
         {
             bgUi[i].SetActive(false);
         }
-        answerUi.SetActive(false);
         scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
         spokeNpc = PlayerData.LoadNpcName(); // 이미 대화한 NPC 이름 불러오기
     }
