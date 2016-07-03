@@ -42,10 +42,10 @@ public class ScriptMgr : MonoBehaviour {
     void Awake()
     {
         instance = this;
-        for(int i=0; i<bgUi.Length; i++)
-        {
-            bgUi[i].SetActive(false);
-        }
+        //for(int i=0; i<bgUi.Length; i++)
+        //{
+        //    bgUi[i].SetActive(false);
+        //}
         scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
         spokeNpc = PlayerData.LoadNpcName(); // 이미 대화한 NPC 이름 불러오기
     }
@@ -53,6 +53,7 @@ public class ScriptMgr : MonoBehaviour {
     // NPC 이름에 해당하는 대사들과 퀘스트 정보를 가져옴
     public void GetScript(string name)
     {
+        Debug.Log(name);
         isSpeak = true;
         // 이전에 대화를 하지 않는 NPC일 경우 대화를 위해 정보들을 가져옴
         if (!SpeakName(name))
@@ -186,12 +187,19 @@ public class ScriptMgr : MonoBehaviour {
     //이미 대화한 NPC인지 확인
     public bool SpeakName(string name)
     {
-        for (int i = 0; i < spokeNpc.Count; i++)
+        if (spokeNpc[0] == null)
         {
-            if (spokeNpc[i] == name)
-                return true;
+            return true;
         }
-        return false;
+        else
+        {
+            for (int i = 0; i < spokeNpc.Count; i++)
+            {
+                if (spokeNpc[i] == name)
+                    return true;
+            }
+            return false;
+        }
     }
 
     // 대화한 NPC 이름 저장

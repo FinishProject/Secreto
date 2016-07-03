@@ -14,7 +14,8 @@ using UnityEngine.UI;
     
 ******************************************************************/
 
-public class InGameUI : MonoBehaviour {
+public class InGameUI : MonoBehaviour
+{
 
     [System.Serializable]
     public struct AttributeImage
@@ -28,12 +29,29 @@ public class InGameUI : MonoBehaviour {
 
     public Image hpBar;
     public Image enhanceGauge;
+    public Image cinematic;
+    public GameObject status_UI;
     public GameObject pauseUI;
     public static InGameUI instance;
+
+    public void CinematicView(bool isCinematicView)
+    {
+        if (!isCinematicView)
+        {
+            cinematic.enabled = false;
+            status_UI.SetActive(true);
+        }
+        else
+        {
+            cinematic.enabled = true;
+            status_UI.SetActive(false);
+        }
+    }
 
     void Awake()
     {
         instance = this;
+        CinematicView(false);
         pauseUI.SetActive(false);
     }
 
@@ -44,15 +62,16 @@ public class InGameUI : MonoBehaviour {
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && !pauseUI.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Escape) && !pauseUI.activeSelf)
         {
-            pauseUI.SetActive(true);
+            pauseUI.SetActive(true);            
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && pauseUI.activeSelf)
         {
-            pauseUI.SetActive(false);
+            // 일시정지 UI에서도 ESC입력 처리를 따로 해야 하므로 pauseUI.SetActive(false) 사용 안함 
+            pauseUI.GetComponent<PauseUI>().ClosePauseUI();
         }
-        
+
     }
 
     // UI들의 수치값을 최신화
@@ -60,7 +79,7 @@ public class InGameUI : MonoBehaviour {
     {
         ChangeHpBar();
         ChangeEnhance();
-//        ChangeAttribute();
+        //        ChangeAttribute();
     }
 
     // HP바 수치를 바꿔줌 (외부 호출)
@@ -103,7 +122,7 @@ public class InGameUI : MonoBehaviour {
     public void ChangeCountDownForAttributeBar()
     {
         StopAllCoroutines();
-        StartCoroutine( ChangeAttributeBar());
+        StartCoroutine(ChangeAttributeBar());
     }
 
     // 속성 변경
@@ -115,12 +134,12 @@ public class InGameUI : MonoBehaviour {
             countDown -= 0.05f;
             yield return new WaitForSeconds(0.02f);
             attributeImage.backGroundAttribute.fillAmount = countDown;
-            if(countDown < 0.05f)
+            if (countDown < 0.05f)
             {
                 break;
             }
         }
     }
 
-    
+
 }

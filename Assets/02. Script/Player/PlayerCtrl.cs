@@ -68,8 +68,6 @@ public class PlayerCtrl : MonoBehaviour
 
     public static PlayerCtrl instance;
 
-    
-
     void Awake()
     {
         instance = this;
@@ -105,7 +103,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-
+        //transform.position = new Vector3(transform.position.x, transform.position.y, positionZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
         else RopeWorker();
@@ -114,11 +112,6 @@ public class PlayerCtrl : MonoBehaviour
         //if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
         // 상호작용 (버튼 조작)
         if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
-
-        if(controller.velocity.y < -30f)
-        {
-            PlayerDie();
-        }
     }
 
     void Movement()
@@ -137,11 +130,11 @@ public class PlayerCtrl : MonoBehaviour
             // 지상에 있을 시
             if (controller.isGrounded)
             {
-                gravity = 100f;
+                gravity = 50f;
 
                 anim.SetBool("Jump", false);
                 anim.SetBool("Dash", false);
-                anim.SetBool("Push", false);
+                //anim.SetBool("Push", false);
                 anim.SetBool("Idle", false);
 
                 //이동
@@ -165,7 +158,6 @@ public class PlayerCtrl : MonoBehaviour
             // 공중에 있을 시
             else if (!controller.isGrounded)
             {
-                //anim.SetBool("Run", false);
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump(JumpType.DASH);
@@ -173,7 +165,6 @@ public class PlayerCtrl : MonoBehaviour
                 }
                 gravity = gr;
                 moveDir.x = inputAxis;
-                //controller.Move(moveDir * Time.deltaTime);
             }
 
             //캐릭터 방향 회전
@@ -209,6 +200,7 @@ public class PlayerCtrl : MonoBehaviour
     void Jump(JumpType curJumpState)
     {
         //cloth.worldAccelerationScale = 1f;
+        gravity = 5f;
         switch (curJumpState)
         {
             case JumpType.BASIC:
@@ -217,16 +209,15 @@ public class PlayerCtrl : MonoBehaviour
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
                 moveDir.y = jumpHight;
-                gravity = 5f;
                 break;
             case JumpType.DASH:
                 if (isJumping)
                 {
                     anim.SetBool("Dash", true);
+                    isJumping = false;
                     //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
                     moveDir.y = jumpHight;
                     //cloth.damping = 1f;
-                    isJumping = false;
                 }
                 break;
         }
@@ -291,13 +282,6 @@ public class PlayerCtrl : MonoBehaviour
         float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
         vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 1.2f);
         vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 0.3f);
-
-        /*
-        Debug.Log(" 각속도 : " + speed);
-        Debug.Log("  각도 : " + currRadian);
-        Debug.Log(" X벡터 : " + vx);
-        Debug.Log(" Y벡터 : " + vy);
-        */
 
         moveDir.y = vy;
         isFlyingByRope = true;
@@ -380,6 +364,10 @@ public class PlayerCtrl : MonoBehaviour
         {
             isClimb = true;
         }
+        else if (coll.CompareTag("DeadLine"))
+        {
+            PlayerDie();
+        }
     }
 
     void OnTriggerExit(Collider coll)
@@ -400,22 +388,22 @@ public class PlayerCtrl : MonoBehaviour
         transform.position = pData.pPosition;
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Rigidbody body = hit.collider.attachedRigidbody;
-        if (body == null || body.isKinematic)
-            return;
-        if (hit.moveDirection.y < -0.3F)
-            return;
+    //void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    Rigidbody body = hit.collider.attachedRigidbody;
+    //    if (body == null || body.isKinematic)
+    //        return;
+    //    if (hit.moveDirection.y < -0.3F)
+    //        return;
 
-        //오브젝트 밀기
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            anim.SetBool("Push", true);
-            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-            body.velocity = pushDir * pushPower;
-        }
-    }
+    //    //오브젝트 밀기
+    //    if (Input.GetKey(KeyCode.LeftShift))
+    //    {
+    //        anim.SetBool("Push", true);
+    //        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+    //        body.velocity = pushDir * pushPower * Time.deltaTime;
+    //    }
+    //}
 
     // 2단 점프 끝났을 때 실행
     void SetEndAnim()
@@ -428,5 +416,10 @@ public class PlayerCtrl : MonoBehaviour
         isMove = false;
         moveDir.x = 0f;
         anim.SetBool("Idle", true);
+    }
+
+    public void SetPushAnim(bool isPush)
+    {
+        anim.SetBool("Push", isPush);
     }
 }

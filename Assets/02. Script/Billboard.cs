@@ -38,7 +38,7 @@ public class Billboard : MonoBehaviour
 			if (LockX == false) {
 				xlock = transform.eulerAngles.x;
 			} else {
-				xlock =  _mainCameraTransf.eulerAngles.x;
+				xlock =  -_mainCameraTransf.eulerAngles.x;
 			}
 			if (LockY == false) {
 				ylock = transform.eulerAngles.y;

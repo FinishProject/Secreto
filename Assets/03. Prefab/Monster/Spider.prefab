@@ -98,6 +98,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 434876}
+  - 135: {fileID: 13508874}
   m_Layer: 0
   m_Name: IK Chain002
   m_TagString: Untagged
@@ -173,6 +174,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 424768}
+  - 135: {fileID: 13564282}
   m_Layer: 0
   m_Name: IK Chain018
   m_TagString: Untagged
@@ -1063,7 +1065,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 171358}
   m_LocalRotation: {x: 0, y: 0.7071066, z: 0, w: -0.70710695}
-  m_LocalPosition: {x: 37.122925, y: 2.1280737, z: -2}
+  m_LocalPosition: {x: 98.36, y: 7.39, z: -1.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 499972}
@@ -1938,9 +1940,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 196750}
-  m_LocalRotation: {x: 0, y: -0.7071066, z: 0, w: -0.70710695}
-  m_LocalPosition: {x: 0.87499946, y: -1.94067, z: 0.92056316}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.02, y: -0.83, z: 0.08}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 459682}
   - {fileID: 445944}
@@ -2009,12 +2011,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
+  isDeath: 0
   curHp: 40
   curAttibute: 0
   discoverDist: 12
   traceDist: 9
   attackDist: 2
   damage: 16
+--- !u!135 &13508874
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109324}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &13513872
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -2026,6 +2041,18 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.8
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &13564282
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123440}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!137 &13792714
 SkinnedMeshRenderer:

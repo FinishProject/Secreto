@@ -12,6 +12,8 @@ public class SideSmashObj : MonoBehaviour {
     private float speed = 0f, speed2 = 0f;
     public float length = 5f;
     public float waitTime = 1.5f; // 충돌 후 대기 시간
+    public float distance = 80f;
+    public Transform Point;
 
     private bool isReverse = false;
     private bool isSecondUP = false;
@@ -81,6 +83,7 @@ public class SideSmashObj : MonoBehaviour {
     {
         while (true)
         {
+            //distance = (PlayerCtrl.instance.transform.position - Point.position).sqrMagnitude;
             moveDelegate();
             yield return null;
         }
@@ -101,6 +104,7 @@ public class SideSmashObj : MonoBehaviour {
 
                 if (objInfo[i].topObj.position.Equals(topTarget[i]))
                 {
+                    
                     isReverse = true;
                     speed = 0f;
                     StartCoroutine(WaitForTime());
@@ -173,6 +177,11 @@ public class SideSmashObj : MonoBehaviour {
 
                 if (objInfo[i].topObj.position.Equals(topTarget[i]))
                 {
+                    if (distance < 500f)
+                    {
+                        //StartCoroutine(CameraCtrl_4.instance.Shake(40f, 5, 0.01f));
+                    }
+
                     isReverse = true;
                     speed = 0f;
                     StartCoroutine(WaitForTime());

@@ -10,9 +10,10 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
     bool isNearByWall_R = false;
     bool isCinematicView = false;
 
+    private float originCamSpeed;
+
     public Vector3 NearWallDistance;
 
-    public GameObject giz;
     Transform playerTr;
     Transform tr;
 
@@ -20,64 +21,81 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
     CameraArea cameraArea;
     Camera cam;
 
-    void Start ()
+    Vector3 cinemaPos, cinemaFocusPos;
+
+
+    public float rot;
+    public int EndCnt;
+    public float delay;
+
+    public static CameraCtrl_4 instance;
+
+    void Start()
     {
+        instance = this;
         tr = GetComponent<Transform>();
         cam = GetComponent<Camera>();
 
-        sensorArea   = GameObject.Find("Sensor_Area"  ).transform;
+        sensorArea = GameObject.Find("Sensor_Area").transform;
         sensorWall_L = GameObject.Find("Sensor_Wall_L").transform;
         sensorWall_R = GameObject.Find("Sensor_Wall_R").transform;
 
         playerTr = PlayerCtrl.instance.transform;
-    }
-	
-	void Update () {
-        Debug.Log("왼쪽 : "+ isNearByWall_L);
-        Debug.Log("오른 : " + isNearByWall_R);
 
+        originCamSpeed = camSpeed;
+    }
+
+
+    public IEnumerator Shake(float rot, int EndCnt, float delay)
+    {
+        Debug.Log("11");
+        Quaternion newRot;
+        float rotX = rot;
+        float curCnt = 0;
+        while (true)
+        {
+            transform.Rotate(new Vector3(1, 1, 0), rotX);
+
+            rotX = rotX * 0.8f;
+            rotX *= -1;
+            curCnt++;
+
+            if (curCnt >= EndCnt)
+                break;
+
+            yield return new WaitForSeconds(delay);
+        }
+
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+            StartCoroutine(Shake(rot, EndCnt, delay));
+
+        // 거리가 급격히 멀어 졌을 때 (죽었을 때)
         if (Vector3.Distance(tr.position, playerTr.position) > 30f)
             tr.position = playerTr.position;
-        
-        // 양쪽 두 벽과 충돌이 있을 때
-        if (isNearByWall_L && isNearByWall_R)
-        {
-            Vector3 tempPos = tr.position;
-            tempPos.y = playerTr.position.y + playerDistance.y;
-            tr.position = Vector3.Lerp(tr.position, tempPos, camSpeed * Time.deltaTime);
-        }
-        // 한쪽 벽과 충돌이 있을 때
-        else if(isNearByWall_L || isNearByWall_R)
-        {
-            /*
-            Vector3 tmpPos = tr.position;
-            tmpPos.x = player_L_EndPos + playerDistance.x;
-            giz.transform.position = tmpPos;
-            */
 
-            if ( isNearByWall_L && playerTr.position.x >= player_L_EndPos + playerDistance.x )
-            {
-                tr.position = Vector3.Lerp(tr.position, playerTr.position + NearWallDistance, camSpeed * Time.deltaTime);
-            }
-            else if ( isNearByWall_R && playerTr.position.x <= player_R_EndPos - playerDistance.x )
-            {
-                tr.position = Vector3.Lerp(tr.position, playerTr.position + NearWallDistance, camSpeed * Time.deltaTime);
-            }
-            else
-            {
-                Vector3 tempPos = tr.position;
-                tempPos.y = playerTr.position.y + playerDistance.y;
-                tr.position = Vector3.Lerp(tr.position, tempPos, camSpeed * Time.deltaTime);
-            }
-
+        if (isCinematicView)
+        {
+            CinematicView();
         }
-        // 벽과 충돌이 없을 때
         else
         {
-            tr.position = Vector3.Lerp(tr.position, playerTr.position + playerDistance, camSpeed * Time.deltaTime);
+            // 벽과 충돌이 있을때
+            if (isNearByWall_L || isNearByWall_R)
+            {
+                NearByWall();
+            }
+            // 벽과 충돌이 없을 때
+            else
+            {
+                tr.position = Vector3.Lerp(tr.position, playerTr.position + playerDistance, camSpeed * Time.deltaTime);
+            }
         }
 
-
+        // 카메라 영역에 포커스가 있을때
         if (cameraArea.hasFocus)
         {
             Vector3 pos = cameraArea.focusTr.position - tr.position;
@@ -89,19 +107,63 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
             tr.rotation = Quaternion.Lerp(tr.rotation, Quaternion.identity, camSpeed * Time.deltaTime);
         }
 
-
-        
-
         CensorRotZero();
     }
 
+    public void SetCinematicView(bool isCinematicView, Vector3 cinemaPos, Vector3 cinemaFocusPos)
+    {
+        this.isCinematicView = isCinematicView;
+        this.cinemaPos = cinemaPos;
+        this.cinemaFocusPos = cinemaFocusPos;
+    }
 
-    
+    void CinematicView()
+    {
+        // 위치로 이동
+        tr.position = Vector3.Lerp(tr.position, cinemaPos, camSpeed * Time.deltaTime);
+
+        // 포커싱
+        Vector3 pos = cinemaFocusPos - tr.position;
+        Quaternion newRot = Quaternion.LookRotation(pos);
+        tr.rotation = Quaternion.Slerp(tr.rotation, newRot, camSpeed * Time.deltaTime);
+
+    }
+
+    void NearByWall()
+    {
+        // 양쪽 두 벽과 충돌이 있을 때
+        if (isNearByWall_L && isNearByWall_R)
+        {
+            Vector3 tempPos = tr.position;
+            tempPos.y = playerTr.position.y + playerDistance.y;
+            tr.position = Vector3.Lerp(tr.position, tempPos, camSpeed * Time.deltaTime);
+        }
+        // 한쪽 벽과 충돌이 있을 때
+        else if (isNearByWall_L || isNearByWall_R)
+        {
+            if (isNearByWall_L && playerTr.position.x >= player_L_EndPos + playerDistance.x)
+            {
+                tr.position = Vector3.Lerp(tr.position, playerTr.position + NearWallDistance, camSpeed * Time.deltaTime);
+            }
+            else if (isNearByWall_R && playerTr.position.x <= player_R_EndPos - playerDistance.x)
+            {
+                tr.position = Vector3.Lerp(tr.position, playerTr.position + NearWallDistance, camSpeed * Time.deltaTime);
+            }
+            else
+            {
+                Vector3 tempPos = tr.position;
+                tempPos.y = playerTr.position.y + playerDistance.y;
+                tr.position = Vector3.Lerp(tr.position, tempPos, camSpeed * Time.deltaTime);
+            }
+        }
+
+    }
+
     void CensorRotZero()
     {
         sensorWall_L.rotation = Quaternion.Lerp(sensorWall_L.rotation, Quaternion.identity, camSpeed * Time.deltaTime);
         sensorWall_R.rotation = Quaternion.Lerp(sensorWall_R.rotation, Quaternion.identity, camSpeed * Time.deltaTime);
-        sensorArea.rotation   = Quaternion.Lerp(sensorArea.rotation, Quaternion.identity, camSpeed * Time.deltaTime);
+        sensorArea.rotation = Quaternion.Lerp(sensorArea.rotation, Quaternion.identity, camSpeed * Time.deltaTime);
     }
 
     float player_L_EndPos;
@@ -115,6 +177,7 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
                 {
                     cameraArea = returnObjet.GetComponent<CameraArea>();
                     playerDistance = cameraArea.playerDistance;
+                    camSpeed = cameraArea.camSpeed;
                 }
                 break;
 
@@ -127,7 +190,7 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
                 {
                     isNearByWall_L = true;
                     NearWallDistance = playerDistance;
-                    
+
                     float sensor_L_EndPos = tr.position.x - (tr.position.x - sensorWall_L.transform.position.x) - (sensorWall_L.transform.localScale.x * 0.5f);
                     float wall_L_EndPos = returnObjet.transform.position.x + (returnObjet.transform.localScale.x * 0.5f);
                     NearWallDistance.x = wall_L_EndPos - sensor_L_EndPos;
@@ -139,7 +202,7 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
                         - (sensorWall_R.position.x - sensorWall_R.localScale.x * 0.5f);
                     */
                 }
-                
+
                 break;
 
             case 3:
@@ -154,7 +217,7 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
                     float sensor_R_EndPos = tr.position.x + (sensorWall_R.transform.position.x - tr.position.x) + (sensorWall_R.transform.localScale.x * 0.5f);
                     float wall_R_EndPos = returnObjet.transform.position.x - (returnObjet.transform.localScale.x * 0.5f);
-                    NearWallDistance.x    = -(sensor_R_EndPos - wall_R_EndPos);
+                    NearWallDistance.x = -(sensor_R_EndPos - wall_R_EndPos);
                     player_R_EndPos = playerTr.position.x;
                     /*
                     NearWallDistance.x += 
@@ -165,8 +228,8 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
                 break;
         }
 
-        
-        
+
+
     }
     public bool ActiveSensor_Something(int index)
     {
@@ -191,6 +254,17 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
         }
 
         return false;
+    }
+
+    // 외부에서 카메라 속도 변경
+    public void ChangeCamSpeed(float speed)
+    {
+        camSpeed = speed;
+    }
+    // 카메라 속도를 초기 설정한 속도로 되돌림
+    public void ResetCameSpeed()
+    {
+        camSpeed = originCamSpeed;
     }
 
 }

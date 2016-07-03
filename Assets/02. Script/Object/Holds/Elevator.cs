@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Elevator : MonoBehaviour {
-    //public bool isType = true; // 아래에서 위 또는 위에서 아래로 가는지 체크
+public class Elevator : MonoBehaviour
+{
     public float speed; // 이동 속도
     public float maxLength = 10f; // 마지막 위치 길이
-    public float waitTime = 3f;
+    public float waitTime = 3f; // 목표 타겟을 변경하기 전 대기시간
 
+    private Vector3 pMoveVector;
     private bool isActive = false; // 작동 여부
     private bool isStep = false; // 플레이어가 밟고 있는지 여부
     private Vector3 originPos, finishPos; // 시작 위치, 최종 위치
-    private Vector3 targetPos;
+    private Vector3 targetPos; // 이동할 목표 위치
     private Transform playerTr; // 플레이어, 올라 트랜스폼
 
     void Start()
@@ -21,25 +22,41 @@ public class Elevator : MonoBehaviour {
         originPos = this.transform.position;
         finishPos = new Vector3(originPos.x, originPos.y + maxLength, originPos.z);
 
-        targetPos = finishPos;    
+        targetPos = finishPos;
+        pMoveVector = Vector3.up;
     }
 
     IEnumerator OnActive()
     {
         while (true)
         {
+            // 목표지점까지 이동
             transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
 
-            if (transform.position.y >= finishPos.y - 0.2f && !isStep)
+            // 목표지점 도착
+            if (transform.position.y.Equals(finishPos.y))
             {
-                StartCoroutine(WaitMove());
+                // 목표 위치 도착 후 캐릭터가 아직 머물고 있을 시
+                if (isStep)
+                    CameraCtrl_4.instance.ChangeCamSpeed(0f);
+                // 캐릭터가 발판을 떠났을 시
+                else if (!isStep)
+                    StartCoroutine(ChangeTargetPos());
             }
-            else if(transform.position.y <= originPos.y && !isStep)
+            // 초기 위치로 돌아왔을 시 코루틴 종료
+            else if (transform.position.y.Equals(originPos.y))
             {
                 isActive = false;
+                pMoveVector = Vector3.up;
                 break;
             }
-            yield return new WaitForFixedUpdate();
+            // 플레이어가 발판 위에 있을 시 플레이어 이동
+            else if (isStep)
+            {
+                PlayerCtrl.instance.transform.Translate(pMoveVector * speed * Time.deltaTime);
+            }
+
+            yield return null;
         }
     }
 
@@ -47,9 +64,10 @@ public class Elevator : MonoBehaviour {
     {
         if (col.CompareTag("Player") && !isActive)
         {
+            CameraCtrl_4.instance.ChangeCamSpeed(100f);
             isActive = true;
-            isStep = true;
             targetPos = finishPos;
+            WahleCtrl.curState = WahleCtrl.instance.StepHold();
             StartCoroutine(OnActive());
         }
     }
@@ -58,20 +76,22 @@ public class Elevator : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            //WahleCtrl.curState = WahleCtrl.instance.StepHold();
+            isStep = true;
         }
     }
 
     void OnTriggerExit(Collider col)
     {
-        //WahleCtrl.curState = WahleCtrl.instance.Move();
+        CameraCtrl_4.instance.ResetCameSpeed();
+        WahleCtrl.instance.ChangeState(WahleState.MOVE);
         isStep = false;
     }
 
     // 플레이어 벗어난 후 초기 위치로 돌아가기 위한 카운트 다운
-    IEnumerator WaitMove()
+    IEnumerator ChangeTargetPos()
     {
         yield return new WaitForSeconds(waitTime);
+        pMoveVector = Vector3.down;
         targetPos = originPos;
     }
 }

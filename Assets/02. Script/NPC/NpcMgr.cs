@@ -34,10 +34,7 @@ public class NpcMgr : MonoBehaviour {
 
     protected virtual void SetScript(string name)
     {
-        
         ScriptMgr.instance.GetScript(name);
         PlayerCtrl.instance.SetStopMove();
-        //PlayerCtrl.moveDir.y -= 5f * Time.deltaTime;
-        //PlayerCtrl.controller.Move(PlayerCtrl.moveDir);
     }
 }

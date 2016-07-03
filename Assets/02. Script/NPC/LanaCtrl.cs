@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LanaCtrl : NpcMgr {
+public class LanaCtrl : NpcMgr
+{
 
     public float recognRange = 80f; // 인식 범위
 
     private bool isAppear = true;
-    private bool isSpeak = false;
+//    private bool isSpeak = false;
 
     public Transform movePoint;
+    public Transform CamPos;
+    public Transform FocusPos;
 
     void Start()
     {
@@ -20,24 +23,32 @@ public class LanaCtrl : NpcMgr {
     {
         distance = GetDistance(this.transform.position);
         // 등장
-        if(distance <= 80f && isAppear)
+        if (distance <= 80f && isAppear)
         {
             AppearNpc();
         }
         // 대화 시작
         if (distance <= 30f && !isAppear)
         {
+            InGameUI.instance.CinematicView(true);
+            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, CamPos.position, FocusPos.position);
             anim.SetBool("Speak", true);
             Speak();
         }
         // 대화 종료
         else
+        {
+            InGameUI.instance.CinematicView(false);
+            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(false, Vector3.zero, Vector3.zero);
             anim.SetBool("Speak", false);
+        }
+
     }
 
     void Speak()
     {
         // 대화한 적이 없다면
+        SetScript(this.name);
         if (!ScriptMgr.instance.SpeakName(this.name))
         {
             SetScript(this.name);
@@ -57,7 +68,7 @@ public class LanaCtrl : NpcMgr {
     void AppearNpc()
     {
         anim.SetBool("Appear", true);
-        
+
         Vector3 center = (movePoint.position + this.transform.position) * 0.5f;
         center -= new Vector3(0, 1, 1);
         Vector3 fromRelCenter = this.transform.position - center;

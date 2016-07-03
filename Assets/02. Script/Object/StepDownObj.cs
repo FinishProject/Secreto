@@ -3,47 +3,45 @@ using System.Collections;
 
 public class StepDownObj : MonoBehaviour {
 
-    private float delTime = 0f;
-    private bool isActive = true;
-    private float speed = 4f;
+    public float downLenth = 0.3f;
+    public float speed = 4f;
 
-    void OnTriggerStay(Collider coll)
+    private bool isActive = false;
+
+    private Vector3 targetPos, originPos;
+
+    void Start()
     {
-        if (coll.CompareTag("Player"))
-        {
-            if (isActive)
-            {
-                if (delTime >= 0.3f)
-                {
-                    isActive = false;
-                }
+        originPos = transform.position;
+        targetPos = new Vector3(originPos.x, originPos.y - downLenth, originPos.z);
+    }
 
-                delTime += Time.deltaTime * 5f;
-                transform.Translate(Vector3.forward * -speed * Time.deltaTime);
-            }
+    void OnTriggerEnter(Collider col)
+    {
+        isActive = false;
+    }
+
+    void OnTriggerStay(Collider col)
+    {
+        //StopCoroutine(BackOriginPos());
+        // 목표 위치까지 아래로 내려감
+        if (col.CompareTag("Player") && !transform.position.y.Equals(targetPos.y)){
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
         }
     }
 
     void OnTriggerExit(Collider col)
     {
-        if (col.CompareTag("Player"))
-        {
-            StartCoroutine(RollBack());
-            isActive = true;
-        }
+        if(col.CompareTag("Player"))
+            StartCoroutine(BackOriginPos());
     }
 
-    IEnumerator RollBack()
+    // 초기 위치로 돌아감
+    IEnumerator BackOriginPos()
     {
-        while (true)
+        while (!transform.position.y.Equals(originPos.y))
         {
-            if(delTime <= 0f)
-            {
-                break;
-            }
-
-            delTime -= Time.deltaTime * 5f;
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, originPos, speed * Time.deltaTime);
 
             yield return null;
         }

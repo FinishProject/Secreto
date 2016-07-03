@@ -127,8 +127,8 @@ public class Spider : FSMBase
 
     bool canActiveAngle()
     {
-        if (Mathf.Abs(transform.localEulerAngles.y - 270f) < 5 && isPlayerLiftSide ||
-            Mathf.Abs(transform.localEulerAngles.y - 90f) < 5 && !isPlayerLiftSide)
+        if (Mathf.Abs(transform.localEulerAngles.y - 270f) < 5 &&  isPlayerLiftSide ||
+            Mathf.Abs(transform.localEulerAngles.y - 90f)  < 5 && !isPlayerLiftSide)
             return true;
         return false;
     }

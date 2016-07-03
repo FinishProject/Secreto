@@ -15,13 +15,13 @@ public class LoadingScreen : MonoBehaviour
     IEnumerator Load()
     {
 
-        AsyncOperation async = Application.LoadLevelAsync("BCS");
+        AsyncOperation async = Application.LoadLevelAsync("0613");
 
         while (!async.isDone)
         {
             float progress = async.progress * 100.0f;
             int pRounded = Mathf.RoundToInt(progress);
-            text.text = "Loading…"+pRounded.ToString() + "%";
+//            text.text = "Loading…"+pRounded.ToString() + "%";
 
             yield return true;
         }

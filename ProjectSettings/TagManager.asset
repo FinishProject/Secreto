@@ -14,7 +14,8 @@ TagManager:
   - BULLET
   - ITEM
   - Wahle
-  - ZoomArea
+  - CameraArea
+  - DeadLine
   layers:
   - Default
   - TransparentFX
