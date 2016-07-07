@@ -8,8 +8,11 @@ public class BouncingMushroom : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
-        PlayerCtrl.moveDir.y = jumpHight;
-        PlayerCtrl.controller.Move(moveDir * 10f * Time.deltaTime);
+        if (coll.CompareTag("Player") && !PlayerCtrl.controller.isGrounded)
+        {
+            PlayerCtrl.moveDir.y = jumpHight;
+            PlayerCtrl.controller.Move(moveDir * jumpHight * Time.deltaTime);
+        }
     }
 
 }

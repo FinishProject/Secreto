@@ -103,6 +103,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+        //ShotRay();
         //transform.position = new Vector3(transform.position.x, transform.position.y, positionZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
@@ -224,22 +225,23 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     ////레이캐스팅 발사
-    //void ShotRay()
-    //{
-    //    RaycastHit hit;
-    //    Vector3 forward = transform.TransformDirection(Vector3.forward);
-    //    Vector3 shotPoint = new Vector3(rayTr.position.x, rayTr.position.y, rayTr.position.z); 
-    //    if (Physics.Raycast(shotPoint, forward, out hit, 10f))
-    //    {
-    //        Debug.DrawRay(shotPoint, forward, Color.red, 2f);
-    //        //NPC 체크 및 이름 확인
-    //        if (hit.collider.CompareTag("NPC"))
-    //        {
-    //            pFunc.ShowScript(hit.collider.name);
-    //            anim.SetBool("Run", false);
-    //        }
-    //    }
-    //}
+    void ShotRay()
+    {
+        RaycastHit hit;
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        Vector3 shotPoint = new Vector3(rayTr.position.x, rayTr.position.y, rayTr.position.z);
+        if (Physics.Raycast(shotPoint, forward, out hit, 10f))
+        {
+            Debug.DrawRay(shotPoint, forward, Color.red, 2f);
+            Debug.Log(hit.collider.name);
+            ////NPC 체크 및 이름 확인
+            //if (hit.collider.CompareTag("NPC"))
+            //{
+            //    pFunc.ShowScript(hit.collider.name);
+            //    anim.SetBool("Run", false);
+            //}
+        }
+    }
 
     public void getRecovery(float recovery)
     {
@@ -331,6 +333,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnTriggerStay(Collider coll)
     {
+        Debug.Log(coll.name);
         // 퀘스트 아이템 습득
         if (QuestMgr.isQuest)
         {

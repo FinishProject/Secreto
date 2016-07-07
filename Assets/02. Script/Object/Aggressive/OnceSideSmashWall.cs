@@ -8,6 +8,7 @@ public class OnceSideSmashWall : MonoBehaviour {
     public float upSpeed = 1f; // 상승 속도
     public float waitTime = 1f; // 하강 후 대기 시간
 
+    private bool isActive = true;
     private float moveSpeed = 0f; // 이동 속도
     private bool isFirstDown = true; // 첫번째 그룹 벽 하강 체크
     private bool isSecondDown = false; // 두번째 그룹 벽 하강 체크
@@ -27,15 +28,31 @@ public class OnceSideSmashWall : MonoBehaviour {
             vStart[i] = walls[i].transform.position;
             vEnd[i] = vStart[i];
             vEnd[i].y -= downLength;
+        }  
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Player"))
+        {
+            isActive = true;
+            StartCoroutine(FirstWallMovement());
+            StartCoroutine(SecondWallMovement());
         }
-        StartCoroutine(FirstWallMovement());
-        StartCoroutine(SecondWallMovement());
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if (col.CompareTag("Player"))
+        {
+            isActive = false;
+        }
     }
 
     // 첫번째 그룹 벽 이동
     IEnumerator FirstWallMovement()
     {
-        while (true)
+        while (isActive)
         {
             for (int i = 0; i < walls.Length; i += 2)
             {
@@ -47,8 +64,9 @@ public class OnceSideSmashWall : MonoBehaviour {
 
                     targetPos = vEnd[i];
                     // 목표 도달 시 일정 시간 후 위로 올라가도록 변경
-                    if (walls[i].transform.position.y - 0.1f <= targetPos.y)
+                    if (walls[0].transform.position.y - 0.1f <= targetPos.y)
                     {
+                        StartCoroutine(CameraCtrl_4.instance.Shake(2f, 1, 10f));
                         yield return new WaitForSeconds(waitTime);
                         isFirstDown = false;
                         isSecondDown = true; // 두번째 그룹 하강 가능하도록 변경
@@ -77,7 +95,7 @@ public class OnceSideSmashWall : MonoBehaviour {
     // 두번째 그룹 벽 이동
     IEnumerator SecondWallMovement()
     {
-        while (true)
+        while (isActive)
         {
             for(int i = 1; i < walls.Length; i += 2)
             {

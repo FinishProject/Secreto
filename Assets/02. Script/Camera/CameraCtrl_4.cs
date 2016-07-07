@@ -48,7 +48,6 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
     public IEnumerator Shake(float rot, int EndCnt, float delay)
     {
-        Debug.Log("11");
         Quaternion newRot;
         float rotX = rot;
         float curCnt = 0;
