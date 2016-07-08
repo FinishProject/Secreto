@@ -3,11 +3,8 @@ using System.Collections;
 
 public class LanaCtrl : NpcMgr
 {
-
     public float recognRange = 80f; // 인식 범위
-
     private bool isAppear = true;
-//    private bool isSpeak = false;
 
     public Transform movePoint;
     public Transform CamPos;
@@ -48,7 +45,6 @@ public class LanaCtrl : NpcMgr
     void Speak()
     {
         // 대화한 적이 없다면
-        SetScript(this.name);
         if (!ScriptMgr.instance.SpeakName(this.name))
         {
             SetScript(this.name);

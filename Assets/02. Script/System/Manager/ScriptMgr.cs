@@ -53,7 +53,6 @@ public class ScriptMgr : MonoBehaviour {
     // NPC 이름에 해당하는 대사들과 퀘스트 정보를 가져옴
     public void GetScript(string name)
     {
-        Debug.Log(name);
         isSpeak = true;
         // 이전에 대화를 하지 않는 NPC일 경우 대화를 위해 정보들을 가져옴
         if (!SpeakName(name))
@@ -138,8 +137,6 @@ public class ScriptMgr : MonoBehaviour {
                     }
                     break;
                 }
-
-
                 //}
                 //// 퀘스트 완료 시
                 //else if (isQuest)
