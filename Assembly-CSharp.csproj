@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_3_4;UNITY_5_3;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;CROSS_PLATFORM_INPUT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_2;UNITY_5_3;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_WEBPLAYER;ENABLE_SUBSTANCE;WEBPLUG;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_MONO;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;CROSS_PLATFORM_INPUT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -78,6 +78,8 @@
      <Compile Include="Assets\02. Script\Object\Aggressive\BulletObject_Parabola.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\DamageObject.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\DownWall.cs" />
+     <Compile Include="Assets\02. Script\Object\Aggressive\Layer_Object.cs" />
+     <Compile Include="Assets\02. Script\Object\Aggressive\OnceSideSmashWall.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\ShootingObject.cs" />
      <Compile Include="Assets\02. Script\Object\Aggressive\SideSmashObj.cs" />
      <Compile Include="Assets\02. Script\Object\Function\Balance.cs" />
@@ -87,6 +89,7 @@
      <Compile Include="Assets\02. Script\Object\Function\ImpactObj.cs" />
      <Compile Include="Assets\02. Script\Object\Function\ObjectForWeather.cs" />
      <Compile Include="Assets\02. Script\Object\Function\Sensor.cs" />
+     <Compile Include="Assets\02. Script\Object\Function\StepDownObj.cs" />
      <Compile Include="Assets\02. Script\Object\Function\SwitchObject.cs" />
      <Compile Include="Assets\02. Script\Object\Function\TrampleObject.cs" />
      <Compile Include="Assets\02. Script\Object\Holds\BouncingMushroom.cs" />
@@ -103,24 +106,26 @@
      <Compile Include="Assets\02. Script\Object\Holds\TeleportGate.cs" />
      <Compile Include="Assets\02. Script\Object\Holds\TimeDown.cs" />
      <Compile Include="Assets\02. Script\Object\Holds\VerticalHold.cs" />
+     <Compile Include="Assets\02. Script\Object\PushBox.cs" />
+     <Compile Include="Assets\02. Script\Object\PushObject.cs" />
      <Compile Include="Assets\02. Script\Object\RotationBox.cs" />
-     <Compile Include="Assets\02. Script\Object\StepDownObj.cs" />
      <Compile Include="Assets\02. Script\Object\etc\OpenByCollectionItem.cs" />
+     <Compile Include="Assets\02. Script\PendularMovement.cs" />
      <Compile Include="Assets\02. Script\Player\CameraCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\LauncherCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\PlayerCtrl.cs" />
      <Compile Include="Assets\02. Script\Player\PlayerEffect.cs" />
      <Compile Include="Assets\02. Script\Player\PlayerFunc.cs" />
      <Compile Include="Assets\02. Script\Player\PlayerWeather.cs" />
+     <Compile Include="Assets\02. Script\Player\RotationPlayer.cs" />
      <Compile Include="Assets\02. Script\Player\SkillCtrl.cs" />
+     <Compile Include="Assets\02. Script\Player\SmashLauncher.cs" />
      <Compile Include="Assets\02. Script\Player\StrikeLauncherCtrl.cs" />
-     <Compile Include="Assets\02. Script\Player\WahleBase.cs" />
-     <Compile Include="Assets\02. Script\Player\WahleCtrl.cs" />
-     <Compile Include="Assets\02. Script\Player\WahleIdle.cs" />
-     <Compile Include="Assets\02. Script\Player\WahleMove.cs" />
+     <Compile Include="Assets\02. Script\Player\Wahle\WahleAttack.cs" />
+     <Compile Include="Assets\02. Script\Player\Wahle\WahleCtrl.cs" />
+     <Compile Include="Assets\02. Script\Player\Wahle\WahleIdle.cs" />
+     <Compile Include="Assets\02. Script\Player\Wahle\WahleMove.cs" />
      <Compile Include="Assets\02. Script\Player\tempMoveCtrl.cs" />
-     <Compile Include="Assets\02. Script\PushObject.cs" />
-     <Compile Include="Assets\02. Script\SoundMgr.cs" />
      <Compile Include="Assets\02. Script\System\BackGroundCtrl.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVParser.cs" />
      <Compile Include="Assets\02. Script\System\Database\CSVReader.cs" />
@@ -131,6 +136,7 @@
      <Compile Include="Assets\02. Script\System\Item\ItemPool.cs" />
      <Compile Include="Assets\02. Script\System\Manager\ObjectMgr.cs" />
      <Compile Include="Assets\02. Script\System\Manager\QuestMgr.cs" />
+     <Compile Include="Assets\02. Script\System\Manager\ScriptMgr.cs" />
      <Compile Include="Assets\02. Script\System\Manager\WeatherMgr.cs" />
      <Compile Include="Assets\02. Script\System\WayPoint.cs" />
      <Compile Include="Assets\02. Script\UI\AnswerUI.cs" />
@@ -138,9 +144,12 @@
      <Compile Include="Assets\02. Script\UI\InputPlayerInfo.cs" />
      <Compile Include="Assets\02. Script\UI\Inventory.cs" />
      <Compile Include="Assets\02. Script\UI\LoadingScreen.cs" />
+     <Compile Include="Assets\02. Script\UI\LogoCtrl.cs" />
      <Compile Include="Assets\02. Script\UI\MainUI.cs" />
+     <Compile Include="Assets\02. Script\UI\MapUI.cs" />
      <Compile Include="Assets\02. Script\UI\PauseUI.cs" />
-     <Compile Include="Assets\02. Script\UI\ScriptMgr.cs" />
+     <Compile Include="Assets\02. Script\test.cs" />
+     <Compile Include="Assets\06. FX\Player\fx_power_attack\AnimateSpriteSheet.cs" />
      <Compile Include="Assets\Test.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
@@ -152,6 +161,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ShowAlphaChannel.shader" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetParticleMultiplicative.shader" />
      <None Include="Assets\06. FX\BackGround\ap_1stage_save_piont\JP_RimNHalo.shader" />
+     <None Include="Assets\Resources\SpokeNpcName.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SunShaftsComposite.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionCurves.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ScreenSpaceAmbientObscurance.shader" />
@@ -185,11 +195,10 @@
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetUnlit.shader" />
      <None Include="Assets\Resources\script_Data.xml" />
      <None Include="Assets\06. FX\fx_obj_laser\material\jpflowDistortion_pix .shader" />
-     <None Include="Assets\Resources\Player_Data.xml" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />
      <None Include="Assets\02. Script\Shader\Standard2side.shader" />
-     <None Include="Assets\02. Script\GodRayShader.shader" />
+     <None Include="Assets\02. Script\Shader\GodRayShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SSAOShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ConvertDepth.shader" />
@@ -208,19 +217,19 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\Bokeh34.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlurDX11.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\SeparableBlurPlus.shader" />
+     <None Include="Assets\07. Objects\Texture\SKY\Unlit-Transparent_2Side.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorLight.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MultiPassHollywoodFlares.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlur.shader" />
      <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\DLAA.shader" />
-     <None Include="Assets\02. Script\SurfaceWindShader.shader" />
+     <None Include="Assets\02. Script\Shader\SurfaceWindShader.shader" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetBasic.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrainDX11.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BrightPassFilter2.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\SeparableBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\MotionBlurClear.shader" />
-     <None Include="Assets\Resources\SpokeNpcName.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionEffect.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\GrayscaleEffect.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SepiaToneEffect.shader" />
@@ -231,7 +240,7 @@
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
      <None Include="Assets\06. FX\skytower\JP_RimNHalo.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VignettingShader.shader" />
-     <None Include="Assets\02. Script\Nonuse\SkyboxBlended.shader" />
+     <None Include="Assets\02. Script\Shader\SkyboxBlended.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Tonemapper.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BrightPassFilter.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA2.shader" />
@@ -247,7 +256,7 @@
      <None Include="Assets\01. Secen\KSY\Standard2side.shader" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
-     <None Include="Assets\02. Script\BackGroundShader.shader" />
+     <None Include="Assets\02. Script\Shader\BackGroundShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
      <None Include="Assets\05. Material\Shader\Char.shader" />
