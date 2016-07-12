@@ -28,7 +28,7 @@ public class LanaCtrl : NpcMgr
         if (distance <= 30f && !isAppear)
         {
             InGameUI.instance.CinematicView(true);
-            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, CamPos.position, FocusPos.position);
+            //Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, CamPos.position, FocusPos.position);
             anim.SetBool("Speak", true);
             Speak();
         }

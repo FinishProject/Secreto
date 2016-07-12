@@ -19,7 +19,7 @@ public class HorizonHold : MonoBehaviour
         originPos = this.transform.position; //초기 이동 길이(좌측)
         maxLengthPos = originPos;
         maxLengthPos.x = originPos.x + length; //최대 이동 길이(우측)
-        
+
         targetPos = maxLengthPos;
     }
 
@@ -37,13 +37,18 @@ public class HorizonHold : MonoBehaviour
         // 플레이어가 발판 위에 있을 시 발판과 같이 이동
         if (col.CompareTag("Player"))
         {
-            //WahleCtrl.curState = WahleCtrl.instance.StepHold();
+            CameraCtrl_4.instance.ChangeCamSpeed(50f);
+            WahleCtrl.curState = WahleCtrl.instance.StepHold();
             playerTr.Translate(Vector3.forward * (speed * PlayerCtrl.focusRight) * Time.deltaTime);
         }
     }
 
     void OnTriggerExit(Collider coll)
     {
-        //WahleCtrl.curState = WahleCtrl.instance.Move();
+        if (coll.CompareTag("Player"))
+        {
+            CameraCtrl_4.instance.ResetCameSpeed();
+            WahleCtrl.instance.ChangeState(WahleState.MOVE);
+        }
     }
 }

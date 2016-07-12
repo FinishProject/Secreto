@@ -79,20 +79,19 @@ public class PlayerCtrl : MonoBehaviour
         // 상호작용을 하기 위한 스위치
         switchState = gameObject.AddComponent<SwitchObject>();
         switchState.IsCanUseSwitch = false;
-
-        //lockPosZ = transform.position.z;
     }
 
     void Start()
     {
-        //pData = PlayerData.Load();
-        //curHp = fullHp;
-        //transform.position = pData.pPosition;
-        //lockPosZ = pData.pPosition.z;
+        pData = PlayerData.Load();
+        curHp = fullHp;
+        transform.position = pData.pPosition;
+        lockPosZ = pData.pPosition.z;
     }
 
     void Update()
     {
+        transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
         else RopeWorker();
@@ -171,7 +170,6 @@ public class PlayerCtrl : MonoBehaviour
 
         moveDir.y -= gravity * Time.deltaTime;
         controller.Move(moveDir * (speed) * Time.deltaTime);
-        transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
     }
 
     //캐릭터 방향 회전

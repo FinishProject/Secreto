@@ -6,7 +6,7 @@ public class StepDownObj : MonoBehaviour {
     public float downLenth = 0.3f;
     public float speed = 4f;
 
-    private bool isActive = false;
+    private bool isActive = true;
 
     private Vector3 targetPos, originPos;
 
@@ -18,30 +18,41 @@ public class StepDownObj : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        isActive = false;
-    }
-
-    void OnTriggerStay(Collider col)
-    {
-        //StopCoroutine(BackOriginPos());
-        // 목표 위치까지 아래로 내려감
-        if (col.CompareTag("Player") && !transform.position.y.Equals(targetPos.y)){
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+        if (col.CompareTag("Player"))
+        {
+            isActive = true;
+            StartCoroutine(MoveDown());
         }
     }
 
     void OnTriggerExit(Collider col)
     {
-        if(col.CompareTag("Player"))
+        if (col.CompareTag("Player"))
+        {
+            isActive = false;
             StartCoroutine(BackOriginPos());
+        }
+    }
+
+    // 아래로 이동
+    IEnumerator MoveDown()
+    {
+        while (transform.position.y >= (targetPos.y + 0.1f) && isActive)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, 
+                targetPos, speed * Time.deltaTime);
+
+            yield return null;
+        }
     }
 
     // 초기 위치로 돌아감
     IEnumerator BackOriginPos()
     {
-        while (!transform.position.y.Equals(originPos.y))
+        while (transform.position.y <= (originPos.y - 0.1f) && !isActive)
         {
-            transform.position = Vector3.MoveTowards(transform.position, originPos, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, 
+                originPos, speed * Time.deltaTime);
 
             yield return null;
         }
