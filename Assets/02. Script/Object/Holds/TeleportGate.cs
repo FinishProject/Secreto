@@ -38,10 +38,12 @@ public class TeleportGate : MonoBehaviour {
             telepGate.Block();
 
             // 출구 위치로 이동
-            coll.transform.position = exitGate.transform.position;
-            CameraCtrl.speed = 200f;
-            //camTr.position = new Vector3(exitGate.transform.position.x, camTr.position.y, camTr.position.z);
-            olaTr.position = exitGate.transform.position; 
+            Vector3 movePoint = exitGate.transform.position;
+            movePoint += exitGate.transform.up * 3f;
+            movePoint -= exitGate.transform.forward * 2f;
+
+            coll.transform.position = movePoint;
+            olaTr.position = movePoint; 
         }
     }
 
@@ -54,7 +56,7 @@ public class TeleportGate : MonoBehaviour {
     IEnumerator BlockTravel()
     {
         isTravel = false;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         isTravel = true;
         StopCoroutine(BlockTravel());
     }
