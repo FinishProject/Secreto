@@ -23,10 +23,13 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
     Vector3 cinemaPos, cinemaFocusPos;
 
-
-    public float rot;
+    public float range;
     public int EndCnt;
     public float delay;
+    public float mi;
+    public Vector3 shakePos;
+
+    public float rot;
 
     public static CameraCtrl_4 instance;
 
@@ -46,17 +49,16 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
     }
 
 
-    public IEnumerator Shake(float rot, int EndCnt, float delay)
+    IEnumerator Shake(float range, int EndCnt, float delay)
     {
-        Quaternion newRot;
-        float rotX = rot;
+        float rangeY = range;
         float curCnt = 0;
         while (true)
         {
-            transform.Rotate(new Vector3(1, 1, 0), rotX);
+            shakePos.Set(-rangeY, rangeY, 0);
 
-            rotX = rotX * 0.8f;
-            rotX *= -1;
+            rangeY = rangeY * mi;
+            rangeY *= -1;
             curCnt++;
 
             if (curCnt >= EndCnt)
@@ -64,7 +66,7 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
             yield return new WaitForSeconds(delay);
         }
-
+        shakePos = Vector3.zero;
     }
 
     void Update()
