@@ -81,7 +81,6 @@ public class WahleCtrl : MonoBehaviour {
             {
                 ChangeState(WahleState.IDLE);
             }
-            ShotRay(); // 장애물을 피하기 위한 레이캐스트 발사
 
             if (!curState.Equals(null) && curState.MoveNext())
             {
@@ -174,14 +173,14 @@ public class WahleCtrl : MonoBehaviour {
     // 대기 상태 시 랜덤으로 포인트 위치 이동
     protected Vector3 SetRandomPos()
     {
-        float rndPointX = Random.Range(camTr.position.x - 4f, camTr.position.x + 4f);
+        float rndPointX = Random.Range(camTr.position.x - 8f, camTr.position.x + 4f);
         float rndPointY = Random.Range(playerTr.position.y - 1f, camTr.position.y + 2f);
 
         return new Vector3(rndPointX, rndPointY, playerTr.position.z);
     }
 
-    // 레이캐스트 발사
-    protected virtual void ShotRay()
+    // 레이캐스트 발사하여 지형 있을 시 회피
+    protected virtual Vector3 ShotRay(Vector3 relativePos)
     {
         // 양측 레이 발사 위치
         Vector3 rightRayPos = transform.position + (transform.right * 0.3f);
@@ -189,15 +188,22 @@ public class WahleCtrl : MonoBehaviour {
 
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
+
+        Debug.DrawRay(rightRayPos, forward, Color.red, 1f);
+        Debug.DrawRay(leftRayPos, forward, Color.red, 1f);
         // 우측 레이캐스트
         if (Physics.Raycast(rightRayPos, forward, out hit, 3f) || Physics.Raycast(leftRayPos, forward, out hit, 3f))
         {
             // 플레이어, 벽, 땅이 있을 시 우회
             if (hit.collider.CompareTag("WALL") || hit.collider.CompareTag("Ground") || hit.collider.CompareTag("Player"))
             {
-                relativePos += hit.normal * 50f;
+                return relativePos += hit.normal * 50f;
             }
+            else
+                return relativePos;
         }
+        else
+            return relativePos;
     }
 
     // 카메라 밖으로 나갔는지 확인

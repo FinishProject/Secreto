@@ -1,27 +1,27 @@
 fileFormatVersion: 2
-guid: ccbde5508e612b44ea8044a6fb85274b
-timeCreated: 1464751832
+guid: c440c823bfb780f41a58bd5a1316fe42
+timeCreated: 1468819620
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: altae03
+    100000: altar01
     100002: //RootNode
-    100004: altar01
-    100006: altar02
-    400000: altae03
+    100004: Object
+    100006: Object001
+    400000: altar01
     400002: //RootNode
-    400004: altar01
-    400006: altar02
-    2300000: altae03
-    2300002: altar01
-    2300004: altar02
-    3300000: altae03
-    3300002: altar01
-    3300004: altar02
+    400004: Object
+    400006: Object001
+    2300000: altar01
+    2300002: Object
+    2300004: Object001
+    3300000: altar01
+    3300002: Object
+    3300004: Object001
     4300000: altar01
-    4300002: altar02
-    4300004: altae03
+    4300002: Object001
+    4300004: Object
   materials:
     importMaterials: 1
     materialName: 0

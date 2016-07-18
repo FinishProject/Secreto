@@ -40,12 +40,12 @@ public class WahleMove : WahleCtrl
     {
         // 플레이어를 봐라봄
         transform.localRotation = Quaternion.Slerp(transform.localRotation, 
-            lookRot, 4f * Time.deltaTime);
+            lookRot, 3f * Time.deltaTime);
         
         initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel); // 이동속도 가속도
         // 플레이어 추격
         transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward),
-                initSpeed * Time.deltaTime);
+                 initSpeed * Time.deltaTime);
     }
 
     // 플레이어 주위를 회전
@@ -54,8 +54,9 @@ public class WahleMove : WahleCtrl
         relativePos = playerTr.position - transform.position;
         lookRot = Quaternion.LookRotation(relativePos);
 
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 1.5f * Time.deltaTime);
-        transform.Translate(Vector3.forward * 2f * Time.deltaTime);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 
+            0.5f * Time.deltaTime);
+        transform.Translate(Vector3.forward * 1f * Time.deltaTime);
 
         changeTime += Time.deltaTime;
         // 일정 시간후 대기상태로 전환
@@ -64,5 +65,10 @@ public class WahleMove : WahleCtrl
             changeTime = 0f;
             base.ChangeState(WahleState.IDLE);
         }
+    }
+
+    public void ResetSpeed()
+    {
+        initSpeed *= 0.2f;
     }
 }

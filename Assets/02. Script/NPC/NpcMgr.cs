@@ -8,10 +8,12 @@ public class NpcMgr : MonoBehaviour {
 
     protected Transform playerTr;
     protected Animator anim;
+    protected Transform CameTr;
 
     void Awake()
     {
         playerTr = GameObject.FindGameObjectWithTag("Player").transform;
+        CameTr = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
     // 자식 객체에서 초기화
     protected void Init()

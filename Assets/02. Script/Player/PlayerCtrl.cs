@@ -65,6 +65,7 @@ public class PlayerCtrl : MonoBehaviour
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
     private PlayerFunc pFunc;
+    private WahleMove wahleMove;
 
     public static PlayerCtrl instance;
 
@@ -75,6 +76,7 @@ public class PlayerCtrl : MonoBehaviour
         anim = GetComponent<Animator>();
         pEffect = GetComponent<PlayerEffect>();
         pFunc = GetComponent<PlayerFunc>();
+        wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
 
         // 상호작용을 하기 위한 스위치
         switchState = gameObject.AddComponent<SwitchObject>();
@@ -107,7 +109,8 @@ public class PlayerCtrl : MonoBehaviour
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
         anim.SetFloat("Velocity", controller.velocity.y);
         // 좌우 동시 입력을 막기위함
-        if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow) ||
+            Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
         {
             inputAxis = 0f;
             anim.SetBool("Run", false);
@@ -134,8 +137,9 @@ public class PlayerCtrl : MonoBehaviour
                     Jump(JumpType.BASIC);
                     anim.SetBool("Run", false);
                 }
-
-                if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
+                // 키 입력 시 달리기 애니메이션 재생
+                if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
+                    Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
                 {
                     anim.SetBool("Run", true);
                 }
@@ -178,6 +182,7 @@ public class PlayerCtrl : MonoBehaviour
         isFocusRight = !isFocusRight;
         transform.Rotate(new Vector3(0, 1, 0), 180);
         focusRight *= -1f;
+        wahleMove.ResetSpeed();
         if (!controller.isGrounded)
         {
             moveDir.x *= -1f;
@@ -320,6 +325,11 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnTriggerStay(Collider coll)
     {
+        if (coll.CompareTag("DeadLine"))
+        {
+            Debug.Log("DeadLine Hit");
+            PlayerDie();
+        }
         // 퀘스트 아이템 습득
         if (QuestMgr.isQuest)
         {
@@ -352,10 +362,6 @@ public class PlayerCtrl : MonoBehaviour
         else if (coll.CompareTag("WALL"))
         {
             isClimb = true;
-        }
-        else if (coll.CompareTag("DeadLine"))
-        {
-            PlayerDie();
         }
     }
 

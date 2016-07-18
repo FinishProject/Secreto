@@ -5,9 +5,10 @@ public class LanaCtrl : NpcMgr
 {
     public float recognRange = 80f; // 인식 범위
     private bool isAppear = true;
+    private bool isSpeakAnim = true;
+    private int cnt = 0;
 
     public Transform movePoint;
-    public Transform CamPos;
     public Transform FocusPos;
 
     void Start()
@@ -20,7 +21,7 @@ public class LanaCtrl : NpcMgr
     {
         distance = GetDistance(this.transform.position);
         // 등장
-        if (distance <= 80f && isAppear)
+        if (distance <= recognRange && isAppear)
         {
             AppearNpc();
         }
@@ -28,9 +29,15 @@ public class LanaCtrl : NpcMgr
         if (distance <= 30f && !isAppear)
         {
             InGameUI.instance.CinematicView(true);
-            //Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, CamPos.position, FocusPos.position);
-            anim.SetBool("Speak", true);
+            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, CameTr.position, FocusPos.position);
+            anim.SetBool("Speak", isSpeakAnim);
             Speak();
+            
+            // Dialogue 애니메이션 재생 후 더 이상 재생 못하도록 함
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Dialogue"))
+            {
+                isSpeakAnim = false;
+            }
         }
         // 대화 종료
         else
@@ -39,7 +46,6 @@ public class LanaCtrl : NpcMgr
             Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(false, Vector3.zero, Vector3.zero);
             anim.SetBool("Speak", false);
         }
-
     }
 
     void Speak()

@@ -12,7 +12,7 @@ public class WahleIdle : WahleCtrl
             if (PlayerCtrl.inputAxis >= 1f || PlayerCtrl.inputAxis <= -1f)
             {
                 distance = (playerTr.position - transform.position).sqrMagnitude;
-                if (distance >= 40f)
+                if (distance >= 20f)
                 {
                     base.ChangeState(WahleState.MOVE);
                 }
@@ -40,6 +40,10 @@ public class WahleIdle : WahleCtrl
         relativePos = targetPoint.position - transform.position;
         distance = relativePos.sqrMagnitude;
         lookRot = Quaternion.LookRotation(relativePos);
+
+        relativePos = ShotRay(relativePos);
+
+        //transform.RotateAround(this.transform.forward, 1f * Time.deltaTime);
 
         transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 0.8f * Time.deltaTime);
         transform.Translate(Vector3.forward * Time.deltaTime);
