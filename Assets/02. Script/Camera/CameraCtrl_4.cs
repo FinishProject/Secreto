@@ -49,7 +49,7 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
     }
 
 
-    IEnumerator Shake(float range, int EndCnt, float delay)
+    public IEnumerator Shake(float range, int EndCnt, float delay)
     {
         float rangeY = range;
         float curCnt = 0;

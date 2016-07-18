@@ -70,8 +70,8 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ShowAlphaChannel.shader" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetParticleMultiplicative.shader" />
      <None Include="Assets\06. FX\BackGround\ap_1stage_save_piont\JP_RimNHalo.shader" />
-     <None Include="Assets\Resources\Player_Data.xml" />
-     <None Include="Assets\Resources\SpokeNpcName.xml" />
+     <None Include="Assets\StreamingAssets\Player_Data.xml" />
+     <None Include="Assets\StreamingAssets\SpokeNpcName.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SunShaftsComposite.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionCurves.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ScreenSpaceAmbientObscurance.shader" />
@@ -103,7 +103,7 @@
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetParticleAdditive.shader" />
      <None Include="Assets\Editor\ShaderForge\NewUnlitShader.shader" />
      <None Include="Assets\Editor\ShaderForge\Editor\InternalResources\Shader Presets\PresetUnlit.shader" />
-     <None Include="Assets\Resources\script_Data.xml" />
+     <None Include="Assets\StreamingAssets\script_Data.xml" />
      <None Include="Assets\06. FX\fx_obj_laser\material\jpflowDistortion_pix .shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />

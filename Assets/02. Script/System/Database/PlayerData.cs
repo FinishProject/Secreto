@@ -32,14 +32,14 @@ public abstract class PlayerData {
         //posElement.AppendChild(infoDataElement);
 
         //데이터 저장
-        doc.Save(Application.dataPath + "/Resources/Player_Data.xml");
+        doc.Save(Application.dataPath + "/StreamingAssets/Player_Data.xml");
     }
 
     public static Data Load()
     {
         XmlDocument xmlDoc = new XmlDocument();
         //해당 경로의 XMl문서 불러오기
-        xmlDoc.Load(Application.dataPath + "/Resources/Player_Data.xml");
+        xmlDoc.Load(Application.dataPath + "/StreamingAssets/Player_Data.xml");
         XmlElement posElement = xmlDoc["PlayerData"];
 
         float posX = 0f, posY = 0f, posZ = 0f;
@@ -66,7 +66,7 @@ public abstract class PlayerData {
         List<Script> scriptData = new List<Script>();
         //XML 생성
         XmlDocument xmldoc = new XmlDocument();
-        xmldoc.Load(Application.dataPath + "/Resources/Script_Data.xml"); // XML 파일 불러오기
+        xmldoc.Load(Application.dataPath + "/StreamingAssets/Script_Data.xml"); // XML 파일 불러오기
         //xmldoc.LoadXml(ScriptMgr.instance.scirptFile.text);
         XmlNodeList nodes = xmldoc.SelectNodes("UniSet/info");
         //XML데이터를 Script클래스 리스트의 옮겨 담음
@@ -112,14 +112,14 @@ public abstract class PlayerData {
         }
         scriptElement.AppendChild(scriptSpeak);
 
-        doc.Save(Application.dataPath + "/Resources/SpokeNpcName.xml");
+        doc.Save(Application.dataPath + "/StreamingAssets/SpokeNpcName.xml");
     }
 
     public static List<string> LoadNpcName()
     {
         // 대화한 NPC 이름 XML 데이터 불러오기
         XmlDocument xmlDocName = new XmlDocument();
-        xmlDocName.Load(Application.dataPath + "/Resources/SpokeNpcName.xml");
+        xmlDocName.Load(Application.dataPath + "/StreamingAssets/SpokeNpcName.xml");
         XmlElement NameElemnet = xmlDocName["Script"];
 
         List<string> npcName = new List<string>();

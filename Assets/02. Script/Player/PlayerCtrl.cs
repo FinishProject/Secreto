@@ -83,17 +83,20 @@ public class PlayerCtrl : MonoBehaviour
         switchState.IsCanUseSwitch = false;
     }
 
-    //void Start()
-    //{
-    //    pData = PlayerData.Load();
-    //    curHp = fullHp;
-    //    transform.position = pData.pPosition;
-    //    lockPosZ = pData.pPosition.z;
-    //}
+    void Start()
+    {
+        pData = PlayerData.Load();
+        if (pData != null)
+        {
+            curHp = fullHp;
+            transform.position = pData.pPosition;
+            lockPosZ = pData.pPosition.z;
+        }
+    }
 
     void Update()
     {
-        //transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
+        transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
         else RopeWorker();
