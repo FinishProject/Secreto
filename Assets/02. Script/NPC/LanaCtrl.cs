@@ -10,7 +10,7 @@ public class LanaCtrl : NpcMgr
 
     public Transform movePoint;
     public Transform FocusPos;
-
+    public Transform camPos;
     void Start()
     {
         Init();
@@ -29,10 +29,10 @@ public class LanaCtrl : NpcMgr
         if (distance <= 30f && !isAppear)
         {
             InGameUI.instance.CinematicView(true);
-            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, CameTr.position, FocusPos.position);
+            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, camPos.position, FocusPos.position);
             anim.SetBool("Speak", isSpeakAnim);
             Speak();
-            
+
             // Dialogue 애니메이션 재생 후 더 이상 재생 못하도록 함
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Dialogue"))
             {

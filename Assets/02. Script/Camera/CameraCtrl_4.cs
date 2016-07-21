@@ -23,13 +23,6 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
     Vector3 cinemaPos, cinemaFocusPos;
 
-    public float range;
-    public int EndCnt;
-    public float delay;
-    public float mi;
-    public Vector3 shakePos;
-
-    public float rot;
 
     public static CameraCtrl_4 instance;
 
@@ -48,14 +41,18 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
         originCamSpeed = camSpeed;
     }
 
-
+    public float range;
+    public int EndCnt;
+    public float delay;
+    public float mi;
+    public Vector3 shakePos;
     public IEnumerator Shake(float range, int EndCnt, float delay)
     {
         float rangeY = range;
         float curCnt = 0;
         while (true)
         {
-            shakePos.Set(-rangeY, rangeY, 0);
+            shakePos.Set(0, rangeY, 0);
 
             rangeY = rangeY * mi;
             rangeY *= -1;
@@ -71,13 +68,18 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-            StartCoroutine(Shake(rot, EndCnt, delay));
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Debug.Log(1111);
+            StartCoroutine(Shake(range, EndCnt, delay));
+        }
+           
 
         // 거리가 급격히 멀어 졌을 때 (죽었을 때)
         if (Vector3.Distance(tr.position, playerTr.position) > 30f)
             tr.position = playerTr.position;
 
+        // 시네마틱 뷰 일때
         if (isCinematicView)
         {
             CinematicView();
@@ -92,24 +94,28 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
             // 벽과 충돌이 없을 때
             else
             {
-                tr.position = Vector3.Lerp(tr.position, playerTr.position + playerDistance, camSpeed * Time.deltaTime);
+                tr.position = Vector3.Lerp(tr.position, playerTr.position + playerDistance + shakePos, camSpeed * Time.deltaTime);
             }
-        }
 
-        // 카메라 영역에 포커스가 있을때
-        if (cameraArea.hasFocus)
-        {
-            Vector3 pos = cameraArea.focusTr.position - tr.position;
-            Quaternion newRot = Quaternion.LookRotation(pos);
-            tr.rotation = Quaternion.Lerp(tr.rotation, newRot, camSpeed * Time.deltaTime);
-        }
-        else
-        {
-            tr.rotation = Quaternion.Lerp(tr.rotation, Quaternion.identity, camSpeed * Time.deltaTime);
-        }
+            // 카메라 영역에 포커스가 있을때
+            if (cameraArea.hasFocus)
+            {
+                Vector3 pos = cameraArea.focusTr.position - tr.position;
+                Debug.Log(pos);
+                Quaternion newRot = Quaternion.LookRotation(pos);
+                tr.rotation = Quaternion.Lerp(tr.rotation, newRot, camSpeed * Time.deltaTime);
+            }
+            else
+            {
+                tr.rotation = Quaternion.Lerp(tr.rotation, Quaternion.identity, camSpeed * Time.deltaTime);
+            }
 
-        CensorRotZero();
+            CensorRotZero();
+        }
+   
     }
+
+    // 시네마틱 뷰
 
     public void SetCinematicView(bool isCinematicView, Vector3 cinemaPos, Vector3 cinemaFocusPos)
     {
@@ -120,14 +126,16 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
     void CinematicView()
     {
+
         // 위치로 이동
         tr.position = Vector3.Lerp(tr.position, cinemaPos, camSpeed * Time.deltaTime);
 
         // 포커싱
         Vector3 pos = cinemaFocusPos - tr.position;
+        Debug.Log(pos);
         Quaternion newRot = Quaternion.LookRotation(pos);
-        tr.rotation = Quaternion.Slerp(tr.rotation, newRot, camSpeed * Time.deltaTime);
 
+        tr.rotation = Quaternion.Slerp(tr.rotation, newRot, camSpeed * Time.deltaTime);
     }
 
     void NearByWall()
