@@ -4,50 +4,56 @@ using UnityEngine.UI;
 
 public class LogoCtrl : MonoBehaviour {
 
-    public float speed = 0.1f;
+    public float fadeSpeed = 0.1f;
 
     private bool isChange = true;
-    private int index = 0;
+    private int imgCount = 0;
 
     public Image[] logoImg;
-    private Color c;
+    private Color colorValue;
 
     // Use this for initialization
     void Start () {
        
         for(int i=0; i<logoImg.Length; i++)
         {
-            c = logoImg[i].color;
-            c.a = 0;
-            logoImg[i].color = c;
+            colorValue = logoImg[i].color;
+            colorValue.a = 0;
+            logoImg[i].color = colorValue;
         }
-        StartCoroutine(SchoolLogo());
 	}
 
-    IEnumerator SchoolLogo()
+    void Update()
     {
-        while (true)
+        // 아무 키나 입력 시 다음 로고 이미지로 바꿈
+        if (Input.anyKeyDown && imgCount < logoImg.Length)
         {
-            if (logoImg[index].color.a >= 1)
-            {
-                //yield return new WaitForSeconds(1f);
-                speed *= -1f;
-            }
-            c.a += speed * Time.deltaTime;
-            logoImg[index].color = c;
+            colorValue.a = 0f;
+            logoImg[imgCount].color = colorValue;
+            imgCount++;
+        }
+        // 카운트가 이미지 갯수 초과시 씬 전환
+        else if (imgCount >= logoImg.Length)
+        {
+            Application.LoadLevel("MainScene");
+        }
 
-            if (logoImg[index].color.a <= 0)
-            {
-                c.a = 0;
-                speed *= -1f;
-                index++;
 
-                if (index >= logoImg.Length)
-                {
-                    Application.LoadLevel("MainScene");
-                }
-            }
-            yield return null;
+        colorValue.a += fadeSpeed * Time.deltaTime;
+        logoImg[imgCount].color = colorValue;
+
+        // alpha 증가
+        if (logoImg[imgCount].color.a >= 1)
+        {
+            fadeSpeed *= -1f;
+        }
+
+        // alpha 감소
+        else if (logoImg[imgCount].color.a <= 0)
+        {
+            colorValue.a = 0;
+            fadeSpeed *= -1f;
+            imgCount++;
         }
     }
 }
