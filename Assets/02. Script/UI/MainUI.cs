@@ -47,7 +47,7 @@ public class MainUI : MonoBehaviour {
                 curSelectIdx--;
             else if (Input.GetKeyDown(KeyCode.DownArrow) && curSelectIdx < 5)
                 curSelectIdx++;
-            else if (Input.GetKeyUp(KeyCode.Space))
+            else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
                 ConnectFunction(curSelectIdx);
 
             else
