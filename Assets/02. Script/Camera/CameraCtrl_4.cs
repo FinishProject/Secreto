@@ -101,7 +101,6 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
             if (cameraArea.hasFocus)
             {
                 Vector3 pos = cameraArea.focusTr.position - tr.position;
-                Debug.Log(pos);
                 Quaternion newRot = Quaternion.LookRotation(pos);
                 tr.rotation = Quaternion.Lerp(tr.rotation, newRot, camSpeed * Time.deltaTime);
             }
