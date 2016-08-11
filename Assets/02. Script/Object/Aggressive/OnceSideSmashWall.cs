@@ -28,7 +28,10 @@ public class OnceSideSmashWall : MonoBehaviour {
             vStart[i] = walls[i].transform.position;
             vEnd[i] = vStart[i];
             vEnd[i].y -= downLength;
-        }  
+        }
+
+        StartCoroutine(FirstWallMovement());
+        StartCoroutine(SecondWallMovement());
     }
 
     void OnTriggerEnter(Collider col)
@@ -48,7 +51,6 @@ public class OnceSideSmashWall : MonoBehaviour {
             isActive = false;
         }
     }
-
     // 첫번째 그룹 벽 이동
     IEnumerator FirstWallMovement()
     {
@@ -86,9 +88,10 @@ public class OnceSideSmashWall : MonoBehaviour {
                     }
                 }
                 // 이동
-                walls[i].transform.position = Vector3.Lerp(walls[i].transform.position, targetPos, moveSpeed);
+                MovementObject(i);
+                //walls[i].transform.position = Vector3.Lerp(walls[i].transform.position, targetPos, moveSpeed);
             }
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
     
@@ -121,11 +124,16 @@ public class OnceSideSmashWall : MonoBehaviour {
                         moveSpeed = 0f;
                     }
                 }
-
-                walls[i].transform.position = Vector3.Lerp(walls[i].transform.position, targetPos, moveSpeed);
+                MovementObject(i);
+                //walls[i].transform.position = Vector3.Lerp(walls[i].transform.position, targetPos, moveSpeed);
             }
 
             yield return null;
         }
     }    
+
+    void MovementObject(int index)
+    {
+        walls[index].transform.position = Vector3.Lerp(walls[index].transform.position, targetPos, moveSpeed);
+    }
 }

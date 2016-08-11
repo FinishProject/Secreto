@@ -51,18 +51,20 @@ public class LanaCtrl : NpcMgr
     void Speak()
     {
         // 대화한 적이 없다면
-        if (!ScriptMgr.instance.SpeakName(this.name))
+        if (!ScriptMgr.instance.GetSpeakName(this.name))
         {
             SetScript(this.name);
         }
         // 대화한 적이 있고, 퀘스트 완료 시
-        else if (ScriptMgr.instance.SpeakName(this.name) && ScriptMgr.instance.isQuest)
+        else if (ScriptMgr.instance.GetSpeakName(this.name) && ScriptMgr.instance.isQuest)
         {
-            if (!isSpeak)
-            {
-                isSpeak = true;
+            
+            //if (!isSpeak)
+            //{
+            //    Debug.Log("11");
+            //    isSpeak = true;
                 SetScript(this.name);
-            }
+            //}
         }
     }
 

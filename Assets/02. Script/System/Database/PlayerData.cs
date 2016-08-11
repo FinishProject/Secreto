@@ -99,7 +99,7 @@ public abstract class PlayerData {
     }
 
     //대화 완료한 NPC이름 저장
-    public static void SaveNpcName(List<string> npcName)
+    public static void SaveNpcName(List<SpokeNpc> npcName)
     {
         XmlDocument doc = new XmlDocument();
         XmlElement scriptElement = doc.CreateElement("Script");
@@ -108,25 +108,30 @@ public abstract class PlayerData {
         XmlElement scriptSpeak = doc.CreateElement("SpokeNPC");
         for (int i = 0; i < npcName.Count; i++)
         {
-            scriptSpeak.SetAttribute("Spoke_NPC", npcName[i].ToString());
+            scriptSpeak.SetAttribute("Spoke_NPC", npcName[i].NpcName.ToString());
+            scriptSpeak.SetAttribute("Quest_Clear", npcName[i].isQuestClear.ToString());
         }
         scriptElement.AppendChild(scriptSpeak);
 
         doc.Save(Application.dataPath + "/StreamingAssets/SpokeNpcName.xml");
     }
 
-    public static List<string> LoadNpcName()
+    public static List<SpokeNpc> LoadNpcName()
     {
         // 대화한 NPC 이름 XML 데이터 불러오기
         XmlDocument xmlDocName = new XmlDocument();
         xmlDocName.Load(Application.dataPath + "/StreamingAssets/SpokeNpcName.xml");
         XmlElement NameElemnet = xmlDocName["Script"];
 
-        List<string> npcName = new List<string>();
+        List<SpokeNpc> npcName = new List<SpokeNpc>();
 
         foreach (XmlElement nameElemnet in NameElemnet.ChildNodes)
         {
-            npcName.Add(System.Convert.ToString(nameElemnet.GetAttribute("Speak_NPC")));
+            npcName.Add(new SpokeNpc
+            {
+                NpcName = System.Convert.ToString(nameElemnet.GetAttribute("Speak_NPC")),
+                isQuestClear = System.Convert.ToBoolean(nameElemnet.GetAttribute("Quest_Clear"))
+            });
         }
 
         return npcName;

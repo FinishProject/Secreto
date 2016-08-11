@@ -330,7 +330,6 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (coll.CompareTag("DeadLine"))
         {
-            Debug.Log("DeadLine Hit");
             PlayerDie();
         }
         // 퀘스트 아이템 습득

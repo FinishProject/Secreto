@@ -131,7 +131,6 @@ public class CameraCtrl_4 : MonoBehaviour, Sensorable_Return, Sensorable_Somethi
 
         // 포커싱
         Vector3 pos = cinemaFocusPos - tr.position;
-        Debug.Log(pos);
         Quaternion newRot = Quaternion.LookRotation(pos);
 
         tr.rotation = Quaternion.Slerp(tr.rotation, newRot, camSpeed * Time.deltaTime);

@@ -13,7 +13,6 @@ public class WahleMove : WahleCtrl
     {
         initSpeed = 0f;
         //float focusDir = 1f; // 봐라보고 있는 방향 오른쪽 : 1, 왼쪽 : -1
-        Debug.Log(changeTime);
         while (true)
         {
             //focusDir = Mathf.Sign(PlayerCtrl.inputAxis);
