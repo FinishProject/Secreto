@@ -10,26 +10,23 @@ public class Data
     public float enhance;
 }
 
-public abstract class PlayerData {
+
+public abstract class DataSaveLoad {
 
     public static void Save(Data data)
     {
         //xml 생성
         XmlDocument doc = new XmlDocument();
         //요소 생성
-        XmlElement posElement = doc.CreateElement("PlayerData");
-        doc.AppendChild(posElement);
+        XmlElement dataElement = doc.CreateElement("PlayerData");
+        doc.AppendChild(dataElement);
         //캐릭터 위치값 저장
-        XmlElement posDataElement = doc.CreateElement("Position");
-        posDataElement.SetAttribute("x", data.pPosition.x.ToString());
-        posDataElement.SetAttribute("y", data.pPosition.y.ToString());
-        posDataElement.SetAttribute("z", data.pPosition.z.ToString());
-        posElement.AppendChild(posDataElement);
-        //캐릭터 정보 저장
-        //XmlElement infoDataElement = doc.CreateElement("Info");
-        //infoDataElement.SetAttribute("hp", data.hp.ToString());
-        //infoDataElement.SetAttribute("enhance", data.enhance.ToString());
-        //posElement.AppendChild(infoDataElement);
+        XmlElement playerDataElement = doc.CreateElement("PlayerInfo");
+        playerDataElement.SetAttribute("x", data.pPosition.x.ToString());
+        playerDataElement.SetAttribute("y", data.pPosition.y.ToString());
+        playerDataElement.SetAttribute("z", data.pPosition.z.ToString());
+        playerDataElement.SetAttribute("hp", data.hp.ToString());
+        dataElement.AppendChild(playerDataElement);
 
         //데이터 저장
         doc.Save(Application.dataPath + "/StreamingAssets/Player_Data.xml");
@@ -42,21 +39,21 @@ public abstract class PlayerData {
         xmlDoc.Load(Application.dataPath + "/StreamingAssets/Player_Data.xml");
         XmlElement posElement = xmlDoc["PlayerData"];
 
-        float posX = 0f, posY = 0f, posZ = 0f;
+        float posX = 0f, posY = 0f, posZ = 0f, pHp = 0f;
         Data loadData = new Data();
+
         foreach (XmlElement PosElement in posElement.ChildNodes)
         {
             posX = System.Convert.ToSingle(PosElement.GetAttribute("x"));
             posY = System.Convert.ToSingle(PosElement.GetAttribute("y"));
             posZ = System.Convert.ToSingle(PosElement.GetAttribute("z"));
-            //pHp = System.Convert.ToSingle(posElement.GetAttribute("hp"));
-            //pEnhance = System.Convert.ToSingle(posElement.GetAttribute("enhance"));
+            pHp = System.Convert.ToSingle(PosElement.GetAttribute("hp"));
 
             Vector3 initVec = new Vector3(posX, posY, posZ);
             loadData.pPosition = initVec;
-            //loadData.hp = pHp;
-            //loadData.enhance = pEnhance;
+            loadData.hp = pHp;
         }
+
         return loadData;
     }
 
@@ -83,7 +80,7 @@ public abstract class PlayerData {
             m_QuestType = nodes[0].SelectSingleNode("questType").InnerText;
             m_QuestTarget = nodes[0].SelectSingleNode("targetName").InnerText;
             m_ComleteNum = System.Convert.ToInt32(nodes[0].SelectSingleNode("completeNum").InnerText);
-            
+
             scriptData.Add(new Script
             {
                 name = m_Name,
@@ -136,5 +133,6 @@ public abstract class PlayerData {
 
         return npcName;
     }
+
 
 }

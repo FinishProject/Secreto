@@ -46,8 +46,8 @@ public class ScriptMgr : MonoBehaviour {
     void Awake()
     {
         instance = this;
-        scriptData =  PlayerData.LoadScript(); // 대사 XML 문서 불러오기
-        spokeNpc = PlayerData.LoadNpcName(); // 이미 대화한 NPC 이름 불러오기
+        scriptData =  DataSaveLoad.LoadScript(); // 대사 XML 문서 불러오기
+        spokeNpc = DataSaveLoad.LoadNpcName(); // 이미 대화한 NPC 이름 불러오기
     }
 
     // NPC 이름에 해당하는 대사들과 퀘스트 정보를 가져옴
@@ -188,7 +188,7 @@ public class ScriptMgr : MonoBehaviour {
     // 대화한 NPC 이름 저장
     void SaveNpcName()
     {
-        PlayerData.SaveNpcName(spokeNpc);
+        DataSaveLoad.SaveNpcName(spokeNpc);
     }
 
     void OnEnable()

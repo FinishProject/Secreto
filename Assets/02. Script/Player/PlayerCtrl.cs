@@ -85,7 +85,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
-        pData = PlayerData.Load();
+        pData = DataSaveLoad.Load();
         if (pData != null)
         {
             curHp = fullHp;
@@ -381,7 +381,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public void PlayerDie()
     {
-        pData = PlayerData.Load();
+        pData = DataSaveLoad.Load();
         transform.position = pData.pPosition;
     }
 
@@ -395,7 +395,8 @@ public class PlayerCtrl : MonoBehaviour
     void Save()
     {
         pData.pPosition = transform.position;
-        PlayerData.Save(pData);
+        pData.hp = curHp;
+        DataSaveLoad.Save(pData);
     }
 
 

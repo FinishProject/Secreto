@@ -12,7 +12,6 @@ public class TeleportSavePoint : MonoBehaviour {
 	
 	void Update () {
         pressKey = System.Convert.ToInt32(Input.inputString) - 1;
-
         if(pressKey < savePointTr.Length)
             PlayerCtrl.instance.transform.position = savePointTr[pressKey].transform.position;
     }

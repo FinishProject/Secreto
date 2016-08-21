@@ -17,6 +17,9 @@ public class OnceSideSmashWall : MonoBehaviour {
     private Vector3[] vStart, vEnd; // 시작, 마지막 위치 벡터
     private Vector3 targetPos; // 이동할 목표 위치 벡트
 
+    private delegate IEnumerator MoveDelegate();
+    MoveDelegate moveDel;
+
     void Start()
     {
         vStart = new Vector3[walls.Length];
@@ -56,14 +59,14 @@ public class OnceSideSmashWall : MonoBehaviour {
     {
         while (isActive)
         {
+            moveSpeed += downLength * Time.deltaTime;
+
             for (int i = 0; i < walls.Length; i += 2)
             {
                 // 하강
                 if (isFirstDown)
                 {
                     // 이동 속도 변수
-                    moveSpeed += downLength * Time.deltaTime;
-
                     targetPos = vEnd[i];
                     // 목표 도달 시 일정 시간 후 위로 올라가도록 변경
                     if (walls[0].transform.position.y - 0.1f <= targetPos.y)
@@ -100,11 +103,11 @@ public class OnceSideSmashWall : MonoBehaviour {
     {
         while (isActive)
         {
-            for(int i = 1; i < walls.Length; i += 2)
+            moveSpeed += downLength * Time.deltaTime;
+            for (int i = 1; i < walls.Length; i += 2)
             {
                 if (isSecondDown)
                 {
-                    moveSpeed += downLength * Time.deltaTime;
                     targetPos = vEnd[i];
 
                     if (walls[i].transform.position.y - 0.1f <= targetPos.y)
@@ -134,6 +137,7 @@ public class OnceSideSmashWall : MonoBehaviour {
 
     void MovementObject(int index)
     {
-        walls[index].transform.position = Vector3.Lerp(walls[index].transform.position, targetPos, moveSpeed);
+        walls[index].transform.position = 
+            Vector3.Lerp(walls[index].transform.position, targetPos, moveSpeed);
     }
 }
