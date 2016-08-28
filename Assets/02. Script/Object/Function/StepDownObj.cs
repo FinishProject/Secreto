@@ -6,12 +6,13 @@ public class StepDownObj : MonoBehaviour {
     public float downLenth = 0.3f;
     public float speed = 4f;
 
-    private bool isActive = true;
+    private bool isStep = true;
 
     private Vector3 targetPos, originPos;
 
     void Start()
     {
+        // 초기 위치와 타겟 위치 초기화
         originPos = transform.position;
         targetPos = new Vector3(originPos.x, originPos.y - downLenth, originPos.z);
     }
@@ -20,7 +21,7 @@ public class StepDownObj : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            isActive = true;
+            isStep = true;
             StartCoroutine(MoveDown());
         }
     }
@@ -29,7 +30,7 @@ public class StepDownObj : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            isActive = false;
+            isStep = false;
             StartCoroutine(BackOriginPos());
         }
     }
@@ -37,7 +38,7 @@ public class StepDownObj : MonoBehaviour {
     // 아래로 이동
     IEnumerator MoveDown()
     {
-        while (transform.position.y >= (targetPos.y + 0.1f) && isActive)
+        while (transform.position.y >= (targetPos.y + 0.1f) && isStep)
         {
             transform.position = Vector3.MoveTowards(transform.position, 
                 targetPos, speed * Time.deltaTime);
@@ -49,7 +50,7 @@ public class StepDownObj : MonoBehaviour {
     // 초기 위치로 돌아감
     IEnumerator BackOriginPos()
     {
-        while (transform.position.y <= (originPos.y - 0.1f) && !isActive)
+        while (transform.position.y <= (originPos.y - 0.1f) && !isStep)
         {
             transform.position = Vector3.MoveTowards(transform.position, 
                 originPos, speed * Time.deltaTime);

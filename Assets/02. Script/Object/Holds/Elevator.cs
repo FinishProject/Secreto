@@ -7,7 +7,7 @@ public class Elevator : MonoBehaviour
     public float maxLength = 10f; // 마지막 위치 길이
     public float waitTime = 3f; // 목표 타겟을 변경하기 전 대기시간
 
-    private Vector3 pMoveVector;
+    private Vector3 moveDirection;
     private bool isActive = false; // 작동 여부
     private bool isStep = false; // 플레이어가 밟고 있는지 여부
     private Vector3 originPos, finishPos; // 시작 위치, 최종 위치
@@ -22,8 +22,7 @@ public class Elevator : MonoBehaviour
         originPos = this.transform.position;
         finishPos = new Vector3(originPos.x, originPos.y + maxLength, originPos.z);
 
-        targetPos = finishPos;
-        pMoveVector = Vector3.up;
+        moveDirection = Vector3.up;
     }
 
     IEnumerator OnActive()
@@ -36,10 +35,12 @@ public class Elevator : MonoBehaviour
             // 목표지점 도착
             if (transform.position.y.Equals(finishPos.y))
             {
-                // 목표 위치 도착 후 캐릭터가 아직 머물고 있을 시
+                // 캐릭터가 발판에 머물러 있을 시
+                // 카메라 속도를 0으로 설정
                 if (isStep)
                     CameraCtrl_4.instance.ChangeCamSpeed(0f);
                 // 캐릭터가 발판을 떠났을 시
+                // 카메라 속도를 초기화 함
                 else if (!isStep)
                     StartCoroutine(ChangeTargetPos());
             }
@@ -47,13 +48,13 @@ public class Elevator : MonoBehaviour
             else if (transform.position.y.Equals(originPos.y))
             {
                 isActive = false;
-                pMoveVector = Vector3.up;
+                moveDirection = Vector3.up;
                 break;
             }
-            // 플레이어가 발판 위에 있을 시 플레이어 이동
+            // 플레이어가 발판 위에 있을 시 발판과 같은 방향으로 플레이어 이동
             else if (isStep)
             {
-                PlayerCtrl.instance.transform.Translate(pMoveVector * speed * Time.deltaTime);
+                PlayerCtrl.instance.transform.Translate(moveDirection * speed * Time.deltaTime);
             }
 
             yield return null;
@@ -91,7 +92,7 @@ public class Elevator : MonoBehaviour
     IEnumerator ChangeTargetPos()
     {
         yield return new WaitForSeconds(waitTime);
-        pMoveVector = Vector3.down;
+        moveDirection = Vector3.down;
         targetPos = originPos;
     }
 }

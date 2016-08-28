@@ -30,9 +30,9 @@ public class TeleportGate : MonoBehaviour {
         //camTr = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
 
-	void OnTriggerEnter(Collider coll)
+	void OnTriggerEnter(Collider col)
     {
-        if(coll.CompareTag("Player") && isTravel)
+        if(col.CompareTag("Player") && isTravel)
         {
             // 반대편에 도착 시 잠시 이동 불가능하게 만듬
             telepGate.Block();
@@ -42,7 +42,7 @@ public class TeleportGate : MonoBehaviour {
             movePoint += exitGate.transform.up * 3f;
             movePoint -= exitGate.transform.forward * 2f;
 
-            coll.transform.position = movePoint;
+            col.transform.position = movePoint;
             olaTr.position = movePoint; 
         }
     }
@@ -52,12 +52,11 @@ public class TeleportGate : MonoBehaviour {
         StartCoroutine(BlockTravel());
     }
 
-    // 잠시 이동 이동 불가능하게 만듬
+    // 이동 후 잠시 텔레포트 이동 불가
     IEnumerator BlockTravel()
     {
         isTravel = false;
         yield return new WaitForSeconds(1f);
         isTravel = true;
-        StopCoroutine(BlockTravel());
     }
 }

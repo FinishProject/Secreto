@@ -11,6 +11,7 @@ public class LanaCtrl : NpcMgr
     public Transform movePoint;
     public Transform FocusPos;
     public Transform camPos;
+
     void Start()
     {
         Init();
@@ -31,7 +32,7 @@ public class LanaCtrl : NpcMgr
             InGameUI.instance.CinematicView(true);
             Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, camPos.position, FocusPos.position);
             anim.SetBool("Speak", isSpeakAnim);
-            Speak();
+            base.StartSpeak(this.name);
 
             // Dialogue 애니메이션 재생 후 더 이상 재생 못하도록 함
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Dialogue"))
@@ -48,27 +49,7 @@ public class LanaCtrl : NpcMgr
         }
     }
 
-    void Speak()
-    {
-        // 대화한 적이 없다면
-        if (!ScriptMgr.instance.GetSpeakName(this.name))
-        {
-            SetScript(this.name);
-        }
-        // 대화한 적이 있고, 퀘스트 완료 시
-        else if (ScriptMgr.instance.GetSpeakName(this.name) && ScriptMgr.instance.isQuest)
-        {
-            
-            //if (!isSpeak)
-            //{
-            //    Debug.Log("11");
-            //    isSpeak = true;
-                SetScript(this.name);
-            //}
-        }
-    }
-
-    // 포물선을 그리며 플레이어 앞으로 등장 함수
+    // 포물선을 그리며 플레이어 앞으로 등장
     void AppearNpc()
     {
         anim.SetBool("Appear", true);

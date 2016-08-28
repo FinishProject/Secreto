@@ -38,7 +38,6 @@ public class LogoCtrl : MonoBehaviour {
             Application.LoadLevel("MainScene");
         }
 
-
         colorValue.a += fadeSpeed * Time.deltaTime;
         logoImg[imgCount].color = colorValue;
 

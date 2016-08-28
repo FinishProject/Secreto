@@ -34,9 +34,14 @@ public class NpcMgr : MonoBehaviour {
         return (playerTr.position - npcPos).sqrMagnitude;
     }
 
-    protected virtual void SetScript(string name)
+    protected virtual void StartSpeak(string npcName)
     {
-        ScriptMgr.instance.GetScript(name);
-        PlayerCtrl.instance.SetStopMove();
+        // 대화한 적이 없다면 || 대화한 적이 있고, 퀘스트 완료 시
+        if (!ScriptMgr.instance.GetSpeakName(npcName) ||
+            ScriptMgr.instance.GetSpeakName(npcName) && ScriptMgr.instance.isQuest)
+        {
+            ScriptMgr.instance.GetScript(npcName);
+            PlayerCtrl.instance.SetStopMove();
+        }
     }
 }
