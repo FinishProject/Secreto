@@ -13,15 +13,18 @@ public enum PlayerEffectList
 
 public class PlayerCtrl : MonoBehaviour
 {
-    public JumpType jumpState = JumpType.IDLE; // 점프 타입
+    public static JumpType jumpState = JumpType.IDLE; // 점프 타입
+
+    // 플레이어 이동 변수
+    public float moveSpeed = 10f; // 이동 속도
+    public float basicJumpHight = 3.0f; // 기본 점프 높이
+    public float dashJumpHight = 4.0f; // 대쉬 점프 높이
+    public float dropGravity = 5; // 공중에 있을 때의 중력값
+    private float curGravity = 5f; // 현재 중력값
 
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
-    public float jumpHight = 3.0f;     // 기본 점프 높이
-    public float dashJumpHight = 4.0f; // 대쉬 점프 높이
-    public float speed = 10f;          // 이동 속도
     private float amorTime = 0.5f;
-    //public float pushPower = 2f;
 
     [System.NonSerialized]
     public float moveResistant = 0f;   // 이동 저항력
@@ -35,8 +38,6 @@ public class PlayerCtrl : MonoBehaviour
     private string carryItemName = null;    // 들고 있는 아이템 이름
     private bool isClimb = false; // 벽 오르기 확인
 
-    private float gravity = 5f; // 중력값
-	public float gr = 5;
     private float fullHp = 100; // 체력
     private float curHp = 100;
     public static float focusRight = 1f;
@@ -58,9 +59,7 @@ public class PlayerCtrl : MonoBehaviour
     public static CharacterController controller; // 캐릭터컨트롤러
     private SwitchObject switchState;
     private GameObject currInteraction;
-
     private Animator anim;
-    public Cloth cloth;
 
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
@@ -96,6 +95,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(curGravity);
         transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isCtrlAuthority) Movement();
@@ -121,10 +121,10 @@ public class PlayerCtrl : MonoBehaviour
 
         if (isMove)
         {
-            // 지상에 있을 시
+             // 지상에 있을 시
             if (controller.isGrounded)
             {
-                gravity = 50f;
+                curGravity = 50f;
 
                 anim.SetBool("Jump", false);
                 anim.SetBool("Dash", false);
@@ -146,21 +146,24 @@ public class PlayerCtrl : MonoBehaviour
                 {
                     anim.SetBool("Run", true);
                 }
-                else {
+                else
+                {
                     anim.SetBool("Run", false);
                 }
             }
             // 공중에 있을 시
             else if (!controller.isGrounded)
             {
+                curGravity = dropGravity;
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump(JumpType.DASH);
                     //cloth.damping = 0.4f;
                 }
-                gravity = gr;
+
                 moveDir.x = inputAxis;
             }
+           
 
             //캐릭터 방향 회전
             if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
@@ -175,8 +178,8 @@ public class PlayerCtrl : MonoBehaviour
         //    moveDir = Vector3.up * inputAxis;
         //}
 
-        moveDir.y -= gravity * Time.deltaTime;
-        controller.Move(moveDir * (speed) * Time.deltaTime);
+        moveDir.y -= curGravity * Time.deltaTime;
+        controller.Move(moveDir * (moveSpeed) * Time.deltaTime);
     }
 
     //캐릭터 방향 회전
@@ -196,7 +199,7 @@ public class PlayerCtrl : MonoBehaviour
     void Jump(JumpType curJumpState)
     {
         //cloth.worldAccelerationScale = 1f;
-        gravity = 5f;
+        curGravity = dropGravity;
         switch (curJumpState)
         {
             case JumpType.BASIC:
@@ -204,7 +207,7 @@ public class PlayerCtrl : MonoBehaviour
                 //anim.CrossFade("Basic_Jump", 0f);
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-                moveDir.y = jumpHight;
+                moveDir.y = basicJumpHight;
                 break;
             case JumpType.DASH:
                 if (isJumping)
@@ -212,7 +215,7 @@ public class PlayerCtrl : MonoBehaviour
                     anim.SetBool("Dash", true);
                     isJumping = false;
                     //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
-                    moveDir.y = jumpHight;
+                    moveDir.y = basicJumpHight;
                     //cloth.damping = 1f;
                 }
                 break;
@@ -276,9 +279,9 @@ public class PlayerCtrl : MonoBehaviour
     public void GetCtrlAuthorityByRope()
     {
         currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
-        float speed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (speed * 1.2f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (speed * 0.3f);
+        float moveSpeed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
+        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (moveSpeed * 1.2f);
+        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (moveSpeed * 0.3f);
 
         moveDir.y = vy;
         isFlyingByRope = true;
