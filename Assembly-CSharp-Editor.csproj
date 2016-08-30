@@ -201,7 +201,7 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
  </Reference>
  <Reference Include="ShaderForge">
- <HintPath>C:/Users/asw77/Documents/GitHub/Secreto/Assets/Editor/ShaderForge/Editor/ShaderForge.dll</HintPath>
+ <HintPath>C:/Users/h/Documents/GitHub/Secreto/Assets/Editor/ShaderForge/Editor/ShaderForge.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
