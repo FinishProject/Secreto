@@ -21,7 +21,7 @@ public class PlayerCtrl : MonoBehaviour
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
     public float speed = 10f;          // 이동 속도
     private float amorTime = 0.5f;
-    public float pushPower = 2f;
+    //public float pushPower = 2f;
 
     [System.NonSerialized]
     public float moveResistant = 0f;   // 이동 저항력

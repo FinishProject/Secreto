@@ -8,31 +8,29 @@ public class OnceSideSmashWall : MonoBehaviour {
     public float upSpeed; // 상승 속도
     public float waitTime; // 하강 후 대기 시간
 
-    private bool isActive = true;
-    private float curDirSpeed = 0f;
+    private bool isActive = true; // 코루틴 작동여부
+    //private float curDirSpeed = 0f; // 움직일 방향의 속도
     private bool isFirstDown = true; // 첫번째 그룹 벽 하강 체크
     private bool isSecondDown = false; // 두번째 그룹 벽 하강 체크
 
-    public GameObject[] walls;
-    private Vector3[] vStart, vEnd; // 시작, 마지막 위치 벡터
+    public GameObject[] walls; // 벽 오브젝트들
+    private Vector3[] originPos, arrivePos; // 시작, 도착 위치 벡터
     private Vector3 targetPos; // 이동할 목표 위치 벡트
-
-    private delegate IEnumerator MoveDelegate();
-    MoveDelegate moveDel;
 
     void Start()
     {
-        vStart = new Vector3[walls.Length];
-        vEnd = new Vector3[walls.Length];
+        // 배열 크기 초기화
+        originPos = new Vector3[walls.Length];
+        arrivePos = new Vector3[walls.Length];
 
         // 초기, 목표 위치 초기화
         for (int i = 0; i < walls.Length; i++)
         {
-            vStart[i] = walls[i].transform.position;
-            vEnd[i] = vStart[i];
-            vEnd[i].y -= downLength;
+            originPos[i] = walls[i].transform.position;
+            arrivePos[i] = originPos[i];
+            arrivePos[i].y -= downLength;
         }
-        curDirSpeed = downSpeed;
+        //curDirSpeed = downSpeed;
 
         StartCoroutine(FirstWallMovement());
         StartCoroutine(SecondWallMovement());
@@ -59,36 +57,42 @@ public class OnceSideSmashWall : MonoBehaviour {
     // 첫번째 그룹 벽 이동
     IEnumerator FirstWallMovement()
     {
+        float curDirSpeed = downSpeed;
         float moveSpeed = 0f;
         while (isActive)
         {
-            moveSpeed += curDirSpeed * Time.deltaTime;
+            moveSpeed = curDirSpeed * Time.deltaTime;
 
             for (int i = 0; i < walls.Length; i += 2)
             {
+                // 하강 또는 상승 시 목표 위치
                 if (isFirstDown)
-                    targetPos = vEnd[i];
+                    targetPos = arrivePos[i];
                 else
-                    targetPos = vStart[i];
+                    targetPos = originPos[i];
 
+                // 도착지점의 도착했을 시
                 if (walls[i].transform.position.y.Equals(targetPos.y))
                 {
+                    // 하강이었을 때
                     if (isFirstDown)
                     {
+                        // 카메라 흔들림
                         StartCoroutine(CameraCtrl_4.instance.Shake(2f, 1, 10f));
                         yield return new WaitForSeconds(waitTime);
 
-                        isFirstDown = false;
-                        isSecondDown = true; // 두번째 그룹 하강 가능하도록 변경
+                        
+                        isSecondDown = true; // 두번째 그룹 하강하도록 변경
 
-                        curDirSpeed = upSpeed;
+                        curDirSpeed = upSpeed; // 상승 속도로 변경
                         moveSpeed = 0f;
                     }
+                    // 상승이었을 때
                     else
                     {
                         yield return new WaitForSeconds(waitTime);
-                        //isFirstDown = true;
-                        curDirSpeed = downSpeed;
+                        isFirstDown = true;
+                        curDirSpeed = downSpeed; // 하강 속도로 변경
                         moveSpeed = 0f;
                     }
                 }
@@ -102,34 +106,38 @@ public class OnceSideSmashWall : MonoBehaviour {
     // 두번째 그룹 벽 이동
     IEnumerator SecondWallMovement()
     {
+        float curDirSpeed = downSpeed;
         float moveSpeed = 0f;
         while (isActive)
         {
-            moveSpeed += curDirSpeed * Time.deltaTime;
+            moveSpeed = curDirSpeed * Time.deltaTime;
 
             for (int i = 1; i < walls.Length; i += 2)
             {
-
                 if (isSecondDown)
-                    targetPos = vEnd[i];
+                    targetPos = arrivePos[i];
                 else
-                    targetPos = vStart[i];
+                    targetPos = originPos[i];
 
+                // 목표 지점에 도착했을 시
                 if (walls[i].transform.position.y.Equals(targetPos.y))
                 {
+                    // 하강이었을 시
                     if (isSecondDown)
                     {
                         StartCoroutine(CameraCtrl_4.instance.Shake(2f, 1, 10f));
                         yield return new WaitForSeconds(waitTime);
+                        
                         isSecondDown = false;
-                        isFirstDown = true;
+                        
                         curDirSpeed = upSpeed;
                         moveSpeed = 0f;
                     }
+                    // 상승이었을 시
                     else
                     {
                         yield return new WaitForSeconds(waitTime);
-                        
+                        isFirstDown = false; // 첫번째 그룹 상승하도록 변경
                         curDirSpeed = downSpeed;
                         moveSpeed = 0f;
                     }
