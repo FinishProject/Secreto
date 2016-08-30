@@ -154,32 +154,22 @@ public class PlayerCtrl : MonoBehaviour
             // 공중에 있을 시
             else if (!controller.isGrounded)
             {
-                curGravity = dropGravity;
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump(JumpType.DASH);
-                    //cloth.damping = 0.4f;
                 }
-
-                moveDir.x = inputAxis;
+                else
+                {
+                    curGravity = dropGravity;
+                    moveDir.x = inputAxis;
+                }
             }
-           
-
             //캐릭터 방향 회전
             if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
             else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
         }
-
-        //if (!isClimb) { moveDir.y -= gravity * Time.deltaTime; }
-        //// 벽에 메달릴 시
-        //else if (isClimb)
-        //{
-        //    inputAxis = Input.GetAxis("Vertical");
-        //    moveDir = Vector3.up * inputAxis;
-        //}
-
         moveDir.y -= curGravity * Time.deltaTime;
-        controller.Move(moveDir * (moveSpeed) * Time.deltaTime);
+        controller.Move(moveDir * moveSpeed * Time.deltaTime);
     }
 
     //캐릭터 방향 회전
@@ -204,10 +194,9 @@ public class PlayerCtrl : MonoBehaviour
         {
             case JumpType.BASIC:
                 anim.SetBool("Jump", true);
-                //anim.CrossFade("Basic_Jump", 0f);
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-                moveDir.y = basicJumpHight;
+                moveDir.y += basicJumpHight;
                 break;
             case JumpType.DASH:
                 if (isJumping)
@@ -215,8 +204,7 @@ public class PlayerCtrl : MonoBehaviour
                     anim.SetBool("Dash", true);
                     isJumping = false;
                     //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
-                    moveDir.y = basicJumpHight;
-                    //cloth.damping = 1f;
+                    moveDir.y += basicJumpHight;
                 }
                 break;
         }
