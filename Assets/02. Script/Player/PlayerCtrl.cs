@@ -19,8 +19,8 @@ public class PlayerCtrl : MonoBehaviour
     public float moveSpeed = 10f; // 이동 속도
     public float basicJumpHight = 3.0f; // 기본 점프 높이
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
-    public float dropGravity = 5; // 공중에 있을 때의 중력값
-    private float curGravity = 5f; // 현재 중력값
+    public float dropGravity = 5f; // 공중에 있을 때의 중력값
+    private float curGravity; // 현재 중력값
 
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
@@ -61,9 +61,10 @@ public class PlayerCtrl : MonoBehaviour
     private GameObject currInteraction;
     private Animator anim;
 
+    public Cloth cloth;
+
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
-    private PlayerFunc pFunc;
     private WahleMove wahleMove;
 
     public static PlayerCtrl instance;
@@ -74,8 +75,7 @@ public class PlayerCtrl : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         pEffect = GetComponent<PlayerEffect>();
-        pFunc = GetComponent<PlayerFunc>();
-        wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
+        //wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
 
         // 상호작용을 하기 위한 스위치
         switchState = gameObject.AddComponent<SwitchObject>();
@@ -95,22 +95,20 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(curGravity);
         transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
-        if (isCtrlAuthority) Movement();
-        else RopeWorker();
+        if(isMove) Movement();
 
-        //NPC와 대화
-        //if (Input.GetKeyDown(KeyCode.Return)) { ShotRay(); }
-        // 상호작용 (버튼 조작)
-        if (Input.GetKeyDown(KeyCode.KeypadEnter)) { switchState.IsSwitchOn = !switchState.IsSwitchOn; }
+        //캐릭터 방향 회전
+        if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
+        else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
     }
 
     void Movement()
     {
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
         anim.SetFloat("Velocity", controller.velocity.y);
+        cloth.damping = 0.6f;
         // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow) ||
             Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
@@ -119,55 +117,48 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetBool("Run", false);
         }
 
-        if (isMove)
+        // 지상에 있을 시
+        if (controller.isGrounded)
         {
-             // 지상에 있을 시
-            if (controller.isGrounded)
+            curGravity = 50f;
+            anim.SetBool("Jump", false);
+            anim.SetBool("Dash", false);
+            anim.SetBool("Idle", false);
+
+            //이동
+            moveDir = Vector3.right * inputAxis;
+
+            // 점프
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                curGravity = 50f;
-
-                anim.SetBool("Jump", false);
-                anim.SetBool("Dash", false);
-                anim.SetBool("Idle", false);
-
-                //이동
-                moveDir = Vector3.right * inputAxis;
-
-                //cloth.worldAccelerationScale = 2f;
-                // 점프
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    Jump(JumpType.BASIC);
-                    anim.SetBool("Run", false);
-                }
-                // 키 입력 시 달리기 애니메이션 재생
-                if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
-                    Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-                {
-                    anim.SetBool("Run", true);
-                }
-                else
-                {
-                    anim.SetBool("Run", false);
-                }
+                Jump(JumpType.BASIC);
+                anim.SetBool("Run", false);
             }
-            // 공중에 있을 시
-            else if (!controller.isGrounded)
+            // 키 입력 시 달리기 애니메이션 재생
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
+                Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    Jump(JumpType.DASH);
-                }
-                else
-                {
-                    curGravity = dropGravity;
-                    moveDir.x = inputAxis;
-                }
+                anim.SetBool("Run", true);
             }
-            //캐릭터 방향 회전
-            if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
-            else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
+            else
+            {
+                anim.SetBool("Run", false);
+            }
         }
+        // 공중에 있을 시
+        else if (!controller.isGrounded)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Jump(JumpType.DASH);
+            }
+            else
+            {
+                curGravity = dropGravity;
+                moveDir.x = inputAxis;
+            }
+        }
+
         moveDir.y -= curGravity * Time.deltaTime;
         controller.Move(moveDir * moveSpeed * Time.deltaTime);
     }
@@ -176,13 +167,16 @@ public class PlayerCtrl : MonoBehaviour
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
-        transform.Rotate(new Vector3(0, 1, 0), 180);
+        //transform.Rotate(new Vector3(0, 1, 0), 180);
         focusRight *= -1f;
+        cloth.damping = 1f;
+
+        Vector3 localScale = transform.localScale;
+        localScale.z *= -1f;
+        transform.localScale = localScale;
+
         wahleMove.ResetSpeed();
-        if (!controller.isGrounded)
-        {
-            moveDir.x *= -1f;
-        }
+        if (!controller.isGrounded) { moveDir.x *= -1f; }
     }
 
     // 점프
