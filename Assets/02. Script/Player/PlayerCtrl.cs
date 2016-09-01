@@ -8,7 +8,7 @@ public enum JumpType
 }
 public enum PlayerEffectList
 {
-    BASIC_JUMP, DASH_JUMP, 
+    DIE, BASIC_JUMP, DASH_JUMP, 
 }
 
 public class PlayerCtrl : MonoBehaviour
@@ -33,19 +33,10 @@ public class PlayerCtrl : MonoBehaviour
     [System.NonSerialized]
     public bool isJumping = false;   // 현재 점프중인지 확인
 
-    private bool isFlyingByRope = false;    // 날고 있는지
-    private bool isCtrlAuthority = true;    // 플레이어의 조작권한이 있는지
-    private string carryItemName = null;    // 들고 있는 아이템 이름
-    private bool isClimb = false; // 벽 오르기 확인
-
     private float fullHp = 100; // 체력
     private float curHp = 100;
     public static float focusRight = 1f;
     private float lockPosZ = 0f;
-
-    private float currRadian;
-    private float vx;
-    private float vy;
 
     private bool hasSuperArmor = false;
 
@@ -75,7 +66,7 @@ public class PlayerCtrl : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         pEffect = GetComponent<PlayerEffect>();
-        //wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
+        wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
 
         // 상호작용을 하기 위한 스위치
         switchState = gameObject.AddComponent<SwitchObject>();
@@ -108,7 +99,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
         anim.SetFloat("Velocity", controller.velocity.y);
-        cloth.damping = 0.6f;
+        //cloth.damping = 0.6f;
         // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow) ||
             Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
@@ -167,13 +158,15 @@ public class PlayerCtrl : MonoBehaviour
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
-        //transform.Rotate(new Vector3(0, 1, 0), 180);
+        transform.Rotate(new Vector3(0, 1, 0), 180);
         focusRight *= -1f;
-        cloth.damping = 1f;
+        //cloth.damping = 1f;
+
+        //cloth.transform.Rotate(new Vector3(0, 0, 1), 180f);
 
         Vector3 localScale = transform.localScale;
         localScale.z *= -1f;
-        transform.localScale = localScale;
+        //transform.localScale = localScale;
 
         wahleMove.ResetSpeed();
         if (!controller.isGrounded) { moveDir.x *= -1f; }
@@ -201,25 +194,6 @@ public class PlayerCtrl : MonoBehaviour
                     moveDir.y += basicJumpHight;
                 }
                 break;
-        }
-    }
-
-    ////레이캐스팅 발사
-    void ShotRay()
-    {
-        RaycastHit hit;
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 shotPoint = new Vector3(rayTr.position.x, rayTr.position.y, rayTr.position.z);
-        if (Physics.Raycast(shotPoint, forward, out hit, 10f))
-        {
-            Debug.DrawRay(shotPoint, forward, Color.red, 2f);
-            Debug.Log(hit.collider.name);
-            ////NPC 체크 및 이름 확인
-            //if (hit.collider.CompareTag("NPC"))
-            //{
-            //    pFunc.ShowScript(hit.collider.name);
-            //    anim.SetBool("Run", false);
-            //}
         }
     }
 
@@ -257,59 +231,6 @@ public class PlayerCtrl : MonoBehaviour
         hasSuperArmor = false;
     }
 
-    // 로프에서 권한 찾기
-    public void GetCtrlAuthorityByRope()
-    {
-        currRadian = currInteraction.GetComponent<RopeCtrl>().getRadian();
-        float moveSpeed = currInteraction.GetComponent<RopeCtrl>().getSpeed();
-        vx = Mathf.Cos(currRadian * Mathf.Deg2Rad) * (moveSpeed * 1.2f);
-        vy = Mathf.Sin(currRadian * Mathf.Deg2Rad) * (moveSpeed * 0.3f);
-
-        moveDir.y = vy;
-        isFlyingByRope = true;
-        isJumping = true;
-        currInteraction = null;
-    }
-    public string getCarryItemName()
-    {
-        return carryItemName;
-    }
-
-    // 로프의 움직임 관련
-    void RopeWorker()
-    {
-        // 로프에서 권한을 찾아옴 ( 상호작용 하고 있는 로프의 조작 권한이 없어지면 )
-        if (currInteraction != null && !isCtrlAuthority && !currInteraction.GetComponent<RopeCtrl>().isCtrlAuthority)
-        {
-            GetCtrlAuthorityByRope();
-        }
-
-        // 로프를 타고 있을때
-        if (!isCtrlAuthority && !isFlyingByRope && currInteraction != null)
-        {
-            Vector3 pos = currInteraction.GetComponent<RopeCtrl>().getLowRopeTransform().position;
-            Quaternion rot = gameObject.transform.rotation;
-
-            pos.y -= gameObject.transform.localScale.y;
-
-            gameObject.transform.position = pos;
-            gameObject.transform.rotation = rot;
-        }
-        // 로프를 이용해 날고 있을때
-        if (isFlyingByRope)
-        {
-
-            controller.Move(Vector3.right * vx * Time.deltaTime);
-            moveDir += new Vector3(0f, -7f, 0f) * Time.deltaTime;   // 중력
-            controller.Move(moveDir * 10.0f * Time.deltaTime);
-
-            if (controller.isGrounded)
-            {
-                isFlyingByRope = false;
-                isCtrlAuthority = true;
-            }
-        }
-    }
 
     void OnTriggerStay(Collider coll)
     {
@@ -336,16 +257,6 @@ public class PlayerCtrl : MonoBehaviour
             switchState = coll.GetComponent<SwitchObject>();
         }
 
-        // 로프와 충돌
-        else if(coll.CompareTag("Rope") && Input.GetKey(KeyCode.UpArrow) && isJumping)
-        {
-            isCtrlAuthority = false;
-            isJumping = false;
-            isFlyingByRope = false;
-            currInteraction = coll.transform.parent.gameObject;
-            currInteraction.GetComponent<RopeCtrl>().
-            setAuthority(Convert.ToInt32(coll.name), isFocusRight); // 조작권한을 넘겨줌
-        }
         else if (coll.CompareTag("WALL"))
         {
             isClimb = true;
@@ -366,6 +277,13 @@ public class PlayerCtrl : MonoBehaviour
 
     public void PlayerDie()
     {
+        StartCoroutine(ResetPlayer());
+    }
+
+    IEnumerator ResetPlayer()
+    {
+        pEffect.StartEffect(PlayerEffectList.DIE);
+        yield return new WaitForSeconds(2f);
         pData = DataSaveLoad.Load();
         transform.position = pData.pPosition;
     }

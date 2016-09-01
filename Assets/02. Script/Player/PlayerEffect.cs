@@ -23,18 +23,11 @@ public class PlayerEffect : MonoBehaviour {
             effects[i] = Instantiate(effects[i]);
             effects[i].SetActive(false);
         }
-        //effect2 = Instantiate(effect2);
-        //effect2.SetActive(false);
     }
 
     public void StartEffect(PlayerEffectList effectState)
     {
-//        StartCoroutine(ShowEffected(effectState));
-        //switch(effectState)
-        //{
-            //case PlayerEffectList.BASIC_JUMP : StartCoroutine(effected());   break;
-            //case PlayerEffectList.DASH_JUMP  : StartCoroutine(effected_2()); break;
-        //}
+        StartCoroutine(ShowEffected(effectState));
     }
 
 
@@ -47,24 +40,4 @@ public class PlayerEffect : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
         effects[(int)effectState].SetActive(false);
     }
-
-    //IEnumerator effected_2()
-    //{
-    //    Vector3 tempPos = gameObject.transform.position;
-    //    tempPos.y += 1.0f;
-    //    effect2.transform.position = tempPos;
-    //    effect2.SetActive(true);
-    //    yield return new WaitForSeconds(0.5f);
-    //    effect2.SetActive(false);
-
-    //}
-    //IEnumerator effected()
-    //{
-    //    Vector3 tempPos = gameObject.transform.position;
-    //    tempPos.y += 1.0f;
-    //    effect1.transform.position = tempPos;
-    //    effect1.SetActive(true);
-    //    yield return new WaitForSeconds(0.5f);
-    //    effect1.SetActive(false);
-    //}
 }
