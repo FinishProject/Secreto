@@ -29,8 +29,8 @@ public class LanaCtrl : NpcMgr
         // 대화 시작
         if (distance <= 30f && !isAppear)
         {
-            InGameUI.instance.CinematicView(true);
-            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, camPos.position, FocusPos.position);
+//            InGameUI.instance.CinematicView(true);
+//            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(true, camPos.position, FocusPos.position);
             anim.SetBool("Speak", isSpeakAnim);
             base.StartSpeak(this.name);
 
@@ -43,8 +43,8 @@ public class LanaCtrl : NpcMgr
         // 대화 종료
         else
         {
-            InGameUI.instance.CinematicView(false);
-            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(false, Vector3.zero, Vector3.zero);
+//            InGameUI.instance.CinematicView(false);
+//            Camera.main.GetComponent<CameraCtrl_4>().SetCinematicView(false, Vector3.zero, Vector3.zero);
             anim.SetBool("Speak", false);
         }
     }

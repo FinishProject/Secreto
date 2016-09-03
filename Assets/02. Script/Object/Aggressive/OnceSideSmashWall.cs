@@ -32,8 +32,8 @@ public class OnceSideSmashWall : MonoBehaviour {
         }
         //curDirSpeed = downSpeed;
 
-        StartCoroutine(FirstWallMovement());
-        StartCoroutine(SecondWallMovement());
+        //StartCoroutine(FirstWallMovement());
+        //StartCoroutine(SecondWallMovement());
     }
 
     void OnTriggerEnter(Collider col)
@@ -78,12 +78,10 @@ public class OnceSideSmashWall : MonoBehaviour {
                     if (isFirstDown)
                     {
                         // 카메라 흔들림
-                        StartCoroutine(CameraCtrl_4.instance.Shake(2f, 1, 10f));
+//                        StartCoroutine(CameraCtrl_4.instance.Shake(2f, 1, 10f));
                         yield return new WaitForSeconds(waitTime);
-
-                        
                         isSecondDown = true; // 두번째 그룹 하강하도록 변경
-
+                        isFirstDown = false; // 첫번째 그룹 상승하도록 변경
                         curDirSpeed = upSpeed; // 상승 속도로 변경
                         moveSpeed = 0f;
                     }
@@ -125,8 +123,8 @@ public class OnceSideSmashWall : MonoBehaviour {
                     // 하강이었을 시
                     if (isSecondDown)
                     {
-                        StartCoroutine(CameraCtrl_4.instance.Shake(2f, 1, 10f));
-                        yield return new WaitForSeconds(waitTime);
+//                        StartCoroutine(CameraCtrl_4.instance.Shake(2f, 1, 10f));
+                        yield return new WaitForSeconds(waitTime - 0.5f);
                         
                         isSecondDown = false;
                         
@@ -137,7 +135,6 @@ public class OnceSideSmashWall : MonoBehaviour {
                     else
                     {
                         yield return new WaitForSeconds(waitTime);
-                        isFirstDown = false; // 첫번째 그룹 상승하도록 변경
                         curDirSpeed = downSpeed;
                         moveSpeed = 0f;
                     }

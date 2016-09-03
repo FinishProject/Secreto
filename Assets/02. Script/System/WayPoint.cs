@@ -11,6 +11,7 @@ public class WayPoint : MonoBehaviour {
         if (col.CompareTag("Player"))
         {
             OnSave();
+            InGameUI_2.instance.AvtiveSave();
         }
     }
 }

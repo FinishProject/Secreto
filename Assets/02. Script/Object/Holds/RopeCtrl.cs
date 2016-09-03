@@ -132,7 +132,7 @@ public class RopeCtrl : MonoBehaviour {
             {
                 curResist = StopResist;
                 isCtrlAuthority = false;
-                PlayerCtrl.instance.GetCtrlAuthorityByRope();  // 플레이어에게 조작 권한을 돌려줌
+                //PlayerCtrl.instance.GetCtrlAuthorityByRope();  // 플레이어에게 조작 권한을 돌려줌
             }
         }
     }

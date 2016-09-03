@@ -16,14 +16,14 @@ public class PlayerEffect : MonoBehaviour {
 
     public GameObject[] effects;
 
-    void Start () {
+    //void Start () {
 
-        for(int i=0; i<effects.Length; i++)
-        {
-            effects[i] = Instantiate(effects[i]);
-            effects[i].SetActive(false);
-        }
-    }
+    //    for(int i=0; i<effects.Length; i++)
+    //    {
+    //        effects[i] = Instantiate(effects[i]);
+    //        effects[i].SetActive(false);
+    //    }
+    //}
 
     public void StartEffect(PlayerEffectList effectState)
     {
@@ -33,11 +33,11 @@ public class PlayerEffect : MonoBehaviour {
 
     IEnumerator ShowEffected(PlayerEffectList effectState)
     {
-        Vector3 tempPos = transform.position;
-        tempPos.y += 1.0f;
-        effects[(int)effectState].transform.position = tempPos;
+        //Vector3 tempPos = transform.position;
+        //tempPos.y += 1.0f;
+        //effects[(int)effectState].transform.position = tempPos;
         effects[(int)effectState].SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         effects[(int)effectState].SetActive(false);
     }
 }

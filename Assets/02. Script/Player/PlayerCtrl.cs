@@ -4,11 +4,11 @@ using System;
 
 public enum JumpType
 {
-    IDLE, FLY_IDLE, BASIC, DASH, LEAP, POWER, 
+    IDLE, FLY_IDLE, BASIC, DASH, LEAP, POWER,
 }
 public enum PlayerEffectList
 {
-    DIE, BASIC_JUMP, DASH_JUMP, 
+    DIE, BASIC_JUMP, DASH_JUMP,
 }
 
 public class PlayerCtrl : MonoBehaviour
@@ -44,7 +44,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         get { return curHp / fullHp; }
     }
-   
+
     public Transform rayTr; // 레이캐스트 시작 위치
     public static Vector3 moveDir = Vector3.zero; // 이동 벡터
     public static CharacterController controller; // 캐릭터컨트롤러
@@ -53,7 +53,7 @@ public class PlayerCtrl : MonoBehaviour
     private Animator anim;
 
     public Cloth cloth;
-
+    public GameObject lunaModel;
     private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
     private WahleMove wahleMove;
@@ -75,6 +75,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
+        /*
         pData = DataSaveLoad.Load();
         if (pData != null)
         {
@@ -82,17 +83,23 @@ public class PlayerCtrl : MonoBehaviour
             transform.position = pData.pPosition;
             lockPosZ = pData.pPosition.z;
         }
+        */
     }
 
     void Update()
     {
         transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
-        if(isMove) Movement();
+        if (isMove) Movement();
 
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            PlayerDie(false);
+        }
     }
 
     void Movement()
@@ -162,8 +169,6 @@ public class PlayerCtrl : MonoBehaviour
         focusRight *= -1f;
         //cloth.damping = 1f;
 
-        //cloth.transform.Rotate(new Vector3(0, 0, 1), 180f);
-
         Vector3 localScale = transform.localScale;
         localScale.z *= -1f;
         //transform.localScale = localScale;
@@ -210,7 +215,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public void getDamage(float damage)
     {
-        if(!hasSuperArmor)
+        if (!hasSuperArmor)
         {
             StartCoroutine(SuperArmor());
             curHp -= damage;
@@ -218,7 +223,7 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetTrigger("Hit");
             if (curHp <= 0)
             {
-                PlayerDie();
+                PlayerDie(false);
                 return;
             }
         }
@@ -236,30 +241,18 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (coll.CompareTag("DeadLine"))
         {
-            PlayerDie();
-        }
-        // 퀘스트 아이템 습득
-        if (QuestMgr.isQuest)
-        {
-            if (coll.CompareTag("ITEM"))
-            {
-                if (QuestMgr.questInfo.targetName == coll.name)
-                {
-                    QuestMgr.instance.curCompletNum++;
-                    coll.gameObject.SetActive(false);
-                }
-            }
+            PlayerDie(true);
         }
 
-        else if(coll.name == "Switch")
+        else if (coll.name == "Switch")
         {
             coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
             switchState = coll.GetComponent<SwitchObject>();
         }
 
-        else if (coll.CompareTag("WALL"))
+        else if(coll.CompareTag("Finish"))
         {
-            isClimb = true;
+            InGameUI_2.instance.GameEnd();
         }
     }
 
@@ -269,25 +262,28 @@ public class PlayerCtrl : MonoBehaviour
         {
             switchState = gameObject.AddComponent<SwitchObject>();
         }
-        else if (coll.CompareTag("WALL"))
-        {
-            isClimb = false;
-        }
     }
 
-    public void PlayerDie()
+    public void PlayerDie(bool isFall)
     {
-        StartCoroutine(ResetPlayer());
+        if (isFall)
+        {
+            pData = DataSaveLoad.Load();
+            transform.position = pData.pPosition;
+        }
+        else
+            StartCoroutine(ResetPlayer());
     }
 
     IEnumerator ResetPlayer()
     {
+        lunaModel.SetActive(false);
         pEffect.StartEffect(PlayerEffectList.DIE);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.3f);
         pData = DataSaveLoad.Load();
         transform.position = pData.pPosition;
+        lunaModel.SetActive(true);
     }
-
 
     void OnEnable()
     {

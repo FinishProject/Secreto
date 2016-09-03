@@ -32,6 +32,7 @@ public class InGameUI : MonoBehaviour
     public Image cinematic;
     public GameObject status_UI;
     public GameObject pauseUI;
+    public GameObject gameEnd;
     public static InGameUI instance;
 
     public void CinematicView(bool isCinematicView)
@@ -51,7 +52,7 @@ public class InGameUI : MonoBehaviour
     void Awake()
     {
         instance = this;
-        CinematicView(false);
+//        CinematicView(false);
         pauseUI.SetActive(false);
     }
 
@@ -64,7 +65,7 @@ public class InGameUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !pauseUI.activeSelf)
         {
-            pauseUI.SetActive(true);            
+            pauseUI.SetActive(true);
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && pauseUI.activeSelf)
         {
@@ -80,6 +81,12 @@ public class InGameUI : MonoBehaviour
         ChangeHpBar();
         ChangeEnhance();
         //        ChangeAttribute();
+    }
+
+    public void GameEnd()
+    {
+        Debug.Log(2);
+        gameEnd.SetActive(true);
     }
 
     // HP바 수치를 바꿔줌 (외부 호출)

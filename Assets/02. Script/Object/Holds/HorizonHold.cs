@@ -37,7 +37,7 @@ public class HorizonHold : MonoBehaviour
         // 플레이어가 발판 위에 있을 시 발판과 같이 이동
         if (col.CompareTag("Player"))
         {
-            CameraCtrl_4.instance.ChangeCamSpeed(50f);
+            CameraCtrl_5.instance.ChangeCamSpeed(50f);
             WahleCtrl.curState = WahleCtrl.instance.StepHold();
             playerTr.Translate(Vector3.forward * (speed * PlayerCtrl.focusRight) * Time.deltaTime);
         }
@@ -47,7 +47,7 @@ public class HorizonHold : MonoBehaviour
     {
         if (coll.CompareTag("Player"))
         {
-            CameraCtrl_4.instance.ResetCameSpeed();
+            CameraCtrl_5.instance.ResetCameSpeed();
             WahleCtrl.instance.ChangeState(WahleState.MOVE);
         }
     }
