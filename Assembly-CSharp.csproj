@@ -45,11 +45,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\02. Script\BackGroundCtrl_2.cs" />
      <Compile Include="Assets\02. Script\Billboard.cs" />
      <Compile Include="Assets\02. Script\Camera\CameraArea.cs" />
      <Compile Include="Assets\02. Script\Camera\CameraCtrl_2.cs" />
      <Compile Include="Assets\02. Script\Camera\CameraCtrl_3.cs" />
      <Compile Include="Assets\02. Script\Camera\CameraCtrl_4.cs" />
+     <Compile Include="Assets\02. Script\Camera\CameraCtrl_5.cs" />
      <Compile Include="Assets\02. Script\Camera\ZoomArea.cs" />
      <Compile Include="Assets\02. Script\Items\CollectionItem.cs" />
      <Compile Include="Assets\02. Script\Items\Flower.cs" />
@@ -140,6 +142,7 @@
      <Compile Include="Assets\02. Script\System\Manager\WeatherMgr.cs" />
      <Compile Include="Assets\02. Script\System\WayPoint.cs" />
      <Compile Include="Assets\02. Script\TeleportSavePoint.cs" />
+     <Compile Include="Assets\02. Script\UI\GameEnd.cs" />
      <Compile Include="Assets\02. Script\UI\InGameUI.cs" />
      <Compile Include="Assets\02. Script\UI\InputPlayerInfo.cs" />
      <Compile Include="Assets\02. Script\UI\Inventory.cs" />
@@ -151,7 +154,6 @@
      <Compile Include="Assets\02. Script\test.cs" />
      <Compile Include="Assets\06. FX\Player\fx_power_attack\AnimateSpriteSheet.cs" />
      <Compile Include="Assets\Test.cs" />
-     <Compile Include="Assets\Test2.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />

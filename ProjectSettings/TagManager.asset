@@ -17,6 +17,7 @@ TagManager:
   - CameraArea
   - DeadLine
   - SavePoint
+  - EndPoint
   layers:
   - Default
   - TransparentFX
