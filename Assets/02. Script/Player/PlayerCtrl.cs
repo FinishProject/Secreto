@@ -234,9 +234,10 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnTriggerStay(Collider coll)
     {
+
         if (coll.CompareTag("DeadLine"))
         {
-            PlayerDie(true);
+            PlayerDie(false);
         }
 
         else if (coll.name == "Switch")
@@ -272,6 +273,7 @@ public class PlayerCtrl : MonoBehaviour
 
     IEnumerator ResetPlayer()
     {
+        FadeInOut.instance.StartFadeInOut(1, 2, 3);
         isMove = false;
         lunaModel.SetActive(false);
         pEffect.StartEffect(PlayerEffectList.DIE);
