@@ -266,18 +266,22 @@ public class PlayerCtrl : MonoBehaviour
             pData = DataSaveLoad.Load();
             transform.position = pData.pPosition;
         }
-        else
+        else if (!isFall)
             StartCoroutine(ResetPlayer());
     }
 
     IEnumerator ResetPlayer()
     {
+        isMove = false;
         lunaModel.SetActive(false);
         pEffect.StartEffect(PlayerEffectList.DIE);
+
         yield return new WaitForSeconds(1.3f);
+
         pData = DataSaveLoad.Load();
         transform.position = pData.pPosition;
         lunaModel.SetActive(true);
+        isMove = true;
     }
 
     void OnEnable()
