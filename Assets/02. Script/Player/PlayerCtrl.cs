@@ -95,11 +95,6 @@ public class PlayerCtrl : MonoBehaviour
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
-
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            PlayerDie(false);
-        }
     }
 
     void Movement()
@@ -188,7 +183,7 @@ public class PlayerCtrl : MonoBehaviour
                 anim.SetBool("Jump", true);
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-                moveDir.y += basicJumpHight;
+                moveDir.y = basicJumpHight;
                 break;
             case JumpType.DASH:
                 if (isJumping)
@@ -196,7 +191,7 @@ public class PlayerCtrl : MonoBehaviour
                     anim.SetBool("Dash", true);
                     isJumping = false;
                     //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
-                    moveDir.y += basicJumpHight;
+                    moveDir.y = basicJumpHight;
                 }
                 break;
         }
