@@ -18,6 +18,7 @@ TagManager:
   - DeadLine
   - SavePoint
   - EndPoint
+  - FadeLine
   layers:
   - Default
   - TransparentFX

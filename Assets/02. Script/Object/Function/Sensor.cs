@@ -70,4 +70,5 @@ public class Sensor : MonoBehaviour
                 transform.parent.GetComponent<Sensorable_Return>().ActiveSensor_Retuen(index, null);
         }
     }
+
 }
