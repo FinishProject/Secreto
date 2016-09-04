@@ -8,14 +8,14 @@ public class WahleMove : WahleCtrl
 
     public float stateChangeTime = 8f;
     private float changeTime = 0f;
+    private float focusDir = 1f; // 봐라보고 있는 방향 오른쪽 : 1, 왼쪽 : -1
 
     protected override IEnumerator CurStateUpdate()
     {
         initSpeed = 0f;
-        //float focusDir = 1f; // 봐라보고 있는 방향 오른쪽 : 1, 왼쪽 : -1
         while (true)
         {
-            //focusDir = Mathf.Sign(PlayerCtrl.inputAxis);
+            focusDir = Mathf.Sign(PlayerCtrl.inputAxis);
             relativePos = playerTr.position - transform.position;
             lookRot = Quaternion.LookRotation(relativePos);
             distance = relativePos.sqrMagnitude;
@@ -43,7 +43,7 @@ public class WahleMove : WahleCtrl
 
             initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel); // 이동속도 가속도
                                                                     // 플레이어 추격
-            transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward),
+            transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward * focusDir),
                      initSpeed * Time.deltaTime);
         
     }

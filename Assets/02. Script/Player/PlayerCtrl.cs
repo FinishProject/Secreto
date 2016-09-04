@@ -54,7 +54,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public Cloth cloth;
     public GameObject lunaModel;
-    private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
+    //private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
     private WahleMove wahleMove;
 
@@ -75,15 +75,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
-        /*
-        pData = DataSaveLoad.Load();
-        if (pData != null)
-        {
-            curHp = fullHp;
-            transform.position = pData.pPosition;
-            lockPosZ = pData.pPosition.z;
-        }
-        */
+        //GetPlayerData();
     }
 
     void Update()
@@ -160,13 +152,13 @@ public class PlayerCtrl : MonoBehaviour
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
-        transform.Rotate(new Vector3(0, 1, 0), 180);
-        focusRight *= -1f;
+        //transform.Rotate(new Vector3(0, 1, 0), 180);
+        //focusRight *= -1f;
         //cloth.damping = 1f;
 
         Vector3 localScale = transform.localScale;
         localScale.z *= -1f;
-        //transform.localScale = localScale;
+        transform.localScale = localScale;
 
         wahleMove.ResetSpeed();
         if (!controller.isGrounded) { moveDir.x *= -1f; }
@@ -191,7 +183,7 @@ public class PlayerCtrl : MonoBehaviour
                     anim.SetBool("Dash", true);
                     isJumping = false;
                     //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
-                    moveDir.y = basicJumpHight;
+                    moveDir.y = dashJumpHight;
                 }
                 break;
         }
@@ -231,18 +223,11 @@ public class PlayerCtrl : MonoBehaviour
         hasSuperArmor = false;
     }
 
-
     void OnTriggerStay(Collider coll)
     {
         if (coll.CompareTag("DeadLine"))
         {
             PlayerDie(true);
-        }
-
-        else if (coll.name == "Switch")
-        {
-            coll.GetComponent<SwitchObject>().IsCanUseSwitch = true;
-            switchState = coll.GetComponent<SwitchObject>();
         }
 
         else if(coll.CompareTag("Finish"))
@@ -263,8 +248,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (isFall)
         {
-            pData = DataSaveLoad.Load();
-            transform.position = pData.pPosition;
+            GetPlayerData();
         }
         else if (!isFall)
             StartCoroutine(ResetPlayer());
@@ -278,10 +262,16 @@ public class PlayerCtrl : MonoBehaviour
 
         yield return new WaitForSeconds(1.3f);
 
-        pData = DataSaveLoad.Load();
-        transform.position = pData.pPosition;
+        GetPlayerData();
         lunaModel.SetActive(true);
         isMove = true;
+    }
+
+    void GetPlayerData()
+    {
+        Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
+        pData = DataSaveLoad.Load();
+        transform.position = pData.pPosition;
     }
 
     void OnEnable()
@@ -292,6 +282,7 @@ public class PlayerCtrl : MonoBehaviour
     //플레이어 데이터 저장
     void Save()
     {
+        Data pData = new Data();
         pData.pPosition = transform.position;
         pData.hp = curHp;
         DataSaveLoad.Save(pData);
