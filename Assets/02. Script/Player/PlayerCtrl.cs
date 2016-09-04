@@ -226,7 +226,10 @@ public class PlayerCtrl : MonoBehaviour
     void OnTriggerStay(Collider coll)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> Megane
 
         if (coll.CompareTag("DeadLine"))
         {
