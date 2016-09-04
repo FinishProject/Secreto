@@ -16,26 +16,36 @@ public class PlayerEffect : MonoBehaviour {
 
     public GameObject[] effects;
 
-    //void Start () {
+    private Transform playerTr;
 
-    //    for(int i=0; i<effects.Length; i++)
-    //    {
-    //        effects[i] = Instantiate(effects[i]);
-    //        effects[i].SetActive(false);
-    //    }
-    //}
+    void Start()
+    {
+        playerTr = GetComponent<PlayerCtrl>().transform;
+    }
 
     public void StartEffect(PlayerEffectList effectState)
     {
         StartCoroutine(ShowEffected(effectState));
     }
 
-
     IEnumerator ShowEffected(PlayerEffectList effectState)
     {
-        //Vector3 tempPos = transform.position;
-        //tempPos.y += 1.0f;
-        //effects[(int)effectState].transform.position = tempPos;
+        Vector3 playerVec = this.transform.position;
+        switch (effectState)
+        {
+            case PlayerEffectList.DIE:
+                playerVec.y += 4f;
+                effects[(int)effectState].transform.position = playerVec;
+                break;
+            case PlayerEffectList.BASIC_JUMP:
+                playerVec.y += 1f;
+                effects[(int)effectState].transform.position = playerVec;
+
+                if (effects[(int)effectState].activeSelf)
+                    effects[(int)effectState].SetActive(false);
+                break;
+        }
+
         effects[(int)effectState].SetActive(true);
         yield return new WaitForSeconds(1f);
         effects[(int)effectState].SetActive(false);
