@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum WahleState { IDLE, MOVE, ATTACK, }
+public enum WahleState { IDLE, MOVE, ATTACK, SWITCH }
 
 public class WahleCtrl : MonoBehaviour {
     public float maxSpeed = 10f; // 최대 속도
@@ -12,6 +12,7 @@ public class WahleCtrl : MonoBehaviour {
     protected bool isSearch = false; // 탐색 여부
 
     bool isStart = true;
+    private bool isSwitch = false;
 
     protected Vector3 npcPos; // NPC 위치를 저장할 변수
     protected Transform targetPoint; // 대기 상태시 추격할 포인트 위치
@@ -26,6 +27,7 @@ public class WahleCtrl : MonoBehaviour {
     private WahleIdle idle;
     private WahleMove move;
     private WahleAttack attack;
+    private WahleSwitch wSwitch;
 
     public static IEnumerator curState;
     public static WahleCtrl instance;
@@ -41,6 +43,7 @@ public class WahleCtrl : MonoBehaviour {
         idle = GetComponent<WahleIdle>();
         move = GetComponent<WahleMove>();
         attack = GetComponent<WahleAttack>();
+        wSwitch = GetComponent<WahleSwitch>();
     }
 
     private void Start()
@@ -69,6 +72,9 @@ public class WahleCtrl : MonoBehaviour {
             case WahleState.ATTACK:
                 curState = attack.CurStateUpdate();
                 break;
+            case WahleState.SWITCH:
+                curState = wSwitch.CurStateUpdate();
+                break;
         }
     }
 
@@ -77,9 +83,9 @@ public class WahleCtrl : MonoBehaviour {
     {
         while (true)
         {
-            if (ScriptMgr.isSpeak)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                ChangeState(WahleState.IDLE);
+                ChangeWahleSwitch();
             }
 
             if (!curState.Equals(null) && curState.MoveNext())
@@ -89,6 +95,16 @@ public class WahleCtrl : MonoBehaviour {
             else
                 yield return null;
         }
+    }
+
+    void ChangeWahleSwitch()
+    {
+        if (isSwitch)
+            ChangeState(WahleState.IDLE);
+        else
+            ChangeState(WahleState.SWITCH);
+
+        isSwitch = !isSwitch;
     }
 
     // 플레이어가 발판에 올라갔을 시
