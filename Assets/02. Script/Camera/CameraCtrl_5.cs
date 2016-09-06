@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityStandardAssets.ImageEffects;
 
 
 
@@ -39,11 +40,15 @@ public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
         teleportTrigger = false;
     }
 
-
     void Start()
     {
         instance = this;
         playerTr = PlayerCtrl.instance.transform;
+
+        // GetComponent<VignetteAndChromaticAberration>().intensity = 0.8f;    // 비네팅
+        // GetComponent<VignetteAndChromaticAberration>().chromaticAberration = 0.8f;    // 희미
+
+
 
         sensorArea = GameObject.Find("Sensor_Area").transform;
         sensorWall_L = GameObject.Find("Sensor_Wall_L").transform;
@@ -69,7 +74,6 @@ public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
         sensorArea.transform.position = PlayerCtrl.instance.transform.position + new Vector3(0,1);
         Vector3 temp = tr.position;
 
-        Debug.Log(camY_gap);
         // 거리가 급격히 멀어 졌을 때 (죽었을 때 or 텔레포트 됬을 때)
         if (Vector3.Distance(tr.position, playerTr.position) > 30f)
         {
