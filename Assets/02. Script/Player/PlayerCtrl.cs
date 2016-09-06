@@ -27,8 +27,6 @@ public class PlayerCtrl : MonoBehaviour
     private float amorTime = 0.5f;
 
     [System.NonSerialized]
-    public float moveResistant = 0f;   // 이동 저항력
-    [System.NonSerialized]
     public bool isMove = true;       // 현재 이동 여부
     [System.NonSerialized]
     public bool isJumping = false;   // 현재 점프중인지 확인
@@ -45,16 +43,12 @@ public class PlayerCtrl : MonoBehaviour
         get { return curHp / fullHp; }
     }
 
-    public Transform rayTr; // 레이캐스트 시작 위치
     public static Vector3 moveDir = Vector3.zero; // 이동 벡터
     public static CharacterController controller; // 캐릭터컨트롤러
-    private SwitchObject switchState;
-    private GameObject currInteraction;
     private Animator anim;
 
     public Cloth cloth;
     public GameObject lunaModel;
-    //private Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
     private PlayerEffect pEffect;
     private WahleMove wahleMove;
 
@@ -67,10 +61,6 @@ public class PlayerCtrl : MonoBehaviour
         anim = GetComponent<Animator>();
         pEffect = GetComponent<PlayerEffect>();
         wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
-
-        // 상호작용을 하기 위한 스위치
-        switchState = gameObject.AddComponent<SwitchObject>();
-        switchState.IsCanUseSwitch = false;
     }
 
     void Start()
@@ -121,31 +111,51 @@ public class PlayerCtrl : MonoBehaviour
             }
             // 키 입력 시 달리기 애니메이션 재생
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
-                Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-            {
+                Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) {
                 anim.SetBool("Run", true);
             }
-            else
-            {
+            else {
                 anim.SetBool("Run", false);
             }
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Jump(JumpType.DASH);
-            }
-            else
-            {
-                curGravity = dropGravity;
-                moveDir.x = inputAxis;
-            }
+            curGravity = dropGravity;
+            //if (Input.GetKeyDown(KeyCode.Space))
+            //    Jump(JumpType.DASH);
+            //else
+            //{
+            //    moveDir.x = inputAxis;
+            //}
         }
-
         moveDir.y -= curGravity * Time.deltaTime;
         controller.Move(moveDir * moveSpeed * Time.deltaTime);
+    }
+
+    // 점프
+    void Jump(JumpType curJumpState)
+    {
+        curGravity = dropGravity;
+        switch (curJumpState)
+        {
+            case JumpType.BASIC:
+                anim.SetBool("Jump", true);
+                isJumping = true;
+                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
+                moveDir.y += basicJumpHight;
+                //curGravity = dropGravity - 1f;
+                break;
+            case JumpType.DASH:
+                if (isJumping)
+                {
+                    anim.SetBool("Dash", true);
+                    isJumping = false;
+                    //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
+                    moveDir.y = dashJumpHight;
+                }
+                break;
+        }
     }
 
     //캐릭터 방향 회전
@@ -162,31 +172,6 @@ public class PlayerCtrl : MonoBehaviour
 
         wahleMove.ResetSpeed();
         if (!controller.isGrounded) { moveDir.x *= -1f; }
-    }
-
-    // 점프
-    void Jump(JumpType curJumpState)
-    {
-        //cloth.worldAccelerationScale = 1f;
-        curGravity = dropGravity;
-        switch (curJumpState)
-        {
-            case JumpType.BASIC:
-                anim.SetBool("Jump", true);
-                isJumping = true;
-                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-                moveDir.y = basicJumpHight;
-                break;
-            case JumpType.DASH:
-                if (isJumping)
-                {
-                    anim.SetBool("Dash", true);
-                    isJumping = false;
-                    //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
-                    moveDir.y = dashJumpHight;
-                }
-                break;
-        }
     }
 
     public void getRecovery(float recovery)
@@ -210,7 +195,7 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetTrigger("Hit");
             if (curHp <= 0)
             {
-                PlayerDie(false);
+                PlayerDie();
                 return;
             }
         }
@@ -225,15 +210,9 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnTriggerStay(Collider coll)
     {
-
         if (coll.CompareTag("DeadLine"))
         {
-            PlayerDie(false);
-        }
-
-        if (coll.CompareTag("DeadLine"))
-        {
-            PlayerDie(false);
+            PlayerDie();
         }
 
         else if(coll.CompareTag("Finish"))
@@ -242,22 +221,9 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    void OnTriggerExit(Collider coll)
+    public void PlayerDie()
     {
-        if (coll.name == "Switch")
-        {
-            switchState = gameObject.AddComponent<SwitchObject>();
-        }
-    }
-
-    public void PlayerDie(bool isFall)
-    {
-        if (isFall)
-        {
-            GetPlayerData();
-        }
-        else if (!isFall)
-            StartCoroutine(ResetPlayer());
+        StartCoroutine(ResetPlayer());
     }
 
     IEnumerator ResetPlayer()

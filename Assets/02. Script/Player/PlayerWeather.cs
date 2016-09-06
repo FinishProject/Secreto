@@ -46,7 +46,7 @@ public class PlayerWeather : MonoBehaviour, WeatherObserver
             if(!isLocked_NONE)
             {
                 PlayerCtrl.jumpState = JumpType.IDLE;
-                PlayerCtrl.instance.moveResistant = 0;
+                //PlayerCtrl.instance.moveResistant = 0;
                 isLocked_WIND_UD = false;
                 isLocked_NONE = true;
             }
@@ -73,7 +73,7 @@ public class PlayerWeather : MonoBehaviour, WeatherObserver
         // 비 영향 받을 시 
         if ((WeatherState.RAIN & weatherState) == WeatherState.RAIN && !isUsingLeaf)
         {
-            PlayerCtrl.instance.moveResistant = weatherValue;
+            //PlayerCtrl.instance.moveResistant = weatherValue;
         }
     }
 
