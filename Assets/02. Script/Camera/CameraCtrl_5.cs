@@ -5,6 +5,7 @@ using UnityStandardAssets.ImageEffects;
 
 
 // 카메라 4
+
 public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
 {
     public float camSpeed = 5f;
@@ -42,13 +43,11 @@ public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
 
     void Start()
     {
-        instance = this;
+//        instance = this;
         playerTr = PlayerCtrl.instance.transform;
 
         // GetComponent<VignetteAndChromaticAberration>().intensity = 0.8f;    // 비네팅
         // GetComponent<VignetteAndChromaticAberration>().chromaticAberration = 0.8f;    // 희미
-
-
 
         sensorArea = GameObject.Find("Sensor_Area").transform;
         sensorWall_L = GameObject.Find("Sensor_Wall_L").transform;
@@ -149,8 +148,7 @@ public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
                         camY_old = camY;
                         camY = returnObjet.GetComponent<CameraArea_2>().val;
                         camY_gap = Mathf.Abs(camY - camY_old);
-//                        if (camY_gap > 5)
-//                            camY_gap = 5;
+                        Debug.Log(returnObjet.name + " : " + camY);
                         inCamArea = true;
                     }
                     else

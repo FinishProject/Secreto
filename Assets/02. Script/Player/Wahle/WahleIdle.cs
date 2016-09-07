@@ -35,11 +35,11 @@ public class WahleIdle : WahleCtrl
     {
         if(distance <= 4f)
         {
-            targetPoint.position = base.SetRandomPos();
+ //           targetPoint.position = base.SetRandomPos();
         }
-        relativePos = targetPoint.position - transform.position;
-        distance = relativePos.sqrMagnitude;
-        lookRot = Quaternion.LookRotation(relativePos);
+//        relativePos = targetPoint.position - transform.position;
+//        distance = relativePos.sqrMagnitude;
+//        lookRot = Quaternion.LookRotation(relativePos);
 
         relativePos = ShotRay(relativePos);
 

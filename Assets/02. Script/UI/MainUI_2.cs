@@ -73,7 +73,7 @@ public class MainUI_2 : MonoBehaviour
 
     public void StartNewGame()
     {
-        Application.LoadLevel("LoadingScene");
+        Application.LoadLevel("IntroMovieScene");
     }
 
     public void ExitGame()

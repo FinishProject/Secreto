@@ -231,11 +231,6 @@ public class PlayerCtrl : MonoBehaviour
             PlayerDie(false);
         }
 
-        if (coll.CompareTag("DeadLine"))
-        {
-            PlayerDie(false);
-        }
-
         else if(coll.CompareTag("Finish"))
         {
             InGameUI_2.instance.GameEnd();
