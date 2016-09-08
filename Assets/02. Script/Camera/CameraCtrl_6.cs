@@ -32,7 +32,7 @@ public class CameraCtrl_6 : MonoBehaviour {
         Vector3 temp = tr.position;
         temp = Vector3.Lerp(tr.position, new Vector3(playerTr.position.x, 0, playerTr.position.z) + baseCamPos, 5 * Time.deltaTime);
         ChackGround();
-        Debug.Log(playerTr.position.y + " : "+ (traceYpos + groundPos.y));
+        //Debug.Log(playerTr.position.y + " : "+ (traceYpos + groundPos.y));
         if (playerTr.position.y > traceYpos + groundPos.y)
             temp.y = Mathf.Lerp(tr.position.y, traceYpos + groundPos.y + baseCamPos.y, 3f * 0.5f * Time.deltaTime);
         else
@@ -50,7 +50,7 @@ public class CameraCtrl_6 : MonoBehaviour {
             if (hit.collider.gameObject && hit.transform.CompareTag("Untagged"))
             { 
                 groundPos = hit.point;
-                Debug.Log(hit.point);
+                //Debug.Log(hit.point);
 //                baseCamPos.y = groundPos.y + groundToCamYgap;
 //                Debug.Log(hit.point);
 

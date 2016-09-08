@@ -17,8 +17,10 @@ public class PlayerCtrl : MonoBehaviour
 
     // 플레이어 이동 변수
     public float moveSpeed = 10f; // 이동 속도
+    public float maxJumpHight = 10f;
     public float basicJumpHight = 3.0f; // 기본 점프 높이
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
+    public float upGravity = 1f; // 점프 시 중력 값
     public float dropGravity = 5f; // 공중에 있을 때의 중력값
     private float curGravity; // 현재 중력값
 
@@ -66,6 +68,7 @@ public class PlayerCtrl : MonoBehaviour
     void Start()
     {
         //GetPlayerData();
+        curGravity = dropGravity;
     }
 
     void Update()
@@ -83,7 +86,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
         anim.SetFloat("Velocity", controller.velocity.y);
-        //cloth.damping = 0.6f;
+
         // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow) ||
             Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
@@ -95,7 +98,7 @@ public class PlayerCtrl : MonoBehaviour
         // 지상에 있을 시
         if (controller.isGrounded)
         {
-            curGravity = 50f;
+            //curGravity = 50f;
             anim.SetBool("Jump", false);
             anim.SetBool("Dash", false);
             anim.SetBool("Idle", false);
@@ -103,33 +106,33 @@ public class PlayerCtrl : MonoBehaviour
             //이동
             moveDir = Vector3.right * inputAxis;
 
+            // 키 입력 시 달리기 애니메이션 재생
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
+                Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) {
+                anim.SetBool("Run", true);
+            }
+            else {
+                anim.SetBool("Run", false);
+            }
+
             // 점프
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Jump(JumpType.BASIC);
-                anim.SetBool("Run", false);
-            }
-            // 키 입력 시 달리기 애니메이션 재생
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
-                Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-            {
-                anim.SetBool("Run", true);
-            }
-            else
-            {
-                anim.SetBool("Run", false);
             }
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
         {
-            curGravity = dropGravity;
-            //if (Input.GetKeyDown(KeyCode.Space))
-            //    Jump(JumpType.DASH);
-            //else
-            //{
-            //    moveDir.x = inputAxis;
-            //}
+            moveDir.x = inputAxis;
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                Jump(JumpType.DASH);
+
+            if (controller.velocity.y <= -0.1)
+            {
+                curGravity = dropGravity;
+            }
         }
         moveDir.y -= curGravity * Time.deltaTime;
         controller.Move(moveDir * moveSpeed * Time.deltaTime);
@@ -138,25 +141,37 @@ public class PlayerCtrl : MonoBehaviour
     // 점프
     void Jump(JumpType curJumpState)
     {
-        curGravity = dropGravity;
+        curGravity = upGravity;
         switch (curJumpState)
         {
             case JumpType.BASIC:
                 anim.SetBool("Jump", true);
                 isJumping = true;
                 pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-                moveDir.y += basicJumpHight;
-                //curGravity = dropGravity - 1f;
+                StartCoroutine(Jumping());
                 break;
             case JumpType.DASH:
-                if (isJumping)
-                {
+                if (isJumping) { 
                     anim.SetBool("Dash", true);
                     isJumping = false;
-                    //pEffect.StartEffect(PlayerEffectList.DASH_JUMP);
                     moveDir.y = dashJumpHight;
                 }
                 break;
+        }
+    }
+
+    IEnumerator Jumping()
+    {
+        float jumpTime = 0f;
+        while (Input.GetKey(KeyCode.Space))
+        {
+            if (jumpTime >= maxJumpHight)
+                break;
+
+            moveDir.y = basicJumpHight;
+            jumpTime += Time.deltaTime;
+
+            yield return null;
         }
     }
 
@@ -164,9 +179,9 @@ public class PlayerCtrl : MonoBehaviour
     void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
+        focusRight *= -1f;
+
         //transform.Rotate(new Vector3(0, 1, 0), 180);
-        //focusRight *= -1f;
-        //cloth.damping = 1f;
 
         Vector3 localScale = transform.localScale;
         localScale.z *= -1f;
