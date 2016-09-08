@@ -1,4 +1,6 @@
-﻿Shader "Custom/SurfaceWindShader" {
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Custom/SurfaceWindShader" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -46,7 +48,7 @@
 				float num = v.vertex.z;
 
 				if ((num - _MinY) > 0.0) {
-					float3 worldPos = mul(_Object2World, v.vertex).xyz;
+					float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 					float x = sin(worldPos.x / _WorldScale + (_Time.y*_Speed)) * (num - _MinY) * _Scale * 0.01;
 					float y = cos(worldPos.y / _WorldScale + (_Time.y*_Speed)) * (num - _MinY) * _Scale * 0.01;
 
