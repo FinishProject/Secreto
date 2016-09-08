@@ -14,13 +14,21 @@ using System.Collections;
 
 public class PlayerEffect : MonoBehaviour {
 
-    public GameObject[] effects;
+    private int jumpEffectCount = -1;
 
+    public GameObject[] effects;
     private Transform playerTr;
+    public GameObject[] jumpEffect;
 
     void Start()
     {
         playerTr = GetComponent<PlayerCtrl>().transform;
+
+        for(int i=0; i < 4; i++)
+        {
+            jumpEffect[i] = (GameObject)Instantiate(effects[1], transform.position, Quaternion.identity);
+            jumpEffect[i].SetActive(false);
+        }
     }
 
     public void StartEffect(PlayerEffectList effectState)
@@ -36,18 +44,29 @@ public class PlayerEffect : MonoBehaviour {
             case PlayerEffectList.DIE:
                 playerVec.y += 4f;
                 effects[(int)effectState].transform.position = playerVec;
+
+                effects[(int)effectState].SetActive(true);
+                yield return new WaitForSeconds(1f);
+                effects[(int)effectState].SetActive(false);
                 break;
             case PlayerEffectList.BASIC_JUMP:
-                playerVec.y += 1f;
-                effects[(int)effectState].transform.position = playerVec;
 
-                if (effects[(int)effectState].activeSelf)
-                    effects[(int)effectState].SetActive(false);
+                jumpEffectCount++;
+                if (jumpEffectCount >= jumpEffect.Length)
+                {
+                    jumpEffectCount = 0;
+                }
+
+                playerVec.y += 1f;
+                jumpEffect[jumpEffectCount].SetActive(true);
+                jumpEffect[jumpEffectCount].transform.position = playerVec;
+
+                yield return new WaitForSeconds(3f);
+                
+                jumpEffect[jumpEffectCount].SetActive(false);
                 break;
         }
 
-        effects[(int)effectState].SetActive(true);
-        yield return new WaitForSeconds(1f);
-        effects[(int)effectState].SetActive(false);
+        
     }
 }
