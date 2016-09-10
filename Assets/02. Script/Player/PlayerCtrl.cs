@@ -2,10 +2,6 @@
 using System.Collections;
 using System;
 
-public enum JumpType
-{
-    IDLE, FLY_IDLE, BASIC, DASH, LEAP, POWER,
-}
 public enum PlayerEffectList
 {
     DIE, BASIC_JUMP, DASH_JUMP,
@@ -13,13 +9,12 @@ public enum PlayerEffectList
 
 public class PlayerCtrl : MonoBehaviour
 {
-    public static JumpType jumpState = JumpType.IDLE; // 점프 타입
-
     // 플레이어 이동 변수
     public float moveSpeed = 10f; // 이동 속도
     public float maxJumpHight = 10f;
     public float basicJumpHight = 3.0f; // 기본 점프 높이
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
+    public float jumpAccel = 1f;
     public float upGravity = 1f; // 점프 시 중력 값
     public float dropGravity = 5f; // 공중에 있을 때의 중력값
     private float curGravity; // 현재 중력값
@@ -62,7 +57,7 @@ public class PlayerCtrl : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         pEffect = GetComponent<PlayerEffect>();
-        wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
+        //wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
     }
 
     void Start()
@@ -80,6 +75,9 @@ public class PlayerCtrl : MonoBehaviour
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
+
+ 
+
     }
 
     void Movement()
@@ -87,6 +85,7 @@ public class PlayerCtrl : MonoBehaviour
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
         anim.SetFloat("Velocity", controller.velocity.y);
 
+      
         // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow) ||
             Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
@@ -103,6 +102,8 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetBool("Dash", false);
             anim.SetBool("Idle", false);
 
+            float jumpTime = 0f;
+
             //이동
             moveDir = Vector3.right * inputAxis;
 
@@ -118,8 +119,9 @@ public class PlayerCtrl : MonoBehaviour
             // 점프
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Jump(JumpType.BASIC);
+                StartCoroutine(BasicJump());
             }
+
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
@@ -127,52 +129,49 @@ public class PlayerCtrl : MonoBehaviour
             moveDir.x = inputAxis;
 
             if (Input.GetKeyDown(KeyCode.Space))
-                Jump(JumpType.DASH);
+                DashJump();
 
             if (controller.velocity.y <= -0.1)
             {
                 curGravity = dropGravity;
             }
         }
+
         moveDir.y -= curGravity * Time.deltaTime;
         controller.Move(moveDir * moveSpeed * Time.deltaTime);
     }
 
-    // 점프
-    void Jump(JumpType curJumpState)
+    IEnumerator BasicJump()
     {
         curGravity = upGravity;
-        switch (curJumpState)
-        {
-            case JumpType.BASIC:
-                anim.SetBool("Jump", true);
-                isJumping = true;
-                pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-                StartCoroutine(Jumping());
-                break;
-            case JumpType.DASH:
-                if (isJumping) { 
-                    anim.SetBool("Dash", true);
-                    isJumping = false;
-                    moveDir.y = dashJumpHight;
-                }
-                break;
-        }
-    }
+        isJumping = true;
+        anim.SetBool("Jump", true);
+        pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
 
-    IEnumerator Jumping()
-    {
+        moveDir.y = basicJumpHight;
+        moveDir.y -= curGravity * Time.deltaTime;
+        controller.Move(moveDir * moveSpeed * Time.deltaTime);
+
         float jumpTime = 0f;
+
         while (Input.GetKey(KeyCode.Space))
         {
             if (jumpTime >= maxJumpHight)
                 break;
 
-            moveDir.y = basicJumpHight;
+            moveDir.y = jumpAccel;
             jumpTime += Time.deltaTime;
 
             yield return null;
         }
+    }
+
+    void DashJump()
+    {
+        curGravity = upGravity;
+        anim.SetBool("Dash", true);
+        isJumping = false;
+        moveDir.y = dashJumpHight;
     }
 
     //캐릭터 방향 회전
@@ -181,13 +180,13 @@ public class PlayerCtrl : MonoBehaviour
         isFocusRight = !isFocusRight;
         focusRight *= -1f;
 
-        //transform.Rotate(new Vector3(0, 1, 0), 180);
+        transform.Rotate(new Vector3(0, 1, 0), 180);
 
-        Vector3 localScale = transform.localScale;
-        localScale.z *= -1f;
-        transform.localScale = localScale;
+        //Vector3 localScale = transform.localScale;
+        //localScale.z *= -1f;
+        //transform.localScale = localScale;
 
-        wahleMove.ResetSpeed();
+        //wahleMove.ResetSpeed();
         if (!controller.isGrounded) { moveDir.x *= -1f; }
     }
 
