@@ -15,7 +15,7 @@ public class WahleMove : WahleCtrl
         initSpeed = 0f;
         while (true)
         {
-            focusDir = Mathf.Sign(PlayerCtrl.inputAxis);
+            focusDir = PlayerCtrl.focusRight;
             relativePos = playerTr.position - transform.position;
             lookRot = Quaternion.LookRotation(relativePos);
             distance = relativePos.sqrMagnitude;
@@ -43,7 +43,7 @@ public class WahleMove : WahleCtrl
 
             initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel); // 이동속도 가속도
                                                                     // 플레이어 추격
-            transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward * focusDir),
+            transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward),
                      initSpeed * Time.deltaTime);
         
     }

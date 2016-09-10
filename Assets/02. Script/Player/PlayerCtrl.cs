@@ -57,7 +57,7 @@ public class PlayerCtrl : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         pEffect = GetComponent<PlayerEffect>();
-        //wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
+        wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
     }
 
     void Start()
@@ -101,8 +101,6 @@ public class PlayerCtrl : MonoBehaviour
             anim.SetBool("Jump", false);
             anim.SetBool("Dash", false);
             anim.SetBool("Idle", false);
-
-            float jumpTime = 0f;
 
             //이동
             moveDir = Vector3.right * inputAxis;
@@ -186,7 +184,7 @@ public class PlayerCtrl : MonoBehaviour
         //localScale.z *= -1f;
         //transform.localScale = localScale;
 
-        //wahleMove.ResetSpeed();
+        wahleMove.ResetSpeed();
         if (!controller.isGrounded) { moveDir.x *= -1f; }
     }
 
