@@ -37,13 +37,20 @@ public class WahleMove : WahleCtrl
     // 플레이어를 따라 이동
     private void Movement()
     {
+        if (!PlayerCtrl.controller.isGrounded)
+        {
+            initSpeed = 2f;
+        }
+        else
+        {
+            initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel); // 이동속도 가속도                              
+        }
         // 플레이어를 봐라봄
-            transform.localRotation = Quaternion.Slerp(transform.localRotation,
-                lookRot, 3f * Time.deltaTime);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+            lookRot, 2f * Time.deltaTime);
 
-            initSpeed = IncrementSpeed(initSpeed, maxSpeed, accel); // 이동속도 가속도
-                                                                    // 플레이어 추격
-            transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward),
+        // 플레이어 추격
+        transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.forward),
                      initSpeed * Time.deltaTime);
         
     }

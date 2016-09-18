@@ -6,6 +6,8 @@ public class WindObj : MonoBehaviour {
     public float speed = 3f;
     private Vector3 moveDir;
 
+    private bool isFly = false;
+
     CameraCtrl_5 cam;
 
     void Start()
@@ -19,11 +21,10 @@ public class WindObj : MonoBehaviour {
         {
             gameObject.GetComponent<Renderer>().material.color = Color.red;
             if(cam != null)
-                cam.ChangeCamSpeed(200f);
+                cam.ChangeCamSpeed(500f);
 
-            moveDir = PlayerCtrl.moveDir;
-            moveDir.x -= speed;
-            PlayerCtrl.controller.Move(moveDir * Time.deltaTime);
+            PlayerCtrl.curGravity = 0f;
+            col.transform.position += Vector3.up * speed * Time.deltaTime;
         }
     }
 
@@ -31,9 +32,9 @@ public class WindObj : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            if(cam != null)
+            if (cam != null)
                 cam.ResetCameSpeed();
-            gameObject.GetComponent<Renderer>().material.color = Color.white;
+            PlayerCtrl.curGravity = PlayerCtrl.instance.dropGravity;
         }
     }
 }

@@ -3,6 +3,9 @@ using System.Collections;
 
 public class WahleIdle : WahleCtrl
 {
+
+    public float lookSpeed = 0.3f;
+
     protected override IEnumerator CurStateUpdate()
     {
         anim.SetBool("Move", true);
@@ -17,12 +20,6 @@ public class WahleIdle : WahleCtrl
                     base.ChangeState(WahleState.MOVE);
                 }
             }
-
-            // NPC와 대화 시
-            if (ScriptMgr.isSpeak)
-            {
-                SpeakingNpc();
-            }
             else
                 Wander();
             
@@ -35,17 +32,17 @@ public class WahleIdle : WahleCtrl
     {
         if(distance <= 4f)
         {
- //           targetPoint.position = base.SetRandomPos();
+            targetPoint.position = base.SetRandomPos();
         }
-//        relativePos = targetPoint.position - transform.position;
-//        distance = relativePos.sqrMagnitude;
-//        lookRot = Quaternion.LookRotation(relativePos);
+        relativePos = targetPoint.position - transform.position;
+        distance = relativePos.sqrMagnitude;
+        lookRot = Quaternion.LookRotation(relativePos);
 
-        relativePos = ShotRay(relativePos);
+        //relativePos = ShotRay(relativePos);
 
         //transform.RotateAround(this.transform.forward, 1f * Time.deltaTime);
 
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 0.8f * Time.deltaTime);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, lookSpeed * Time.deltaTime);
         transform.Translate(Vector3.forward * Time.deltaTime);
     }
 

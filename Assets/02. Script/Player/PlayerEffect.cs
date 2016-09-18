@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /*************************   정보   **************************
 
@@ -14,21 +15,14 @@ using System.Collections;
 
 public class PlayerEffect : MonoBehaviour {
 
-    private int jumpEffectCount = -1;
-
     public GameObject[] effects;
     private Transform playerTr;
-    public GameObject[] jumpEffect;
+
+    Queue<GameObject> effectQueue = new Queue<GameObject>();
 
     void Start()
     {
         playerTr = GetComponent<PlayerCtrl>().transform;
-
-        for(int i=0; i < 4; i++)
-        {
-            jumpEffect[i] = (GameObject)Instantiate(effects[1], transform.position, Quaternion.identity);
-            jumpEffect[i].SetActive(false);
-        }
     }
 
     public void StartEffect(PlayerEffectList effectState)
@@ -41,6 +35,7 @@ public class PlayerEffect : MonoBehaviour {
         Vector3 playerVec = this.transform.position;
         switch (effectState)
         {
+            // 플레이어 죽음 이펙트
             case PlayerEffectList.DIE:
                 playerVec.y += 4f;
                 effects[(int)effectState].transform.position = playerVec;
@@ -49,24 +44,19 @@ public class PlayerEffect : MonoBehaviour {
                 yield return new WaitForSeconds(1f);
                 effects[(int)effectState].SetActive(false);
                 break;
+            // 플레이어 기본 점프 이펙트
             case PlayerEffectList.BASIC_JUMP:
-
-                jumpEffectCount++;
-                if (jumpEffectCount >= jumpEffect.Length)
-                {
-                    jumpEffectCount = 0;
-                }
-
-                playerVec.y += 1f;
-                jumpEffect[jumpEffectCount].SetActive(true);
-                jumpEffect[jumpEffectCount].transform.position = playerVec;
-
-                yield return new WaitForSeconds(3f);
-                
-                jumpEffect[jumpEffectCount].SetActive(false);
+                GameObject jumpEffect = (GameObject)Instantiate(effects[1], 
+                    new Vector3(playerVec.x, playerVec.y + 1f, playerVec.z), Quaternion.identity);
+                effectQueue.Enqueue(jumpEffect);
+                StartCoroutine(SetOffEffect());
                 break;
         }
+    }
 
-        
+    IEnumerator SetOffEffect()
+    {
+        yield return new WaitForSeconds(5f);
+        Destroy(effectQueue.Dequeue());
     }
 }

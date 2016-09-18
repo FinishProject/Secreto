@@ -17,7 +17,7 @@ public class PlayerCtrl : MonoBehaviour
     public float jumpAccel = 1f;
     public float upGravity = 1f; // 점프 시 중력 값
     public float dropGravity = 5f; // 공중에 있을 때의 중력값
-    private float curGravity; // 현재 중력값
+    public static float curGravity; // 현재 중력값
 
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
@@ -75,9 +75,6 @@ public class PlayerCtrl : MonoBehaviour
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
-
- 
-
     }
 
     void Movement()
@@ -105,6 +102,12 @@ public class PlayerCtrl : MonoBehaviour
             //이동
             moveDir = Vector3.right * inputAxis;
 
+            // 점프
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartCoroutine(BasicJump());
+            }
+
             // 키 입력 시 달리기 애니메이션 재생
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
                 Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) {
@@ -113,13 +116,6 @@ public class PlayerCtrl : MonoBehaviour
             else {
                 anim.SetBool("Run", false);
             }
-
-            // 점프
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                StartCoroutine(BasicJump());
-            }
-
         }
         // 공중에 있을 시
         else if (!controller.isGrounded)
@@ -145,12 +141,11 @@ public class PlayerCtrl : MonoBehaviour
         isJumping = true;
         anim.SetBool("Jump", true);
         pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
-
-        moveDir.y = basicJumpHight;
-        moveDir.y -= curGravity * Time.deltaTime;
-        controller.Move(moveDir * moveSpeed * Time.deltaTime);
-
         float jumpTime = 0f;
+
+        //moveDir.y = basicJumpHight;
+        //moveDir.y -= curGravity * Time.deltaTime;
+        //controller.Move(moveDir * moveSpeed * Time.deltaTime);
 
         while (Input.GetKey(KeyCode.Space))
         {
