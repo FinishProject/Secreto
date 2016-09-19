@@ -31,8 +31,8 @@ public class CameraCtrl_6 : MonoBehaviour {
 
         Vector3 temp = tr.position;
         temp = Vector3.Lerp(tr.position, new Vector3(playerTr.position.x, 0, playerTr.position.z) + baseCamPos, 5 * Time.deltaTime);
-        ChackGround();
-        Debug.Log(playerTr.position.y + " : "+ (traceYpos + groundPos.y));
+//        ChackGround();
+//        Debug.Log(playerTr.position.y + " : "+ (traceYpos + groundPos.y));
         if (playerTr.position.y > traceYpos + groundPos.y)
             temp.y = Mathf.Lerp(tr.position.y, traceYpos + groundPos.y + baseCamPos.y, 3f * 0.5f * Time.deltaTime);
         else
@@ -42,19 +42,37 @@ public class CameraCtrl_6 : MonoBehaviour {
     }
 
     GameObject oldGround = null;
+    RaycastHit[] hits;
     void ChackGround()
     {
-        Debug.DrawLine(tr.position, tr.position - Vector3.up * 20, Color.yellow);
-        if (Physics.Raycast(tr.position, tr.position - Vector3.up * 20, out hit, 10))
+        /*
+        Debug.DrawLine(playerTr.position, playerTr.position - Vector3.up * 20, Color.yellow);
+        if (Physics.Raycast(playerTr.position, playerTr.position - Vector3.up * 20, out hit, 10))
         {
-            if (hit.collider.gameObject && hit.transform.CompareTag("Untagged"))
+            if (hit.collider.gameObject && hit.transform.CompareTag("Land"))
             { 
                 groundPos = hit.point;
-                Debug.Log(hit.point);
+                Debug.Log(hit.point.y + "  " + hit.transform.name);
 //                baseCamPos.y = groundPos.y + groundToCamYgap;
 //                Debug.Log(hit.point);
 
             }
         }
+        */
+        Debug.DrawLine(playerTr.position + (Vector3.up * 1f), playerTr.position - Vector3.up * 20, Color.yellow);
+        hits = Physics.RaycastAll(playerTr.position + (Vector3.up * 1f), playerTr.position - Vector3.up * 20, 100.0F);
+
+        Debug.Log(hits.Length);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            RaycastHit hit = hits[i];
+
+            Debug.Log(hit.transform.name);
+            if (hit.transform.CompareTag("Land"))
+            {
+                
+            }
+        }
+
     }
 }
