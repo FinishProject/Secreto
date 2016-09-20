@@ -1736,7 +1736,6 @@ GameObject:
   - 54: {fileID: 5460850}
   - 114: {fileID: 11411660}
   - 114: {fileID: 114000011268019206}
-  - 114: {fileID: 114000010362868526}
   m_Layer: 0
   m_Name: Luna
   m_TagString: Player
@@ -3824,11 +3823,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 8
   maxJumpHight: 1
-  basicJumpHight: 3
-  dashJumpHight: 1.05
+  basicJumpHight: 2
+  dashJumpHight: 1
   jumpAccel: 1
   upGravity: 1
-  dropGravity: 5
+  dropGravity: 3
   cloth: {fileID: 18335394}
   lunaModel: {fileID: 0}
 --- !u!114 &11411970
@@ -4024,6 +4023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 10
   accel: 5
+  lookSpeed: 0.3
 --- !u!114 &11462130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7277,17 +7277,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   traceYpos: 3
---- !u!114 &114000010362868526
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 195370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73aad4b30e05844abff359589fda31a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114000011268019206
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7301,7 +7290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effects:
   - {fileID: 1000013421357622}
-  jumpEffect: []
+  - {fileID: 109174, guid: 4724f3897fe0420498cdb49b1ea727a2, type: 2}
 --- !u!114 &114000013860628742
 MonoBehaviour:
   m_ObjectHideFlags: 1
