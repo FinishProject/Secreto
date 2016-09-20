@@ -40,8 +40,8 @@ public class FadeInOut : MonoBehaviour {
     }
 
     public Fade_PlayerDead fade_PlayerDead_Info;
-
     public static FadeInOut instance;
+
     void Start()
     {
         instance = this;
@@ -50,9 +50,12 @@ public class FadeInOut : MonoBehaviour {
         BlackImg = gameObject.GetComponent<Image>();
         vignette = Camera.main.GetComponent<VignetteAndChromaticAberration>();
 
-        fade_PlayerDead_Info.Vgnetting_min =  vignette.intensity;
-        fade_PlayerDead_Info.chromaticAberration_min = vignette.chromaticAberration;
-        
+        if (vignette != null)
+        {
+            fade_PlayerDead_Info.Vgnetting_min = vignette.intensity;
+            fade_PlayerDead_Info.chromaticAberration_min = vignette.chromaticAberration;
+        }
+
     }
 
     void Update()

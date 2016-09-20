@@ -43,7 +43,7 @@ public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
 
     void Start()
     {
-//        instance = this;
+        instance = this;
         playerTr = PlayerCtrl.instance.transform;
 
         // GetComponent<VignetteAndChromaticAberration>().intensity = 0.8f;    // 비네팅
@@ -91,7 +91,7 @@ public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
             {
 
                 temp = Vector3.Lerp(tr.position, new Vector3(playerTr.position.x, 0, playerTr.position.z) + baseCamPos, camSpeed * Time.deltaTime);
-                temp.y = Mathf.Lerp(tr.position.y, camY + baseCamPos.y, camY_gap * 0.3f * Time.deltaTime);
+                temp.y = Mathf.Lerp(tr.position.y, camY + baseCamPos.y, camY_gap * 0.4f * Time.deltaTime);
             }
             else
                 //                temp = Vector3.Lerp(tr.position, playerTr.position + baseCamPos, Mathf.Abs(PlayerCtrl.controller.velocity.y) * Time.deltaTime);
