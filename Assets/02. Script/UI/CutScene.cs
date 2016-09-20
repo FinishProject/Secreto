@@ -3,52 +3,63 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class CutScene : MonoBehaviour {
-    public Image[] cutImages;
+    public float normalTransTime;
+
+    [System.Serializable]
+    public struct ImgInfo
+    {
+        public Image cutImg;
+        public float transTime;
+        public bool playFadeOut;
+    }
+    public ImgInfo[] imgInfo; 
 
     private int index;
     private int imgCnt;
 
 	void Start () {
         index = 0;
-
-        imgCnt = cutImages.Length;
-
-        cutImages[0].enabled = true;
-        for (int i = 1; i < imgCnt; i++)
-            cutImages[i].enabled = false;
-    }
-	
-	void Update () {
         
-	    if(Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            ViewImage(false);
-        }
-        else if (Input.anyKeyDown)
-        {
-            ViewImage(true);
-        }
+        imgCnt = imgInfo.Length;
+        
+        imgInfo[0].cutImg.enabled = true;
+        for (int i = 1; i < imgCnt; i++)
+            imgInfo[i].cutImg.enabled = false;
 
-	}
+        StartCoroutine(SlideShow());
+    }
 
-    void ViewImage(bool isNext)
+
+    IEnumerator SlideShow()
     {
-        if(isNext)
+        while (true)
         {
+            Debug.Log(index + 1);
+            
+
+            if (imgInfo[index].transTime > 0)
+            {
+                yield return new WaitForSeconds(imgInfo[index].transTime);
+            }
+            else
+            {
+                yield return new WaitForSeconds(normalTransTime);
+            }
+
+            if (imgInfo[index].playFadeOut)
+            {
+                FadeInOut.instance.StartFadeInOut(0.5f, 0.3f, 0.5f);
+                yield return new WaitForSeconds(0.5f);
+            }
+
             if (imgCnt <= index + 1)
             {
                 Application.LoadLevel("MainScene");
-                return;
+                yield break;
             }
 
-            cutImages[index++].enabled = false;
-            cutImages[index].enabled = true;
-        }
-        
-        else if (index > 0)
-        {
-            cutImages[index--].enabled = false;
-            cutImages[index].enabled = true;
+            imgInfo[index++].cutImg.enabled = false;
+            imgInfo[index].cutImg.enabled = true;
         }
     }
 }

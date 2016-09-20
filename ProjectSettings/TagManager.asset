@@ -19,6 +19,7 @@ TagManager:
   - SavePoint
   - EndPoint
   - FadeLine
+  - Land
   layers:
   - Default
   - TransparentFX
