@@ -12,7 +12,7 @@ public class PlayerCtrl : MonoBehaviour
     // 플레이어 이동 변수
     public float moveSpeed = 10f; // 이동 속도
     public float maxJumpHight = 10f;
-    //public float basicJumpHight = 3.0f; // 기본 점프 높이
+    public float basicJumpHight = 3.0f; // 기본 점프 높이
     public float dashJumpHight = 4.0f; // 대쉬 점프 높이
     public float jumpAccel = 1f;
     public float upGravity = 1f; // 점프 시 중력 값
@@ -122,7 +122,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             moveDir.x = inputAxis;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && isJumping)
                 DashJump();
 
             if (controller.velocity.y <= -0.1)
@@ -142,7 +142,7 @@ public class PlayerCtrl : MonoBehaviour
         anim.SetBool("Jump", true);
         pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
         float jumpTime = 0f;
-
+        
         //moveDir.y = basicJumpHight;
         //moveDir.y -= curGravity * Time.deltaTime;
         //controller.Move(moveDir * moveSpeed * Time.deltaTime);
@@ -151,7 +151,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             if (jumpTime >= maxJumpHight)
                 break;
-
+            Debug.Log(controller.isGrounded);
             moveDir.y = jumpAccel;
             jumpTime += Time.deltaTime;
 
