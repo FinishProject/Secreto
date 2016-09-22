@@ -23,7 +23,7 @@ CGPROGRAM
 // Copyright (c) 2010 NVIDIA Corporation. All rights reserved.
 //
 // TO  THE MAXIMUM  EXTENT PERMITTED  BY APPLICABLE  LAW, THIS SOFTWARE  IS PROVIDED
-// *AS IS*  AND NVIDIA AND  ITS SUPPLIERS DISCLAIM  ALL WARRANTIES,  EITHER  MentalRESS
+// *AS IS*  AND NVIDIA AND  ITS SUPPLIERS DISCLAIM  ALL WARRANTIES,  EITHER  EXPRESS
 // OR IMPLIED, INCLUDING, BUT NOT LIMITED  TO, IMPLIED WARRANTIES OF MERCHANTABILITY
 // AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL  NVIDIA OR ITS SUPPLIERS
 // BE  LIABLE  FOR  ANY  SPECIAL,  INCIDENTAL,  INDIRECT,  OR  CONSEQUENTIAL DAMAGES
@@ -115,6 +115,8 @@ CGPROGRAM
 /*--------------------------------------------------------------------------*/
 #define FxaaToFloat3(a) FxaaFloat3((a), (a), (a))
 /*--------------------------------------------------------------------------*/
+half4 _MainTex_ST;
+
 float4 FxaaTexLod0(FxaaTex tex, float2 pos) {
     #if FXAA_GLSL_120
         return texture2DLod(tex, pos.xy, 0.0);
@@ -123,10 +125,10 @@ float4 FxaaTexLod0(FxaaTex tex, float2 pos) {
         return textureLod(tex, pos.xy, 0.0);
     #endif
     #if FXAA_HLSL_3
-        return tex2Dlod(tex, float4(pos.xy, 0.0, 0.0)); 
+        return tex2Dlod(tex, float4(UnityStereoScreenSpaceUVAdjust(pos.xy, _MainTex_ST), 0.0, 0.0));
     #endif
     #if FXAA_HLSL_4
-        return tex.tex.SampleLevel(tex.smpl, pos.xy, 0.0);
+        return tex.tex.SampleLevel(tex.smpl, UnityStereoScreenSpaceUVAdjust(pos.xy, _MainTex_ST), 0.0);
     #endif
 }
 /*--------------------------------------------------------------------------*/
@@ -138,10 +140,10 @@ float4 FxaaTexGrad(FxaaTex tex, float2 pos, float2 grad) {
         return textureGrad(tex, pos.xy, grad, grad);
     #endif
     #if FXAA_HLSL_3
-        return tex2Dgrad(tex, pos.xy, grad, grad); 
+        return tex2Dgrad(tex, UnityStereoScreenSpaceUVAdjust(pos.xy, _MainTex_ST), grad, grad);
     #endif
     #if FXAA_HLSL_4
-        return tex.tex.SampleGrad(tex.smpl, pos.xy, grad, grad);
+        return tex.tex.SampleGrad(tex.smpl, UnityStereoScreenSpaceUVAdjust(pos.xy, _MainTex_ST), grad, grad);
     #endif
 }
 /*--------------------------------------------------------------------------*/
@@ -153,10 +155,10 @@ float4 FxaaTexOff(FxaaTex tex, float2 pos, int2 off, float2 rcpFrame) {
         return textureLodOffset(tex, pos.xy, 0.0, off.xy);
     #endif
     #if FXAA_HLSL_3
-        return tex2Dlod(tex, float4(pos.xy + (off * rcpFrame), 0, 0)); 
+        return tex2Dlod(tex, float4(UnityStereoScreenSpaceUVAdjust(pos.xy + (off * rcpFrame), _MainTex_ST), 0, 0));
     #endif
     #if FXAA_HLSL_4
-        return tex.tex.SampleLevel(tex.smpl, pos.xy, 0.0, off.xy);
+        return tex.tex.SampleLevel(tex.smpl, UnityStereoScreenSpaceUVAdjust(pos.xy, _MainTex_ST), 0.0, off.xy);
     #endif
 }
 
@@ -165,7 +167,7 @@ float4 FxaaTexOff(FxaaTex tex, float2 pos, int2 off, float2 rcpFrame) {
 ------------------------------------------------------------------------------
 FXAA_SRGB_ROP - Set to 1 when applying FXAA to an sRGB back buffer (DX10/11).
                 This will do the sRGB to linear transform, 
-                as ROP will Mentalect linear color from this shader,
+                as ROP will expect linear color from this shader,
                 and this shader works in non-linear color.
 ============================================================================*/
 #define FXAA_SRGB_ROP 0

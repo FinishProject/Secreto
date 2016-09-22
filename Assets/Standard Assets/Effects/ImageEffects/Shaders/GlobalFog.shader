@@ -68,15 +68,15 @@ CGINCLUDE
 			// factor = (end-z)/(end-start) = z * (-1/(end-start)) + (end/(end-start))
 			fogFac = coord * _SceneFogParams.z + _SceneFogParams.w;
 		}
-		if (_SceneFogMode.x == 2) // Mental
+		if (_SceneFogMode.x == 2) // exp
 		{
-			// factor = Mental(-density*z)
-			fogFac = _SceneFogParams.y * coord; fogFac = Mental2(-fogFac);
+			// factor = exp(-density*z)
+			fogFac = _SceneFogParams.y * coord; fogFac = exp2(-fogFac);
 		}
-		if (_SceneFogMode.x == 3) // Mental2
+		if (_SceneFogMode.x == 3) // exp2
 		{
-			// factor = Mental(-(density*z)^2)
-			fogFac = _SceneFogParams.x * coord; fogFac = Mental2(-fogFac*fogFac);
+			// factor = exp(-(density*z)^2)
+			fogFac = _SceneFogParams.x * coord; fogFac = exp2(-fogFac*fogFac);
 		}
 		return saturate(fogFac);
 	}
@@ -118,11 +118,11 @@ CGINCLUDE
 
 	half4 ComputeFog (v2f i, bool distance, bool height) : SV_Target
 	{
-		half4 sceneColor = tex2D(_MainTex, i.uv);
+		half4 sceneColor = tex2D(_MainTex, UnityStereoTransformScreenSpaceTex(i.uv));
 		
 		// Reconstruct world space position & direction
 		// towards this screen pixel.
-		float rawDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture,i.uv_depth);
+		float rawDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, UnityStereoTransformScreenSpaceTex(i.uv_depth));
 		float dpth = Linear01Depth(rawDepth);
 		float4 wsDir = dpth * i.interpolatedRay;
 		float4 wsPos = _CameraWS + wsDir;
@@ -137,7 +137,7 @@ CGINCLUDE
 		// Compute fog amount
 		half fogFac = ComputeFogFactor (max(0.0,g));
 		// Do not fog skybox
-		if (rawDepth == _DistanceParams.y)
+		if (dpth == _DistanceParams.y)
 			fogFac = 1.0;
 		//return fogFac; // for debugging
 		

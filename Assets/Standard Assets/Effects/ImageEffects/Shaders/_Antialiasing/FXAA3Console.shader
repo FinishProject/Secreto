@@ -15,7 +15,7 @@ and adapted and ported to Unity by Unity Technologies
 COPYRIGHT (C) 2010, 2011 NVIDIA CORPORATION. ALL RIGHTS RESERVED.
 ------------------------------------------------------------------------------                       
 TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THIS SOFTWARE IS PROVIDED 
-*AS IS* AND NVIDIA AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES, EITHER MentalRESS 
+*AS IS* AND NVIDIA AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES, EITHER EXPRESS 
 OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF 
 MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL NVIDIA 
 OR ITS SUPPLIERS BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR 
@@ -50,6 +50,7 @@ Shader "Hidden/FXAA III (Console)" {
 		uniform half _EdgeThresholdMin;
 		uniform half _EdgeThreshold;
 		uniform half _EdgeSharpness;
+		half4 _MainTex_ST;
 
 		struct v2f {
 			float4 pos : SV_POSITION;
@@ -93,9 +94,9 @@ Shader "Hidden/FXAA III (Console)" {
 
 // hacky support for NaCl
 #if defined(SHADER_API_GLES) && defined(SHADER_API_DESKTOP)
-		#define FxaaTexTop(t, p) tex2D(t, p) 
+		#define FxaaTexTop(t, p) tex2D(t, UnityStereoScreenSpaceUVAdjust(p, _MainTex_ST)) 
 #else
-		#define FxaaTexTop(t, p) tex2Dlod(t, float4(p, 0.0, 0.0))
+		#define FxaaTexTop(t, p) tex2Dlod(t, float4(UnityStereoScreenSpaceUVAdjust(p, _MainTex_ST), 0.0, 0.0))
 #endif
 
 		inline half TexLuminance( float2 uv )
