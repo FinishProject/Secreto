@@ -39,20 +39,24 @@ public class LogoCtrl : MonoBehaviour {
         }
 
         colorValue.a += fadeSpeed * Time.deltaTime;
-        logoImg[imgCount].color = colorValue;
 
-        // alpha 증가
-        if (logoImg[imgCount].color.a >= 1)
+        if (imgCount < logoImg.Length)
         {
-            fadeSpeed *= -1f;
-        }
+            logoImg[imgCount].color = colorValue;
 
-        // alpha 감소
-        else if (logoImg[imgCount].color.a <= 0)
-        {
-            colorValue.a = 0;
-            fadeSpeed *= -1f;
-            imgCount++;
+            // alpha 증가
+            if (logoImg[imgCount].color.a >= 1)
+            {
+                fadeSpeed *= -1f;
+            }
+
+            // alpha 감소
+            else if (logoImg[imgCount].color.a <= 0)
+            {
+                colorValue.a = 0;
+                fadeSpeed *= -1f;
+                imgCount++;
+            }
         }
     }
 }

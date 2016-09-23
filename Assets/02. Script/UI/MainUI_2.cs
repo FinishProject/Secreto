@@ -11,6 +11,12 @@ public class MainUI_2 : MonoBehaviour
     int curSelectIdx;
     Transform[] menuButtons;
 
+    public Texture2D fadeImg;
+
+    public float fadeSpeed = 1f;
+    private float alpha = 0f;
+    float FadeAlpha;
+
     // Use this for initialization
     void Start()
     {
@@ -65,16 +71,28 @@ public class MainUI_2 : MonoBehaviour
     {
         switch (curIdx)
         {
-            case 1: StartNewGame(); break;
+            case 1: StartCoroutine(StartNewGame()); break;
             case 2: ExitGame(); break;
 
         }
     }
 
-    public void StartNewGame()
+    IEnumerator StartNewGame()
     {
-        Application.LoadLevel("IntroMovieScene");
+        while (true)
+        {
+            float fadeAlpha = GetComponent<Fade>().BeginFade(1);
+
+            if (fadeAlpha.Equals(1))
+            {
+                yield return new WaitForSeconds(0.5f);
+                Application.LoadLevel(Application.loadedLevel + 1);
+            }
+
+            yield return null;
+        }
     }
+
 
     public void ExitGame()
     {
