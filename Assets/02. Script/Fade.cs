@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Fade : MonoBehaviour {
-    public Texture2D fadeImg;
+    public Texture2D fadeTexture;
     public float fadeSpeed = 0.8f;
     private float FadeDir = 0f;
     public float alpha;
@@ -17,7 +17,7 @@ public class Fade : MonoBehaviour {
 
         GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, alpha);
         GUI.depth = drawDepth;
-        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), fadeImg);
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), fadeTexture);
     }
 
     public float BeginFade(float direction)

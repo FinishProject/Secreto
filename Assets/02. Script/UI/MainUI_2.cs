@@ -11,13 +11,6 @@ public class MainUI_2 : MonoBehaviour
     int curSelectIdx;
     Transform[] menuButtons;
 
-    public Texture2D fadeImg;
-
-    public float fadeSpeed = 1f;
-    private float alpha = 0f;
-    float FadeAlpha;
-
-    // Use this for initialization
     void Start()
     {
         curSelectIdx = 1;
