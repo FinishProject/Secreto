@@ -14,8 +14,17 @@ public class LoadingScreen : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(StartFade());
+    }
+
+    IEnumerator StartFade()
+    {
+        GetComponent<Fade>().SetLoad();
+        yield return new WaitForSeconds(0.8f);
         StartCoroutine(ShowText());
-        AsyncOperation async = Application.LoadLevelAsync("0613_copy");
+
+        yield return new WaitForSeconds(1.5f);
+        Application.LoadLevel("0613_copy");
     }
 
     IEnumerator ShowText()

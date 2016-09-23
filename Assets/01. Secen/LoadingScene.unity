@@ -171,7 +171,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 438423224}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -191,6 +191,7 @@ GameObject:
   - 114: {fileID: 614664085}
   - 222: {fileID: 614664091}
   - 114: {fileID: 614664090}
+  - 114: {fileID: 614664092}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -256,8 +257,8 @@ Canvas:
   m_GameObject: {fileID: 614664084}
   m_Enabled: 1
   serializedVersion: 2
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 438423228}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -319,6 +320,20 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 614664084}
+--- !u!114 &614664092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 614664084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d72059c1156e51449f610c65513e7f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeTexture: {fileID: 2800000, guid: fd9d0070029dc304aa485bc715bf9dbb, type: 3}
+  fadeSpeed: 0.2
+  alpha: 0
 --- !u!1 &1472741207
 GameObject:
   m_ObjectHideFlags: 0

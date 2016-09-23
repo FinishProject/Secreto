@@ -78,7 +78,6 @@ public class MainUI_2 : MonoBehaviour
 
             if (fadeAlpha.Equals(1))
             {
-                yield return new WaitForSeconds(0.5f);
                 Application.LoadLevel(Application.loadedLevel + 1);
             }
 
