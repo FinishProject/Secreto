@@ -11,7 +11,6 @@ public class MainUI_2 : MonoBehaviour
     int curSelectIdx;
     Transform[] menuButtons;
 
-    // Use this for initialization
     void Start()
     {
         curSelectIdx = 1;
@@ -65,16 +64,27 @@ public class MainUI_2 : MonoBehaviour
     {
         switch (curIdx)
         {
-            case 1: StartNewGame(); break;
+            case 1: StartCoroutine(StartNewGame()); break;
             case 2: ExitGame(); break;
 
         }
     }
 
-    public void StartNewGame()
+    IEnumerator StartNewGame()
     {
-        Application.LoadLevel("IntroMovieScene");
+        while (true)
+        {
+            float fadeAlpha = GetComponent<Fade>().BeginFade(1);
+
+            if (fadeAlpha.Equals(1))
+            {
+                Application.LoadLevel(Application.loadedLevel + 1);
+            }
+
+            yield return null;
+        }
     }
+
 
     public void ExitGame()
     {

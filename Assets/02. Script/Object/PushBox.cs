@@ -17,9 +17,6 @@ public class PushBox : MonoBehaviour {
     {
         if (col.CompareTag("Player") && Input.GetKey(KeyCode.LeftShift) && PlayerCtrl.inputAxis != 0f)
         {
-            
-            rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezePositionZ
-                | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             PlayerCtrl.instance.SetPushAnim(true);
             moveDir = col.transform.forward;
             transform.position += moveDir * speed * Time.deltaTime;
@@ -27,15 +24,11 @@ public class PushBox : MonoBehaviour {
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             PlayerCtrl.instance.SetPushAnim(false);
-            rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ 
-                | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         }
     }
 
    void OnTriggerExit(Collider col)
     {
         PlayerCtrl.instance.SetPushAnim(false);
-        rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ
-                | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 }

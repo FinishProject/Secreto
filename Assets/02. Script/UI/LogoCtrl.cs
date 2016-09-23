@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class LogoCtrl : MonoBehaviour {
 
-    public float fadeSpeed = 0.1f;
-
-    private bool isChange = true;
+    public float fadeSpeed = 0.8f;
+    private float alpha;
+    private float fadeDir = 1f;
     private int imgCount = 0;
 
     public Image[] logoImg;
@@ -21,38 +21,48 @@ public class LogoCtrl : MonoBehaviour {
             colorValue.a = 0;
             logoImg[i].color = colorValue;
         }
+
+        StartCoroutine(FadeLogo());
 	}
 
-    void Update()
+    IEnumerator FadeLogo()
     {
-        // 아무 키나 입력 시 다음 로고 이미지로 바꿈
-        if (Input.anyKeyDown && imgCount < logoImg.Length)
+        while (true)
         {
-            colorValue.a = 0f;
-            logoImg[imgCount].color = colorValue;
-            imgCount++;
-        }
-        // 카운트가 이미지 갯수 초과시 씬 전환
-        else if (imgCount >= logoImg.Length)
-        {
-            Application.LoadLevel("MainScene");
-        }
+            // 로고 전부 보여진 후 씬 이동
+            if (imgCount >= logoImg.Length)
+            {
+                Application.LoadLevel(Application.loadedLevel + 1);
+            }
+            // 아무 키 입력시 로고 넘김
+            else if (Input.anyKeyDown && imgCount < logoImg.Length)
+            {
+                colorValue.a = 0f;
+                logoImg[imgCount].color = colorValue;
+                alpha = 0f;
+                imgCount++; 
+            }
+            // 로고 그리기
+            else 
+            {
+                alpha += fadeDir * fadeSpeed * Time.deltaTime;
+                alpha = Mathf.Clamp01(alpha);
 
-        colorValue.a += fadeSpeed * Time.deltaTime;
-        logoImg[imgCount].color = colorValue;
+                colorValue.a = alpha;
+                logoImg[imgCount].color = colorValue;
 
-        // alpha 증가
-        if (logoImg[imgCount].color.a >= 1)
-        {
-            fadeSpeed *= -1f;
-        }
-
-        // alpha 감소
-        else if (logoImg[imgCount].color.a <= 0)
-        {
-            colorValue.a = 0;
-            fadeSpeed *= -1f;
-            imgCount++;
+                if (alpha == 1)
+                {
+                    yield return new WaitForSeconds(1f);
+                    fadeDir = -1f;
+                }
+                else if (alpha == 0)
+                {
+                    imgCount++;
+                    fadeDir = 1f;
+                }
+            }
+            yield return null;
         }
     }
 }

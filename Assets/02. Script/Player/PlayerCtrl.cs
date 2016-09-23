@@ -122,7 +122,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             moveDir.x = inputAxis;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && isJumping)
                 DashJump();
 
             if (controller.velocity.y <= -0.1)
@@ -142,7 +142,7 @@ public class PlayerCtrl : MonoBehaviour
         anim.SetBool("Jump", true);
         pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
         float jumpTime = 0f;
-
+        
         //moveDir.y = basicJumpHight;
         //moveDir.y -= curGravity * Time.deltaTime;
         //controller.Move(moveDir * moveSpeed * Time.deltaTime);
@@ -151,7 +151,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             if (jumpTime >= maxJumpHight)
                 break;
-
+            Debug.Log(controller.isGrounded);
             moveDir.y = jumpAccel;
             jumpTime += Time.deltaTime;
 

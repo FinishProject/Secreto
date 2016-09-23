@@ -6,24 +6,39 @@ using System.Collections;
 public class LoadingScreen : MonoBehaviour
 {
     public Text text;
+    private string str0 = "Loading.";
+    private string str1 = "Loading..";
+    private string str2 = "Loading...";
+
+    public float speed = 0.2f;
 
     void Start()
     {
-        StartCoroutine(Load());
+        StartCoroutine(StartFade());
     }
 
-    IEnumerator Load()
+    IEnumerator StartFade()
     {
+        GetComponent<Fade>().SetLoad();
+        yield return new WaitForSeconds(0.8f);
+        StartCoroutine(ShowText());
 
-        AsyncOperation async = Application.LoadLevelAsync("0613_copy");
+        yield return new WaitForSeconds(1.5f);
+        Application.LoadLevel("0613_copy");
+    }
 
-        while (!async.isDone)
+    IEnumerator ShowText()
+    {
+        while (true)
         {
-            float progress = async.progress * 100.0f;
-            int pRounded = Mathf.RoundToInt(progress);
-//            text.text = "Loading…"+pRounded.ToString() + "%";
+            text.text = str0;
+            yield return new WaitForSeconds(speed);
+            text.text = str1;
+            yield return new WaitForSeconds(speed);
+            text.text = str2;
+            yield return new WaitForSeconds(speed);
 
-            yield return true;
+            yield return null;
         }
     }
 
