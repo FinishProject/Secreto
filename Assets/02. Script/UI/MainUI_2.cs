@@ -1,9 +1,29 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MainUI_2 : MonoBehaviour
 {
+    [System.Serializable]
+    public struct Cloudes
+    {
+        public Transform cloudeTr;
+        public float speed;
+        public float length;
+    };
+    [System.Serializable]
+    public struct OlaInfo
+    {
+        public Transform olaTr;
+        public float speed;
+        public float length;
+    }
+
+    public Cloudes[] cloude = new Cloudes[3];
+    private RectTransform rectTr;
+
+    public OlaInfo ola;
 
     public Image pressAnyKey;
     public GameObject selectButton;
@@ -13,11 +33,40 @@ public class MainUI_2 : MonoBehaviour
 
     void Start()
     {
+        rectTr = GetComponent<RectTransform>();
+
         curSelectIdx = 1;
         menuButtons = menu.GetComponentsInChildren<Transform>();
         selectButton.SetActive(false);
         menu.SetActive(false);
         StartCoroutine(PressAnyKey());
+    }
+
+    void Update()
+    {
+        CloudeMove();
+        OlaMove();
+    }
+
+    void CloudeMove()
+    {
+        for(int i=0; i<cloude.Length; i++)
+        {
+            cloude[i].cloudeTr.Translate(Vector3.right * cloude[i].speed * Time.deltaTime);
+
+            if(cloude[i].cloudeTr.position.x >= rectTr.rect.width + cloude[i].length)
+            {
+                cloude[i].cloudeTr.position = 
+                    new Vector3(-rectTr.rect.width - cloude[i].length, cloude[i].cloudeTr.position.y, cloude[i].cloudeTr.position.z);
+            }
+        }
+    }
+
+    void OlaMove()
+    {
+        float moveSpeed = Mathf.Sin(Time.time * ola.speed) * ola.length;
+
+        ola.olaTr.Translate(Vector3.up * moveSpeed * Time.deltaTime);
     }
 
     IEnumerator PressAnyKey()
@@ -33,7 +82,6 @@ public class MainUI_2 : MonoBehaviour
                 StartCoroutine(SelectMenu());
                 break;
             }
-
             yield return null;
         }
     }
@@ -66,7 +114,6 @@ public class MainUI_2 : MonoBehaviour
         {
             case 1: StartCoroutine(StartNewGame()); break;
             case 2: ExitGame(); break;
-
         }
     }
 

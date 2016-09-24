@@ -151,7 +151,6 @@ public class PlayerCtrl : MonoBehaviour
         {
             if (jumpTime >= maxJumpHight)
                 break;
-            Debug.Log(controller.isGrounded);
             moveDir.y = jumpAccel;
             jumpTime += Time.deltaTime;
 

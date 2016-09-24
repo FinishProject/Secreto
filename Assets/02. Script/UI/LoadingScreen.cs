@@ -31,6 +31,9 @@ public class LoadingScreen : MonoBehaviour
     {
         while (true)
         {
+            //AsyncOperation async = Application.LoadLevelAsync("0613_copy");
+            //Debug.Log(async.isDone);
+
             text.text = str0;
             yield return new WaitForSeconds(speed);
             text.text = str1;
