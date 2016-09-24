@@ -15,7 +15,9 @@ public class LoadingScreen : MonoBehaviour
     IEnumerator Load()
     {
 
-        AsyncOperation async = Application.LoadLevelAsync("0613_copy");
+        //        AsyncOperation async = Application.LoadLevelAsync("0613_copy");
+        AsyncOperation async = Application.LoadLevelAsync("BCS");
+
 
         while (!async.isDone)
         {

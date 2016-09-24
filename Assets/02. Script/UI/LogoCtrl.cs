@@ -26,7 +26,7 @@ public class LogoCtrl : MonoBehaviour {
     void Update()
     {
         // 아무 키나 입력 시 다음 로고 이미지로 바꿈
-        if (Input.anyKeyDown && imgCount < logoImg.Length)
+        if (Input.anyKeyDown && !MouseInput() && imgCount < logoImg.Length)
         {
             colorValue.a = 0f;
             logoImg[imgCount].color = colorValue;
@@ -36,6 +36,7 @@ public class LogoCtrl : MonoBehaviour {
         else if (imgCount >= logoImg.Length)
         {
             Application.LoadLevel("MainScene");
+            return;
         }
 
         colorValue.a += fadeSpeed * Time.deltaTime;
@@ -54,5 +55,14 @@ public class LogoCtrl : MonoBehaviour {
             fadeSpeed *= -1f;
             imgCount++;
         }
+    }
+
+    bool MouseInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1) || Input.GetKeyDown(KeyCode.Mouse2) ||
+            Input.GetKeyDown(KeyCode.Mouse3) || Input.GetKeyDown(KeyCode.Mouse4) || Input.GetKeyDown(KeyCode.Mouse5) || Input.GetKeyDown(KeyCode.Mouse6))
+            return true;
+        else
+            return false;
     }
 }

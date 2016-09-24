@@ -55,22 +55,22 @@ public class TeleportGate : MonoBehaviour {
 
     IEnumerator MovePoint(Collider col)
     {
-        CameraCtrl_5.instance.StartTeleport();
+        CameraCtrl_6.instance.StartTeleport();
         
         // 출구 위치로 이동
         Vector3 movePoint = exitGate.transform.position;
         movePoint += exitGate.transform.up * 3f;
-        movePoint -= exitGate.transform.forward * 2f;
+        movePoint -= exitGate.transform.forward * 3f;
 
         col.transform.position = movePoint;
         olaTr.position = movePoint;
 
-        yield return new WaitForSeconds(0.5f);
+//        yield return new WaitForSeconds(0.5f);
 
         FadeInOut.instance.StartFadeInOut(1f, 1.8f, 1f);
 
         yield return new WaitForSeconds(1f);
-        CameraCtrl_5.instance.EndTeleport();
+        CameraCtrl_6.instance.EndTeleport();
     }
 }
 

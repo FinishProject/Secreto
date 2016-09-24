@@ -12,14 +12,15 @@ public class CutScene : MonoBehaviour {
         public float transTime;
         public bool playFadeOut;
     }
-    public ImgInfo[] imgInfo; 
-
+    public ImgInfo[] imgInfo;
+    public Image SkipImg;
+    private bool onSkipButton;
     private int index;
     private int imgCnt;
 
 	void Start () {
         index = 0;
-        
+        onSkipButton = false;
         imgCnt = imgInfo.Length;
         
         imgInfo[0].cutImg.enabled = true;
@@ -28,14 +29,43 @@ public class CutScene : MonoBehaviour {
 
         StartCoroutine(SlideShow());
     }
-
-
-    IEnumerator SlideShow()
+    void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            onSkipButton = true;
+    }
+
+    IEnumerator fadeSkip(bool fadeIn)
+    {
+        Color tempAlpha = SkipImg.color;
+        float pressKeyFadeSpeed = 0.8f;
+
+        if (!fadeIn)
+        {
+            tempAlpha.a = 1;
+            pressKeyFadeSpeed *= -1;
+        }
+        else
+        {
+            tempAlpha.a = 0;
+        }
+        SkipImg.color = tempAlpha;
+        
         while (true)
         {
-            Debug.Log(index + 1);
-            
+            tempAlpha.a = pressKeyFadeSpeed * Time.deltaTime;
+            SkipImg.color += tempAlpha;
+            if (SkipImg.color.a >= 1.0f || SkipImg.color.a <= 0)
+                break;
+
+            yield return null;
+        }
+    }
+    IEnumerator SlideShow()
+    {
+        StartCoroutine(fadeSkip(true));
+        while (true)
+        {
 
             if (imgInfo[index].transTime > 0)
             {
@@ -46,20 +76,31 @@ public class CutScene : MonoBehaviour {
                 yield return new WaitForSeconds(normalTransTime);
             }
 
-            if (imgInfo[index].playFadeOut)
+            if(imgCnt <= index + 1)
+            {
+                StartCoroutine(fadeSkip(false));
+                FadeInOut.instance.StartFadeInOut(0.5f, 5f, 0.5f);
+                yield return new WaitForSeconds(1.5f);
+            }
+            else if (imgInfo[index].playFadeOut)
             {
                 FadeInOut.instance.StartFadeInOut(0.5f, 0.3f, 0.5f);
                 yield return new WaitForSeconds(0.5f);
             }
 
-            if (imgCnt <= index + 1)
+            if (onSkipButton || imgCnt <= index + 1)
             {
-                Application.LoadLevel("MainScene");
+                Application.LoadLevel("LoadingScene");
                 yield break;
             }
 
             imgInfo[index++].cutImg.enabled = false;
             imgInfo[index].cutImg.enabled = true;
         }
+    }
+
+    public void OnSkipButton()
+    {
+        onSkipButton = true;
     }
 }

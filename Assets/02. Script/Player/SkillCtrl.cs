@@ -47,7 +47,7 @@ public class SkillCtrl : MonoBehaviour {
 
     void Awake()
     {
-        instance = this;
+//        instance = this;
         curAttribute = AttributeState.noraml;
         _countDownForAttribute = attributeDuration;
     }
