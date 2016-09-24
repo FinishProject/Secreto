@@ -4,9 +4,13 @@ using System.Collections;
 
 public class Hold_Switch_Show : MonoBehaviour {
 
+    bool isActive;
     bool isOnBox;
     float space = 2.5f;
-    int elevatorCnt;
+    int elevatorCnt;                    // 엘리베이터 개수
+    int curIdx;                         // 현재 엘레베이터 인덱스
+    
+    public float nextExecutionLevel = 0.65f;
 
     public GameObject elevatorParent;
     struct ElevatorInfo
@@ -23,7 +27,9 @@ public class Hold_Switch_Show : MonoBehaviour {
     ElevatorInfo[] elevators;
 
 
-    void Awake () {
+    void Start () {
+        isActive = false;
+        curIdx = 0;
         elevatorsInit();
     }
 
@@ -31,20 +37,14 @@ public class Hold_Switch_Show : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            StartCoroutine(OpacityUp(0,true));
-            StartCoroutine(moveUP(0,true));
-            StartCoroutine(OpacityUp(1, true));
-            StartCoroutine(moveUP(1, true));
+            StartCoroutine(TimeAboutPlay(true));
         }
 
         if (col.CompareTag("OBJECT"))
         {
             isOnBox = true;
 
-            StartCoroutine(OpacityUp(0, true));
-            StartCoroutine(moveUP(0, true));
-            StartCoroutine(OpacityUp(1, true));
-            StartCoroutine(moveUP(1, true));
+            StartCoroutine(TimeAboutPlay(true));
         }
         
     }
@@ -56,26 +56,88 @@ public class Hold_Switch_Show : MonoBehaviour {
             if(isOnBox)
              return;
 
-            StartCoroutine(OpacityUp(0, false));
-            StartCoroutine(moveUP(0, false));
-            StartCoroutine(OpacityUp(1, false));
-            StartCoroutine(moveUP(1, false));
+            StartCoroutine(TimeAboutPlay(false));
         }
         else if(col.CompareTag("OBJECT"))
         {
             isOnBox = false;
 
-            StartCoroutine(OpacityUp(0, false));
-            StartCoroutine(moveUP(0, false));
-            StartCoroutine(OpacityUp(1, false));
-            StartCoroutine(moveUP(1, false));
+            StartCoroutine(TimeAboutPlay(false));
         }    
     }
 
     IEnumerator TimeAboutPlay(bool isMoveUp)
     {
-
+        isActive = false;
         yield return null;
+        isActive = true;
+        /*
+        if(!isMoveUp)
+        {
+            StartCoroutine(OpacityUp(curIdx, false));
+            StartCoroutine(moveUP(curIdx, false));
+            curIdx--;
+        }*/
+        int curIdx = 0;
+        while (isActive)
+        { 
+            if(isMoveUp)
+            {
+                if(curIdx == 0 ) 
+                {
+                    StartCoroutine(OpacityUp(curIdx, true));
+                    StartCoroutine(moveUP(curIdx, true));
+                    curIdx++;
+                }
+                else if(curIdx < elevatorCnt && elevators[curIdx-1].executionLevel > nextExecutionLevel)
+                {
+                    StartCoroutine(OpacityUp(curIdx, true));
+                    StartCoroutine(moveUP(curIdx, true));
+
+                    if (curIdx + 1 < elevatorCnt)
+                        curIdx++;
+                    else
+                        break;
+                }
+            }
+            else
+            {
+                
+                if (curIdx == 0)
+                {
+                    StartCoroutine(OpacityUp(curIdx, false));
+                    StartCoroutine(moveUP(curIdx, false));
+                    curIdx++;
+                }
+                else if (curIdx < elevatorCnt && elevators[curIdx - 1].executionLevel < -nextExecutionLevel)
+                {
+                    StartCoroutine(OpacityUp(curIdx, false));
+                    StartCoroutine(moveUP(curIdx, false));
+
+                    if (curIdx + 1 < elevatorCnt)
+                        curIdx++;
+                    else
+                        break;
+                }
+                
+                Debug.Log(curIdx);
+                /*
+                if (curIdx > 0 && elevators[curIdx + 1].executionLevel < -nextExecutionLevel) 
+                {
+                    StartCoroutine(OpacityUp(curIdx, false));
+                    StartCoroutine(moveUP(curIdx, false));
+                    curIdx--;
+                }
+                else if (curIdx == 0)
+                {
+                    StartCoroutine(OpacityUp(curIdx, false));
+                    StartCoroutine(moveUP(curIdx, false));
+                    break;
+                }
+                */
+            }
+            yield return null;
+        } 
     }
 
     // 자식 오브젝트 받아 올 때 ( 자식이 없으면 자신을 반환 )
@@ -99,7 +161,6 @@ public class Hold_Switch_Show : MonoBehaviour {
     void elevatorsInit()
     {
         GameObject[] objs = GetChildObj(elevatorParent);
-        Debug.Log(objs.Length);
         Debug.Log(objs[0].name);
 
         elevatorCnt = objs.Length;
@@ -115,6 +176,9 @@ public class Hold_Switch_Show : MonoBehaviour {
                                            -1);
             elevators[i].meshRender.material.color = elevators[i].color;
             elevators[i].colliders = elevators[i].elevator.GetComponentsInChildren<BoxCollider>();
+
+            for(int j = 0; j < elevators[i].colliders.Length; j++)
+                elevators[i].colliders[j].enabled = false;
 
             elevators[i].orignPos = elevators[i].elevator.transform.position;
             elevators[i].destinationPos = elevators[i].elevator.transform.position;
@@ -155,11 +219,57 @@ public class Hold_Switch_Show : MonoBehaviour {
 
     IEnumerator OpacityUp(int idx, bool isUp)
     {
+        if (isUp)
+        {
+//            tempColor.a = 0;
+            while (true)
+            {
+                elevators[idx].color.a += 3f * Time.deltaTime; ;
+                elevators[idx].meshRender.material.color = elevators[idx].color;
+                elevators[idx].executionLevel = elevators[idx].color.a;                   // 진행 정도를 저장하기 위해
+
+                if (elevators[idx].color.a > 1f)
+                {
+                    for (int i = 0; i < elevators[idx].colliders.Length; i++)
+                    {
+                        elevators[idx].colliders[i].enabled = true;
+                    }
+                    break;
+                }
+                yield return null;
+            }
+        }
+        else
+        {
+            while (true)
+            {
+                elevators[idx].color.a -= 3f * Time.deltaTime;
+                elevators[idx].meshRender.material.color = elevators[idx].color;
+                elevators[idx].executionLevel = elevators[idx].color.a;                   // 진행 정도를 저장하기 위해
+
+                if (elevators[idx].color.a < -1f)
+                {
+                    for (int i = 0; i < elevators[idx].colliders.Length; i++)
+                    {
+                        elevators[idx].colliders[i].enabled = false;
+                    }
+                    break;
+                }
+
+                yield return null;
+            }
+            
+        }
+    }
+
+    /*
+    IEnumerator OpacityUp(int idx, bool isUp)
+    {
         Color tempColor = elevators[idx].color;
 
         if (isUp)
         {
-            tempColor.a = 0;
+//            tempColor.a = 0;
             while (true)
             {
                 tempColor.a += 3f * Time.deltaTime; ;
@@ -179,13 +289,14 @@ public class Hold_Switch_Show : MonoBehaviour {
         }
         else
         {
-            tempColor.a = 1;
+            //            tempColor.a = 1;
+            Debug.Log(tempColor.a);
             while (true)
             {
                 tempColor.a -= 3f * Time.deltaTime;
                 elevators[idx].meshRender.material.color = tempColor;
-
-
+                elevators[idx].executionLevel = tempColor.a;                   // 진행 정도를 저장하기 위해
+                Debug.Log(idx + " : " + tempColor.a);
                 if (tempColor.a < -1f)
                 {
                     for (int i = 0; i < elevators[idx].colliders.Length; i++)
@@ -199,7 +310,7 @@ public class Hold_Switch_Show : MonoBehaviour {
             }
             
         }
-    }
+    }*/
 }
 
 /*
@@ -349,3 +460,4 @@ public class Hold_Switch_Show : MonoBehaviour {
     }
 }
 */
+  

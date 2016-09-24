@@ -4,16 +4,37 @@ using System.Collections;
 public class NewBehaviourScript : MonoBehaviour {
 
     Transform tr;
-	// Use this for initialization
+    // Use this for initialization
+
+    IEnumerator co1, co2;
 	void Start () {
         tr = gameObject.transform;
-	}
+        co1 = startCo(1);
+        co2 = startCo(2);
+
+        StartCoroutine(co1);
+        StartCoroutine(co2);
+
+    }
+
 
     // Update is called once per frame
     void Update()
     {
         ChackGround2();
 
+        if (Input.GetKeyDown(KeyCode.Z))
+            StopCoroutine(co1);
+
+    }
+
+    IEnumerator startCo(int i)
+    {
+        while(true)
+        {
+            Debug.Log(i);
+            yield return null;
+        }
     }
 
     GameObject oldGround = null;

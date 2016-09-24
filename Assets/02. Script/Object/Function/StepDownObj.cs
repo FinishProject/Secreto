@@ -10,7 +10,7 @@ public class StepDownObj : MonoBehaviour {
 
     private Vector3 targetPos, originPos;
 
-    void Start()
+    void Awake()
     {
         // 초기 위치와 타겟 위치 초기화
         originPos = transform.position;
