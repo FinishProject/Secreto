@@ -20,6 +20,7 @@ TagManager:
   - EndPoint
   - FadeLine
   - Land
+  - Ignore
   layers:
   - Default
   - TransparentFX

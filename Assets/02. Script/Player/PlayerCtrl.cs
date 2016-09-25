@@ -71,7 +71,7 @@ public class PlayerCtrl : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isMove) Movement();
-
+        else Debug.Log(11);
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
@@ -233,19 +233,26 @@ public class PlayerCtrl : MonoBehaviour
     {
         StartCoroutine(ResetPlayer());
     }
+    
+    public void animReset()
+    {
+        anim.SetFloat("Velocity", 0);
+        anim.SetBool("Run", false);
+        anim.SetBool("Jump", false);
+        anim.SetBool("Dash", false);
+        anim.SetBool("Idle", true);
+    }
 
     IEnumerator ResetPlayer()
     {
         FadeInOut.instance.StartFadeInOut(1, 2, 3);
-        isMove = false;
         lunaModel.SetActive(false);
         pEffect.StartEffect(PlayerEffectList.DIE);
-
+ //       animReset();
         yield return new WaitForSeconds(1.3f);
 
         GetPlayerData();
         lunaModel.SetActive(true);
-        isMove = true;
     }
 
     void GetPlayerData()
