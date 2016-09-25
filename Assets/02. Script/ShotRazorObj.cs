@@ -29,6 +29,8 @@ public class ShotRazorObj : MonoBehaviour {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.right);
 
+        int layer = (1 << LayerMask.NameToLayer("CAM"));
+
         if (Physics.Raycast(this.transform.position, forward, out hit, maxLength))
         {
             if (hit.collider.CompareTag("Player"))

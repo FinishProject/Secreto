@@ -22,13 +22,16 @@ public class AltarCtrl : MonoBehaviour {
     public float length = 0.5f;
     public float speed = 1f;
 
+    public GameObject[] hold = new GameObject[4];
+    public Renderer[] holdRender = new Renderer[4];
+
     void Start()
     {
         //originColor = new Color(0f, 0.8117652f, 1.5f);
         originColor = new Color(0.322f, 0.322f, 0.322f);
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < render.Length; i++)
         {
-            render[i].sharedMaterial.SetColor("_EmissionColor", originColor);
+            render[i].material.SetColor("_EmissionColor", originColor);
         }
 
         originPos = stepHold.position;
@@ -47,7 +50,9 @@ public class AltarCtrl : MonoBehaviour {
             StartCoroutine(DrawColor());
             altarEffect.SetActive(true);
             isOnBox = true;
-            
+
+            if (hold[0] != null)
+                StartCoroutine(SetOnObject());
         }
     }
 
@@ -61,6 +66,8 @@ public class AltarCtrl : MonoBehaviour {
             altarEffect.SetActive(false);
             StartCoroutine(ClearColor());
             isOnBox = false;
+            if(hold[0] != null)
+                StartCoroutine(SetOffObject());
         }
     }
 
@@ -72,6 +79,7 @@ public class AltarCtrl : MonoBehaviour {
             isClear = false;
             StartCoroutine(DrawColor());
         }
+
     }
 
 
@@ -87,7 +95,7 @@ public class AltarCtrl : MonoBehaviour {
 
     IEnumerator DrawColor()
     {
-        drawColor = render[0].sharedMaterial.GetColor("_EmissionColor");
+        drawColor = render[0].material.GetColor("_EmissionColor");
         while (isDraw)
         {
             if (drawColor.r >= targetColor.r)
@@ -97,9 +105,9 @@ public class AltarCtrl : MonoBehaviour {
             if (drawColor.b <= targetColor.b)
                 drawColor.b += 0.03f;
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < render.Length; i++)
             {
-                render[i].sharedMaterial.SetColor("_EmissionColor", drawColor);
+                render[i].material.SetColor("_EmissionColor", drawColor);
             }
 
             stepHold.position = Vector3.MoveTowards(stepHold.position, finishPos, speed * Time.deltaTime);
@@ -114,7 +122,7 @@ public class AltarCtrl : MonoBehaviour {
 
     IEnumerator ClearColor()
     {
-        drawColor = render[0].sharedMaterial.GetColor("_EmissionColor");
+        drawColor = render[0].material.GetColor("_EmissionColor");
         while (isClear)
         {
             if (drawColor.r <= originColor.r)
@@ -124,15 +132,54 @@ public class AltarCtrl : MonoBehaviour {
             if (drawColor.b >= originColor.b)
                 drawColor.b -= 0.03f;
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < render.Length; i++)
             {
-                render[i].sharedMaterial.SetColor("_EmissionColor", drawColor);
+                render[i].material.SetColor("_EmissionColor", drawColor);
             }
 
             stepHold.position = Vector3.MoveTowards(stepHold.position, originPos, speed * Time.deltaTime);
 
             if (drawColor.r >= originColor.r && drawColor.g <= originColor.g && 
                 drawColor.b <= originColor.b)
+                break;
+
+            yield return null;
+        }
+    }
+
+    IEnumerator SetOffObject()
+    {
+        Color color = holdRender[0].material.color;
+        while (!isOnBox)
+        {
+            color.a -= 1f * Time.deltaTime;
+            for (int i = 0; i < hold.Length; i++)
+            {
+                holdRender[i].material.color = color;
+                if (color.a <= 0f)
+                    hold[i].SetActive(false);
+            }
+
+            if (color.a <= 0f)
+                break;
+
+            yield return null;
+        }
+    }
+
+    IEnumerator SetOnObject()
+    {
+        Color color = holdRender[0].material.color;
+        while (isOnBox)
+        {
+            color.a += 1f * Time.deltaTime;
+            for (int i = 0; i < hold.Length; i++)
+            {
+                hold[i].SetActive(true);
+                holdRender[i].material.color = color;
+            }
+
+            if (color.a >= 1f)
                 break;
 
             yield return null;
