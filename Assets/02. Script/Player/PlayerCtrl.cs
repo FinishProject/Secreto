@@ -64,6 +64,8 @@ public class PlayerCtrl : MonoBehaviour
     {
         //GetPlayerData();
         curGravity = dropGravity;
+
+        lockPosZ = transform.position.z;
     }
 
     void Update()
