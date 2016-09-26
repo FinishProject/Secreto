@@ -101,7 +101,7 @@ public class Telpo : MonoBehaviour
         movePoint -= exitGate.transform.forward * 3f;
 
         playerTr.transform.position = movePoint;
-        box.transform.position = new Vector3(movePoint.x + 3f, movePoint.y, 1.21f);
+        box.transform.position = new Vector3(movePoint.x + 3f, movePoint.y, 0.71f);
         olaTr.position = movePoint;
 
         FadeInOut.instance.StartFadeInOut(1f, 1.8f, 1f);

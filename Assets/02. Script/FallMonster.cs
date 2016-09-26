@@ -3,18 +3,9 @@ using System.Collections;
 
 public class FallMonster : MonoBehaviour {
 
-    public GameObject coll;
+    public GameObject endUi;
 
-	// Use this for initialization
-	void Start () {
-       
 
-    }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     void OnTriggerEnter(Collider col)
     {
@@ -38,9 +29,20 @@ public class FallMonster : MonoBehaviour {
         }
     }
 
+    IEnumerator ShowTitle()
+    {
+        while (true)
+        {
+
+            yield return null;
+        }
+    }
+
     IEnumerator End()
     {
         yield return new WaitForSeconds(2f);
+        endUi.SetActive(true);
+        yield return new WaitForSeconds(5f);
         FadeInOut.instance.StartFadeInOut(1f, 1.8f, 1f);
         yield return new WaitForSeconds(1f);
         Application.LoadLevel("MainScene 1");
