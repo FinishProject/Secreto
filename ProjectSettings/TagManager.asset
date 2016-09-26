@@ -20,6 +20,10 @@ TagManager:
   - EndPoint
   - FadeLine
   - Land
+  - Ignore
+  - CAMBOX
+  - OBJECT1
+  - OBJECT2
   layers:
   - Default
   - TransparentFX
@@ -32,7 +36,7 @@ TagManager:
   - BackGround
   - BackGround2
   - Floor
-  - 
+  - CAM
   - 
   - 
   - 

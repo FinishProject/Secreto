@@ -35,7 +35,8 @@ public class BackGroundCtrl_3 : MonoBehaviour {
     void MoveBg_X(GameObject gameObj, float moveValue)
     {
         tempPos = gameObj.transform.position;
-        tempPos.x -= PlayerCtrl.controller.velocity.x * moveValue;
+        if(PlayerCtrl.instance.isMove)
+            tempPos.x -= Input.GetAxis("Horizontal") * moveValue * 8;
         gameObj.transform.position = tempPos;
     }
 }

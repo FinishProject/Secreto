@@ -79,22 +79,36 @@ public class FadeInOut : MonoBehaviour {
     IEnumerator Load(float fadeInTime, float waitTime, float fadeOutTime)
     {
         trigger = true;
-        while (alpha < 1)
+        if (PlayerCtrl.instance != null)
+            PlayerCtrl.instance.isMove = false;
+
+        alpha = 0;
+        while (alpha < 1 && fadeInTime > 0)
         {
             alpha += (1 / fadeInTime) * Time.deltaTime;
             BlackImg.color = new Color(0, 0, 0, alpha);
             yield return true;
         }
 
-        yield return new WaitForSeconds(waitTime);
+        if (PlayerCtrl.instance != null)
+        {
+            PlayerCtrl.instance.animReset();
+        }
 
+        if (waitTime > 0)
+            yield return new WaitForSeconds(waitTime);
+
+        alpha = 1;
         while (alpha > 0)
         {
+
             alpha -= (1 / fadeOutTime) * Time.deltaTime;
             BlackImg.color = new Color(0, 0, 0, alpha);
             yield return true;
         }
         trigger = false;
+        if (PlayerCtrl.instance != null)
+            PlayerCtrl.instance.isMove = true;
     }
 
     IEnumerator Load_Dead()
@@ -115,6 +129,7 @@ public class FadeInOut : MonoBehaviour {
             yield return true;
         }
         timer = 0;
+
         yield return new WaitForSeconds(fade_PlayerDead_Info.waitTime);
 
         while (timer < fade_PlayerDead_Info.fadeOutTime)

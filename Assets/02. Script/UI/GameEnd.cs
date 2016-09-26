@@ -24,7 +24,8 @@ public class GameEnd : MonoBehaviour {
         }
 
 
-        Application.LoadLevel("CutScene");
+        //        Application.LoadLevel("CutScene");
+        Application.LoadLevel("MainScene");
 
 
     }

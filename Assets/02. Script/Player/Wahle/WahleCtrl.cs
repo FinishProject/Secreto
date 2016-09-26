@@ -15,7 +15,6 @@ public class WahleCtrl : MonoBehaviour {
     private bool isSwitch = false;
 
     protected Vector3 npcPos; // NPC 위치를 저장할 변수
-    protected Transform targetPoint; // 대기 상태시 추격할 포인트 위치
     protected Vector3 relativePos; // 상대적 위치값
     protected Quaternion lookRot; // 봐라볼 방향
     protected Transform playerTr; // 플레이어 위치
@@ -46,9 +45,6 @@ public class WahleCtrl : MonoBehaviour {
 
     private void Start()
     {
-        targetPoint = new GameObject().transform;
-        targetPoint.name = "TargetPoint";
-
         ChangeState(WahleState.IDLE);
         StartCoroutine(CoroutineUpdate());
         StartCoroutine(SearchEnemy());
@@ -180,7 +176,7 @@ public class WahleCtrl : MonoBehaviour {
     protected Vector3 SetRandomPos()
     {
         float rndPointX = Random.Range(camTr.position.x - 4f, camTr.position.x + 2f);
-        float rndPointY = Random.Range(playerTr.position.y - 1f, camTr.position.y + 1.3f);
+        float rndPointY = Random.Range(playerTr.position.y, camTr.position.y + 1.3f);
 
         return new Vector3(rndPointX, rndPointY, playerTr.position.z);
     }
@@ -195,8 +191,6 @@ public class WahleCtrl : MonoBehaviour {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
 
-        //Debug.DrawRay(rightRayPos, forward, Color.red, 1f);
-        //Debug.DrawRay(leftRayPos, forward, Color.red, 1f);
         // 우측 레이캐스트
         if (Physics.Raycast(rightRayPos, forward, out hit, 3f) || Physics.Raycast(leftRayPos, forward, out hit, 3f))
         {

@@ -14,10 +14,15 @@ using System.Collections;
 public class TeleportGate : MonoBehaviour {
 
     public GameObject exitGate; // 출구 오브젝트
+    public GameObject box;
+
+    public Transform spawnPoint;
 
     private bool isTravel = true; // 이동 가능 여부
+    private bool isBox = false;
     private TeleportGate telepGate; // 출구 오브젝트의 스크립트를 담을 변수
     private Transform olaTr, camTr;
+    private Transform playerTr;
 
     void Start()
     {
@@ -25,18 +30,31 @@ public class TeleportGate : MonoBehaviour {
         {
             telepGate = exitGate.GetComponent<TeleportGate>();
         }
-
+        playerTr = GameObject.FindGameObjectWithTag("Player").transform;
         olaTr = GameObject.FindGameObjectWithTag("WAHLE").transform;
         //camTr = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
 
-	void OnTriggerEnter(Collider col)
+	void OnTriggerStay(Collider col)
     {
-        if (col.CompareTag("Player") && isTravel)
+        if(col.CompareTag("OBJECT"))
         {
-            // 반대편에 도착 시 잠시 이동 불가능하게 만듬
-            telepGate.Block();
-            StartCoroutine(MovePoint(col));
+            isBox = true;
+        }
+
+        else if (col.CompareTag("Player") && isTravel)
+        {
+            if (isBox)
+            {
+                telepGate.Block();
+                StartCoroutine(Toghter(col));
+            }
+            else
+            {
+                // 반대편에 도착 시 잠시 이동 불가능하게 만듬
+                telepGate.Block();
+                StartCoroutine(MovePoint(col));
+            }
         }
     }
 
@@ -55,22 +73,57 @@ public class TeleportGate : MonoBehaviour {
 
     IEnumerator MovePoint(Collider col)
     {
-        CameraCtrl_5.instance.StartTeleport();
+        CameraCtrl_6.instance.StartTeleport();
         
         // 출구 위치로 이동
         Vector3 movePoint = exitGate.transform.position;
         movePoint += exitGate.transform.up * 3f;
-        movePoint -= exitGate.transform.forward * 2f;
+        movePoint -= exitGate.transform.forward * 3f;
 
         col.transform.position = movePoint;
         olaTr.position = movePoint;
 
-        yield return new WaitForSeconds(0.5f);
+//        yield return new WaitForSeconds(0.5f);
 
         FadeInOut.instance.StartFadeInOut(1f, 1.8f, 1f);
 
         yield return new WaitForSeconds(1f);
-        CameraCtrl_5.instance.EndTeleport();
+        CameraCtrl_6.instance.EndTeleport();
+    }
+
+    IEnumerator Toghter(Collider col)
+    {
+        CameraCtrl_6.instance.StartTeleport();
+
+        Vector3 movePoint = exitGate.transform.position;
+        movePoint += exitGate.transform.up * 3f;
+        movePoint -= exitGate.transform.forward * 3f;
+
+        playerTr.transform.position = movePoint;
+        box.transform.position = new Vector3(movePoint.x - 3f, movePoint.y, movePoint.z);
+        olaTr.position = movePoint;
+
+
+        // 출구 위치로 이동
+        //Vector3 movePoint = exitGate.transform.position;
+        //movePoint -= exitGate.transform.up * -1f;
+        //movePoint -= exitGate.transform.forward * 2f;
+
+        //Vector3 boxPoint = exitGate.transform.position;
+        //boxPoint -= exitGate.transform.forward * 5f;
+
+        //playerTr.transform.position = movePoint;
+        //Vector3 boxVec = new Vector3(boxPoint.x, boxPoint.y, 1.21f);
+        //box.transform.position = boxVec;
+        //olaTr.position = movePoint;
+
+        //        yield return new WaitForSeconds(0.5f);
+
+        FadeInOut.instance.StartFadeInOut(1f, 1.8f, 1f);
+
+        yield return new WaitForSeconds(1f);
+        CameraCtrl_6.instance.EndTeleport();
+        isBox = false;
     }
 }
 

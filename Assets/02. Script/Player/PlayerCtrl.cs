@@ -64,6 +64,8 @@ public class PlayerCtrl : MonoBehaviour
     {
         //GetPlayerData();
         curGravity = dropGravity;
+
+        lockPosZ = transform.position.z;
     }
 
     void Update()
@@ -71,7 +73,6 @@ public class PlayerCtrl : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isMove) Movement();
-
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
@@ -122,7 +123,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             moveDir.x = inputAxis;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && isJumping)
                 DashJump();
 
             if (controller.velocity.y <= -0.1)
@@ -142,7 +143,7 @@ public class PlayerCtrl : MonoBehaviour
         anim.SetBool("Jump", true);
         pEffect.StartEffect(PlayerEffectList.BASIC_JUMP);
         float jumpTime = 0f;
-
+        
         //moveDir.y = basicJumpHight;
         //moveDir.y -= curGravity * Time.deltaTime;
         //controller.Move(moveDir * moveSpeed * Time.deltaTime);
@@ -151,7 +152,6 @@ public class PlayerCtrl : MonoBehaviour
         {
             if (jumpTime >= maxJumpHight)
                 break;
-
             moveDir.y = jumpAccel;
             jumpTime += Time.deltaTime;
 
@@ -234,17 +234,29 @@ public class PlayerCtrl : MonoBehaviour
     {
         StartCoroutine(ResetPlayer());
     }
+    
+    public void animReset()
+    {
+        anim.SetFloat("Velocity", 0);
+        anim.SetBool("Run", false);
+        anim.SetBool("Jump", false);
+        anim.SetBool("Dash", false);
+        anim.SetBool("Idle", true);
+    }
 
     IEnumerator ResetPlayer()
     {
+        Debug.Log("11");
         FadeInOut.instance.StartFadeInOut(1, 2, 3);
         isMove = false;
+        cloth.gameObject.SetActive(false);
         lunaModel.SetActive(false);
         pEffect.StartEffect(PlayerEffectList.DIE);
 
         yield return new WaitForSeconds(1.3f);
 
         GetPlayerData();
+        cloth.gameObject.SetActive(true);
         lunaModel.SetActive(true);
         isMove = true;
     }
