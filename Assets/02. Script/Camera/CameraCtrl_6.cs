@@ -86,7 +86,6 @@ public class CameraCtrl_6 : MonoBehaviour
         {
             if (tempRangeR < fallStandardRange)  // 추락 기준값과 비교, 일반 추적
             {
-                Debug.Log(groundPos_Box_R.y + " - " + groundPos_Player.y + " = " + tempRangeR);
                 isFalling_Before = false;
                 correctionValue = (groundPos_Box_R.y - groundPos_Player.y) * 0.3f;
                 //                rayBox.transform.position = new Vector3(rayBox_R.position.x, groundPos_Box_R.y, rayBox_R.position.z);

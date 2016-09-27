@@ -168,12 +168,14 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     //캐릭터 방향 회전
-    void TurnPlayer()
+    public void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
         focusRight *= -1f;
 
         transform.Rotate(new Vector3(0, 1, 0), 180);
+
+        Debug.Log("Turn");
 
         //Vector3 localScale = transform.localScale;
         //localScale.z *= -1f;
