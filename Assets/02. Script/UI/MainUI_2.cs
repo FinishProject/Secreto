@@ -53,6 +53,7 @@ public class MainUI_2 : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(curSelectIdx);
         CloudeMove();
         OlaMove();
     }
@@ -199,9 +200,9 @@ public class MainUI_2 : MonoBehaviour
     {
         while (true)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && curSelectIdx > 1)
+            if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && curSelectIdx > 1)
                 curSelectIdx--;
-            else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) && curSelectIdx < 2)
+            else if ((Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) && curSelectIdx < 2)
                 curSelectIdx++;
             else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
                 ConnectFunction(curSelectIdx);

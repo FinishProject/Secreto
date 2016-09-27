@@ -32,45 +32,50 @@ public class Hold_Switch_Show : MonoBehaviour {
         curIdx = 0;
         elevatorsInit();
     }
-
-    void OnTriggerEnter(Collider col)
+    IEnumerator Play;
+    void OnCollisionEnter(Collision col)
     {
-        if (col.CompareTag("Player"))
-        {
-            StartCoroutine(TimeAboutPlay(true));
-        }
-
-        if (col.CompareTag("OBJECT"))
+        if (col.collider.CompareTag("OBJECT"))
         {
             isOnBox = true;
 
+            StopAllCoroutines();
             StartCoroutine(TimeAboutPlay(true));
         }
-        
     }
+
+
+    void OnCollisionExit(Collision col)
+    {
+        if (col.collider.CompareTag("OBJECT") && isOnBox)
+        {
+            isOnBox = false;
+            StopAllCoroutines();
+            StartCoroutine(TimeAboutPlay(false));
+        }
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Player") && !isOnBox)
+        {
+            StopAllCoroutines();
+            StartCoroutine(TimeAboutPlay(true));
+        }
+    }
+
 
     void OnTriggerExit(Collider col)
     {
-        if (col.CompareTag("Player"))
+        if (col.CompareTag("Player") && !isOnBox)
         {
-            if(isOnBox)
-             return;
-
+            StopAllCoroutines();
             StartCoroutine(TimeAboutPlay(false));
         }
-        else if(col.CompareTag("OBJECT"))
-        {
-            isOnBox = false;
-
-            StartCoroutine(TimeAboutPlay(false));
-        }    
     }
-
+    
     IEnumerator TimeAboutPlay(bool isMoveUp)
     {
-        isActive = false;
-        yield return null;
-        isActive = true;
         /*
         if(!isMoveUp)
         {
@@ -79,7 +84,7 @@ public class Hold_Switch_Show : MonoBehaviour {
             curIdx--;
         }*/
         int curIdx = 0;
-        while (isActive)
+        while (true)
         { 
             if(isMoveUp)
             {
@@ -109,7 +114,7 @@ public class Hold_Switch_Show : MonoBehaviour {
                     StartCoroutine(moveUP(curIdx, false));
                     curIdx++;
                 }
-                else if (curIdx < elevatorCnt && elevators[curIdx - 1].executionLevel < -nextExecutionLevel)
+                else if (curIdx < elevatorCnt && elevators[curIdx - 1].executionLevel > -nextExecutionLevel)
                 {
                     StartCoroutine(OpacityUp(curIdx, false));
                     StartCoroutine(moveUP(curIdx, false));
@@ -120,7 +125,6 @@ public class Hold_Switch_Show : MonoBehaviour {
                         break;
                 }
                 
-                Debug.Log(curIdx);
                 /*
                 if (curIdx > 0 && elevators[curIdx + 1].executionLevel < -nextExecutionLevel) 
                 {
