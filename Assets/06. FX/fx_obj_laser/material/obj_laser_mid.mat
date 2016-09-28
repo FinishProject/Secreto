@@ -15,86 +15,68 @@ Material:
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: a280d6b3f48455c4ca3e7908034eebd6, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _MainTex2
-        second:
-          m_Texture: {fileID: 2800000, guid: a280d6b3f48455c4ca3e7908034eebd6, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _MainTex3
-        second:
-          m_Texture: {fileID: 2800000, guid: 6b0086d6248e4624d81d8862fc49cb26, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MainTex
+      second:
+        m_Texture: {fileID: 2800000, guid: f10fde0e029617943be2792ce65828cd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MainTex2
+      second:
+        m_Texture: {fileID: 2800000, guid: f10fde0e029617943be2792ce65828cd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MainTex3
+      second:
+        m_Texture: {fileID: 2800000, guid: 6b0086d6248e4624d81d8862fc49cb26, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
-      data:
-        first:
-          name: _SrcBlend
-        second: 5
-      data:
-        first:
-          name: _DstBlend
-        second: 1
-      data:
-        first:
-          name: _InvFade
-        second: 1
-      data:
-        first:
-          name: _Zwrite
-        second: 0
-      data:
-        first:
-          name: _tex1U
-        second: 0
-      data:
-        first:
-          name: _tex1V
-        second: -1.2
-      data:
-        first:
-          name: _rot1
-        second: 0
-      data:
-        first:
-          name: _tex2U
-        second: 0
-      data:
-        first:
-          name: _tex2V
-        second: 1
-      data:
-        first:
-          name: _rot2
-        second: 0
-      data:
-        first:
-          name: _tex3pow
-        second: 0.036
-      data:
-        first:
-          name: _tex3U
-        second: 0.2
-      data:
-        first:
-          name: _tex3V
-        second: -1
+    - first:
+        name: _DstBlend
+      second: 1
+    - first:
+        name: _InvFade
+      second: 1
+    - first:
+        name: _SrcBlend
+      second: 5
+    - first:
+        name: _Zwrite
+      second: 0
+    - first:
+        name: _rot1
+      second: 0
+    - first:
+        name: _rot2
+      second: 0
+    - first:
+        name: _tex1U
+      second: 0
+    - first:
+        name: _tex1V
+      second: -1.2
+    - first:
+        name: _tex2U
+      second: 0
+    - first:
+        name: _tex2V
+      second: 1
+    - first:
+        name: _tex3U
+      second: 0.2
+    - first:
+        name: _tex3V
+      second: -1
+    - first:
+        name: _tex3pow
+      second: 0.02
     m_Colors:
-      data:
-        first:
-          name: _Color
-        second: {r: 0.6137931, g: 0.17647058, b: 1, a: 1}
-      data:
-        first:
-          name: _TintColor
-        second: {r: 0.75294137, g: 0.3602941, b: 1, a: 0.5}
+    - first:
+        name: _Color
+      second: {r: 0.9852941, g: 0.5868296, b: 0.891861, a: 1}
+    - first:
+        name: _TintColor
+      second: {r: 0.75294137, g: 0.3602941, b: 1, a: 0.5}
