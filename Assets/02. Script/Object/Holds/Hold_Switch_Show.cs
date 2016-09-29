@@ -120,7 +120,6 @@ public class Hold_Switch_Show : MonoBehaviour {
                         break;
                 }
                 
-                Debug.Log(curIdx);
                 /*
                 if (curIdx > 0 && elevators[curIdx + 1].executionLevel < -nextExecutionLevel) 
                 {
@@ -161,7 +160,6 @@ public class Hold_Switch_Show : MonoBehaviour {
     void elevatorsInit()
     {
         GameObject[] objs = GetChildObj(elevatorParent);
-        Debug.Log(objs[0].name);
 
         elevatorCnt = objs.Length;
         elevators = new ElevatorInfo[elevatorCnt];
