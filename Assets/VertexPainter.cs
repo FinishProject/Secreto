@@ -1,9 +1,13 @@
-﻿using UnityEditor;
+﻿
 using UnityEngine;
 
-namespace TOZEditor {
 
-	public class VertexPainter : EditorWindow {
+namespace TOZEditor {
+#if UNITY_EDITOR
+
+    using UnityEditor;
+
+    public class VertexPainter : EditorWindow {
 		//Standart Editor Variables//
 		private static VertexPainter window;
 
@@ -345,5 +349,5 @@ namespace TOZEditor {
 				gui_Notification = "No object selected!";
 		}
 	}
-
+#endif
 }

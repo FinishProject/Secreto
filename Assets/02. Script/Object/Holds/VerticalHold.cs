@@ -36,6 +36,7 @@ public class VerticalHold : MonoBehaviour {
         {
             WahleCtrl.curState = WahleCtrl.instance.StepHold();
             playerTr.Translate(Vector3.up * speed * Time.deltaTime);
+            WahleCtrl.instance.StepHold();
         }
     }
 

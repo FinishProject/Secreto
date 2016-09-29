@@ -254,38 +254,6 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    //void OnTriggerExit(Collider col)
-    //{
-    //    if (col.CompareTag("OBJECT"))
-    //    {
-    //        anim.SetBool("Push", false);
-    //    }
-    //}
-
-    string GetObjectTag()
-    {
-        RaycastHit hit;
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-
-        // 우측 레이캐스트
-        if (Physics.Raycast(headPoint.position, forward, out hit, 1f))
-        {
-            return hit.collider.tag;
-        }
-        else
-            return null;
-    }
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.collider.CompareTag("OBJECT"))
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                hit.gameObject.GetComponent<PushBox>().PushObject(this.transform, isFocusRight);
-            }
-        }
-    }
 
     public void PlayerDie()
     {
@@ -326,7 +294,14 @@ public class PlayerCtrl : MonoBehaviour
     {
         Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
         pData = DataSaveLoad.Load();
-        transform.position = pData.pPosition;
+        if (pData != null)
+            transform.position = pData.pPosition;
+        else
+        {
+            Save();
+            pData = DataSaveLoad.Load();
+            transform.position = pData.pPosition;
+        }
     }
 
     void OnEnable()

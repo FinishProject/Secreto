@@ -6351,13 +6351,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cloude:
   - cloudeTr: {fileID: 1675924877}
-    speed: 3
+    speed: 0.8
     length: 30
   - cloudeTr: {fileID: 950034172}
-    speed: 1.5
+    speed: 1.07
     length: 40
   - cloudeTr: {fileID: 1260081643}
-    speed: 0.4
+    speed: 0.8
     length: 80
   ola:
     olaTr: {fileID: 179238620}
