@@ -22,9 +22,6 @@ public class AltarCtrl : MonoBehaviour {
     public float length = 0.5f;
     public float speed = 1f;
 
-    public GameObject[] hold = new GameObject[4];
-    public Renderer[] holdRender = new Renderer[4];
-
     void Start()
     {
         //originColor = new Color(0f, 0.8117652f, 1.5f);
@@ -37,8 +34,6 @@ public class AltarCtrl : MonoBehaviour {
         originPos = stepHold.position;
         finishPos = originPos;
         finishPos.y -= length;
-
-        //StartCoroutine(ClearColor());
     }
 
     void OnCollisionEnter(Collision col)
@@ -50,9 +45,6 @@ public class AltarCtrl : MonoBehaviour {
             StartCoroutine(DrawColor());
             altarEffect.SetActive(true);
             isOnBox = true;
-
-            if (hold[0] != null)
-                StartCoroutine(SetOnObject());
         }
     }
 
@@ -66,8 +58,6 @@ public class AltarCtrl : MonoBehaviour {
             altarEffect.SetActive(false);
             StartCoroutine(ClearColor());
             isOnBox = false;
-            if(hold[0] != null)
-                StartCoroutine(SetOffObject());
         }
     }
 
@@ -141,45 +131,6 @@ public class AltarCtrl : MonoBehaviour {
 
             if (drawColor.r >= originColor.r && drawColor.g <= originColor.g && 
                 drawColor.b <= originColor.b)
-                break;
-
-            yield return null;
-        }
-    }
-
-    IEnumerator SetOffObject()
-    {
-        Color color = holdRender[0].material.color;
-        while (!isOnBox)
-        {
-            color.a -= 1f * Time.deltaTime;
-            for (int i = 0; i < hold.Length; i++)
-            {
-                holdRender[i].material.color = color;
-                if (color.a <= 0f)
-                    hold[i].SetActive(false);
-            }
-
-            if (color.a <= 0f)
-                break;
-
-            yield return null;
-        }
-    }
-
-    IEnumerator SetOnObject()
-    {
-        Color color = holdRender[0].material.color;
-        while (isOnBox)
-        {
-            color.a += 1f * Time.deltaTime;
-            for (int i = 0; i < hold.Length; i++)
-            {
-                hold[i].SetActive(true);
-                holdRender[i].material.color = color;
-            }
-
-            if (color.a >= 1f)
                 break;
 
             yield return null;
