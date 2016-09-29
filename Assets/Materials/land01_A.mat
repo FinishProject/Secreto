@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: land01_A
-  m_Shader: {fileID: 4800000, guid: d208c90cacad7df45879b39d2041f7c2, type: 3}
+  m_Shader: {fileID: 4800000, guid: 4cd9f1cbff7fc0a4fb21f08114b77e48, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_CustomRenderQueue: -1
@@ -55,7 +55,7 @@ Material:
         name: _MainTex2
       second:
         m_Texture: {fileID: 2800000, guid: 894a370e7701e5b42b9c7bb15549d6a1, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 4, y: 4}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MainTex3
