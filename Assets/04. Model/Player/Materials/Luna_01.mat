@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Luna_01
-  m_Shader: {fileID: 4800000, guid: b35a2abbdd5b15d4ca40103088758eac, type: 3}
+  m_Shader: {fileID: 4800000, guid: 96d05de60c5f7474491f9f94568cf623, type: 3}
   m_ShaderKeywords: _ALPHATEST_ON _CUSTOMSPECULAR_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
     _USEGLOSSMAP_ON _USELIGHTWRAP_ON
   m_LightmapFlags: 0
