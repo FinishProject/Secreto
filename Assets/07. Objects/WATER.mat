@@ -104,6 +104,9 @@ Material:
         name: _GlossyReflections
       second: 1
     - first:
+        name: _InvFade
+      second: 1
+    - first:
         name: _Metallic
       second: 0
     - first:
@@ -150,16 +153,16 @@ Material:
       second: 0
     - first:
         name: _tex2V
-      second: 0.15
+      second: 0
     - first:
         name: _tex3U
       second: 0
     - first:
         name: _tex3V
-      second: -0.35
+      second: 0
     - first:
         name: _tex3pow
-      second: 0.039
+      second: 0
     m_Colors:
     - first:
         name: _Color
@@ -167,3 +170,6 @@ Material:
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
+    - first:
+        name: _TintColor
+      second: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
