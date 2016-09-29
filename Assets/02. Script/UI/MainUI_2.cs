@@ -124,7 +124,7 @@ public class MainUI_2 : MonoBehaviour
             tempAlpha.a += pressKeyFadeSpeed * Time.deltaTime;
             pressAnyKey.color = tempAlpha;
 
-            // alpha 반전 ( 불투명 상태가 됬을 때)
+            // alpha 반전 ( 완전 불투명 상태가 됬을 때)
             if (pressAnyKey.color.a >= 1.0f)
             {
                 pressKeyFadeSpeed *= -1f;

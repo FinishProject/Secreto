@@ -24,7 +24,7 @@ public class LoadingScreen : MonoBehaviour
         StartCoroutine(ShowText());
 
         yield return new WaitForSeconds(1.5f);
-        Application.LoadLevel("0613_copy");
+        Application.LoadLevel("BCS");
     }
 
     IEnumerator ShowText()

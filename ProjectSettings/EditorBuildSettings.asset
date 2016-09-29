@@ -27,7 +27,7 @@ EditorBuildSettings:
     path: Assets/01. Secen/CutScene.unity
   - enabled: 0
     path: Assets/01. Secen/0613.unity
-  - enabled: 0
+  - enabled: 1
     path: Assets/01. Secen/BCS.unity
   - enabled: 0
     path: Assets/01. Secen/ClothTest.unity

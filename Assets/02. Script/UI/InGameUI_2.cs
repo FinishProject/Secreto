@@ -9,7 +9,8 @@ public class InGameUI_2 : MonoBehaviour {
     public static InGameUI_2 instance;
 
     public Image saveImg;
-    public Image saveCircleImg;
+    public Image loadImg;
+    public Image circleImg;
 
     [System.Serializable]
     public struct SaveInfo
@@ -25,7 +26,8 @@ public class InGameUI_2 : MonoBehaviour {
         pauseUI.SetActive(false);
 
         saveImg.enabled = false;
-        saveCircleImg.enabled = false;
+        loadImg.enabled = false;
+        circleImg.enabled = false;
     }
 
     // Update is called once per frame
@@ -40,10 +42,6 @@ public class InGameUI_2 : MonoBehaviour {
             // 일시정지 UI에서도 ESC입력 처리를 따로 해야 하므로 pauseUI.SetActive(false) 사용 안함 
             pauseUI.GetComponent<PauseUI_2>().ClosePauseUI();
         }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            AvtiveSave();
-        }
     }
 
     public void GameEnd()
@@ -53,13 +51,20 @@ public class InGameUI_2 : MonoBehaviour {
 
     public void AvtiveSave()
     {
-        StartCoroutine(Saved());
+        StartCoroutine(SaveLoad(saveImg));
     }
 
-    public IEnumerator Saved()
+    public void AvtiveLoad()
     {
-        saveImg.enabled = true;
-        saveCircleImg.enabled = true;
+        StartCoroutine(SaveLoad(loadImg));
+    }
+
+    public IEnumerator SaveLoad(Image img)
+    {
+
+        img.enabled = true;
+
+        circleImg.enabled = true;
         float round = 0;
 
         while(true)
@@ -67,14 +72,14 @@ public class InGameUI_2 : MonoBehaviour {
             if (round > saveInfo.angle)
                 break;
 
-            saveCircleImg.transform.Rotate(new Vector3(0, 0, -saveInfo.speed));
+            circleImg.transform.Rotate(new Vector3(0, 0, -saveInfo.speed));
 
             round += saveInfo.speed;
             yield return new WaitForSeconds(0.01f);
         }
-        
 
-        saveImg.enabled = false;
-        saveCircleImg.enabled = false;
+
+        img.enabled = false;
+        circleImg.enabled = false;
     }
 }

@@ -88,7 +88,6 @@ public class CameraCtrl_6 : MonoBehaviour
                 isFalling_Before = false;
                 correctionValue = (groundPos_Box_R.y - groundPos_Player.y) * 0.5f;
 //                rayBox.transform.position = new Vector3(rayBox_R.position.x, groundPos_Box_R.y, rayBox_R.position.z);
-                Debug.Log("오른쪽");
             }
             else if (tempRangeRn > fallStandardRange)
             {
@@ -106,7 +105,6 @@ public class CameraCtrl_6 : MonoBehaviour
                 isFalling_Before = false;
                 correctionValue = (groundPos_Box_L.y - groundPos_Player.y) * 0.3f;
 //                rayBox.transform.position = new Vector3(rayBox_L.position.x, groundPos_Box_L.y, rayBox_L.position.z);
-                Debug.Log("왼쪽");
             }
             else if (tempRangeLn > fallStandardRange)
             {
