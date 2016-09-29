@@ -6,6 +6,7 @@ public class PushBox : MonoBehaviour {
 
     public float speed = 1f;
     private Vector3 moveDir = Vector3.zero;
+    public Image shiftImg;
 
     bool isRight = true;
     bool isActive = false;
@@ -24,10 +25,10 @@ public class PushBox : MonoBehaviour {
         if (col.CompareTag("Player"))
         {
             ShowUI.instanace.OnImage(1);
-            ShowUI.instanace.SetPosition(this.transform);
-            //Vector3 imgPosition = this.transform.position;
-            //imgPosition.y += 1f;
-            //shiftImg.transform.position = imgPosition;
+            //ShowUI.instanace.SetPosition(this.transform.position);
+            Vector3 imgPosition = this.transform.position;
+            imgPosition.y += 1f;
+            shiftImg.transform.position = imgPosition;
         }
     }
 

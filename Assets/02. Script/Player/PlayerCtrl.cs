@@ -49,7 +49,6 @@ public class PlayerCtrl : MonoBehaviour
     public GameObject lunaModel;
     private PlayerEffect pEffect;
     private WahleMove wahleMove;
-    public Transform headPoint;
 
     public static PlayerCtrl instance;
 
@@ -230,17 +229,6 @@ public class PlayerCtrl : MonoBehaviour
         {
             InGameUI_2.instance.GameEnd();
         }
-        //else if (coll.CompareTag("OBJECT"))
-        //{
-        //    if(Input.GetKey(KeyCode.LeftShift) && inputAxis != 0 &&
-        //        transform.position.y <= coll.transform.position.y)
-        //    {
-        //        anim.SetBool("Push", true);
-        //        coll.gameObject.GetComponent<PushBox>().PushObject(this.transform);
-        //    }
-        //    else
-        //        anim.SetBool("Push", false);
-        //}
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
@@ -252,28 +240,6 @@ public class PlayerCtrl : MonoBehaviour
                 hit.gameObject.GetComponent<PushBox>().PushObject(this.transform, isFocusRight);
             }
         }
-    }
-
-    //void OnTriggerExit(Collider col)
-    //{
-    //    if (col.CompareTag("OBJECT"))
-    //    {
-    //        anim.SetBool("Push", false);
-    //    }
-    //}
-
-    string GetObjectTag()
-    {
-        RaycastHit hit;
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-
-        // 우측 레이캐스트
-        if (Physics.Raycast(headPoint.position, forward, out hit, 1f))
-        {
-            return hit.collider.tag;
-        }
-        else
-            return null;
     }
 
     public void PlayerDie()
