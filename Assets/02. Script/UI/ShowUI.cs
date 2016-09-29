@@ -20,14 +20,23 @@ public class ShowUI : MonoBehaviour {
     {
         if (fadeDir == -1)
             StartCoroutine(OffImage());
+        else
+        {
+            Color imgColor = shiftImg.material.color;
+            alpha += fadeDir * fadeSpeed * Time.deltaTime;
+            alpha = Mathf.Clamp01(alpha);
 
-        Color imgColor = shiftImg.material.color;
-        alpha += fadeDir * fadeSpeed * Time.deltaTime;
-        alpha = Mathf.Clamp01(alpha);
+            imgColor.a = alpha;
 
-        imgColor.a = alpha;
+            shiftImg.material.color = imgColor;
+        }
+    }
 
-        shiftImg.material.color = imgColor;
+    public void SetPosition(Transform curTr)
+    {
+        Vector3 setPosition = curTr.position;
+        setPosition.y += 1f;
+        this.transform.position = setPosition;
     }
 
     IEnumerator OffImage()
@@ -37,7 +46,6 @@ public class ShowUI : MonoBehaviour {
             Color imgColor = shiftImg.material.color;
             alpha -= fadeSpeed * Time.deltaTime;
             alpha = Mathf.Clamp01(alpha);
-            Debug.Log(alpha);
             imgColor.a = alpha;
 
             shiftImg.material.color = imgColor;

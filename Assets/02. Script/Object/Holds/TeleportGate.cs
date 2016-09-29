@@ -17,11 +17,16 @@ public class TeleportGate : MonoBehaviour {
     private TeleportGate exitTelpo;
     private Transform boxTr;
 
+    public bool isRight = true;
     private bool isBox = false;
+    private float focusDir = 1;
 
     void Start()
     {
         exitTelpo = exitGate.GetComponent<TeleportGate>();
+
+        if (!isRight)
+            focusDir = -1f;
     }
 
     void OnTriggerEnter(Collider col)
@@ -49,14 +54,14 @@ public class TeleportGate : MonoBehaviour {
     IEnumerator MoveGate()
     {
         Vector3 exitPoint = exitGate.position;
-        exitPoint -= Vector3.right * 3f;
+        exitPoint += Vector3.right * focusDir * 3f;
         exitPoint -= Vector3.up * 3.8f;
 
         yield return new WaitForSeconds(1f);
 
         if (isBox && boxTr != null)
         {
-            boxTr.position = new Vector3(exitPoint.x - 3f, exitPoint.y, exitPoint.z);
+            boxTr.position = new Vector3(exitPoint.x + (3f * focusDir), exitPoint.y + 5f, boxTr.position.z);
         }
 
         PlayerCtrl.instance.transform.position = exitPoint;

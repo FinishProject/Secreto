@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class PushBox : MonoBehaviour {
 
     public float speed = 1f;
-    public Image shiftImg;
     private Vector3 moveDir = Vector3.zero;
 
     bool isRight = true;
@@ -25,9 +24,10 @@ public class PushBox : MonoBehaviour {
         if (col.CompareTag("Player"))
         {
             ShowUI.instanace.OnImage(1);
-            Vector3 imgPosition = this.transform.position;
-            imgPosition.y += 1f;
-            shiftImg.transform.position = imgPosition;
+            ShowUI.instanace.SetPosition(this.transform);
+            //Vector3 imgPosition = this.transform.position;
+            //imgPosition.y += 1f;
+            //shiftImg.transform.position = imgPosition;
         }
     }
 
