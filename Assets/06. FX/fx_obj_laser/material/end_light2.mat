@@ -6,10 +6,10 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Godray
-  m_Shader: {fileID: 4800000, guid: 18c362ad7ad192e419b726e33c6759a4, type: 3}
-  m_ShaderKeywords: _ALPHABLEND_ON
-  m_LightmapFlags: 5
+  m_Name: end_light2
+  m_Shader: {fileID: 4800000, guid: d3c65eaa136b06346935c6e8bd5d0d9a, type: 3}
+  m_ShaderKeywords: _EMISSION
+  m_LightmapFlags: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   m_SavedProperties:
@@ -40,6 +40,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _DispMap
+      second:
+        m_Texture: {fileID: 2800000, guid: 83983eca2f3a9e942886068d9a30e21c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _EmissionMap
       second:
         m_Texture: {fileID: 0}
@@ -48,19 +54,31 @@ Material:
     - first:
         name: _MainTex
       second:
-        m_Texture: {fileID: 2800000, guid: 77c456c81a8be5f43b5a750c634ef496, type: 3}
-        m_Scale: {x: 0.87, y: 1}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MainTex2
       second:
-        m_Texture: {fileID: 2800000, guid: f6258e6214faf3f41a08d4de8ebaa788, type: 3}
-        m_Scale: {x: 0.5, y: 0.5}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MainTex3
       second:
-        m_Texture: {fileID: 2800000, guid: a711da432f7bc2348b02c77394665ebb, type: 3}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MainTex4
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MaskTex
+      second:
+        m_Texture: {fileID: 2800000, guid: e647de4ccb94ef84aa011eb49c2b8af5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -81,7 +99,28 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - first:
+        name: _RGBA_Tex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
+    - first:
+        name: _AORange
+      second: 0
+    - first:
+        name: _BumpRangeTex
+      second: 0
+    - first:
+        name: _BumpRangeTex2
+      second: 0
+    - first:
+        name: _BumpRangeTex3
+      second: 0
+    - first:
+        name: _BumpRangeTex4
+      second: 0
     - first:
         name: _BumpScale
       second: 1
@@ -92,23 +131,47 @@ Material:
         name: _DetailNormalMapScale
       second: 1
     - first:
+        name: _DispScrollSpeedX
+      second: 0
+    - first:
+        name: _DispScrollSpeedY
+      second: 0
+    - first:
         name: _DstBlend
+      second: 0
+    - first:
+        name: _EmissionRange
+      second: 0
+    - first:
+        name: _GlossMapScale
       second: 1
     - first:
-        name: _EmissionScaleUI
-      second: 0
-    - first:
         name: _Glossiness
-      second: 0
+      second: 0.5
     - first:
-        name: _InvFade
-      second: 0.81
+        name: _GlossyReflections
+      second: 1
     - first:
         name: _Metallic
       second: 0
     - first:
+        name: _MetallicRange
+      second: 0
+    - first:
+        name: _MetallicRange2
+      second: 0
+    - first:
+        name: _MetallicRange3
+      second: 0
+    - first:
+        name: _MetallicRange4
+      second: 0
+    - first:
         name: _Mode
-      second: 2
+      second: 0
+    - first:
+        name: _NoVertexColor
+      second: 0
     - first:
         name: _OcclusionStrength
       second: 1
@@ -116,60 +179,42 @@ Material:
         name: _Parallax
       second: 0.02
     - first:
-        name: _RayScale
+        name: _SmoothnessRange
+      second: 0
+    - first:
+        name: _SmoothnessRange2
+      second: 0
+    - first:
+        name: _SmoothnessRange3
+      second: 0
+    - first:
+        name: _SmoothnessRange4
+      second: 0
+    - first:
+        name: _SmoothnessTextureChannel
+      second: 0
+    - first:
+        name: _SpecularHighlights
       second: 1
     - first:
-        name: _Speed
-      second: 0.2
-    - first:
         name: _SrcBlend
-      second: 5
+      second: 1
+    - first:
+        name: _StrengthX
+      second: 2
+    - first:
+        name: _StrengthY
+      second: 3
     - first:
         name: _UVSec
       second: 0
     - first:
         name: _ZWrite
-      second: 0
-    - first:
-        name: _Zwrite
-      second: 0
-    - first:
-        name: _rot1
-      second: 0
-    - first:
-        name: _rot2
-      second: 0
-    - first:
-        name: _tex1U
-      second: -0.15
-    - first:
-        name: _tex1V
-      second: 0
-    - first:
-        name: _tex2U
-      second: 0.01
-    - first:
-        name: _tex2V
-      second: 0
-    - first:
-        name: _tex3U
-      second: -0.1
-    - first:
-        name: _tex3V
-      second: -0.1
-    - first:
-        name: _tex3pow
-      second: 0.008
+      second: 1
     m_Colors:
     - first:
         name: _Color
-      second: {r: 0.45588237, g: 0.5722109, b: 1, a: 1}
+      second: {r: 1, g: 1, b: 1, a: 1}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
-    - first:
-        name: _EmissionColorUI
-      second: {r: 1, g: 1, b: 1, a: 1}
-    - first:
-        name: _TintColor
-      second: {r: 0.48446202, g: 0.44636676, b: 0.9485294, a: 0.672}
