@@ -14,12 +14,10 @@ using System.Collections;
 public class TeleportGate : MonoBehaviour {
 
     public Transform exitGate;
-    public float lenth = 5f;
-
     private TeleportGate exitTelpo;
+    private Transform boxTr;
 
     private bool isBox = false;
-
 
     void Start()
     {
@@ -30,14 +28,39 @@ public class TeleportGate : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            Vector3 exitPoint = exitGate.position;
-            exitPoint -= Vector3.forward * lenth;
-
-           
-            PlayerCtrl.instance.transform.position = exitPoint;
-
-            Transform playerTr = PlayerCtrl.instance.transform;
+            FadeInOut.instance.StartFadeInOut(1f, 1.8f, 1f);
+            StartCoroutine(MoveGate());
         }
+        else if (col.CompareTag("OBJECT"))
+        {
+            isBox = true;
+            boxTr = col.transform;
+        }
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if (col.CompareTag("OBJECT"))
+        {
+            isBox = false;
+        }
+    }
+
+    IEnumerator MoveGate()
+    {
+        Vector3 exitPoint = exitGate.position;
+        exitPoint -= Vector3.right * 3f;
+        exitPoint -= Vector3.up * 3.8f;
+
+        yield return new WaitForSeconds(1f);
+
+        if (isBox && boxTr != null)
+        {
+            boxTr.position = new Vector3(exitPoint.x - 3f, exitPoint.y, exitPoint.z);
+        }
+
+        PlayerCtrl.instance.transform.position = exitPoint;
+        PlayerCtrl.instance.TurnPlayer();
     }
 }
 
