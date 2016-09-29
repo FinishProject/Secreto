@@ -27,7 +27,7 @@ public class MovieMgr : MonoBehaviour
 
     IEnumerator StartMovie()
     {
-        FadeInOut.instance.StartFadeInOut(0, 1, 1.5f);
+        FadeInOut.instance.StartFadeInOut(0, 1, 2.5f);
         StartCoroutine(fadeSkip(true));
         yield return new WaitForSeconds(2f);
 

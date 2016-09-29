@@ -60,8 +60,8 @@ public class FadeInOut : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-            StartFadeInOut_PlayerDead();
+//        if (Input.GetKeyDown(KeyCode.Q))
+//            StartFadeInOut_PlayerDead();
     }
 
     public void StartFadeInOut(float fadeInTime, float waitTime, float fadeOutTime)

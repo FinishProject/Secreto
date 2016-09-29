@@ -18,6 +18,7 @@ public class PlayerCtrl : MonoBehaviour
     public float upGravity = 1f; // 점프 시 중력 값
     public float dropGravity = 5f; // 공중에 있을 때의 중력값
     public static float curGravity; // 현재 중력값
+    public static bool dying;      // 죽는중
 
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
@@ -291,6 +292,7 @@ public class PlayerCtrl : MonoBehaviour
 
     IEnumerator ResetPlayer()
     {
+        dying = true;
         FadeInOut.instance.StartFadeInOut(1, 2, 3);
         isMove = false;
         cloth.gameObject.SetActive(false);
@@ -298,11 +300,15 @@ public class PlayerCtrl : MonoBehaviour
         pEffect.StartEffect(PlayerEffectList.DIE);
 
         yield return new WaitForSeconds(1.3f);
-
+   
         GetPlayerData();
         cloth.gameObject.SetActive(true);
         lunaModel.SetActive(true);
+
         isMove = true;
+
+        yield return new WaitForSeconds(1f);
+        dying = false;
     }
 
     void GetPlayerData()
