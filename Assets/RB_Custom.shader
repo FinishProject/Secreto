@@ -29,8 +29,10 @@
 		_MainTex4 ("Albedo (A) / No Vertex Color = D", 2D) = "white" {}
 
 //		버텍스컬러가 없는 경우에는 버텍스 컬러가 흰색이기 때문에 반전이 필요하다.
-		[Toggle]_NoVertexColor ("No Vertex Color This Check",float) = 0
+//		맥스에서 기본 디폴트로 넘어 올 때, RGBA 가 모두 칠해져 오기 때문에 1개의 텍스쳐만 쓰고 싶을 때는 나머지를 간섭 안받게 꺼줘야 한다.
+		[Toggle]_NoVertexColor ("No Vertex Color This Check (1 Albedo Setting)",float) = 0
 
+		_Color ("Color", Color) = (1,1,1,1)
 		_MetallicRange4 ("Metallic" , Range(0,1)) = 0.0
 		_SmoothnessRange4 ("Smoothness" , Range(0,1)) = 0.0
 		_BumpRangeTex4 ("Bump" , Range(0,1)) = 0.0
@@ -40,6 +42,7 @@
 
 		_AORange ("Occlusion" , Range(0,1)) = 0.0
 		_EmissionRange ("Emission" , Range(0,3)) = 0.0
+		_EmissionColor ("Emission Color", Color) = (1,1,1,1)
 
 		_BumpMap ("Detail Normal", 2D) = "bump" {}
 
@@ -52,9 +55,10 @@
 
 		Tags { "RenderType"="Opaque" }
 		LOD 200
-		
+		Cull Off
 		CGPROGRAM
- 		#pragma surface surf Standard //fullforwardshadows // noambient
+ 		#pragma surface surf Standard fullforwardshadows // noambient
+
 
 		//텍스쳐 연산이 많아지면서 드디어 2.0 셰이더를 탈피 했다.
 		#pragma target 3.0
@@ -77,6 +81,7 @@
 		float _SmoothnessRange4;
 
 		float _EmissionRange;
+		fixed4 _EmissionColor;
 
 		float _BumpRangeTex;
 		float _BumpRangeTex2;
@@ -86,6 +91,7 @@
 		float _AORange;
 
 		float _NoVertexColor;
+		fixed4 _Color;
 
 	//	이것은 Input Struct (Input 구조체) 
 		struct Input {
@@ -122,9 +128,13 @@
 			o.Albedo =  ((c.rgb * IN.color.r) 
 					   + (d.rgb * IN.color.g)
 					   + (e.rgb * IN.color.b)
-					   + (float3(abs(_NoVertexColor - f.r),abs(_NoVertexColor - f.g),abs(_NoVertexColor - f.b)) * (1 - IN.color.r - IN.color.g - IN.color.b)));			
-					   // 버텍스 컬러가 없을 경우, 텍스쳐가 반전되어 나오기 때문에 토글 스위치로 반전 할 수 있게끔 해준다.
-			o.Albedo = c.rgb;
+					   + (f.rgb * (1 - IN.color.r - IN.color.g - IN.color.b)));			
+
+			// 버텍스 컬러가 없을 경우, f 텍스쳐 하나로만 컨트롤 할 수 있게끔 해 준다.
+			// 토글을 껏을때는 알베도에 1을 곱해 원래 텍스쳐가 나오게 끔 해주고, 토글이 켜지면, RGB 텍스쳐를 모두 0으로 만든 뒤, A 텍스쳐만 표기하게끔 한다.
+			o.Albedo = o.Albedo * (1 - _NoVertexColor) + (_NoVertexColor * f.rgb * _Color);
+//			o.Albedo = f.rgb;
+
 
 //			RGBA 텍스쳐에서 메탈릭맵(R채널)만 뽑아쓴다. 
 			o.Metallic =  (IN.color.r * m.r * _MetallicRange)
@@ -132,12 +142,18 @@
 						 +(IN.color.b * m.r * _MetallicRange3)
 						 +(IN.color.a * m.r * _MetallicRange4);
 
+			// 텍스쳐를 한개만 쓸 경우에 RGB 쪽에 슬라이드에 영향을 안받게끔 텍스쳐를 꺼준다.
+			o.Metallic = o.Metallic * (1 - _NoVertexColor) + (_NoVertexColor * (IN.color.a * m.r * _MetallicRange4));
 
 //			RGBA 텍스쳐에서 스무스니스맵(A채널)만 뽑아쓴다. 
 			o.Smoothness = (IN.color.r * m.a * _SmoothnessRange)
 						  +(IN.color.g * m.a * _SmoothnessRange2)
 						  +(IN.color.b * m.a * _SmoothnessRange3)
 						  +(IN.color.a * m.a * _SmoothnessRange4);
+
+			// 텍스쳐를 한개만 쓸 경우에 RGB 쪽에 슬라이드에 영향을 안받게끔 텍스쳐를 꺼준다.
+			o.Smoothness = o.Smoothness * (1 - _NoVertexColor) + (_NoVertexColor * (IN.color.a * m.a * _SmoothnessRange4));
+
 
 
 			o.Normal =  lerp
@@ -160,7 +176,7 @@
 			o.Occlusion = 1-(1-m.g)*_AORange;	
 
 //			RGBA 텍스쳐에서 이미션맵(B채널)만 뽑아쓴다. 	
-			o.Emission =  m.b * _EmissionRange;
+			o.Emission =  m.b * _EmissionRange * _EmissionColor;
 
 			o.Alpha = c.a;
 		}
