@@ -334,6 +334,48 @@ MonoBehaviour:
   fadeTexture: {fileID: 2800000, guid: fd9d0070029dc304aa485bc715bf9dbb, type: 3}
   fadeSpeed: 0.2
   alpha: 0
+--- !u!1001 &615492875
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4000012871177580, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 62.356144
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012871177580, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 9.584403
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012871177580, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0.140625
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012871177580, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012871177580, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012871177580, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012871177580, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012871177580, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9a3b1c4c456c4d44d829789a4e6c0428, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1472741207
 GameObject:
   m_ObjectHideFlags: 0

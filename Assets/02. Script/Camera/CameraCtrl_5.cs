@@ -136,6 +136,17 @@ public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
 
     }
 
+    GameObject CamArea;
+    bool isCamAreaMove = false;
+
+    IEnumerator GetCamAreaVal()
+    {
+        while(isCamAreaMove)
+        {
+            camY = CamArea.GetComponent<CameraArea_2>().val;
+            yield return null;
+        }
+    }
 
     public void ActiveSensor_Retuen(int index, GameObject returnObjet)
     {
@@ -145,14 +156,26 @@ public class CameraCtrl_5 : MonoBehaviour, Sensorable_Return
                 {
                     if (returnObjet != null)
                     {
-                        camY_old = camY;
-                        camY = returnObjet.GetComponent<CameraArea_2>().val;
-                        camY_gap = Mathf.Abs(camY - camY_old);
-                        Debug.Log(returnObjet.name + " : " + camY);
+                        if(!returnObjet.GetComponent<CameraArea_2>().moving)
+                        {
+                            isCamAreaMove = false;
+                            camY_old = camY;
+                            camY = returnObjet.GetComponent<CameraArea_2>().val;
+                            camY_gap = Mathf.Abs(camY - camY_old);
+                            Debug.Log(returnObjet.name + " : " + camY);
+                        }
+                        else
+                        {
+                            CamArea = returnObjet;
+                            isCamAreaMove = true;
+                            StartCoroutine(GetCamAreaVal());
+                        }
+
                         inCamArea = true;
                     }
                     else
                     {
+                        isCamAreaMove = false;
                         inCamArea = false;
                     }
                 }

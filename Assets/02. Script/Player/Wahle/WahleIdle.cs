@@ -5,6 +5,7 @@ public class WahleIdle : WahleCtrl
 {
 
     public float lookSpeed = 0.3f;
+    public Transform targetPoint;
 
     protected override IEnumerator CurStateUpdate()
     {
@@ -38,12 +39,12 @@ public class WahleIdle : WahleCtrl
         distance = relativePos.sqrMagnitude;
         lookRot = Quaternion.LookRotation(relativePos);
 
-        //relativePos = ShotRay(relativePos);
+        relativePos = ShotRay(relativePos);
 
         //transform.RotateAround(this.transform.forward, 1f * Time.deltaTime);
 
         transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, lookSpeed * Time.deltaTime);
-        transform.Translate(Vector3.forward * Time.deltaTime);
+        transform.Translate(Vector3.forward * maxSpeed * Time.deltaTime);
     }
 
     // NPC와 대화시 고래가 플레이어 좌측에 위치
@@ -55,5 +56,10 @@ public class WahleIdle : WahleCtrl
         transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRot, 5f * Time.deltaTime);
         transform.position = Vector3.Lerp(transform.position, playerTr.position - (playerTr.right),
                3f * Time.deltaTime);
+    }
+
+    public void SearchObject()
+    {
+        targetPoint.position = base.SetRandomPos();
     }
 }

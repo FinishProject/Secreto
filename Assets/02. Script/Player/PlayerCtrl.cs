@@ -18,6 +18,7 @@ public class PlayerCtrl : MonoBehaviour
     public float upGravity = 1f; // 점프 시 중력 값
     public float dropGravity = 5f; // 공중에 있을 때의 중력값
     public static float curGravity; // 현재 중력값
+    public static bool dying;      // 죽는중
 
     public static float inputAxis = 0f;     // 입력 받는 키의 값
     public static bool isFocusRight = true; // 우측을 봐라보는 여부
@@ -48,6 +49,7 @@ public class PlayerCtrl : MonoBehaviour
     public GameObject lunaModel;
     private PlayerEffect pEffect;
     private WahleMove wahleMove;
+    public Transform headPoint;
 
     public static PlayerCtrl instance;
 
@@ -64,6 +66,8 @@ public class PlayerCtrl : MonoBehaviour
     {
         //GetPlayerData();
         curGravity = dropGravity;
+
+        lockPosZ = transform.position.z;
     }
 
     void Update()
@@ -71,10 +75,10 @@ public class PlayerCtrl : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isMove) Movement();
-
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
+
     }
 
     void Movement()
@@ -82,7 +86,6 @@ public class PlayerCtrl : MonoBehaviour
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
         anim.SetFloat("Velocity", controller.velocity.y);
 
-      
         // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow) ||
             Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
@@ -151,7 +154,6 @@ public class PlayerCtrl : MonoBehaviour
         {
             if (jumpTime >= maxJumpHight)
                 break;
-            Debug.Log(controller.isGrounded);
             moveDir.y = jumpAccel;
             jumpTime += Time.deltaTime;
 
@@ -168,19 +170,19 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     //캐릭터 방향 회전
-    void TurnPlayer()
+    public void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
         focusRight *= -1f;
-
+    
         transform.Rotate(new Vector3(0, 1, 0), 180);
+
+        wahleMove.ResetSpeed();
+        if (!controller.isGrounded) { moveDir.x *= -1f; }
 
         //Vector3 localScale = transform.localScale;
         //localScale.z *= -1f;
         //transform.localScale = localScale;
-
-        wahleMove.ResetSpeed();
-        if (!controller.isGrounded) { moveDir.x *= -1f; }
     }
 
     public void getRecovery(float recovery)
@@ -228,32 +230,78 @@ public class PlayerCtrl : MonoBehaviour
         {
             InGameUI_2.instance.GameEnd();
         }
+        //else if (coll.CompareTag("OBJECT"))
+        //{
+        //    if(Input.GetKey(KeyCode.LeftShift) && inputAxis != 0 &&
+        //        transform.position.y <= coll.transform.position.y)
+        //    {
+        //        anim.SetBool("Push", true);
+        //        coll.gameObject.GetComponent<PushBox>().PushObject(this.transform);
+        //    }
+        //    else
+        //        anim.SetBool("Push", false);
+        //}
     }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.CompareTag("OBJECT"))
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                hit.gameObject.GetComponent<PushBox>().PushObject(this.transform, isFocusRight);
+            }
+        }
+    }
+
 
     public void PlayerDie()
     {
         StartCoroutine(ResetPlayer());
     }
+    
+    public void animReset()
+    {
+        anim.SetFloat("Velocity", 0);
+        anim.SetBool("Run", false);
+        anim.SetBool("Jump", false);
+        anim.SetBool("Dash", false);
+        anim.SetBool("Idle", true);
+    }
 
     IEnumerator ResetPlayer()
     {
+        dying = true;
         FadeInOut.instance.StartFadeInOut(1, 2, 3);
         isMove = false;
+        cloth.gameObject.SetActive(false);
         lunaModel.SetActive(false);
         pEffect.StartEffect(PlayerEffectList.DIE);
 
         yield return new WaitForSeconds(1.3f);
-
+   
         GetPlayerData();
+        cloth.gameObject.SetActive(true);
         lunaModel.SetActive(true);
+
         isMove = true;
+
+        yield return new WaitForSeconds(1f);
+        dying = false;
     }
 
     void GetPlayerData()
     {
         Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
         pData = DataSaveLoad.Load();
-        transform.position = pData.pPosition;
+        if (pData != null)
+            transform.position = pData.pPosition;
+        else
+        {
+            Save();
+            pData = DataSaveLoad.Load();
+            transform.position = pData.pPosition;
+        }
     }
 
     void OnEnable()

@@ -48,7 +48,7 @@ Material:
     - first:
         name: _MainTex
       second:
-        m_Texture: {fileID: 2800000, guid: 5d812155f116787448a9d95edd42fb4d, type: 3}
+        m_Texture: {fileID: 2800000, guid: f956268614722444a86a420ede98d0b0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -87,7 +87,7 @@ Material:
       second: 1
     - first:
         name: _Cutoff
-      second: 0.894
+      second: 0.843
     - first:
         name: _DetailNormalMapScale
       second: 1

@@ -24,13 +24,16 @@ public class LoadingScreen : MonoBehaviour
         StartCoroutine(ShowText());
 
         yield return new WaitForSeconds(1.5f);
-        Application.LoadLevel("0613_copy");
+        Application.LoadLevel("0613_copy(0925_build)");
     }
 
     IEnumerator ShowText()
     {
         while (true)
         {
+            //AsyncOperation async = Application.LoadLevelAsync("0613_copy");
+            //Debug.Log(async.isDone);
+
             text.text = str0;
             yield return new WaitForSeconds(speed);
             text.text = str1;

@@ -34,13 +34,14 @@ public class VerticalHold : MonoBehaviour {
         // 플레이어가 발판 위에 있을 시 발판과 같이 이동
         if (coll.CompareTag("Player"))
         {
-            //WahleCtrl.curState = WahleCtrl.instance.StepHold();
+            WahleCtrl.curState = WahleCtrl.instance.StepHold();
             playerTr.Translate(Vector3.up * speed * Time.deltaTime);
+            WahleCtrl.instance.StepHold();
         }
     }
 
     void OnTriggerExit(Collider coll)
     {
-        //WahleCtrl.curState = WahleCtrl.instance.Move();
+        WahleCtrl.instance.ChangeState(WahleState.MOVE);
     }
 }

@@ -6,33 +6,75 @@ using UnityEngine.UI;
 */
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
-
 public class MovieMgr : MonoBehaviour
 {
     public MovieTexture movieclips;
+    public Image SkipImg;
+
     private MeshRenderer meshRenderer;
+    private AudioSource audio;
     private bool trigger;
     void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.material.mainTexture = movieclips;
+        audio = GetComponent<AudioSource>();
+        StartCoroutine(StartMovie());
+    }
 
-        AudioSource audio = GetComponent<AudioSource>();
+    IEnumerator StartMovie()
+    {
+        FadeInOut.instance.StartFadeInOut(0, 1, 2.5f);
+        StartCoroutine(fadeSkip(true));
+        yield return new WaitForSeconds(2f);
+
         audio.Play();
         movieclips.Play();
         trigger = false;
+
+        while(true)
+        {
+            if (Input.GetKey(KeyCode.Escape) || !movieclips.isPlaying && !trigger)
+            {
+                trigger = true;
+                StartCoroutine(fadeSkip(false));
+                FadeInOut.instance.StartFadeInOut(1.5f, 3, 1.5f);
+                yield return new WaitForSeconds(1.5f);
+                Application.LoadLevel("LoadingScene");
+                break;
+            }
+            yield return null;
+        }
     }
 
-    void Update()
+    IEnumerator fadeSkip(bool fadeIn)
     {
-        if (!movieclips.isPlaying && !trigger)
+        Color tempAlpha = SkipImg.color;
+        float pressKeyFadeSpeed = 0.5f;
+
+        if (!fadeIn)
         {
-            trigger = true;
-            Application.LoadLevel("LoadingScene");
+            tempAlpha.a = 1;
+            pressKeyFadeSpeed *= -1;
         }
-            
+        else
+        {
+            tempAlpha.a = 0;
+        }
+        SkipImg.color = tempAlpha;
+
+        while (true)
+        {
+            tempAlpha.a = pressKeyFadeSpeed * Time.deltaTime;
+            SkipImg.color += tempAlpha;
+            if (SkipImg.color.a >= 1.0f || SkipImg.color.a <= 0)
+                break;
+
+            yield return null;
+        }
     }
 
 }

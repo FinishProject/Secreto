@@ -18,11 +18,13 @@ public class CameraArea_2 : MonoBehaviour {
 
     IEnumerator UpdatePos()
     {
-
-        transform.position = orign + moving_bace.transform.position;
-        val = moving_bace.position.y + 1;
-
-        yield return null;
+        while(true)
+        {
+            orign.y = moving_bace.transform.position.y+1;
+            transform.position = orign;
+            val = moving_bace.position.y + 1;
+            yield return null;
+        }   
     }
 
 }

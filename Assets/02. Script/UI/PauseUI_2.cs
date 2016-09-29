@@ -65,7 +65,7 @@ public class PauseUI_2 : MonoBehaviour
     // 타이틀 씬으로
     public void ToTitleScene()
     {
-        Application.LoadLevel("MainScene");
+        Application.LoadLevel("MainScene 1");
     }
 
     // PauseUI 종료

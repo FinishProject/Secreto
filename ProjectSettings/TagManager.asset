@@ -21,6 +21,7 @@ TagManager:
   - FadeLine
   - Land
   - Ignore
+  - LimitArea
   layers:
   - Default
   - TransparentFX
