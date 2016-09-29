@@ -31,7 +31,28 @@ public class JingGume : MonoBehaviour {
 
     void OnHolds()
     {
-        if(cnt < gObject.Length)
-            gObject[cnt++].SetActive(true);
+        if (cnt < gObject.Length)
+        {
+            gObject[cnt].SetActive(true);
+            StartCoroutine(UpHold(gObject[cnt]));
+            cnt++;
+        }
+    }
+
+    IEnumerator UpHold(GameObject moveHold)
+    {
+        Vector3 originPos = moveHold.transform.position;
+        Vector3 spawnPos = originPos;
+        spawnPos.y -= 1f;
+        moveHold.transform.position = spawnPos;
+
+        while (true)
+        {
+            if (moveHold.transform.position.y.Equals(originPos.y))
+                break;
+
+            moveHold.transform.position = Vector3.MoveTowards(moveHold.transform.position, originPos, 2f * Time.deltaTime);
+            yield return null;
+        }
     }
 }

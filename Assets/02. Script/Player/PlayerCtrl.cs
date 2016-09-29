@@ -49,6 +49,7 @@ public class PlayerCtrl : MonoBehaviour
     public GameObject lunaModel;
     private PlayerEffect pEffect;
     private WahleMove wahleMove;
+    public Transform headPoint;
 
     public static PlayerCtrl instance;
 
@@ -74,10 +75,10 @@ public class PlayerCtrl : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y, lockPosZ);
         // 플레이어에게 조작권한이 있다면 움직임
         if (isMove) Movement();
-        else Debug.Log(11);
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
+
     }
 
     void Movement()
@@ -85,7 +86,6 @@ public class PlayerCtrl : MonoBehaviour
         inputAxis = Input.GetAxis("Horizontal"); // 키 입력
         anim.SetFloat("Velocity", controller.velocity.y);
 
-      
         // 좌우 동시 입력을 막기위함
         if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow) ||
             Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
@@ -170,19 +170,19 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     //캐릭터 방향 회전
-    void TurnPlayer()
+    public void TurnPlayer()
     {
         isFocusRight = !isFocusRight;
         focusRight *= -1f;
-
+    
         transform.Rotate(new Vector3(0, 1, 0), 180);
+
+        wahleMove.ResetSpeed();
+        if (!controller.isGrounded) { moveDir.x *= -1f; }
 
         //Vector3 localScale = transform.localScale;
         //localScale.z *= -1f;
         //transform.localScale = localScale;
-
-        wahleMove.ResetSpeed();
-        if (!controller.isGrounded) { moveDir.x *= -1f; }
     }
 
     public void getRecovery(float recovery)
@@ -230,6 +230,50 @@ public class PlayerCtrl : MonoBehaviour
         {
             InGameUI_2.instance.GameEnd();
         }
+        //else if (coll.CompareTag("OBJECT"))
+        //{
+        //    if(Input.GetKey(KeyCode.LeftShift) && inputAxis != 0 &&
+        //        transform.position.y <= coll.transform.position.y)
+        //    {
+        //        anim.SetBool("Push", true);
+        //        coll.gameObject.GetComponent<PushBox>().PushObject(this.transform);
+        //    }
+        //    else
+        //        anim.SetBool("Push", false);
+        //}
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.CompareTag("OBJECT"))
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                hit.gameObject.GetComponent<PushBox>().PushObject(this.transform, isFocusRight);
+            }
+        }
+    }
+
+    //void OnTriggerExit(Collider col)
+    //{
+    //    if (col.CompareTag("OBJECT"))
+    //    {
+    //        anim.SetBool("Push", false);
+    //    }
+    //}
+
+    string GetObjectTag()
+    {
+        RaycastHit hit;
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+
+        // 우측 레이캐스트
+        if (Physics.Raycast(headPoint.position, forward, out hit, 1f))
+        {
+            return hit.collider.tag;
+        }
+        else
+            return null;
     }
 
     public void PlayerDie()
@@ -250,13 +294,19 @@ public class PlayerCtrl : MonoBehaviour
     {
         dying = true;
         FadeInOut.instance.StartFadeInOut(1, 2, 3);
+        isMove = false;
+        cloth.gameObject.SetActive(false);
         lunaModel.SetActive(false);
         pEffect.StartEffect(PlayerEffectList.DIE);
- //       animReset();
+
         yield return new WaitForSeconds(1.3f);
    
         GetPlayerData();
+        cloth.gameObject.SetActive(true);
         lunaModel.SetActive(true);
+
+        isMove = true;
+
         yield return new WaitForSeconds(1f);
         dying = false;
     }

@@ -1133,7 +1133,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013708417194}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35.66, y: 1.24, z: -1.7553363}
+  m_LocalPosition: {x: 441.85, y: 2.632, z: -1.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -2255,11 +2255,12 @@ MonoBehaviour:
   render:
   - {fileID: 23000011307345194}
   - {fileID: 23000012870493134}
-  - {fileID: 0}
+  - {fileID: 23000013043452802}
   altarEffect: {fileID: 1000013984049204}
   stepHold: {fileID: 4000010523645830}
   length: 0.05
   speed: 1
+  hold: {fileID: 0}
 --- !u!137 &137000010543478688
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

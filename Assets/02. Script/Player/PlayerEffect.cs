@@ -37,7 +37,7 @@ public class PlayerEffect : MonoBehaviour {
         {
             // 플레이어 죽음 이펙트
             case PlayerEffectList.DIE:
-                playerVec.y += 4f;
+                playerVec.y += 1f;
                 effects[(int)effectState].transform.position = playerVec;
 
                 effects[(int)effectState].SetActive(true);
