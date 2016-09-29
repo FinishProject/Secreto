@@ -56,7 +56,6 @@ public class TeleportGate : MonoBehaviour {
         Vector3 exitPoint = exitGate.position;
         exitPoint += Vector3.right * focusDir * 3f;
         exitPoint -= Vector3.up * 3.8f;
-
         yield return new WaitForSeconds(1f);
 
         if (isBox && boxTr != null)
