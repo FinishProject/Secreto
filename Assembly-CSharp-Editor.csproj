@@ -220,6 +220,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
      <None Include="Assets\ProCore\ProBuilder\About\Credits.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendForBloom.shader" />
+     <None Include="Assets\ChangeLog 1.txt" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>C:/Users/G/Documents/GitHub/Secreto/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>
