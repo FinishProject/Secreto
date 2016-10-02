@@ -47,7 +47,9 @@ public class MainUI_2 : MonoBehaviour
         menuButtons = menu.GetComponentsInChildren<Transform>();
         selectButton.SetActive(false);
         menu.SetActive(false);
-        
+
+        StopAllCoroutines();
+        StartCoroutine(FadeText());
         StartCoroutine(OffAnimation());
     }
 
@@ -90,7 +92,6 @@ public class MainUI_2 : MonoBehaviour
 
     IEnumerator OffAnimation()
     {
-        StartCoroutine(FadeText());
         yield return new WaitForSeconds(3f);
         anim.enabled = false;
         StartCoroutine(PressAnyKey());

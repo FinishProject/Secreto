@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
 using System.Text;
 
@@ -8,7 +7,7 @@ public class CamNode : MonoBehaviour {
     public Transform PrevNode;
     public Transform NextNode;
     public bool settingOnEditor;
-    // Use this for initialization
+
     void Start () {
 //        if(settingComplete)
             getData();
@@ -26,7 +25,10 @@ public class CamNode : MonoBehaviour {
             setData();
             Debug.Log("저장됨");
         }
+
+        Debug.DrawLine(transform.position, NextNode.position);
     }
+
 
     Vector3 tempVec;
     Quaternion tempQuat;
@@ -60,10 +62,13 @@ public class CamNode : MonoBehaviour {
         transform.eulerAngles = tempVec;
 
     }
-
-    static void ma()
-    {
-        
-    }
     
 }
+
+     
+     
+     
+     
+     
+     
+     
