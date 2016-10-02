@@ -31,11 +31,14 @@ public class TeleportGate : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
+        // 플레이어 체크
         if (col.CompareTag("Player"))
         {
+            
             FadeInOut.instance.StartFadeInOut(1f, 1.8f, 1f);
             StartCoroutine(MoveGate());
         }
+        // 오브젝트 체크, 오브젝트 있을 시 플레이어와 같이 이동하기 위해
         else if (col.CompareTag("OBJECT"))
         {
             isBox = true;
@@ -53,18 +56,34 @@ public class TeleportGate : MonoBehaviour {
 
     IEnumerator MoveGate()
     {
+        // 출구 위치 설정
         Vector3 exitPoint = exitGate.position;
         exitPoint += Vector3.right * focusDir * 3f;
         exitPoint -= Vector3.up * 3.8f;
+        StartCoroutine(Movement());
         yield return new WaitForSeconds(1f);
 
+        // 오브젝트가 있을 시 오브젝트 이동
         if (isBox && boxTr != null)
         {
             boxTr.position = new Vector3(exitPoint.x + (3f * focusDir), exitPoint.y + 5f, boxTr.position.z);
         }
-
+        // 플레이어 이동
         PlayerCtrl.instance.transform.position = exitPoint;
         PlayerCtrl.instance.TurnPlayer();
+    }
+
+    IEnumerator Movement()
+    {
+        int playingAnim = PlayerCtrl.instance.GetPlayingAnimation();
+
+        if(playingAnim == Animator.StringToHash("Base Layer.Jump"))
+            Debug.Log(playingAnim);
+        while (true)
+        {
+            
+            yield return null;
+        }
     }
 }
 

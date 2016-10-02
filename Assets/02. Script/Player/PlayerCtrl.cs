@@ -49,7 +49,8 @@ public class PlayerCtrl : MonoBehaviour
     public GameObject lunaModel;
     private PlayerEffect pEffect;
     private WahleMove wahleMove;
-    public Transform headPoint;
+    public AudioClip runSound;
+    private AudioSource audioSource;
 
     public static PlayerCtrl instance;
 
@@ -58,6 +59,7 @@ public class PlayerCtrl : MonoBehaviour
         instance = this;
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         pEffect = GetComponent<PlayerEffect>();
         wahleMove = GameObject.FindGameObjectWithTag("WAHLE").GetComponent<WahleMove>();
     }
@@ -78,7 +80,6 @@ public class PlayerCtrl : MonoBehaviour
         //캐릭터 방향 회전
         if (inputAxis < 0 && isFocusRight) { TurnPlayer(); }
         else if (inputAxis > 0 && !isFocusRight) { TurnPlayer(); }
-
     }
 
     void Movement()
@@ -115,9 +116,13 @@ public class PlayerCtrl : MonoBehaviour
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
                 Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) {
                 anim.SetBool("Run", true);
+
+                //if (!audioSource.isPlaying)
+                //    audioSource.PlayOneShot(runSound);
             }
             else {
                 anim.SetBool("Run", false);
+                audioSource.Stop();
             }
         }
         // 공중에 있을 시
@@ -128,10 +133,8 @@ public class PlayerCtrl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && isJumping)
                 DashJump();
 
-            if (controller.velocity.y <= -0.1)
-            {
+            if (controller.velocity.y <= -0.01)
                 curGravity = dropGravity;
-            }
         }
 
         moveDir.y -= curGravity * Time.deltaTime;
@@ -185,6 +188,75 @@ public class PlayerCtrl : MonoBehaviour
         //transform.localScale = localScale;
     }
 
+
+    void OnTriggerStay(Collider coll)
+    {
+        if (coll.CompareTag("DeadLine"))
+        {
+            PlayerDie();
+        }
+
+        else if (coll.CompareTag("Finish"))
+        {
+            InGameUI_2.instance.GameEnd();
+        }
+        else if (coll.CompareTag("StartPoint"))
+        {
+            Save();
+        }
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.CompareTag("OBJECT"))
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                hit.gameObject.GetComponent<PushBox>().PushObject(this.transform, isFocusRight);
+            }
+        }
+    }
+
+    public void PlayerDie()
+    {
+        StartCoroutine(ResetPlayer());
+    }
+
+    IEnumerator ResetPlayer()
+    {
+        dying = true;
+        FadeInOut.instance.StartFadeInOut(1, 2, 3);
+        isMove = false;
+        cloth.gameObject.SetActive(false);
+        lunaModel.SetActive(false);
+        pEffect.StartEffect(PlayerEffectList.DIE);
+
+        yield return new WaitForSeconds(1.3f);
+
+        GetPlayerData();
+        cloth.gameObject.SetActive(true);
+        lunaModel.SetActive(true);
+
+        isMove = true;
+
+        yield return new WaitForSeconds(1f);
+        dying = false;
+    }
+
+    void GetPlayerData()
+    {
+        Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
+        pData = DataSaveLoad.Load();
+        if (pData != null)
+            transform.position = pData.pPosition;
+        else
+        {
+            Save();
+            pData = DataSaveLoad.Load();
+            transform.position = pData.pPosition;
+        }
+    }
+
     public void getRecovery(float recovery)
     {
         curHp += recovery;
@@ -219,46 +291,6 @@ public class PlayerCtrl : MonoBehaviour
         hasSuperArmor = false;
     }
 
-    void OnTriggerStay(Collider coll)
-    {
-        if (coll.CompareTag("DeadLine"))
-        {
-            PlayerDie();
-        }
-
-        else if (coll.CompareTag("Finish"))
-        {
-            InGameUI_2.instance.GameEnd();
-        }
-        //else if (coll.CompareTag("OBJECT"))
-        //{
-        //    if(Input.GetKey(KeyCode.LeftShift) && inputAxis != 0 &&
-        //        transform.position.y <= coll.transform.position.y)
-        //    {
-        //        anim.SetBool("Push", true);
-        //        coll.gameObject.GetComponent<PushBox>().PushObject(this.transform);
-        //    }
-        //    else
-        //        anim.SetBool("Push", false);
-        //}
-    }
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.collider.CompareTag("OBJECT"))
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                hit.gameObject.GetComponent<PushBox>().PushObject(this.transform, isFocusRight);
-            }
-        }
-    }
-
-
-    public void PlayerDie()
-    {
-        StartCoroutine(ResetPlayer());
-    }
     
     public void animReset()
     {
@@ -267,41 +299,6 @@ public class PlayerCtrl : MonoBehaviour
         anim.SetBool("Jump", false);
         anim.SetBool("Dash", false);
         anim.SetBool("Idle", true);
-    }
-
-    IEnumerator ResetPlayer()
-    {
-        dying = true;
-        FadeInOut.instance.StartFadeInOut(1, 2, 3);
-        isMove = false;
-        cloth.gameObject.SetActive(false);
-        lunaModel.SetActive(false);
-        pEffect.StartEffect(PlayerEffectList.DIE);
-
-        yield return new WaitForSeconds(1.3f);
-   
-        GetPlayerData();
-        cloth.gameObject.SetActive(true);
-        lunaModel.SetActive(true);
-
-        isMove = true;
-
-        yield return new WaitForSeconds(1f);
-        dying = false;
-    }
-
-    void GetPlayerData()
-    {
-        Data pData = new Data(); // 플레이어 데이터 저장을 위한 클래스 변수
-        pData = DataSaveLoad.Load();
-        if (pData != null)
-            transform.position = pData.pPosition;
-        else
-        {
-            Save();
-            pData = DataSaveLoad.Load();
-            transform.position = pData.pPosition;
-        }
     }
 
     void OnEnable()
@@ -314,7 +311,6 @@ public class PlayerCtrl : MonoBehaviour
     {
         Data pData = new Data();
         pData.pPosition = transform.position;
-        pData.hp = curHp;
         DataSaveLoad.Save(pData);
     }
 
@@ -335,5 +331,10 @@ public class PlayerCtrl : MonoBehaviour
     public void SetPushAnim(bool isPush)
     {
         anim.SetBool("Push", isPush);
+    }
+
+    public int GetPlayingAnimation()
+    {
+        return anim.GetCurrentAnimatorStateInfo(0).nameHash;
     }
 }

@@ -11,32 +11,43 @@ public class ShowUI : MonoBehaviour {
     public float alpha = 0f;
     public static ShowUI instanace;
 
+    private Camera cam;
+    private RectTransform rectTr;
+
     void Awake()
     {
         instanace = this;
+        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        rectTr = GetComponent<RectTransform>();
     }
 
     public void OnImage(float fadeDir)
     {
-        if (fadeDir == -1)
-            StartCoroutine(OffImage());
+        if (fadeDir == 1)
+            shiftImg.gameObject.SetActive(true);
         else
-        {
-            Color imgColor = shiftImg.material.color;
-            alpha += fadeDir * fadeSpeed * Time.deltaTime;
-            alpha = Mathf.Clamp01(alpha);
+            shiftImg.gameObject.SetActive(false);
 
-            imgColor.a = alpha;
+        //if (fadeDir == -1)
+        //    StartCoroutine(OffImage());
+        //else
+        //{
+        //    Color imgColor = shiftImg.material.color;
+        //    alpha += fadeDir * fadeSpeed * Time.deltaTime;
+        //    alpha = Mathf.Clamp01(alpha);
 
-            shiftImg.material.color = imgColor;
-        }
+        //    imgColor.a = alpha;
+
+        //    shiftImg.material.color = imgColor;
+        //}
     }
 
-    public void SetPosition(Transform curTr)
+    public void SetPosition(Transform boxTr)
     {
-        Vector3 setPosition = curTr.position;
-        setPosition.y += 1f;
-        this.transform.position = setPosition;
+        Vector3 setPosition = boxTr.position;
+        float yLength = boxTr.transform.localScale.y * 1.5f;
+        setPosition.y += yLength;
+        shiftImg.transform.position = setPosition;
     }
 
     IEnumerator OffImage()
@@ -52,6 +63,5 @@ public class ShowUI : MonoBehaviour {
 
             yield return null;
         }
-        Debug.Log("End");
     }
 }

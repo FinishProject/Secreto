@@ -6,8 +6,6 @@ using System.Xml;
 public class Data
 {
     public Vector3 pPosition;
-    public float hp;
-    public float enhance;
 }
 
 
@@ -25,7 +23,6 @@ public abstract class DataSaveLoad {
         playerDataElement.SetAttribute("x", data.pPosition.x.ToString());
         playerDataElement.SetAttribute("y", data.pPosition.y.ToString());
         playerDataElement.SetAttribute("z", data.pPosition.z.ToString());
-        playerDataElement.SetAttribute("hp", data.hp.ToString());
         dataElement.AppendChild(playerDataElement);
 
         //데이터 저장
@@ -47,13 +44,10 @@ public abstract class DataSaveLoad {
             posX = System.Convert.ToSingle(PosElement.GetAttribute("x"));
             posY = System.Convert.ToSingle(PosElement.GetAttribute("y"));
             posZ = System.Convert.ToSingle(PosElement.GetAttribute("z"));
-            pHp = System.Convert.ToSingle(PosElement.GetAttribute("hp"));
 
             Vector3 initVec = new Vector3(posX, posY, posZ);
             loadData.pPosition = initVec;
-            loadData.hp = pHp;
         }
-
         return loadData;
     }
 

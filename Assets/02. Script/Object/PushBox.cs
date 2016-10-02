@@ -15,8 +15,6 @@ public class PushBox : MonoBehaviour {
         isRight = isDir;
         if(!isActive)
             StartCoroutine(Push(playerTr));
-        //moveDir = playerTr.forward;
-        //transform.position += moveDir * speed * Time.deltaTime;
     }
 
     void OnTriggerStay(Collider col)
@@ -25,9 +23,6 @@ public class PushBox : MonoBehaviour {
         {
             ShowUI.instanace.OnImage(1);
             ShowUI.instanace.SetPosition(this.transform);
-            //Vector3 imgPosition = this.transform.position;
-            //imgPosition.y += 1f;
-            //shiftImg.transform.position = imgPosition;
         }
     }
 
@@ -53,11 +48,14 @@ public class PushBox : MonoBehaviour {
                 break;
             }
 
+            SoundMgr.instance.PushObject(true);
+
             moveDir = playerTr.forward;
             transform.position += moveDir * speed * Time.deltaTime;
 
             yield return null;
         }
+        SoundMgr.instance.PushObject(false);
         PlayerCtrl.instance.SetPushAnim(false);
         isActive = false;
     }
